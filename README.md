@@ -20,7 +20,7 @@ Layout examples using [Pure CSS][pure] compiled from the [pure-site][] project.
 [pure]: http://purecss.io/
 [pure-site]: https://github.com/pure-css/pure-site
 
-Hosted as static website inside a AWS S£ Bucket
+Hosted as static website inside a AWS S3 Bucket
 
 ## Tasks
 
