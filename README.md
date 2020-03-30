@@ -5,8 +5,9 @@
 
 ## timstiwtterlisteningparty
 
-Simple page to hold the dates/times and bands and albums for [#timstiwtterlisteningparty]
+Simple [website] page to hold the dates/times and bands and albums for [#timstiwtterlisteningparty].
 
+[website]: http://www.timstwitterlisteningparty.com
 [#timstiwtterlisteningparty]: https://twitter.com/hashtag/timstwitterlisteningparty?src=hash
 
 
@@ -19,6 +20,7 @@ Layout examples using [Pure CSS][pure] compiled from the [pure-site][] project.
 [pure]: http://purecss.io/
 [pure-site]: https://github.com/pure-css/pure-site
 
+Hosted as static website inside a AWS S£ Bucket
 
 ## Tasks
 
