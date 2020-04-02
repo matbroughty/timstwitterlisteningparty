@@ -1,5 +1,9 @@
 language: minimal
+install:
+  # `awscli` is required for invalidation of CloudFront distributions.
+  - pip install awscli
 deploy:
+  # move everything from this project into the s3 bucket
   provider: s3
   access_key_id: AKIAVAENIR56NNR55NVD
   secret_access_key:
@@ -10,3 +14,8 @@ deploy:
   region: eu-west-2
   on:
     repo: matbroughty/timstwitterlisteningparty
+after_deploy:
+  # Allow `awscli` to make requests to CloudFront.
+  - aws configure set preview.cloudfront true
+  # Invalidate every object in the targeted distribution.
+  - aws cloudfront create-invalidation --distribution-id E3VMVDBEUWOSL5 --paths "/*"
