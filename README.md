@@ -1,6 +1,6 @@
-![header](img/black-vinyl.jpg)
+![header](img/record-transparent.png)
 
-###### [Photo by Elviss Railijs Bitāns from Pexels](https://www.pexels.com/photo/black-vinyl-record-playing-on-turntable-1389429/)
+###### [Image By ](https://www.pexels.com/photo/black-vinyl-record-playing-on-turntable-1389429/)
 
 
 ## timstiwtterlisteningparty
