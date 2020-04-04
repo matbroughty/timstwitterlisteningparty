@@ -11,7 +11,7 @@ Simple [website] page to hold the dates/times and bands and albums for [#timstiw
 [#timstiwtterlisteningparty]: https://twitter.com/hashtag/timstwitterlisteningparty?src=hash
 
 
-## timstiwtterlisteningparty
+## Static HTML
 
 The static html code to serve a simple blog type template with tables of data - one for each week of listening party's.
 
@@ -25,7 +25,8 @@ Hosted as static website inside a AWS S3 Bucket
 ## Tasks
 
 - [ ] Generally improve!
-- [ ] Add TBC page
+- [ ] Drive tabular data from file
+- [x] Add TBC Page
 
 
 License
