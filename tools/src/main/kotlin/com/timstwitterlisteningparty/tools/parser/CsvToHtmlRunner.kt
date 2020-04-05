@@ -1,9 +1,13 @@
 package com.timstwitterlisteningparty.tools.parser
-
-import org.apache.logging.log4j.Logger
 import org.springframework.boot.CommandLineRunner
+import org.springframework.stereotype.Component
 
-class CsvToHtmlRunner(logger: Logger) : CommandLineRunner{
+
+/**
+ * Picks up the
+ */
+@Component
+class CsvToHtmlRunner : CommandLineRunner{
 
 
   override fun run(vararg args: String?) {

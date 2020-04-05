@@ -26,7 +26,8 @@ import java.util.stream.Collectors
 
 
 /**
- * Takes the existing HTML file(s) (just index.html really) and
+ * Takes the existing HTML file(s) (just index.html really) and creates
+ * a csv file from it with the date strings converted to Iso date/time
  */
 @Component
 class HtmlToCsvRunner() : CommandLineRunner {
@@ -34,7 +35,7 @@ class HtmlToCsvRunner() : CommandLineRunner {
   override fun run(vararg args: String?) {
     logger.info("args passed in {} ", args)
 
-    var fileName = "generated-time-slot-data.csv"
+    var fileName = "index.html"
     if (args.isEmpty()) {
       logger.warn("No arguments passed defaulting to {}", fileName)
     }else{
