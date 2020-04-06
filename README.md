@@ -22,10 +22,18 @@ Layout examples using [Pure CSS][pure] compiled from the [pure-site][] project.
 
 Hosted as static website inside a AWS S3 Bucket
 
+## Tools
+
+TODO - explain the spring boot shell tool in the tools folder
+
 ## Tasks
 
 - [ ] Generally improve!
-- [ ] Drive tabular data from file
+- [x] Drive tabular data from file
+- [ ] Document shell tool and write tests
+- [ ] Generate empty_slots.html
+- [ ] Add command to add, commit and push code
+- [ ] Add command to call aws
 - [x] Add TBC Page
 
 

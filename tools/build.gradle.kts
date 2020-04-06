@@ -20,6 +20,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
   implementation("org.jsoup:jsoup:1.13.1")
   implementation("com.opencsv:opencsv:5.1")
+  implementation("org.springframework.shell:spring-shell-starter:2.0.0.RELEASE")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {

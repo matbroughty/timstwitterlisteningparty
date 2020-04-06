@@ -1,10 +1,11 @@
-package com.timstwitterlisteningparty.tools.parser
+package com.timstwitterlisteningparty.tools.shell
 
 import com.opencsv.bean.CsvToBeanBuilder
+import com.timstwitterlisteningparty.tools.parser.TimeSlot
 import org.slf4j.LoggerFactory
-import org.springframework.boot.CommandLineRunner
-import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Component
+import org.springframework.shell.standard.ShellComponent
+import org.springframework.shell.standard.ShellMethod
+import org.springframework.shell.standard.ShellOption
 import java.io.File
 import java.io.FileReader
 import java.time.DayOfWeek
@@ -14,23 +15,25 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 import java.util.stream.Collectors
 
-
-/**
- * Picks up the
- */
-@Order(2)
-@Component
-class CsvToHtmlRunner : CommandLineRunner {
+@ShellComponent
+class CsvToHtmlCommand{
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  override fun run(vararg args: String?) {
-    logger.info("args passed in {} ", args)
+
+  @ShellMethod("Produces the time-slots.html file from a csv file - defaults to using time-slots-data.csv")
+  fun html(@ShellOption("-f", "--file", defaultValue = "time-slot-data.csv") file : String) : String{
+    return "The html file was created ${createFile(file)}"
+  }
+
+
+  fun createFile(file: String)  : String{
+    logger.info("args passed in {} ", file)
     // default file to read
     var fileName = "time-slot-data.csv"
-    if (args.isEmpty()) {
+    if (file.isEmpty()) {
       logger.warn("No arguments passed defaulting to {}", fileName)
     } else {
-      fileName = args[0] ?: ""
+      fileName = file
     }
     val beans: List<TimeSlot> = CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
       .withType(TimeSlot::class.java).build().parse()
@@ -45,12 +48,9 @@ class CsvToHtmlRunner : CommandLineRunner {
     var htmlString = buildTable(upcoming, false, tbd = false)
     htmlString = htmlString.plus(buildTable(tbd, false, tbd = true))
     htmlString = htmlString.plus(buildTable(completed, true, tbd = false))
-
     logger.info("Html generated is {}", htmlString)
-
     File("time-slots.html").writeText(htmlString)
-
-
+    return htmlString
 
   }
 
@@ -116,5 +116,12 @@ class CsvToHtmlRunner : CommandLineRunner {
       "          </header>")
 
   }
+
+
+
+
+
+
+
 
 }

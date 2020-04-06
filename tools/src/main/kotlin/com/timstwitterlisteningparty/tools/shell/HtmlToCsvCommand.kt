@@ -1,33 +1,35 @@
-package com.timstwitterlisteningparty.tools.parser
+package com.timstwitterlisteningparty.tools.shell
 
 import com.opencsv.CSVWriter
 import com.opencsv.bean.StatefulBeanToCsvBuilder
+import com.timstwitterlisteningparty.tools.parser.TimeSlot
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
-import org.springframework.boot.CommandLineRunner
-import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Component
+import org.springframework.shell.standard.ShellComponent
+import org.springframework.shell.standard.ShellMethod
+import org.springframework.shell.standard.ShellOption
 import java.io.FileWriter
 import java.util.stream.Collectors
 
 
-/**
- * Takes the existing HTML table data (time-slots.html by default)
- */
-@Order(1)
-@Component
-class HtmlToCsvRunner() : CommandLineRunner {
+@ShellComponent
+class HtmlToCsvCommand {
   private val logger = LoggerFactory.getLogger(javaClass)
-  override fun run(vararg args: String?) {
-    logger.info("args passed in {} ", args)
+
+  @ShellMethod("Produces the generated-time-slot.date.csv file from the url https://timstwitterlisteningparty.com/time-slots.html by default")
+  fun csv(@ShellOption("-u", "--url", defaultValue = "https://timstwitterlisteningparty.com/time-slots.html") url: String): String {
+    return "The generated-time-slot.date.csv file was created: ${createFile(url)}"
+  }
+
+
+  fun createFile(url: String): Boolean {
+    logger.info("args passed in {} ", url)
 
     var url = "https://timstwitterlisteningparty.com/time-slots.html"
-    if (args.isEmpty()) {
+    if (url.isEmpty()) {
       logger.warn("No arguments passed defaulting to {}", url)
-    } else {
-      url = args[0] ?: ""
     }
 
     logger.info("Parsing URL from '{}'", url)
@@ -47,6 +49,8 @@ class HtmlToCsvRunner() : CommandLineRunner {
       .build()
     sbc.write(csvRows)
     fileWriter.close()
+
+    return true
   }
 
   private fun Element?.buildCsvRow(): TimeSlot? {
