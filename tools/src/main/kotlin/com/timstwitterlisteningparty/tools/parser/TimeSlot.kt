@@ -34,10 +34,10 @@ data class TimeSlot(val dateStr: String = "?",
     }
 
     val parseFormatter = DateTimeFormatterBuilder()
-      .appendPattern("EEEE d['st']['nd']['rd']['th'] MMMM")
+      .appendPattern("EEEE, MMMM d")
       .parseDefaulting(ChronoField.YEAR, 2020)
       .toFormatter(Locale.ENGLISH)
-    val date = LocalDate.parse(dateStr, parseFormatter).withYear(2020)
+    val date = LocalDate.parse(dateStr, parseFormatter)
     logger.info("Parsed date = {} ", date)
     val time = Integer.parseInt(StringUtils.substringBefore(timeStr, ":"))
     logger.info("Parsed time = {} ", time)

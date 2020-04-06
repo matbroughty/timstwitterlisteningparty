@@ -9,14 +9,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
-import java.io.File
 import java.io.FileWriter
 import java.util.stream.Collectors
 
 
 /**
- * Takes the existing HTML file(s) (just index.html really) and creates
- * a csv file from it with the date strings converted to Iso date/time
+ * Takes the existing HTML table data (time-slots.html by default)
  */
 @Order(1)
 @Component
@@ -25,16 +23,15 @@ class HtmlToCsvRunner() : CommandLineRunner {
   override fun run(vararg args: String?) {
     logger.info("args passed in {} ", args)
 
-    var fileName = "index.html"
+    var url = "https://timstwitterlisteningparty.com/time-slots.html"
     if (args.isEmpty()) {
-      logger.warn("No arguments passed defaulting to {}", fileName)
+      logger.warn("No arguments passed defaulting to {}", url)
     } else {
-      fileName = args[0] ?: ""
+      url = args[0] ?: ""
     }
 
-    logger.info("Parsing File from '{}'", fileName)
-    val input = File(fileName)
-    val doc: Document = Jsoup.parse(input, "UTF-8")
+    logger.info("Parsing URL from '{}'", url)
+    val doc: Document = Jsoup.connect(url).get()
 
     val csvRows = doc.select("tr")
       .stream()
