@@ -32,10 +32,11 @@ TODO - explain the spring boot shell tool in the tools folder
 - [x] Drive tabular data from file
 - [ ] Document shell tool, write tests and link to [codefactor](https://www.codefactor.io)
 - [ ] Generate empty_slots.html
-- [ ] Break up generation of html into upcoming, date tbc and archived
+- [x] Break up generation of html into upcoming, date tbc and archived
 - [ ] Add new archive page
 - [ ] Investigate twitter api for listening period date range for archive page
-- [ ] Add command to add, commit and push code
+- [ ] Add shell command to preview index.html
+- [ ] Add shell command to add, commit and push code
 - [ ] Add command to call aws
 - [x] Add TBC Page
 

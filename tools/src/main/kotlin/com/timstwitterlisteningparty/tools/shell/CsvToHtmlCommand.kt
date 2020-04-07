@@ -93,7 +93,7 @@ class CsvToHtmlCommand {
     } else {
       section = section.plus(processTable(null, sortedSlots, completed))
     }
-    return section.plus(" </section>")
+    return section.plus("\n</section>")
   }
 
   private fun processTable(monday: LocalDate?, rows: List<TimeSlot>?, completed: Boolean): String {
@@ -104,7 +104,7 @@ class CsvToHtmlCommand {
       val df = DateTimeFormatter.ofPattern("EEEE, MMMM d")
       h2Value = if (completed || previousWeek(monday)) "Week that commenced ${monday.format(df)}" else "Week commencing ${monday.format(df)}"
     }
-    var htmlTable = "          <header class=\"post-header\">\n" +
+    var htmlTable = "\n          <header class=\"post-header\">\n" +
       "            <h2 class=\"post-title\">$h2Value</h2>\n" +
       "\n" +
       "            <div class=\"scroll-table\">\n" +
@@ -124,7 +124,7 @@ class CsvToHtmlCommand {
     rows?.forEach { htmlTable = htmlTable.plus(it.buildHtmlRow()) }
 
 
-    return htmlTable.plus("</tbody>\n" +
+    return htmlTable.plus("\n                </tbody>\n" +
       "              </table>\n" +
       "            </div>\n" +
       "            \n" +
