@@ -27,11 +27,10 @@ class CsvToHtmlCommand {
   @ShellMethod("Produces the completed-time-slots.html, date-tbd-time-slots.html and the upcoming-time-slots.html files from a csv file - defaults to using time-slots-data.csv")
   fun html(@ShellOption("-f", "--file", defaultValue = "time-slot-data.csv") file: String,
            @ShellOption("-l", "--log", defaultValue = "false") log: Boolean): String {
-    return "The html file was created ${createFile(file, log)}"
+    return "The html file was created ${createFiles(file, log)}"
   }
 
-
-  fun createFile(file: String, log: Boolean): String {
+  fun createFiles(file: String, log: Boolean): String {
     logger.info("File is {} and logging is {}", file, log)
     // default file to read
     var fileName = "time-slot-data.csv"
@@ -45,32 +44,33 @@ class CsvToHtmlCommand {
     if(log) {
       beans.forEach { logger.info("Read in Bean {}", it) }
     }
-    val tbd = beans.stream().filter { it.date.year == 1970 }.collect(Collectors.toList())
-    val completed = beans.stream().filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()) }.collect(Collectors.toList())
-    val upcoming = beans.stream().filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()).not() }.collect(Collectors.toList())
+    val tbd = beans.stream()
+      .filter { it.date.year == 1970 }.collect(Collectors.toList())
+    val completed = beans.stream()
+      .filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()) }
+      .collect(Collectors.toList())
+    val upcoming = beans.stream()
+      .filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()).not() }
+      .collect(Collectors.toList())
     if(log) {
       tbd.forEach { logger.info("Dates to be confirmed {}", it) }
       completed.forEach { logger.info("Completed listening {}", it) }
       upcoming.forEach { logger.info("Upcoming listening {}", it) }
     }
-
-    var upcomingHtml = buildTable(upcoming, false, tbd = false)
+    val upcomingHtml = buildTable(upcoming, false, tbd = false)
     File("upcoming-time-slots.html").writeText(upcomingHtml)
-    var dateTbdHtml = buildTable(tbd, false, tbd = true)
+    val  dateTbdHtml = buildTable(tbd, false, tbd = true)
     File("date-tbd-time-slots.html").writeText(dateTbdHtml)
-    var completedHtml = buildTable(completed, true, tbd = false)
+    val completedHtml = buildTable(completed, true, tbd = false)
     File("completed-time-slots.html").writeText(completedHtml)
-
     if(log){
       logger.info("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {}", upcomingHtml, dateTbdHtml, completedHtml)
     }
-
     return upcomingHtml.plus(dateTbdHtml).plus(completed)
 
   }
 
   private fun buildTable(slots: List<TimeSlot>, completed: Boolean, tbd: Boolean): String {
-
     var section = "<section class=\"post\">\n"
     val sortedSlots = if (tbd) slots.sortedBy { it.band } else slots.sortedBy { it.date }
     logger.info("Sorted slots for completed {} and tbd {}", completed, tbd)
@@ -140,7 +140,7 @@ class CsvToHtmlCommand {
     if (monday.isEqual(LocalDate.now())) {
       return false
     }
-    val woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+    val woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()
     val weekNumber: Int = LocalDate.now().get(woy)
     val mondayWeekNum: Int = monday.get(woy)
     // not this week
