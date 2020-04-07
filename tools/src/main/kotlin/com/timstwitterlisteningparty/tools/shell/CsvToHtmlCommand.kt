@@ -111,11 +111,11 @@ class CsvToHtmlCommand {
       "              <table width=\"100%\" class=\"pure-table\">\n" +
       "                <thead>\n" +
       "                <tr>\n" +
-      "                  <th width=\"20%\">Day</th>\n" +
-      "                  <th width=\"10%\">Time</th>\n" +
-      "                  <th width=\"30%\">Band</th>\n" +
-      "                  <th width=\"25%\">Album</th>\n" +
-      "                  <th width=\"15%\">Twitter Link</th>\n" +
+      "                  <th width=\"15%\">Day</th>\n" +
+      "                  <th width=\"5%\">Time</th>\n" +
+      "                  <th width=\"35%\">Band</th>\n" +
+      "                  <th width=\"30%\">Album</th>\n" +
+      "                  <th width=\"15%\">Link</th>\n" +
       "                </tr>\n" +
       "                </thead>\n" +
       "                <tbody>"
