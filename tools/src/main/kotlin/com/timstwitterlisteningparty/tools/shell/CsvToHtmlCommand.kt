@@ -10,23 +10,27 @@ import java.io.File
 import java.io.FileReader
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
+import java.util.*
 import java.util.stream.Collectors
+import kotlin.collections.HashMap
+import kotlin.collections.set
+
 
 @ShellComponent
-class CsvToHtmlCommand{
+class CsvToHtmlCommand {
   private val logger = LoggerFactory.getLogger(javaClass)
 
 
   @ShellMethod("Produces the time-slots.html file from a csv file - defaults to using time-slots-data.csv")
-  fun html(@ShellOption("-f", "--file", defaultValue = "time-slot-data.csv") file : String) : String{
+  fun html(@ShellOption("-f", "--file", defaultValue = "time-slot-data.csv") file: String): String {
     return "The html file was created ${createFile(file)}"
   }
 
 
-  fun createFile(file: String)  : String{
+  fun createFile(file: String): String {
     logger.info("args passed in {} ", file)
     // default file to read
     var fileName = "time-slot-data.csv"
@@ -36,13 +40,13 @@ class CsvToHtmlCommand{
       fileName = file
     }
     val beans: List<TimeSlot> = CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
-      .withType(TimeSlot::class.java).build().parse()
+      .withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
     beans.forEach { logger.debug("Read in Bean {}", it) }
     val tbd = beans.stream().filter { it.date.year == 1970 }.collect(Collectors.toList())
     tbd.forEach { logger.debug("Dates to be confirmed {}", it) }
-    val completed = beans.stream().filter { it.date.year != 1970 && it.date.isBefore(LocalDateTime.now()) }.collect(Collectors.toList())
+    val completed = beans.stream().filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()) }.collect(Collectors.toList())
     completed.forEach { logger.debug("Completed listening {}", it) }
-    val upcoming = beans.stream().filter { it.date.year != 1970 && it.date.isAfter(LocalDateTime.now().minusHours(6)) }.collect(Collectors.toList())
+    val upcoming = beans.stream().filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()).not() }.collect(Collectors.toList())
     upcoming.forEach { logger.debug("Upcoming listening {}", it) }
 
     var htmlString = buildTable(upcoming, false, tbd = false)
@@ -67,27 +71,27 @@ class CsvToHtmlCommand{
       logger.info("first date {} startingMonday {} last date {}", first.date, startingMonday, last.date)
       val map: HashMap<LocalDate, ArrayList<TimeSlot>> = HashMap()
       var start = startingMonday
-      while (start.isBefore(last.date)) {
-        map[start.toLocalDate()] = java.util.ArrayList()
+      while (start.isAfter(last.date).not()) {
+        map[start.toLocalDate()] = ArrayList()
         start = start.plusWeeks(1)
       }
       map.keys.sortedBy { it }.forEach { logger.info("key is {}", it) }
       sortedSlots.forEach { map[it.date.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))]?.add(it) }
 
-      map.keys.stream().sorted().map { processTable(it, map[it]) }.collect(Collectors.toList()).forEach { section = section.plus(it) }
+      map.keys.stream().sorted().map { processTable(it, map[it], completed) }.collect(Collectors.toList()).forEach { section = section.plus(it) }
     } else {
-      section = section.plus(processTable(null, sortedSlots))
+      section = section.plus(processTable(null, sortedSlots, completed))
     }
     return section.plus(" </section>")
   }
 
-  private fun processTable(monday: LocalDate?, rows: List<TimeSlot>?): String {
+  private fun processTable(monday: LocalDate?, rows: List<TimeSlot>?, completed: Boolean): String {
 
     var h2Value = "Upcoming Events - Dates to be confirmed"
 
     if (monday != null) {
       val df = DateTimeFormatter.ofPattern("EEEE, MMMM d")
-      h2Value = if(monday.isBefore(LocalDate.now())) "Week that commenced ${monday.format(df)}" else "Week commencing ${monday.format(df)}"
+      h2Value = if (completed || previousWeek(monday)) "Week that commenced ${monday.format(df)}" else "Week commencing ${monday.format(df)}"
     }
     var htmlTable = "          <header class=\"post-header\">\n" +
       "            <h2 class=\"post-title\">$h2Value</h2>\n" +
@@ -118,10 +122,23 @@ class CsvToHtmlCommand{
   }
 
 
-
-
-
-
+  /**
+   * If this week or a week in the future return true else false
+   */
+  private fun previousWeek(monday: LocalDate): Boolean {
+    if (monday.isEqual(LocalDate.now())) {
+      return false
+    }
+    val woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+    val weekNumber: Int = LocalDate.now().get(woy)
+    val mondayWeekNum: Int = monday.get(woy)
+    // not this week
+    if (monday.isBefore(LocalDate.now()) && weekNumber != mondayWeekNum) {
+      return true
+    }
+    // else must be the weeks before
+    return false
+  }
 
 
 }
