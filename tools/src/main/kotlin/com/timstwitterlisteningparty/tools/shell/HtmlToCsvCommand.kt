@@ -54,11 +54,11 @@ class HtmlToCsvCommand {
     if (this != null) {
       logger.debug("row {}", html())
       return TimeSlot(
-        select("td")[0].text(),
-        select("td")[1].text(),
-        select("td")[2].text(),
-        select("td")[3].text(),
-        select("td")[4].select("a").attr("href")
+        dateStr = select("td")[0].text(),
+        timeStr = select("td")[1].text(),
+        band = select("td")[2].text(),
+        album = select("td")[3].text(),
+        link = select("td")[4].select("a").attr("href")
       )
     }
     return null

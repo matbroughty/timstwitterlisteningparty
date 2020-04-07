@@ -45,12 +45,12 @@ class CsvToHtmlCommand {
       beans.forEach { logger.debug("Read in Bean {}", it) }
     }
     val tbd = beans.stream()
-      .filter { it.date.year == 1970 }.collect(Collectors.toList())
+      .filter { it.isoDate.year == 1970 }.collect(Collectors.toList())
     val completed = beans.stream()
-      .filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()) }
+      .filter { it.isoDate.year != 1970 && it.isoDate.toLocalDate().isBefore(LocalDate.now()) }
       .collect(Collectors.toList())
     val upcoming = beans.stream()
-      .filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()).not() }
+      .filter { it.isoDate.year != 1970 && it.isoDate.toLocalDate().isBefore(LocalDate.now()).not() }
       .collect(Collectors.toList())
     if(log) {
       tbd.forEach { logger.info("Dates to be confirmed {}", it) }
@@ -72,22 +72,22 @@ class CsvToHtmlCommand {
 
   private fun buildTable(slots: List<TimeSlot>, completed: Boolean, tbd: Boolean): String {
     var section = "<section class=\"post\">\n"
-    val sortedSlots = if (tbd) slots.sortedBy { it.band } else slots.sortedBy { it.date }
+    val sortedSlots = if (tbd) slots.sortedBy { it.band } else slots.sortedBy { it.isoDate }
     logger.debug("Sorted slots for completed {} and tbd {}", completed, tbd)
     sortedSlots.forEach { logger.debug("Time listening {}", it) }
     if (!tbd) {
       val first = sortedSlots.first()
-      val startingMonday = first.date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+      val startingMonday = first.isoDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
       val last = sortedSlots.last()
-      logger.info("first date {} startingMonday {} last date {}", first.date, startingMonday, last.date)
+      logger.info("first date {} startingMonday {} last date {}", first.isoDate, startingMonday, last.isoDate)
       val map: HashMap<LocalDate, ArrayList<TimeSlot>> = HashMap()
       var start = startingMonday
-      while (start.isAfter(last.date).not()) {
+      while (start.isAfter(last.isoDate).not()) {
         map[start.toLocalDate()] = ArrayList()
         start = start.plusWeeks(1)
       }
       map.keys.sortedBy { it }.forEach { logger.debug("key is {}", it) }
-      sortedSlots.forEach { map[it.date.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))]?.add(it) }
+      sortedSlots.forEach { map[it.isoDate.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))]?.add(it) }
 
       map.keys.stream().sorted().map { processTable(it, map[it], completed) }.collect(Collectors.toList()).forEach { section = section.plus(it) }
     } else {
