@@ -31,7 +31,7 @@ class CsvToHtmlCommand {
   }
 
   fun createFiles(file: String, log: Boolean): String {
-    logger.info("File is {} and logging is {}", file, log)
+    logger.debug("File is {} and logging is {}", file, log)
     // default file to read
     var fileName = "time-slot-data.csv"
     if (file.isEmpty()) {
@@ -42,7 +42,7 @@ class CsvToHtmlCommand {
     val beans: List<TimeSlot> = CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
       .withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
     if(log) {
-      beans.forEach { logger.info("Read in Bean {}", it) }
+      beans.forEach { logger.debug("Read in Bean {}", it) }
     }
     val tbd = beans.stream()
       .filter { it.date.year == 1970 }.collect(Collectors.toList())
@@ -73,7 +73,7 @@ class CsvToHtmlCommand {
   private fun buildTable(slots: List<TimeSlot>, completed: Boolean, tbd: Boolean): String {
     var section = "<section class=\"post\">\n"
     val sortedSlots = if (tbd) slots.sortedBy { it.band } else slots.sortedBy { it.date }
-    logger.info("Sorted slots for completed {} and tbd {}", completed, tbd)
+    logger.debug("Sorted slots for completed {} and tbd {}", completed, tbd)
     sortedSlots.forEach { logger.debug("Time listening {}", it) }
     if (!tbd) {
       val first = sortedSlots.first()
@@ -86,7 +86,7 @@ class CsvToHtmlCommand {
         map[start.toLocalDate()] = ArrayList()
         start = start.plusWeeks(1)
       }
-      map.keys.sortedBy { it }.forEach { logger.info("key is {}", it) }
+      map.keys.sortedBy { it }.forEach { logger.debug("key is {}", it) }
       sortedSlots.forEach { map[it.date.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))]?.add(it) }
 
       map.keys.stream().sorted().map { processTable(it, map[it], completed) }.collect(Collectors.toList()).forEach { section = section.plus(it) }
