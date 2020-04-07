@@ -2,8 +2,9 @@
 
 ###### [Image By Dave Atkinson](https://twitter.com/chipiedavea)
 
+[![Build Status](https://travis-ci.com/matbroughty/timstwitterlisteningparty.svg?branch=master)](https://travis-ci.com/matbroughty/timstwitterlisteningparty)
 
-## timstiwtterlisteningparty
+## timstwitterlisteningparty
 
 Simple [website] page to hold the dates/times and bands and albums for [#timstiwtterlisteningparty].
 
@@ -28,10 +29,12 @@ TODO - explain the spring boot shell tool in the tools folder
 
 ## Tasks
 
-- [ ] Generally improve!
 - [x] Drive tabular data from file
-- [ ] Document shell tool and write tests
+- [ ] Document shell tool, write tests and link to [codefactor](https://www.codefactor.io)
 - [ ] Generate empty_slots.html
+- [ ] Break up generation of html into upcoming, date tbc and archived
+- [ ] Add new archive page
+- [ ] Investigate twitter api for listening period date range for archive page
 - [ ] Add command to add, commit and push code
 - [ ] Add command to call aws
 - [x] Add TBC Page

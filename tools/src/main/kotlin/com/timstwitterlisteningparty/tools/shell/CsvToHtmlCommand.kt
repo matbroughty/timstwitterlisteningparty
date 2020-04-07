@@ -24,14 +24,15 @@ class CsvToHtmlCommand {
   private val logger = LoggerFactory.getLogger(javaClass)
 
 
-  @ShellMethod("Produces the time-slots.html file from a csv file - defaults to using time-slots-data.csv")
-  fun html(@ShellOption("-f", "--file", defaultValue = "time-slot-data.csv") file: String): String {
-    return "The html file was created ${createFile(file)}"
+  @ShellMethod("Produces the completed-time-slots.html, date-tbd-time-slots.html and the upcoming-time-slots.html files from a csv file - defaults to using time-slots-data.csv")
+  fun html(@ShellOption("-f", "--file", defaultValue = "time-slot-data.csv") file: String,
+           @ShellOption("-l", "--log", defaultValue = "false") log: Boolean): String {
+    return "The html file was created ${createFile(file, log)}"
   }
 
 
-  fun createFile(file: String): String {
-    logger.info("args passed in {} ", file)
+  fun createFile(file: String, log: Boolean): String {
+    logger.info("File is {} and logging is {}", file, log)
     // default file to read
     var fileName = "time-slot-data.csv"
     if (file.isEmpty()) {
@@ -41,20 +42,30 @@ class CsvToHtmlCommand {
     }
     val beans: List<TimeSlot> = CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
       .withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
-    beans.forEach { logger.debug("Read in Bean {}", it) }
+    if(log) {
+      beans.forEach { logger.info("Read in Bean {}", it) }
+    }
     val tbd = beans.stream().filter { it.date.year == 1970 }.collect(Collectors.toList())
-    tbd.forEach { logger.debug("Dates to be confirmed {}", it) }
     val completed = beans.stream().filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()) }.collect(Collectors.toList())
-    completed.forEach { logger.debug("Completed listening {}", it) }
     val upcoming = beans.stream().filter { it.date.year != 1970 && it.date.toLocalDate().isBefore(LocalDate.now()).not() }.collect(Collectors.toList())
-    upcoming.forEach { logger.debug("Upcoming listening {}", it) }
+    if(log) {
+      tbd.forEach { logger.info("Dates to be confirmed {}", it) }
+      completed.forEach { logger.info("Completed listening {}", it) }
+      upcoming.forEach { logger.info("Upcoming listening {}", it) }
+    }
 
-    var htmlString = buildTable(upcoming, false, tbd = false)
-    htmlString = htmlString.plus(buildTable(tbd, false, tbd = true))
-    htmlString = htmlString.plus(buildTable(completed, true, tbd = false))
-    logger.info("Html generated is {}", htmlString)
-    File("time-slots.html").writeText(htmlString)
-    return htmlString
+    var upcomingHtml = buildTable(upcoming, false, tbd = false)
+    File("upcoming-time-slots.html").writeText(upcomingHtml)
+    var dateTbdHtml = buildTable(tbd, false, tbd = true)
+    File("date-tbd-time-slots.html").writeText(dateTbdHtml)
+    var completedHtml = buildTable(completed, true, tbd = false)
+    File("completed-time-slots.html").writeText(completedHtml)
+
+    if(log){
+      logger.info("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {}", upcomingHtml, dateTbdHtml, completedHtml)
+    }
+
+    return upcomingHtml.plus(dateTbdHtml).plus(completed)
 
   }
 
