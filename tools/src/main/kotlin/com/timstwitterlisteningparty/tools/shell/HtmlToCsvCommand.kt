@@ -26,12 +26,9 @@ class HtmlToCsvCommand {
 
   fun createFile(url: String): Boolean {
     logger.info("args passed in {} ", url)
-
-    var url = "https://timstwitterlisteningparty.com/time-slots.html"
     if (url.isEmpty()) {
       logger.warn("No arguments passed defaulting to {}", url)
     }
-
     logger.info("Parsing URL from '{}'", url)
     val doc: Document = Jsoup.connect(url).get()
 
