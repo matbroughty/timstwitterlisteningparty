@@ -9,45 +9,46 @@ import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
-import org.springframework.shell.standard.ShellOption
 import java.io.FileWriter
 import java.util.stream.Collectors
+import kotlin.streams.toList
 
 
 @ShellComponent
 class HtmlToCsvCommand {
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  @ShellMethod("Produces the generated-time-slot.date.csv file from the url https://timstwitterlisteningparty.com/time-slots.html by default")
-  fun csv(@ShellOption("-u", "--url", defaultValue = "https://timstwitterlisteningparty.com/time-slots.html") url: String): String {
-    return "The generated-time-slot.date.csv file was created: ${createFile(url)}"
+  @ShellMethod("Produces the generated-time-slot.date.csv file from the url https://timstwitterlisteningparty.com/time-slots.html, https://timstwitterlisteningparty.com/completed-time-slots.html and https://timstwitterlisteningparty.com/date-tbd-time-slots.html")
+  fun csv(): String {
+    return "The generated-time-slot.date.csv file was created: ${createFile()}"
   }
 
+  fun createFile() : Boolean{
 
-  fun createFile(url: String): Boolean {
-    logger.info("args passed in {} ", url)
-    if (url.isEmpty()) {
-      logger.warn("No arguments passed defaulting to {}", url)
-    }
-    logger.info("Parsing URL from '{}'", url)
-    val doc: Document = Jsoup.connect(url).get()
+    val timeSlots = timeSlotList("https://timstwitterlisteningparty.com/time-slots.html")
+    val completedTimeSlots = (timeSlotList("https://timstwitterlisteningparty.com/completed-time-slots.html"))
+    val tbcTimeSlots = (timeSlotList("https://timstwitterlisteningparty.com/date-tbd-time-slots.html"))
 
-    val csvRows = doc.select("tr")
-      .stream()
-      .filter { it.children().`is`("th").not() }
-      .map { it.buildCsvRow() }
-      .filter { it != null }
-      .collect(Collectors.toList())
-
-    csvRows.forEach { logger.info("TimeSlot is: {}", it) }
     val fileWriter = FileWriter("generated-time-slot-data.csv")
     val sbc = StatefulBeanToCsvBuilder<TimeSlot>(fileWriter)
       .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
       .build()
-    sbc.write(csvRows)
+    sbc.write(timeSlots)
+    sbc.write(completedTimeSlots)
+    sbc.write(tbcTimeSlots)
     fileWriter.close()
-
     return true
+  }
+
+  private fun timeSlotList(url: String): List<TimeSlot?> {
+    logger.info("Parsing URL from '{}'", url)
+    val doc: Document = Jsoup.connect(url).get()
+    return doc.select("tr")
+      .stream()
+      .filter { it.children().`is`("th").not() }
+      .map { it.buildCsvRow() }
+      .filter { it != null }
+      .toList()
   }
 
   private fun Element?.buildCsvRow(): TimeSlot? {
