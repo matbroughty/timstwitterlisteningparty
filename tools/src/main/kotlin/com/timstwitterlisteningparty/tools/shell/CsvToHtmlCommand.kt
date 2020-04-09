@@ -107,7 +107,7 @@ class CsvToHtmlCommand {
       icon = "<i class=\"fas fa-calendar-check\"></i>"
     }
 
-    val bstrapHeader = "  <div class=\"card bg-light mb-3 border-dark \">\n" +
+    val bstrapHeader = "  <div class=\"card bg-light mb-2 border-dark \" style=\"max-width\">\n" +
       "    <div class=\"card-header\">$icon $h2Value</div>\n" +
       "    <div class=\"card-body p-0\">"
 
