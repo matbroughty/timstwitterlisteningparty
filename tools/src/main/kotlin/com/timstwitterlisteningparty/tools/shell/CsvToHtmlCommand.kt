@@ -62,7 +62,12 @@ class CsvToHtmlCommand {
 
   private fun buildTable(slots: List<TimeSlot>, completed: Boolean, tbd: Boolean, bootStrap: Boolean = false): String {
     var section = "<section class=\"post\">\n"
-    val sortedSlots = if (tbd) slots.sortedBy { it.band } else slots.sortedBy { it.isoDate }
+    val sortedSlots =
+      when {
+          tbd -> slots.sortedBy { it.band }
+          completed -> slots.sortedBy{ it.isoDate }
+          else -> slots.sortedBy { it.isoDate }
+      }
     logger.debug("Sorted slots for completed {} and tbd {}", completed, tbd)
     sortedSlots.forEach { logger.debug("Time listening {}", it) }
     if (!tbd) {
@@ -78,7 +83,6 @@ class CsvToHtmlCommand {
       }
       map.keys.sortedBy { it }.forEach { logger.debug("key is {}", it) }
       sortedSlots.forEach { map[it.isoDate.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))]?.add(it) }
-
       map.keys.stream().sorted().map { pureTable(it, map[it], completed, bootStrap) }.collect(Collectors.toList()).forEach { section = section.plus(it) }
     } else {
       section = section.plus(pureTable(null, sortedSlots, completed, bootStrap))
