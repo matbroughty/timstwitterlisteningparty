@@ -51,7 +51,7 @@ class RegenerateHtmlHandler : RequestHandler<S3Event,String>{
 
       val files = FileCreator().createFiles(inputStream = objectData, writeToFile = false)
 
-      files.keys.forEach(){
+      files.keys.forEach{
         println("Writing to: $srcBucket/${it} with html ${files[it]}")
         try {
           s3Client.putObject(srcBucket,it, files[it])
