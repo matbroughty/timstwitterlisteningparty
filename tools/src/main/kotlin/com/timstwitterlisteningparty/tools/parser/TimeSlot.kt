@@ -91,7 +91,7 @@ data class TimeSlot(val dateStr: String = "?",
      */
      return  "                <tr>\n" +
       "                  <td>$engTime</td>\n" +
-      "                  <td>$hours</td>\n" +
+      "                  <td style=\"text-align:right\">$hours</td>\n" +
       "                  <td>$band</td>\n" +
       "                  <td>$album</td>\n" +
       "                  <td><a class=\"pure-button $button\"\n" +

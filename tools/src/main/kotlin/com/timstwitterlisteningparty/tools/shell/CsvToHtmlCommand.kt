@@ -83,7 +83,10 @@ class CsvToHtmlCommand {
       }
       map.keys.sortedBy { it }.forEach { logger.debug("key is {}", it) }
       sortedSlots.forEach { map[it.isoDate.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))]?.add(it) }
-      map.keys.stream().sorted().map { pureTable(it, map[it], completed, bootStrap) }.collect(Collectors.toList()).forEach { section = section.plus(it) }
+      map.keys.stream().sorted(if(completed) reverseOrder() else naturalOrder())
+        .map { pureTable(it, map[it], completed, bootStrap) }
+        .collect(Collectors.toList())
+        .forEach { section = section.plus(it) }
     } else {
       section = section.plus(pureTable(null, sortedSlots, completed, bootStrap))
     }
@@ -124,8 +127,8 @@ class CsvToHtmlCommand {
         "                  <th width=\"15%\">Day</th>\n" +
         "                  <th width=\"5%\">Time</th>\n" +
         "                  <th width=\"35%\">Band</th>\n" +
-        "                  <th width=\"30%\">Album</th>\n" +
-        "                  <th width=\"15%\">Link</th>\n" +
+        "                  <th width=\"35%\">Album</th>\n" +
+        "                  <th width=\"10%\">Link</th>\n" +
         "                </tr>\n" +
         "                </thead>\n" +
         "                <tbody>"

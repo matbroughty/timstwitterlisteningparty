@@ -62,7 +62,7 @@ and the [completed-time-slots.html](completed-time-slots.html) from it
 - [ ] Add shell command to add, commit and push code
 - [ ] Add command to call aws
 - [x] Add TBC Page
-- [ ] Sort archive page latest to oldest
+- [x] Sort archive page latest to oldest
 - [ ] Add lambda to auto create html snippets from csv in github
 
 
