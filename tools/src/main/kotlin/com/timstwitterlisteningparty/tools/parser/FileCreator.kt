@@ -27,7 +27,7 @@ class FileCreator {
           CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
       }
     val beans: List<TimeSlot> = csvToBeanBuilder.withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
-    beans.forEach { logger.debug("Read in Bean {}", it) }
+    beans.forEach { logger.info("Read in Bean {}", it) }
     val tbd = beans.stream()
       .filter { it.isoDate.year == 1970 }.collect(Collectors.toList())
     val completed = beans.stream()
@@ -45,23 +45,30 @@ class FileCreator {
     val dateTbdFile = File("date-tbd-time-slots.html")
     val completedHtml = buildTable(completed, true, tbd = false)
     val completedFile = File("completed-time-slots.html")
+    val allOneTableHtml = buildTable(beans, completed = true, tbd= true, all = true)
+    val allOneTableFile = File("all-time-slots.html")
     // if called from Lambda we can't write to the file
     if(writeToFile) {
       completedFile.writeText(completedHtml)
       upcomingFile.writeText(upcomingHtml)
       dateTbdFile.writeText(dateTbdHtml)
+      allOneTableFile.writeText(allOneTableHtml)
     }
-    logger.info("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {}", upcomingHtml, dateTbdHtml, completedHtml)
+    logger.info("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}", upcomingHtml, dateTbdHtml, completedHtml, allOneTableHtml)
 
-    return mapOf(Pair(upcomingFile.name,upcomingHtml), Pair(dateTbdFile.name,dateTbdHtml), Pair(completedFile.name,completedHtml))
+    return mapOf(
+      Pair(upcomingFile.name,upcomingHtml),
+      Pair(dateTbdFile.name,dateTbdHtml),
+      Pair(completedFile.name,completedHtml),
+      Pair(allOneTableFile.name,allOneTableHtml))
   }
 
-  private fun buildTable(slots: List<TimeSlot>, completed: Boolean, tbd: Boolean): String {
+  private fun buildTable(slots: List<TimeSlot>, completed: Boolean, tbd: Boolean, all: Boolean = false): String {
     var section = "<section class=\"post\">\n"
     val sortedSlots = if (tbd) slots.sortedBy { it.band } else slots.sortedBy { it.isoDate }
     logger.debug("Sorted slots for completed {} and tbd {}", completed, tbd)
     sortedSlots.forEach { logger.debug("Time listening {}", it) }
-    if (!tbd) {
+    if (!all && !tbd) {
       val first = sortedSlots.first()
       val startingMonday = first.isoDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
       val last = sortedSlots.last()
@@ -79,15 +86,15 @@ class FileCreator {
         .collect(Collectors.toList())
         .forEach { section = section.plus(it) }
     } else {
-      section = section.plus(pureTable(null, sortedSlots, completed))
+      section = section.plus(pureTable(null, sortedSlots, completed, all))
     }
     return section.plus("\n</section>")
   }
 
 
-  private fun pureTable(monday: LocalDate?, rows: List<TimeSlot>?, completed: Boolean): String {
+  private fun pureTable(monday: LocalDate?, rows: List<TimeSlot>?, completed: Boolean, all: Boolean = false): String {
 
-    var h2Value = "Upcoming Events - Dates to be confirmed"
+    var h2Value = if(all) "All Events - Searchable & Sortable" else " Upcoming Events - Dates to be confirmed"
     if (monday != null) {
       val df = DateTimeFormatter.ofPattern("EEEE, MMMM d")
       h2Value = if (completed || previousWeek(monday))
@@ -104,7 +111,7 @@ class FileCreator {
         "    <div class=\"card-header\">$icon $h2Value</div>\n" +
         "    <div class=\"card-body p-0\">" +
         "            <div class=\"scroll-table\">\n" +
-        "              <table width=\"100%\" class=\"pure-table\">\n" +
+        "              <table id=\"time-slots\" width=\"100%\" class=\"pure-table\">\n" +
         "                <thead>\n" +
         "                <tr>\n" +
         "                  <th width=\"15%\">Day</th>\n" +
