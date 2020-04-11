@@ -56,7 +56,7 @@ class RegenerateHtmlHandler : RequestHandler<S3Event,String>{
         try {
           s3Client.putObject(srcBucket,it, files[it])
         } catch (e: AmazonServiceException) {
-          err.println(e.errorMessage)
+          err.println("We have an error writing to  $srcBucket/${it} with html ${files[it]} error is:  ${e.errorMessage}")
         }
       }
 
