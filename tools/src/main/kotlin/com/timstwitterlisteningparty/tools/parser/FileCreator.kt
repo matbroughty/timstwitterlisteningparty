@@ -126,6 +126,17 @@ class FileCreator {
 
     // add each row
     rows?.forEach { htmlTable = htmlTable.plus(it.buildHtmlRow()) }
+    // the script for the search needs to be in the snippet
+    if(all){
+      htmlTable = htmlTable.plus("<script>\n" +
+        "    \$(document).ready(function() {\n" +
+        "      \$('#time-slots').DataTable({\n" +
+        "        \"paging\": false\n" +
+        "      });\n" +
+        "    });\n" +
+        "\n" +
+        "</script>")
+    }
     // close table and divs
     return htmlTable.plus("\n                </tbody>\n" +
       "              </table>\n   </div></div></div>\n")
