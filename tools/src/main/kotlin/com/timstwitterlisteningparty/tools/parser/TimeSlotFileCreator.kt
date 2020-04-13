@@ -17,7 +17,7 @@ import java.util.stream.Collectors
 import kotlin.collections.HashMap
 
 @Component
-class FileCreator {
+class TimeSlotFileCreator {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 

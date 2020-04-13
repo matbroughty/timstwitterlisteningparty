@@ -3,7 +3,7 @@ package com.timstwitterlisteningparty.tools.lambda
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.GetObjectRequest
-import com.timstwitterlisteningparty.tools.parser.FileCreator
+import com.timstwitterlisteningparty.tools.parser.TimeSlotFileCreator
 import java.io.InputStream
 import java.time.LocalDateTime
 
@@ -16,7 +16,7 @@ class S3HtmlGenerator {
     val s3Object = s3Client.getObject(GetObjectRequest(bucketName, srcKey))
     println("Object for $srcKey from bucket $bucketName is $s3Object")
     val objectData: InputStream = s3Object.objectContent
-    val files = FileCreator().createFiles(inputStream = objectData, writeToFile = false)
+    val files = TimeSlotFileCreator().createFiles(inputStream = objectData, writeToFile = false)
 
     files.keys.forEach{
       println("Writing to: $bucketName/${it} with html ${files[it]}")

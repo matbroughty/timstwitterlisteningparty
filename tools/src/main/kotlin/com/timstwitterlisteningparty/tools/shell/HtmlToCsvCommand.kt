@@ -25,9 +25,9 @@ class HtmlToCsvCommand {
 
   fun createFile() : Boolean{
 
-    val timeSlots = timeSlotList("https://timstwitterlisteningparty.com/time-slots.html")
-    val completedTimeSlots = (timeSlotList("https://timstwitterlisteningparty.com/completed-time-slots.html"))
-    val tbcTimeSlots = (timeSlotList("https://timstwitterlisteningparty.com/date-tbd-time-slots.html"))
+    val timeSlots = timeSlotList("https://timstwitterlisteningparty.com/snippets/time-slots.html")
+    val completedTimeSlots = (timeSlotList("https://timstwitterlisteningparty.com/snippets/completed-time-slots.html"))
+    val tbcTimeSlots = (timeSlotList("https://timstwitterlisteningparty.com/snippets/date-tbd-time-slots.html"))
 
     val fileWriter = FileWriter("generated-time-slot-data.csv")
     val sbc = StatefulBeanToCsvBuilder<TimeSlot>(fileWriter)

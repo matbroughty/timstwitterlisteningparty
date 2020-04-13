@@ -24,7 +24,7 @@ data class TimeSlot(val dateStr: String = "?",
                     @CsvBindByPosition(position = 2)
                     val album: String = "",
                     @CsvBindByPosition(position = 3)
-                    val link: String = "") {
+                    val link: String = "") : HtmlRow {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -65,7 +65,7 @@ data class TimeSlot(val dateStr: String = "?",
   /**
    * When converting back to an html row this will do the biz
    */
-  fun buildHtmlRow(): String {
+  override fun buildHtmlRow(): String {
 
     /**
      * Styling for normal link button, or active if today
