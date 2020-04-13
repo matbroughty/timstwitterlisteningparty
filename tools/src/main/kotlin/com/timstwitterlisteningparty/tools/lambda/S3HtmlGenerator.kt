@@ -26,7 +26,7 @@ class S3HtmlGenerator {
         System.err.println("We have an error writing to  $bucketName/${it} with html ${files[it]} error is:  ${e.errorMessage}")
       }
     }
-    val message = "S3 S3HtmlGenerator - Successfully updated $bucketName using $srcKey and uploaded to $bucketName with  $files.map {it.key }}"
+    val message = "S3 S3HtmlGenerator - Successfully updated $bucketName using $srcKey and uploaded to $bucketName with  ${files.map {it.key }}"
     println(message)
     return "Ok: + $message Generated time is :${LocalDateTime.now()} "
   }
