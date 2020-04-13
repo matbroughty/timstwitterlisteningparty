@@ -5,7 +5,7 @@
 ## timstwitterlisteningparty tools
 
 A [spring boot shell](https://projects.spring.io/spring-shell/) client written in Kotlin to generate the [timstwitterlisteningparty.com](https://timstwitterlisteningparty.com) site from
-a csv file...for now
+csv file(s)...for now
 
 ## Tasks
 

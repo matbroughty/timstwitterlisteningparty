@@ -26,7 +26,7 @@ as the [pure] library not really updated anymore
 
 ## Data
 
-The website data is driven by a simple csv file - which can be found [here](time-slot-data.csv) and is in the form:
+The time slot website data is driven by a simple csv file - which can be found [here](time-slot-data.csv) and is in the form:
 
 |ISO Date Time   |Band                              |Album                          |Twitter Link                                               |
 |----------------|----------------------------------|-------------------------------|-----------------------------------------------------------|
@@ -43,15 +43,30 @@ The website data is driven by a simple csv file - which can be found [here](time
 |2020-04-12T21:00|Pulp                              |Different Class                |https://twitter.com/Tim_Burgess/status/1246506666901807106 |
 |2020-04-12T22:00|New Order                         |Power Corruption & Lies        |https://twitter.com/Tim_Burgess/status/1244623119295352839 |
 
+The record shop website data controlled another simple csv file - which can be found [here](record-store-data.csv) and is in the form:
+
+|NAME            |ADDRESS                                                         |WEBSITE                                              |TWITTER                             |
+|----------------|----------------------------------------------------------------|-----------------------------------------------------|------------------------------------|
+|Creekside Vinyl |3 Market Street,Faversham, Kent ME13 7AH                        |https://creeksidevinyl.co.uk/                        |https://twitter.com/Creeksidevinyl  |
+|Cliffs Margate  |172 Northdown Road Margate, England, CT9 2QN United Kingdom     |http://www.cliffsmargate.com                         |https://twitter.com/cliffsmargate   |
+|Ben Oneill      |64 O'Connell Street, Dungarvan, Co. Waterford, Ireland, X35 HF54|http://www.benoneilldungarvan.com/                   | https://twitter.com/BenONeillRecord|
+|Freebird Records|15a Wicklow Street Dublin                                       | https://freebirdrecords.com/                        |https://twitter.com/FreebirdRecords |
+|Bella Union     |Online BN1 1AJ Brighton                                         |https://bellaunion.ochre.store/bella-union-vinyl-shop|https://twitter.com/VinylBella      |
+|Spiller Records |27 The Morgan Arcade, CARDIFF CF10 1AF                          | http://spillersrecords.com/                         |https://twitter.com/spillersrecords |
+
+This is also used to drive the [google map](https://drive.google.com/open?id=1XhFWnejDpNMuz2qG6iIOt5WIAdcEXFjX&usp=sharing)
+
 
 ## Tools
 
 TODO - explain the spring boot shell tool in the tools folder.  Basically takes the [csv data](time-slot-data.csv)
 and generates the [upcoming-time-slots.html](snippets/upcoming-time-slots.html), [date-tbd-time-slots.html](snippets/date-tbd-time-slots.html) [all-time-slots.html](snippets/all-time-slots.html)
-and the [completed-time-slots.html](snippets/completed-time-slots.html) from it.
+and the [completed-time-slots.html](snippets/completed-time-slots.html) from it as well as the [record store](snippets/record-stores.html)
+
+
 
 A Lambda also exists that can be added to aws and triggered when the S3 bucket PUT's the time-slot-data.csv into it and writes
-the files above back to the bucket.
+the files above back to the bucket (including the record stores which are derived from the record-store-data.csv)
 
 ## Tasks
 
@@ -67,5 +82,5 @@ the files above back to the bucket.
 - [x] Add TBC Page
 - [x] Sort archive page latest to oldest
 - [x] Add lambda to auto create html snippets from csv in github
-- [ ] Update lambda to invalidate the Cloud Front cache after writing the html to the s3 buckets
+- [x] Update lambda to invalidate the Cloud Front cache after writing the html to the s3 buckets
 
