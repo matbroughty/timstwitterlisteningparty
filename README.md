@@ -21,8 +21,8 @@ Layout examples using [Pure CSS][pure] compiled from the [pure-site][] project.
 [pure]: http://purecss.io/
 [pure-site]: https://github.com/pure-css/pure-site
 
-Chucked in some bootstrap as well for the cards
-
+Chucked in some bootstrap as well for the cards - and a [new design is probably on its way using all bootstrap](http://test.timstwitterlisteningparty.com)
+as the [pure] library not really updated anymore
 
 ## Data
 
@@ -47,8 +47,11 @@ The website data is driven by a simple csv file - which can be found [here](time
 ## Tools
 
 TODO - explain the spring boot shell tool in the tools folder.  Basically takes the [csv data](time-slot-data.csv)
-and generates the [upcoming-time-slots.html](upcoming-time-slots.html), [date-tbd-time-slots.html](date-tbd-time-slots.html)
-and the [completed-time-slots.html](completed-time-slots.html) from it
+and generates the [upcoming-time-slots.html](upcoming-time-slots.html), [date-tbd-time-slots.html](date-tbd-time-slots.html) [all-time-slots.html](all-time-slots.html)
+and the [completed-time-slots.html](completed-time-slots.html) from it.
+
+A Lambda also exists that can be added to aws and triggered when the S3 bucket PUT's the time-slot-data.csv into it and writes
+the files above back to the bucket.
 
 ## Tasks
 
@@ -63,13 +66,6 @@ and the [completed-time-slots.html](completed-time-slots.html) from it
 - [ ] Add command to call aws
 - [x] Add TBC Page
 - [x] Sort archive page latest to oldest
-- [ ] Add lambda to auto create html snippets from csv in github
+- [x] Add lambda to auto create html snippets from csv in github
+- [ ] Update lambda to invalidate the Cloud Front cache after writing the html to the s3 buckets
 
-
-License
--------
-
-This software is free to use under the zLib license.
-See the [zLib][] license for more information.
-
-[zLib]: http://www.zlib.net/zlib_license.html

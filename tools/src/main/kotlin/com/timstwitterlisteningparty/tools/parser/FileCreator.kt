@@ -106,12 +106,13 @@ class FileCreator {
     if (completed) {
       icon = "<i class=\"fas fa-calendar-check\"></i>"
     }
+    val tableId = if(all) "id=\"time-slots\"" else ""
     var htmlTable =
       "  <div class=\"card bg-light mb-2 border-dark \" style=\"max-width\">\n" +
         "    <div class=\"card-header\">$icon $h2Value</div>\n" +
         "    <div class=\"card-body p-0\">" +
         "            <div class=\"scroll-table\">\n" +
-        "              <table id=\"time-slots\" width=\"100%\" class=\"pure-table\">\n" +
+        "              <table $tableId width=\"100%\" class=\"pure-table\">\n" +
         "                <thead>\n" +
         "                <tr>\n" +
         "                  <th width=\"15%\">Day</th>\n" +
@@ -125,6 +126,17 @@ class FileCreator {
 
     // add each row
     rows?.forEach { htmlTable = htmlTable.plus(it.buildHtmlRow()) }
+    // the script for the search needs to be in the snippet
+    if(all){
+      htmlTable = htmlTable.plus("<script>\n" +
+        "    \$(document).ready(function() {\n" +
+        "      \$('#time-slots').DataTable({\n" +
+        "        \"paging\": false\n" +
+        "      });\n" +
+        "    });\n" +
+        "\n" +
+        "</script>")
+    }
     // close table and divs
     return htmlTable.plus("\n                </tbody>\n" +
       "              </table>\n   </div></div></div>\n")
