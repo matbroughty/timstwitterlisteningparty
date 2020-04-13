@@ -43,7 +43,11 @@ class S3HtmlGenerator {
       System.err.println("We have an error writing snippets/record-stores.html to $bucketName with html $fileStr error is:  ${e.errorMessage}")
     }
 
-    return "Ok: + $timeSlotsMsg Generated time is :${LocalDateTime.now()} "
+    val recordSlotsMsg = "S3 S3HtmlGenerator RecordShops - Successfully updated $bucketName using $srcKeyRecordStores and uploaded to $bucketName with object snippets/record-stores.html}"
+    println(timeSlotsMsg)
+
+
+    return "Ok: timeSlots **** + $timeSlotsMsg recordStores **** $recordSlotsMsg : Generated time is :${LocalDateTime.now()} "
   }
 
 
