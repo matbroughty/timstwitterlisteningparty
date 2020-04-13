@@ -47,8 +47,8 @@ The website data is driven by a simple csv file - which can be found [here](time
 ## Tools
 
 TODO - explain the spring boot shell tool in the tools folder.  Basically takes the [csv data](time-slot-data.csv)
-and generates the [upcoming-time-slots.html](upcoming-time-slots.html), [date-tbd-time-slots.html](date-tbd-time-slots.html) [all-time-slots.html](all-time-slots.html)
-and the [completed-time-slots.html](completed-time-slots.html) from it.
+and generates the [upcoming-time-slots.html](snippets/upcoming-time-slots.html), [date-tbd-time-slots.html](snippets/date-tbd-time-slots.html) [all-time-slots.html](snippets/all-time-slots.html)
+and the [completed-time-slots.html](snippets/completed-time-slots.html) from it.
 
 A Lambda also exists that can be added to aws and triggered when the S3 bucket PUT's the time-slot-data.csv into it and writes
 the files above back to the bucket.

@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.GetObjectRequest
 import com.timstwitterlisteningparty.tools.parser.FileCreator
 import java.io.InputStream
+import java.time.LocalDateTime
 
 class S3HtmlGenerator {
 
@@ -25,8 +26,9 @@ class S3HtmlGenerator {
         System.err.println("We have an error writing to  $bucketName/${it} with html ${files[it]} error is:  ${e.errorMessage}")
       }
     }
-    println("Successfully updated $bucketName using $srcKey and uploaded to $bucketName with  $files.map {it.key }}")
-    return "Ok"
+    val message = "S3 S3HtmlGenerator - Successfully updated $bucketName using $srcKey and uploaded to $bucketName with  $files.map {it.key }}"
+    println(message)
+    return "Ok: + $message Generated time is :${LocalDateTime.now()} "
   }
 
 

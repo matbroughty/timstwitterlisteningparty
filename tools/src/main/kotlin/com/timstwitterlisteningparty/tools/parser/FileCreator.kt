@@ -22,7 +22,7 @@ class FileCreator {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   fun createFiles(fileName: String = "time-slot-data.csv", inputStream: InputStream? = null, writeToFile : Boolean = true): Map<String, String> {
-    var csvToBeanBuilder: CsvToBeanBuilder<TimeSlot> =
+    val csvToBeanBuilder: CsvToBeanBuilder<TimeSlot> =
       if (inputStream != null) CsvToBeanBuilder<TimeSlot>(InputStreamReader(inputStream)) else {
           CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
       }
@@ -40,13 +40,13 @@ class FileCreator {
     completed.forEach { logger.info("Completed listening {}", it) }
     upcoming.forEach { logger.info("Upcoming listening {}", it) }
     val upcomingHtml = buildTable(upcoming, false, tbd = false)
-    val upcomingFile = File("upcoming-time-slots.html")
+    val upcomingFile = File("snippets/upcoming-time-slots.html")
     val dateTbdHtml = buildTable(tbd, false, tbd = true)
-    val dateTbdFile = File("date-tbd-time-slots.html")
+    val dateTbdFile = File("snippets/date-tbd-time-slots.html")
     val completedHtml = buildTable(completed, true, tbd = false)
-    val completedFile = File("completed-time-slots.html")
+    val completedFile = File("snippets/completed-time-slots.html")
     val allOneTableHtml = buildTable(beans, completed = true, tbd= true, all = true)
-    val allOneTableFile = File("all-time-slots.html")
+    val allOneTableFile = File("snippets/all-time-slots.html")
     // if called from Lambda we can't write to the file
     if(writeToFile) {
       completedFile.writeText(completedHtml)
@@ -57,10 +57,10 @@ class FileCreator {
     logger.info("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}", upcomingHtml, dateTbdHtml, completedHtml, allOneTableHtml)
 
     return mapOf(
-      Pair(upcomingFile.name,upcomingHtml),
-      Pair(dateTbdFile.name,dateTbdHtml),
-      Pair(completedFile.name,completedHtml),
-      Pair(allOneTableFile.name,allOneTableHtml))
+      Pair("snippets/${upcomingFile.name}",upcomingHtml),
+      Pair("snippets/${dateTbdFile.name}",dateTbdHtml),
+      Pair("snippets/${completedFile.name}",completedHtml),
+      Pair("snippets/${allOneTableFile.name}",allOneTableHtml))
   }
 
   private fun buildTable(slots: List<TimeSlot>, completed: Boolean, tbd: Boolean, all: Boolean = false): String {
@@ -160,6 +160,5 @@ class FileCreator {
     // else must be the weeks before
     return false
   }
-
 
 }
