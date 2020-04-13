@@ -11,7 +11,7 @@ class RecordStoreCsvToHtmlCommand(val fileCreator: RecordStoreFileCreator) {
 
   @ShellMethod("Produces the record-stores.html")
   fun storeshtml(): String {
-    return "The html file was created ${fileCreator.createFiles()}"
+    return "The html file was created ${fileCreator.createFiles(fileName = "record-store-data.csv")}"
   }
 }
 

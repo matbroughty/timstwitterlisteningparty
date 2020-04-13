@@ -5,33 +5,35 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.io.File
 import java.io.FileReader
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
-import java.time.temporal.WeekFields
-import java.util.*
-import java.util.stream.Collectors
-import kotlin.collections.HashMap
+import java.io.InputStream
+import java.io.InputStreamReader
 
 @Component
-class RecordStoreFileCreator {
+class RecordStoreFileCreator : HtmlFileCreator{
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  fun createFiles(fileName: String = "record-store-data.csv"): String {
-    val csvToBeanBuilder: CsvToBeanBuilder<RecordStore> = CsvToBeanBuilder<RecordStore>(FileReader(fileName))
+  override fun createFiles(fileName: String, inputStream: InputStream?, writeToFile: Boolean): String {
+
+    val csvToBeanBuilder: CsvToBeanBuilder<RecordStore> =
+      if (inputStream != null) CsvToBeanBuilder<RecordStore>(InputStreamReader(inputStream)) else {
+        CsvToBeanBuilder<RecordStore>(FileReader(fileName))
+      }
+
     val beans: List<RecordStore> = csvToBeanBuilder.withType(RecordStore::class.java).withSkipLines(1).withIgnoreEmptyLine(true).build().parse()
     beans.forEach { logger.info("Read in Bean {}", it) }
     val storeHtml = buildTable(beans)
-    logger.info("Store html {}",storeHtml)
-    File("snippets/record-stores.html").writeText(storeHtml)
+    logger.info("Store html {}", storeHtml)
+    val file = File("snippets/record-stores.html")
+    if (writeToFile) {
+      file.writeText(storeHtml)
+    }
     return storeHtml
   }
 
   private fun buildTable(slots: List<RecordStore>): String {
     var section = "<section class=\"post\">\n"
-    val sortedStores = slots.sortedBy { it.name}
+    val sortedStores = slots.sortedBy { it.name }
     logger.debug("Sorted stores for {}", sortedStores)
     section = section.plus(pureTable(sortedStores))
     return section.plus("\n</section>")
@@ -40,7 +42,7 @@ class RecordStoreFileCreator {
 
   private fun pureTable(rows: List<RecordStore>?): String {
 
-    var h2Value =  "Record Stores - Mail Order.  See Map below"
+    var h2Value = "Independent Record Shops - Mail Order.  See Map below"
 
     var icon = "<i class=\"fas fa-record-vinyl\"></i>"
 
@@ -63,14 +65,14 @@ class RecordStoreFileCreator {
 
     // add each row
     rows?.forEach { htmlTable = htmlTable.plus(it.buildHtmlRow()) }
-      htmlTable = htmlTable.plus("<script>\n" +
-        "    \$(document).ready(function() {\n" +
-        "      \$('#record-stores').DataTable({\n" +
-        "        \"paging\": false\n" +
-        "      });\n" +
-        "    });\n" +
-        "\n" +
-        "</script>")
+    htmlTable = htmlTable.plus("<script>\n" +
+      "    \$(document).ready(function() {\n" +
+      "      \$('#record-stores').DataTable({\n" +
+      "        \"paging\": false\n" +
+      "      });\n" +
+      "    });\n" +
+      "\n" +
+      "</script>")
     // close table and divs
     return htmlTable.plus("\n                </tbody>\n" +
       "              </table>\n   </div></div></div>\n")

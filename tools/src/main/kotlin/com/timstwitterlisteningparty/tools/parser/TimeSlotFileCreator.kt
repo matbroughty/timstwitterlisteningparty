@@ -17,11 +17,11 @@ import java.util.stream.Collectors
 import kotlin.collections.HashMap
 
 @Component
-class TimeSlotFileCreator {
+class TimeSlotFileCreator :HtmlFileCreator {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  fun createFiles(fileName: String = "time-slot-data.csv", inputStream: InputStream? = null, writeToFile : Boolean = true): Map<String, String> {
+  override fun createFiles(fileName: String, inputStream: InputStream?, writeToFile : Boolean): Map<String, String> {
     val csvToBeanBuilder: CsvToBeanBuilder<TimeSlot> =
       if (inputStream != null) CsvToBeanBuilder<TimeSlot>(InputStreamReader(inputStream)) else {
           CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
