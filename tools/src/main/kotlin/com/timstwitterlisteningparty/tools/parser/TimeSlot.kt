@@ -42,7 +42,7 @@ data class TimeSlot(val dateStr: String = "?",
    * If from html then we need to turn something like Tuesday, April 7 	9:pm into
    * a LocalDateTime
    * @param dateStr in form EEEE, MMMM d
-   * @param timeStrin form 9:pm
+   * @param timeStr form 9:pm
    */
   private fun buildDate(dateStr: String, timeStr: String): LocalDateTime {
     logger.info("Parsing date {} and time {} for band {} and album", dateStr, timeStr, band, album)
@@ -82,7 +82,7 @@ data class TimeSlot(val dateStr: String = "?",
       }
       // date and time strings displayed in the html
       engTime = isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
-      hours = isoDate.format(DateTimeFormatter.ofPattern("h:a"))
+      hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm a"))
     }
 
     /**
