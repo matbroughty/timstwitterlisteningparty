@@ -40,5 +40,4 @@ data class RecordStore(@CsvBindByPosition(position = 0)val name: String = "",
 
   }
 
-
 }
