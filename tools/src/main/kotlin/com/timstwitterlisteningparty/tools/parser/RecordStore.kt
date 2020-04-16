@@ -30,7 +30,7 @@ data class RecordStore(@CsvBindByPosition(position = 0)val name: String = "",
      */
     return  "                <tr>\n" +
       "                  <td>$name</td>\n" +
-      "                  <td style=\"text-align:right\">$address</td>\n" +
+      "                  <td>$address</td>\n" +
       "                  <td><a $webSiteButton \n" +
       "                                     href=\"$webSite\"><i class=\"fas fa-laptop\"></i></a></td>\n" +
       "                  <td><a $twitterButton \n" +
