@@ -58,8 +58,7 @@ class BookReviewFileCreator : HtmlFileCreator {
         "                  <th width=\"15%\">Author</th>\n" +
         "                  <th width=\"15%\">Title</th>\n" +
         "                  <th width=\"60%\">Description</th>\n" +
-        "                  <th width=\"5%\">Review</th>\n" +
-        "                  <th width=\"5%\">Buy Here</th>\n" +
+        "                  <th width=\"10%\">Buy Here</th>\n" +
         "                </tr>\n" +
         "                </thead>\n" +
         "                <tbody>"

@@ -28,10 +28,7 @@ data class BookReview(@CsvBindByPosition(position = 0) val author: String = "",
     return "                <tr>\n" +
       "                  <td>$author</td>\n" +
       "                  <td>$title</td>\n" +
-      "                  <td>$description</td>\n" +
-      "                  <td><a $twitterButton \n" +
-      "                                     href=\"$reviewerTwitter\"><i\n" +
-      "                    class=\"fab fa-twitter-square\"> $reviewerInitials</i></a></td>\n" +
+      "                  <td>$description <a $twitterButton href=\"$reviewerTwitter\"><i\n class=\"fab fa-twitter-square\"> $reviewerInitials</i></a></td>" +
       "                  <td><a $webSiteButton \n" +
       "                                     href=\"${StringUtils.trimToEmpty(bookStoreWebsite)}\"><i class=\"fas fa-shopping-cart\"></i></a></td>\n" +
       "                </tr>"
