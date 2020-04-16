@@ -33,7 +33,7 @@ data class BookReview(@CsvBindByPosition(position = 0) val author: String = "",
       "                                     href=\"$reviewerTwitter\"><i\n" +
       "                    class=\"fab fa-twitter-square\"> $reviewerInitials</i></a></td>\n" +
       "                  <td><a $webSiteButton \n" +
-      "                                     href=\"${StringUtils.trimToEmpty(bookStoreWebsite)}\"><i class=\"fas fa-link\"></i> ${StringUtils.trimToEmpty(bookStoreWebsite)}</a></td>\n" +
+      "                                     href=\"${StringUtils.trimToEmpty(bookStoreWebsite)}\"><i class=\"fas fa-shopping-cart\"></i></a></td>\n" +
       "                </tr>"
   }
 }
