@@ -6,7 +6,7 @@ import org.springframework.shell.standard.ShellMethod
 
 
 @ShellComponent
-class BooksCsvToHtmlCommand(val fileCreator: BookReviewFileCreator) {
+class BookReviewsCsvToHtmlCommand(val fileCreator: BookReviewFileCreator) {
 
   @ShellMethod("Produces the snippets/book-reviews-shops.html from the book-review-data.csv")
   fun bookshtml(): String {

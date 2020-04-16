@@ -3,6 +3,7 @@ package com.timstwitterlisteningparty.tools.lambda
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.GetObjectRequest
+import com.timstwitterlisteningparty.tools.parser.BookStoreFileCreator
 import com.timstwitterlisteningparty.tools.parser.RecordStoreFileCreator
 import com.timstwitterlisteningparty.tools.parser.TimeSlotFileCreator
 import java.io.InputStream
@@ -10,7 +11,8 @@ import java.time.LocalDateTime
 
 class S3HtmlGenerator {
 
-  fun generate(bucketName: String = "timstwitterlisteningparty.com", srcKeyTimeSlots: String = "time-slot-data.csv", srcKeyRecordStores: String = "record-store-data.csv") : String{
+  fun generate(bucketName: String = "timstwitterlisteningparty.com", srcKeyTimeSlots: String = "time-slot-data.csv",
+               srcKeyRecordStores: String = "record-store-data.csv", srcKeyBookStores: String = "book-shops-data.csv") : String{
     print("bucket = $bucketName and file = $srcKeyTimeSlots")
     val s3Client = AmazonS3ClientBuilder.defaultClient()
     println("Getting $srcKeyTimeSlots from bucket $bucketName")
@@ -35,7 +37,7 @@ class S3HtmlGenerator {
     s3Object = s3Client.getObject(GetObjectRequest(bucketName, srcKeyRecordStores))
     println("Object for $srcKeyRecordStores from bucket $bucketName is $s3Object")
     objectData = s3Object.objectContent
-    val fileStr = RecordStoreFileCreator().createFiles(fileName = srcKeyRecordStores, inputStream = objectData, writeToFile = false)
+    var fileStr = RecordStoreFileCreator().createFiles(fileName = srcKeyRecordStores, inputStream = objectData, writeToFile = false)
     println("Writing to: $bucketName with html $fileStr")
     try {
       s3Client.putObject(bucketName,"snippets/record-stores.html", fileStr)
@@ -47,7 +49,22 @@ class S3HtmlGenerator {
     println(timeSlotsMsg)
 
 
-    return "Ok: timeSlots **** + $timeSlotsMsg recordStores **** $recordSlotsMsg : Generated time is :${LocalDateTime.now()} "
+    println("Getting $srcKeyBookStores from bucket $bucketName")
+    s3Object = s3Client.getObject(GetObjectRequest(bucketName, srcKeyBookStores))
+    println("Object for $srcKeyBookStores from bucket $bucketName is $s3Object")
+    objectData = s3Object.objectContent
+    fileStr = BookStoreFileCreator().createFiles(fileName = srcKeyBookStores, inputStream = objectData, writeToFile = false)
+    println("Writing to: $bucketName with html $fileStr")
+    try {
+      s3Client.putObject(bucketName,"snippets/book-stores.html", fileStr)
+    } catch (e: AmazonServiceException) {
+      System.err.println("We have an error writing snippets/book-stores.html to $bucketName with html $fileStr error is:  ${e.errorMessage}")
+    }
+
+    val bookSlotsMsg = "S3 S3HtmlGenerator BookShops - Successfully updated $bucketName using $srcKeyBookStores and uploaded to $bucketName with object snippets/book-stores.html }"
+    println(bookSlotsMsg)
+
+    return "Ok: timeSlots **** + $timeSlotsMsg recordStores **** $recordSlotsMsg bookStores **** $bookSlotsMsg: Generated time is :${LocalDateTime.now()} "
   }
 
 

@@ -32,50 +32,46 @@ class BookReviewFileCreator : HtmlFileCreator {
   }
 
   private fun buildTable(slots: List<BookReview>): String {
-    var section = "<section class=\"post\">\n"
-    //val sortedStores = slots.sortedBy { it.title }
+    var section = "<div class=\"container-fluid\">\n"
     logger.debug("Stores for {}", slots)
     section = section.plus(pureTable(slots))
-    return section.plus("\n</section>")
+    return section.plus("\n</div>")
+  }
+
+  private fun pureTable(rows: List<BookReview>): String {
+    return rows.map{ it.buildHtmlRow() }.joinToString ( separator = "" )
+
   }
 
 
-  private fun pureTable(rows: List<BookReview>?): String {
-
-    var h2Value = "Book Reviews & Shops"
-
-    var icon = "<i class=\"fas fa-book-open\"></i>"
-
-    val tableId = "id=\"book-reviews\""
-    var htmlTable =
-      "  <div class=\"card bg-light mb-2 border-dark \" style=\"max-width\">\n" +
-        "    <div class=\"card-header\">$icon $h2Value</div>\n" +
-        "    <div class=\"card-body p-0\">" +
-        "            <div class=\"scroll-table\">\n" +
-        "              <table $tableId width=\"100%\" class=\"pure-table\">\n" +
-        "                <thead>\n" +
-        "                <tr>\n" +
-        "                  <th width=\"15%\">Author</th>\n" +
-        "                  <th width=\"15%\">Title</th>\n" +
-        "                  <th width=\"60%\">Description</th>\n" +
-        "                  <th width=\"10%\">Buy Here</th>\n" +
-        "                </tr>\n" +
-        "                </thead>\n" +
-        "                <tbody>"
-
-    // add each row
-    rows?.forEach { htmlTable = htmlTable.plus(it.buildHtmlRow()) }
-//    htmlTable = htmlTable.plus("<script>\n" +
-//      "    \$(document).ready(function() {\n" +
-//      "      \$('#book-reviews').DataTable({\n" +
-//      "        \"paging\": false\n" +
-//      "      });\n" +
-//      "    });\n" +
-//      "\n" +
-//      "</script>")
-    // close table and divs
-    return htmlTable.plus("\n                </tbody>\n" +
-      "              </table>\n   </div></div></div>\n")
-  }
+//  private fun pureTable(rows: List<BookReview>?): String {
+//
+//    var h2Value = "Book Reviews & Shops"
+//
+//    var icon = "<i class=\"fas fa-book-open\"></i>"
+//
+//    val tableId = "id=\"book-reviews\""
+//    var htmlTable =
+//      "  <div class=\"card bg-light mb-2 border-dark \" style=\"max-width\">\n" +
+//        "    <div class=\"card-header\">$icon $h2Value</div>\n" +
+//        "    <div class=\"card-body p-0\">" +
+//        "            <div class=\"scroll-table\">\n" +
+//        "              <table $tableId width=\"100%\" class=\"pure-table\">\n" +
+//        "                <thead>\n" +
+//        "                <tr>\n" +
+//        "                  <th width=\"15%\">Author</th>\n" +
+//        "                  <th width=\"15%\">Title</th>\n" +
+//        "                  <th width=\"60%\">Description</th>\n" +
+//        "                  <th width=\"10%\">Buy Here</th>\n" +
+//        "                </tr>\n" +
+//        "                </thead>\n" +
+//        "                <tbody>"
+//
+//    // add each row
+//    rows?.forEach { htmlTable = htmlTable.plus(it.buildHtmlRow()) }
+//    // close table and divs
+//    return htmlTable.plus("\n                </tbody>\n" +
+//      "              </table>\n   </div></div></div>\n")
+//  }
 
 }
