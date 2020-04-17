@@ -1,7 +1,3 @@
-![header](img/record-transparent.png)
-
-###### [Image By Dave Atkinson](https://twitter.com/chipiedavea)
-
 [![Build Status](https://travis-ci.com/matbroughty/timstwitterlisteningparty.svg?branch=master)](https://travis-ci.com/matbroughty/timstwitterlisteningparty)
 
 ## timstwitterlisteningparty
