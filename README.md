@@ -52,6 +52,9 @@ The record shop website data controlled another simple csv file - which can be f
 
 This is also used to drive the [google map](https://drive.google.com/open?id=1XhFWnejDpNMuz2qG6iIOt5WIAdcEXFjX&usp=sharing)
 
+## Replay
+
+The [replay code](https://github.com/ajbrindle/listeningpartyreplay) is provided by [@andrewb1970](https://twitter.com/andrewb1970)
 
 ## Tools
 
@@ -68,10 +71,9 @@ the files above back to the bucket (including the record stores which are derive
 
 - [x] Drive tabular data from file
 - [ ] Document shell tool, write tests and link to [codefactor](https://www.codefactor.io)
-- [ ] Generate empty_slots.html
 - [x] Break up generation of html into upcoming, date tbc and archived
 - [x] Add new archive page
-- [ ] Investigate twitter api for listening period date range for archive page
+- [x] Investigate twitter api for listening period date range for archive page
 - [ ] Add shell command to preview index.html
 - [ ] Add shell command to add, commit and push code
 - [ ] Add command to call aws
@@ -79,4 +81,5 @@ the files above back to the bucket (including the record stores which are derive
 - [x] Sort archive page latest to oldest
 - [x] Add lambda to auto create html snippets from csv in github
 - [x] Update lambda to invalidate the Cloud Front cache after writing the html to the s3 buckets
+- [ ] Redesign tables to use cardgroups
 
