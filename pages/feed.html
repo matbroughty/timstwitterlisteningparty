@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Stream or play the album in question and follow me and the relevant twitterer(s) and watch the
+        tweets in real time. Ask questions/ share memories etc using #timstwitterlisteningparty">
+  <title>timstwitterlisteningparty replay</title>
+
+  <script src="https://kit.fontawesome.com/ad4f6abd2a.js" crossorigin="anonymous"></script>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <script defer src="../js/mailtoui-min.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+  <script>
+    $(function(){
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const id = urlParams.get('id');
+      $("#completed").load("../snippets/replay/feed_" + id + "_snippet.html");
+      $(function(){
+        $("#page-bottom").load("../snippets/page-bottom.html");
+      });
+  </script>
+    <script>
+        var timeout;
+        var counter = 0;
+        var startms = (new Date()).getTime();
+        var mssofar = 0;
+        var delaysofar = 0;
+        var timeOfNextTweet = 0;
+
+        // For pausing
+        var paused = false;
+        var pausedTime = 0;
+
+        function playPause() {
+            if (paused) {
+                var now = (new Date()).getTime();
+                paused = false;
+                document.getElementById("playpause").innerHTML = '<img src="../img/pause.png">';
+                document.getElementById("advance").style.display = "block";
+                var offset = now - pausedTime;
+                startms += offset;
+                timeOfNextTweet += offset;
+                timeout = setTimeout("showIt()", timeOfNextTweet - now);
+            } else {
+                paused = true;
+                document.getElementById("playpause").innerHTML = '<img src="../img/play.png">';
+                document.getElementById("advance").style.display = "none";
+                pausedTime = (new Date()).getTime();
+                clearTimeout(timeout);
+            }
+        }
+
+        function advance() {
+            // Wind time on to next tweet
+            clearTimeout(timeout);
+            var now = (new Date()).getTime();
+            var timeSkipped = timeOfNextTweet - now;
+            startms -= timeSkipped;
+            timeOfNextTweet = now;
+            showIt();
+        }
+
+        function showIt() {
+            // Work out how many (unpaused) ms have elapsed since the start
+            mssofar = (new Date()).getTime() - startms;
+            var element = document.getElementById("div" + counter);
+
+            if (counter === 4) {
+                // Hide user panel after 4 updates
+                var usersPanel = document.getElementById("users-panel");
+                $(usersPanel).slideUp("slow");
+                $('html','body').animate({
+                    scrollTop: $('#timer-div').offset().top
+                }, 'slow');
+            }
+
+            if (element !== null) {
+                // Get the delay that was applied before showing this div
+                var delayms = Number(document.getElementById("div" + counter).getAttribute("data-delay"));
+
+                // Loop until all divs that should've been shown by now have been unhidden
+                // This allows the page to catch up if focus has been moved away
+                while (delaysofar + delayms <= mssofar && element !== null) {
+                    // Work out when div should've been shown
+                    var url = document.getElementById("div" + counter).getAttribute("data-url");
+                    delaysofar += delayms;
+
+                    if (url !== null) {
+                        // Fetch embedded tweet using oEmbed API
+                        var originalCounter = counter;
+                        var originalElement = element;
+                        $.ajax({
+                            type: "GET",
+                            url: "https://publish.twitter.com/oembed?url=" + url,
+                            dataType: "jsonp",
+                            success: function (data) {
+                                $("#div" + originalCounter).html(data.html);
+                                $(originalElement).slideDown("slow");
+                            }
+                        });
+                    }
+                    // Find details of next element
+                    counter++;
+                    element = document.getElementById("div" + counter);
+
+                    if (element !== null) {
+                        // Determine delay until next one is shown
+                        delayms = Number(document.getElementById("div" + counter).getAttribute("data-delay"));
+                    } else {
+                        // Finished so hide the timer
+                        var finishedElement = document.getElementById("div" + (counter-1));
+                        $(finishedElement).slideDown("slow");
+                        var timer = document.getElementById("timer-div");
+                        $(timer).slideUp("slow");
+                    }
+                }
+
+                if (element !== null) {
+                    // Work out delay to next div (could already have passed)
+                    mssofar = (new Date()).getTime() - startms;
+                    var delaytonext = delaysofar + delayms - mssofar;
+                    if (delaytonext < 0) {
+                        delaytonext = 1;
+                    }
+                    timeout = setTimeout("showIt()", delaytonext);
+
+                    // Update the count down every 1 second
+                    timeOfNextTweet = (new Date()).getTime() + delaytonext;
+
+                    var x = setInterval(function () {
+                        if (paused) {
+                            document.getElementById("timer").innerHTML = "Paused";
+                        } else {
+                            var interval = timeOfNextTweet - (new Date()).getTime();
+                            var seconds = Math.floor(interval / 1000);
+                            document.getElementById("timer").innerHTML = "Next tweet in " + seconds + " seconds";
+                            if (seconds < 1) {
+                                clearInterval(x);
+                                document.getElementById("timer").innerHTML = "Next tweet coming up...";
+                            }
+                        }
+                    }, 1000);
+                }
+            }
+        }
+        // Initial delay 10ms before showing first tweet
+        timeout = setTimeout("showIt()", 300);
+    </script>
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-"
+        crossorigin="anonymous">
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
+  <!--<![endif]-->
+
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="../css/layouts/blog-old-ie.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="../css/layouts/blog.css">
+  <!--<![endif]-->
+
+  <link rel="apple-touch-icon" sizes="57x57" href="../img/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="../img/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="../img/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="../img/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="../img/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="../img/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../img/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../img/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../img/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon-16x16.png">
+  <link rel="manifest" href="../img/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="../img/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+
+</head>
+<body>
+
+<div id="layout" class="pure-g">
+  <div class="sidebar pure-u-1 pure-u-md-1-3 pure-u-lg-1-4">
+    <div class="header">
+      <h1 class="brand-title">Replay</h1>
+      <h4 class="status">Together Apart</h4>
+      <blockquote class="twitter-tweet tw-align-center"><p lang="en" dir="ltr">A few folks asking how these work.
+        They’re really
+        easy:<br><br>Stream or play the album in question and follow me and the relevant twitterer(s) and watch the
+        tweets in real time. Ask questions/ share memories etc using <a
+          href="https://twitter.com/hashtag/timstwitterlisteningparty?src=hash&amp;ref_src=twsrc%5Etfw">#timstwitterlisteningparty</a>.
+        Nowt complicated. That’s it ; )</p>&mdash; Tim Burgess (@Tim_Burgess) <a
+        href="https://twitter.com/Tim_Burgess/status/1243311699941261313?ref_src=twsrc%5Etfw">March 26, 2020</a>
+      </blockquote>
+
+
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="pure-button" href="../index.html"><i class="fas fa-home"></i> Home</a>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="content pure-u-1 pure-u-md-2-3 pure-u-lg-3-4">
+    <div>
+      <!-- A wrapper for all the posts -->
+      <div class="posts">
+        <h1 class="content-subhead">Replay Completed Events</h1>
+        <div id="completed"></div>
+      </div>
+      <div id="page-bottom"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
