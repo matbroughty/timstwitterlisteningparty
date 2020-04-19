@@ -42,6 +42,12 @@ class S3HtmlGenerator {
     val bookSlotsMsg = createHtmlFile(BookStoreFileCreator(), bucketName, s3Client, srcKeyBookStores, "snippets/book-stores.html")
     val bookReviewMsg = createHtmlFile(BookReviewFileCreator(), bucketName, s3Client, srcKeyBookReviews, "snippets/book-reviews-shops.html")
 
+    //finally write an invalidation.txt file to indicate the cloud front edge needs refreshing
+    try {
+      s3Client.putObject(bucketName, "aws/invalidation.txt", "semaphore file to indicate cache needs updating. a trigger will pick up this has been updated.")
+    } catch (e: AmazonServiceException) {
+      System.err.println("We have an error writing to  $bucketName/aws/invalidation.txt (cache refresh may not work) error is:  ${e.errorMessage}")
+    }
     return "Ok: timeSlots **** + $timeSlotsMsg recordStores **** $recordSlotsMsg bookStores **** " +
       "$bookSlotsMsg bookReviews **** $bookReviewMsg : Generated time is :${LocalDateTime.now()} "
   }
