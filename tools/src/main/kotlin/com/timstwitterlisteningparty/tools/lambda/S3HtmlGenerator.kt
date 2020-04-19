@@ -56,12 +56,14 @@ class S3HtmlGenerator {
     //
     val htmlSnippetStr = fileCreator.createFiles(fileName = dataFile, inputStream = objectData, writeToFile = false) as String
     println("Writing to: $bucketName with html $htmlSnippetStr")
+    var msg = "S3 S3HtmlGenerator"
     try {
       s3Client.putObject(bucketName, htmlSnippetName, htmlSnippetStr)
     } catch (e: AmazonServiceException) {
       System.err.println("We have an error writing $dataFile to $bucketName with html $htmlSnippetStr error is:  ${e.errorMessage}")
+      return msg.plus(" FAILED to update $bucketName using $dataFile and uploaded to $bucketName with object $htmlSnippetName}")
     }
-    val msg = "S3 S3HtmlGenerator - Successfully updated $bucketName using $dataFile and uploaded to $bucketName with object $htmlSnippetName}"
+     msg = msg.plus("- Successfully updated $bucketName using $dataFile and uploaded to $bucketName with object $htmlSnippetName}")
     println(msg)
     return msg
   }

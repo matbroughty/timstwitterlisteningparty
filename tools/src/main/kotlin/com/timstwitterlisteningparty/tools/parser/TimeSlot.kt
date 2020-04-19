@@ -72,7 +72,8 @@ data class TimeSlot(val dateStr: String = "?",
      */
     var button = "pure-button-active"
     var hours = "?"
-    var engTime = "?"
+    // english date format - i.e. April 13th
+    var engDate = "?"
 
 
     // active button for today
@@ -81,8 +82,13 @@ data class TimeSlot(val dateStr: String = "?",
         button = "pure-button-primary"
       }
       // date and time strings displayed in the html
-      engTime = isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
-      hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm a"))
+      engDate = isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
+      // if time is 00 but date isn't 1970 then we know the day but not the time so set to TBC
+      if (isoDate.hour != 0) {
+        hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm a"))
+      } else {
+        hours = "TBC"
+      }
     }
 
     /**
@@ -90,7 +96,7 @@ data class TimeSlot(val dateStr: String = "?",
      * @see buildHtmlRow
      */
      return  "                <tr>\n" +
-      "                  <td>$engTime</td>\n" +
+      "                  <td>$engDate</td>\n" +
       "                  <td style=\"text-align:right\">$hours</td>\n" +
       "                  <td>$band</td>\n" +
       "                  <td>$album</td>\n" +
