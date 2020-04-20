@@ -8,7 +8,6 @@
   <title>timstwitterlisteningparty replay</title>
 
   <script src="https://kit.fontawesome.com/ad4f6abd2a.js" crossorigin="anonymous"></script>
-  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   <script defer src="../js/mailtoui-min.js"></script>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -21,40 +20,66 @@
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const id = urlParams.get('id');
-<!--      $("#completed").load("../snippets/replay/feed_" + id + "_snippet.html"); -->
-      $(function(){
+      $("#completed").load("../snippets/replay/feed_" + id + "_snippet.html");
+      // Display first tweet 2 seconds after the page has loaded
+      timeout = setTimeout("showIt()", 2000);
+    });
+    $(function(){
         $("#page-bottom").load("../snippets/page-bottom-without-feed.html");
-      });
-  });
+    });
   </script>
-    <script>
-        var timeout;
-        var counter = 0;
-        var startms = (new Date()).getTime();
-        var mssofar = 0;
-        var delaysofar = 0;
-        var timeOfNextTweet = 0;
+    <script>window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+
+      t._e = [];
+      t.ready = function(f) {
+        t._e.push(f);
+      };
+
+      return t;
+    }(document, "script", "twitter-wjs"));
+    </script>
+      <script>
+        // A few global vars :-)
+        var timeout;                // Reference to the timeout that fires showIt()
+        var counter = 0;            // Counts how many tweet divs have been displayed
+        var startms = (new Date()).getTime();   // Start time of the page (used as reference point)
+        var mssofar = 0;            // How many milliseconds have passed since the start
+        var delaysofar = 0;         // Cumulative delay of each div
+        var timeOfNextTweet = 0;    // Time that next div should be displayed
+        var firstTweetLoaded = false;
 
         // For pausing
-        var paused = false;
-        var pausedTime = 0;
+        var paused = false; // Whether or not feed is paused
+        var pausedTime = 0; // Time that page was paused
+        var pauseText = "Paused";
 
         function playPause() {
-            if (paused) {
-                var now = (new Date()).getTime();
-                paused = false;
-                document.getElementById("playpause").innerHTML = '<img src="../img/pause.png">';
-                document.getElementById("advance").style.display = "block";
-                var offset = now - pausedTime;
-                startms += offset;
-                timeOfNextTweet += offset;
-                timeout = setTimeout("showIt()", timeOfNextTweet - now);
-            } else {
-                paused = true;
-                document.getElementById("playpause").innerHTML = '<img src="../img/play.png">';
-                document.getElementById("advance").style.display = "none";
-                pausedTime = (new Date()).getTime();
-                clearTimeout(timeout);
+            if (firstTweetLoaded) {
+                if (paused) {
+                    var now = (new Date()).getTime();
+                    paused = false;
+                    document.getElementById("playpause").innerHTML = '<img src="../img/pause.png">';
+                    document.getElementById("advance").style.display = "block";
+                    var offset = now - pausedTime;
+                    startms += offset;
+                    timeOfNextTweet += offset;
+                    timeout = setTimeout("showIt()", timeOfNextTweet - now);
+                    document.getElementById("timer").className = "not-blinking";
+                    pauseText = "Paused";
+                } else {
+                    paused = true;
+                    document.getElementById("playpause").innerHTML = '<img src="../img/play.png">';
+                    document.getElementById("advance").style.display = "none";
+                    pausedTime = (new Date()).getTime();
+                    clearTimeout(timeout);
+                }
             }
         }
 
@@ -68,55 +93,63 @@
             showIt();
         }
 
-        function showIt() {
-            // Work out how many (unpaused) ms have elapsed since the start
-            mssofar = (new Date()).getTime() - startms;
-            var element = document.getElementById("div" + counter);
-
-            if (counter === 4) {
+        function hideUserPanel() {
+            if (counter >= 4) {
                 // Hide user panel after 4 updates
                 var usersPanel = document.getElementById("users-panel");
                 $(usersPanel).slideUp("slow");
-                $('html','body').animate({
-                    scrollTop: $('#timer-div').offset().top
-                }, 'slow');
             }
-
+        }
+        
+        function showIt() {
+            // Work out how many (unpaused) ms have elapsed since the start
+            mssofar = (new Date()).getTime() - startms;
+            var element = document.getElementById("tweet-feed-" + counter);
+            hideUserPanel();
+            
             if (element !== null) {
                 // Get the delay that was applied before showing this div
-                var delayms = Number(document.getElementById("div" + counter).getAttribute("data-delay"));
+                var delayms = Number(document.getElementById("tweet-feed-" + counter).getAttribute("data-delay"));
 
                 // Loop until all divs that should've been shown by now have been unhidden
                 // This allows the page to catch up if focus has been moved away
                 while (delaysofar + delayms <= mssofar && element !== null) {
                     // Work out when div should've been shown
-                    var url = document.getElementById("div" + counter).getAttribute("data-url");
+                    var url = document.getElementById("tweet-feed-" + counter).getAttribute("data-url");
                     delaysofar += delayms;
 
+                    // Load the tweet asynchronously
                     if (url !== null) {
-                        // Fetch embedded tweet using oEmbed API
+                        // Store counter and element values so they are still correct after
+                        // the async call has completed
                         var originalCounter = counter;
                         var originalElement = element;
+
+                        // Fetch embedded tweet using oEmbed API
                         $.ajax({
                             type: "GET",
-                            url: "https://publish.twitter.com/oembed?url=" + url,
+                            url: "https://publish.twitter.com/oembed?url=" + url + "&omit_script=true&dnt=true",
                             dataType: "jsonp",
                             success: function (data) {
-                                $("#div" + originalCounter).html(data.html);
+                                $("#tweet-feed-" + originalCounter).html(data.html);
+                                twttr.widgets.load(
+                                    document.getElementById("#tweet-feed-" + originalCounter)
+                                );
                                 $(originalElement).slideDown("slow");
                             }
                         });
                     }
+
                     // Find details of next element
                     counter++;
-                    element = document.getElementById("div" + counter);
+                    element = document.getElementById("tweet-feed-" + counter);
 
                     if (element !== null) {
-                        // Determine delay until next one is shown
-                        delayms = Number(document.getElementById("div" + counter).getAttribute("data-delay"));
+                        // Determine delay until next one is shown relative to the current one
+                        delayms = Number(document.getElementById("tweet-feed-" + counter).getAttribute("data-delay"));
                     } else {
-                        // Finished so hide the timer
-                        var finishedElement = document.getElementById("div" + (counter-1));
+                        // No more tweet divs, so show the finished message and hide the timer
+                        var finishedElement = document.getElementById("tweet-feed-" + (counter-1));
                         $(finishedElement).slideDown("slow");
                         var timer = document.getElementById("timer-div");
                         $(timer).slideUp("slow");
@@ -135,9 +168,19 @@
                     // Update the count down every 1 second
                     timeOfNextTweet = (new Date()).getTime() + delaytonext;
 
+                    // Pause after the first "drop the needle tweet" and display
+                    // specific message to resume when music is playing
+                    if (!firstTweetLoaded) {
+                        firstTweetLoaded = true;
+                        pauseText = "<b>&#8678;</b> Press here to continue when you have started the music ";
+                        playPause();
+                    } else {
+                        document.getElementById("timer").className = "not-blinking";
+                    }
+                    
                     var x = setInterval(function () {
                         if (paused) {
-                            document.getElementById("timer").innerHTML = "Paused";
+                            document.getElementById("timer").innerHTML = pauseText;
                         } else {
                             var interval = timeOfNextTweet - (new Date()).getTime();
                             var seconds = Math.floor(interval / 1000);
@@ -151,10 +194,19 @@
                 }
             }
         }
-        // Initial delay 10ms before showing first tweet
-        timeout = setTimeout("showIt()", 300);
     </script>
-
+    <style type="text/css">
+        .blinking{
+            animation:blinkingText 2.0s infinite;
+        }
+        @keyframes blinkingText{
+            0%{color: #000;}
+            49%{color: transparent;}
+            50%{color: transparent;}
+            69%{color: transparent;}
+            100%{color: #000;}
+        }            
+    </style>
   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-"
         crossorigin="anonymous">
 
@@ -203,6 +255,9 @@
       <ul class="nav-list">
         <li class="nav-item">
           <a class="pure-button" href="../index.html"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="pure-button" href="replay.html"><i class="fas fa-redo"></i> Replay</a>
         </li>
 
       </ul>
