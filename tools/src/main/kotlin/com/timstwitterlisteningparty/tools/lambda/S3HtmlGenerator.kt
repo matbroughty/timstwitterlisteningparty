@@ -45,8 +45,9 @@ class S3HtmlGenerator {
     //finally write an invalidation.txt file to indicate the cloud front edge needs refreshing
     try {
       // wait 5 seconds before writing this so the invalidation trigger doesn't fire too quickly
+      println("pausing for 5 seconds before writing the aws/invalidation.txt")
       Thread.sleep(5000L)
-      s3Client.putObject(bucketName, "aws/invalidation.txt", "semaphore file to indicate cache needs updating. a trigger will pick up this has been updated.")
+      s3Client.putObject(bucketName, "aws/invalidation.txt", "semaphore file to indicate cache needs updating. a trigger will pick up this has been updated. Date:  ${LocalDateTime.now()}")
     } catch (e: AmazonServiceException) {
       System.err.println("We have an error writing to  $bucketName/aws/invalidation.txt (cache refresh may not work) error is:  ${e.errorMessage}")
     }
