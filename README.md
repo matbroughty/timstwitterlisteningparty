@@ -22,7 +22,7 @@ as the [pure] library not really updated anymore
 
 ## Data
 
-The time slot website data is driven by a simple csv file - which can be found [here](time-slot-data.csv) and is in the form:
+The time slot website data is driven by a simple csv file - which can be found [here](data/time-slot-data.csv) and is in the form:
 
 |ISO Date Time   |Band                              |Album                          |Twitter Link                                               |
 |----------------|----------------------------------|-------------------------------|-----------------------------------------------------------|
@@ -39,7 +39,7 @@ The time slot website data is driven by a simple csv file - which can be found [
 |2020-04-12T21:00|Pulp                              |Different Class                |https://twitter.com/Tim_Burgess/status/1246506666901807106 |
 |2020-04-12T22:00|New Order                         |Power Corruption & Lies        |https://twitter.com/Tim_Burgess/status/1244623119295352839 |
 
-The record shop website data controlled another simple csv file - which can be found [here](record-store-data.csv) and is in the form:
+The record shop website data controlled another simple csv file - which can be found [here](data/record-store-data.csv) and is in the form:
 
 |NAME            |ADDRESS                                                         |WEBSITE                                              |TWITTER                             |
 |----------------|----------------------------------------------------------------|-----------------------------------------------------|------------------------------------|
@@ -58,7 +58,7 @@ The [replay code](https://github.com/ajbrindle/listeningpartyreplay) is provided
 
 ## Tools
 
-TODO - explain the spring boot shell tool in the tools folder.  Basically takes the [csv data](time-slot-data.csv)
+TODO - explain the spring boot shell tool in the tools folder.  Basically takes the [csv data](data/time-slot-data.csv)
 and generates the [upcoming-time-slots.html](snippets/upcoming-time-slots.html), [date-tbd-time-slots.html](snippets/date-tbd-time-slots.html) [all-time-slots.html](snippets/all-time-slots.html)
 and the [completed-time-slots.html](snippets/completed-time-slots.html) from it as well as the [record store](snippets/record-stores.html)
 

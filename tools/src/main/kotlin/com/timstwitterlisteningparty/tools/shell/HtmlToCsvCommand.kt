@@ -29,7 +29,7 @@ class HtmlToCsvCommand {
     val completedTimeSlots = (timeSlotList("https://timstwitterlisteningparty.com/snippets/completed-time-slots.html"))
     val tbcTimeSlots = (timeSlotList("https://timstwitterlisteningparty.com/snippets/date-tbd-time-slots.html"))
 
-    val fileWriter = FileWriter("generated-time-slot-data.csv")
+    val fileWriter = FileWriter("data/generated-time-slot-data.csv")
     val sbc = StatefulBeanToCsvBuilder<TimeSlot>(fileWriter)
       .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
       .build()

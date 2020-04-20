@@ -10,7 +10,7 @@ import java.util.regex.Pattern
 
 
 /**
- * Checks to see if the s3 event was for the time-slot-data.csv and if it was
+ * Checks to see if the s3 event was for the data/time-slot-data.csv and if it was
  * then generates the various html files and writes them back to the same s3 bucket
  */
 @Suppress("unused")

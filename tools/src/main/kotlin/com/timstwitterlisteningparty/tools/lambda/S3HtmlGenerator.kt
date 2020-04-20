@@ -11,10 +11,10 @@ import java.time.LocalDateTime
 class S3HtmlGenerator {
 
   fun generate(bucketName: String = "timstwitterlisteningparty.com",
-               srcKeyTimeSlots: String = "time-slot-data.csv",
-               srcKeyRecordStores: String = "record-store-data.csv",
-               srcKeyBookStores: String = "book-shops-data.csv",
-               srcKeyBookReviews: String = "book-review-data.csv"
+               srcKeyTimeSlots: String = "data/time-slot-data.csv",
+               srcKeyRecordStores: String = "data/record-store-data.csv",
+               srcKeyBookStores: String = "data/book-shops-data.csv",
+               srcKeyBookReviews: String = "data/book-review-data.csv"
   ): String {
     print("bucket = $bucketName and file = $srcKeyTimeSlots")
     val s3Client = AmazonS3ClientBuilder.defaultClient() as AmazonS3Client
@@ -44,6 +44,8 @@ class S3HtmlGenerator {
 
     //finally write an invalidation.txt file to indicate the cloud front edge needs refreshing
     try {
+      // wait 5 seconds before writing this so the invalidation trigger doesn't fire too quickly
+      Thread.sleep(5000L)
       s3Client.putObject(bucketName, "aws/invalidation.txt", "semaphore file to indicate cache needs updating. a trigger will pick up this has been updated.")
     } catch (e: AmazonServiceException) {
       System.err.println("We have an error writing to  $bucketName/aws/invalidation.txt (cache refresh may not work) error is:  ${e.errorMessage}")

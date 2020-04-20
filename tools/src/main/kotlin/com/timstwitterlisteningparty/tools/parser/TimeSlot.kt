@@ -11,7 +11,7 @@ import java.time.temporal.ChronoField
 import java.util.*
 
 /**
- * Represent a row in the time-slot-data.csv
+ * Represent a row in the data/time-slot-data.csv
  * Note - also used to parse the existing html in completed-time-slots.html,
  * date-tbd-time-slots.html and upcoming-time-slots.html and these have times as date and time string, hence constructor
  */
