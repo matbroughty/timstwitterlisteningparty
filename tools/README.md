@@ -1,6 +1,5 @@
-![header](../img/record-transparent.png)
+![header](../img/ttlp-small.jpg)
 
-###### [Image By Dave Atkinson](https://twitter.com/chipiedavea)
 
 ## timstwitterlisteningparty tools
 

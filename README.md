@@ -1,3 +1,5 @@
+![header](img/ttlp-small.jpg)
+
 [![Build Status](https://travis-ci.com/matbroughty/timstwitterlisteningparty.svg?branch=master)](https://travis-ci.com/matbroughty/timstwitterlisteningparty)
 
 ## timstwitterlisteningparty
