@@ -82,5 +82,5 @@ the files above back to the bucket (including the record stores which are derive
 - [x] Add lambda to auto create html snippets from csv in github
 - [x] Update lambda to invalidate the Cloud Front cache after writing the html to the s3 buckets
 - [ ] Redesign tables to use cardgroups
-- [ ] Move data csv files to a separate folder
+- [x] Move data csv files to a separate folder
 
