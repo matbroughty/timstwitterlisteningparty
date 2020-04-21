@@ -27,6 +27,7 @@ dependencies {
   implementation("com.amazonaws:aws-lambda-java-core:1.2.0")
   implementation("com.amazonaws:aws-lambda-java-events:2.2.7")
   implementation("com.amazonaws:aws-java-sdk-s3:1.11.762")
+  implementation("com.amazonaws:aws-java-sdk-cloudfront:1.11.762")
   implementation("com.google.api-client:google-api-client:1.30.9")
 
   runtimeOnly("com.amazonaws:aws-lambda-java-log4j2:1.1.0")
