@@ -17,14 +17,14 @@ import java.util.stream.Collectors
 import kotlin.collections.HashMap
 
 @Component
-class TimeSlotFileCreator :HtmlFileCreator {
+class TimeSlotFileCreator : HtmlFileCreator {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  override fun createFiles(fileName: String, inputStream: InputStream?, writeToFile : Boolean): Map<String, String> {
+  override fun createFiles(fileName: String, inputStream: InputStream?, writeToFile: Boolean): Map<String, String> {
     val csvToBeanBuilder: CsvToBeanBuilder<TimeSlot> =
       if (inputStream != null) CsvToBeanBuilder<TimeSlot>(InputStreamReader(inputStream)) else {
-          CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
+        CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
       }
     val beans: List<TimeSlot> = csvToBeanBuilder.withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
     beans.forEach { logger.info("Read in Bean {}", it) }
@@ -41,27 +41,32 @@ class TimeSlotFileCreator :HtmlFileCreator {
     upcoming.forEach { logger.info("Upcoming listening {}", it) }
     val upcomingHtml = buildTable(upcoming, false, tbd = false)
     val upcomingFile = File("snippets/upcoming-time-slots.html")
+    val upcomingHtmlCard = buildTableCard(upcoming)
+    val upcomingFileCard = File("snippets/upcoming-time-slots-card.html")
     val dateTbdHtml = buildTable(tbd, false, tbd = true)
     val dateTbdFile = File("snippets/date-tbd-time-slots.html")
     val completedHtml = buildTable(completed, true, tbd = false)
     val completedFile = File("snippets/completed-time-slots.html")
-    val allOneTableHtml = buildTable(beans, completed = true, tbd= true, all = true)
+    val allOneTableHtml = buildTable(beans, completed = true, tbd = true, all = true)
     val allOneTableFile = File("snippets/all-time-slots.html")
     // if called from Lambda we can't write to the file
-    if(writeToFile) {
+    if (writeToFile) {
       completedFile.writeText(completedHtml)
       upcomingFile.writeText(upcomingHtml)
       dateTbdFile.writeText(dateTbdHtml)
       allOneTableFile.writeText(allOneTableHtml)
+      upcomingFileCard.writeText(upcomingHtmlCard)
     }
     logger.info("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}", upcomingHtml, dateTbdHtml, completedHtml, allOneTableHtml)
 
     return mapOf(
-      Pair("snippets/${upcomingFile.name}",upcomingHtml),
-      Pair("snippets/${dateTbdFile.name}",dateTbdHtml),
-      Pair("snippets/${completedFile.name}",completedHtml),
-      Pair("snippets/${allOneTableFile.name}",allOneTableHtml))
+      Pair("snippets/${upcomingFile.name}", upcomingHtml),
+      Pair("snippets/${dateTbdFile.name}", dateTbdHtml),
+      Pair("snippets/${completedFile.name}", completedHtml),
+      Pair("snippets/${allOneTableFile.name}", allOneTableHtml),
+      Pair("snippets/${upcomingFileCard.name}", upcomingHtmlCard))
   }
+
 
   private fun buildTable(slots: List<TimeSlot>, completed: Boolean, tbd: Boolean, all: Boolean = false): String {
     var section = "<section class=\"post\">\n"
@@ -94,7 +99,7 @@ class TimeSlotFileCreator :HtmlFileCreator {
 
   private fun pureTable(monday: LocalDate?, rows: List<TimeSlot>?, completed: Boolean, all: Boolean = false): String {
 
-    var h2Value = if(all) "All Events - Searchable & Sortable" else " Upcoming Events - Dates to be confirmed"
+    var h2Value = if (all) "All Events - Searchable & Sortable" else " Upcoming Events - Dates to be confirmed"
     if (monday != null) {
       val df = DateTimeFormatter.ofPattern("EEEE, MMMM d")
       h2Value = if (completed || previousWeek(monday))
@@ -106,7 +111,7 @@ class TimeSlotFileCreator :HtmlFileCreator {
     if (completed) {
       icon = "<i class=\"fas fa-calendar-check\"></i>"
     }
-    val tableId = if(all) "id=\"time-slots\"" else ""
+    val tableId = if (all) "id=\"time-slots\"" else ""
     var htmlTable =
       "  <div class=\"card bg-light mb-2 border-dark \" style=\"max-width\">\n" +
         "    <div class=\"card-header\">$icon $h2Value</div>\n" +
@@ -127,7 +132,7 @@ class TimeSlotFileCreator :HtmlFileCreator {
     // add each row
     rows?.forEach { htmlTable = htmlTable.plus(it.buildHtmlRow()) }
     // the script for the search needs to be in the snippet
-    if(all){
+    if (all) {
       htmlTable = htmlTable.plus("<script>\n" +
         "    \$(document).ready(function() {\n" +
         "      \$('#time-slots').DataTable({\n" +
@@ -160,5 +165,35 @@ class TimeSlotFileCreator :HtmlFileCreator {
     // else must be the weeks before
     return false
   }
+
+  private fun buildTableCard(slots: List<TimeSlot>): String {
+    var section = "<section class=\"post\">\n<div class=\"container-fluid\">"
+    val sortedSlots = slots.sortedBy { it.isoDate }
+    var hr = ""
+    var date = sortedSlots.first().isoDate
+    section = section.plus("      <div class=\"card d mb-3\" style=\"width: 100%;\">\n" +
+      "        <div class=\"card-header font-weight-bold\">\n" +
+      "          <i class=\"fas fa-calendar-day\"></i> ${date.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))} \n" +
+      "        </div>")
+    sortedSlots.forEach {
+
+      // new card header required if we have moved on
+      if (it.isoDate.toLocalDate().isAfter(date.toLocalDate())) {
+        section = section.plus("      </div><div class=\"card d mb-3\" style=\"width: 100%;\">\n" +
+          "        <div class=\"card-header font-weight-bold\">\n" +
+          "          <i class=\"fas fa-calendar-day\"></i> ${it.isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))} \n" +
+          "        </div>")
+      } else {
+          section = section.plus(hr)
+           hr = "<hr/>"
+      }
+      // build the card body
+      section = section.plus(it.buildHtmlCardBody())
+      date = it.isoDate
+    }
+
+    return section.plus("\n</div>\n</section>")
+  }
+
 
 }

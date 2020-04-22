@@ -106,4 +106,48 @@ data class TimeSlot(val dateStr: String = "?",
       "                </tr>"
 
   }
+
+  /**
+   * When converting back to an html row this will do the biz
+   */
+  fun buildHtmlCardBody(): String {
+
+    /**
+     * Styling for normal link button, or active if today
+     */
+    var button = "pure-button-active"
+    var hours = "?"
+    // active button for today
+    if (isoDate.year != 1970) {
+      if (LocalDate.now().isEqual(isoDate.toLocalDate())) {
+        button = "pure-button-primary"
+      }
+      if (isoDate.hour != 0) {
+        hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm a"))
+      } else {
+        hours = "TBC"
+      }
+    }
+
+    /**
+     * The row html to populate
+     */
+    return  "        <div class=\"card-body\">\n" +
+      "          <table style=\"width: 100%;\">\n" +
+      "            <tr>\n" +
+      "              <td width=\"25%\">\n" +
+      "                $hours\n" +
+      "              </td>\n" +
+      "              <td width=\"50%\" style=\"text-align:left;\">\n" +
+      "                <b>$band</b><br/>$album\n" +
+      "              </td>\n" +
+      "              <td width=\"25%\"><a class=\"pure-button $button\"\n" +
+      "                                 href=\"https://twitter.com/Trampolene_Band/status/1248645546971185153\"><i\n" +
+      "                class=\"fab fa-twitter-square\"></i></a></td>\n" +
+      "            </tr>\n" +
+      "          </table>\n" +
+      "        </div>"
+
+  }
+
 }
