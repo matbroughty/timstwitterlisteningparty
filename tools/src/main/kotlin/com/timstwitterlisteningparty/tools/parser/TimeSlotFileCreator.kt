@@ -192,7 +192,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
       date = it.isoDate
     }
 
-    return section.plus("\n</div>\n</section>")
+    return section.plus("\n</div></div>\n</section>")
   }
 
 
