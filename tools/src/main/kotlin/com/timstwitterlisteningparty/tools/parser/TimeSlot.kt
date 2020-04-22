@@ -117,13 +117,15 @@ data class TimeSlot(val dateStr: String = "?",
      */
     var button = "pure-button-active"
     var hours = "?"
+    var amPm = ""
     // active button for today
     if (isoDate.year != 1970) {
       if (LocalDate.now().isEqual(isoDate.toLocalDate())) {
         button = "pure-button-primary"
       }
       if (isoDate.hour != 0) {
-        hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm a"))
+        hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm"))
+        amPm = isoDate.format(DateTimeFormatter.ofPattern("a"))
       } else {
         hours = "TBC"
       }
@@ -135,8 +137,8 @@ data class TimeSlot(val dateStr: String = "?",
     return  "        <div class=\"card-body\">\n" +
       "          <table style=\"width: 100%;\">\n" +
       "            <tr>\n" +
-      "              <td width=\"25%\">\n" +
-      "                $hours\n" +
+      "              <td width=\"25%\" class=\"font-weight-light\" style=\"text-align:left;\">\n" +
+      "                $hours$amPm\n" +
       "              </td>\n" +
       "              <td width=\"50%\" style=\"text-align:left;\">\n" +
       "                <b>$band</b><br/>$album\n" +
