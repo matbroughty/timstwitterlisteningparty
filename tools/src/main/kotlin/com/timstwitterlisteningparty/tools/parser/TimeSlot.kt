@@ -138,12 +138,12 @@ data class TimeSlot(val dateStr: String = "?",
       "          <table style=\"width: 100%;\">\n" +
       "            <tr>\n" +
       "              <td width=\"25%\" class=\"font-weight-light\" style=\"text-align:left;\">\n" +
-      "                $hours$amPm\n" +
+      "                $hours<sup> $amPm</sup>\n" +
       "              </td>\n" +
-      "              <td width=\"50%\" style=\"text-align:left;\">\n" +
+      "              <td width=\"60%\" style=\"text-align:left;\">\n" +
       "                <b>$band</b><br/>$album\n" +
       "              </td>\n" +
-      "              <td width=\"25%\"><a class=\"pure-button $button\"\n" +
+      "              <td width=\"15%\"><a class=\"pure-button $button\"\n" +
       "                                 href=\"$link\"><i\n" +
       "                class=\"fab fa-twitter-square\"></i></a></td>\n" +
       "            </tr>\n" +
