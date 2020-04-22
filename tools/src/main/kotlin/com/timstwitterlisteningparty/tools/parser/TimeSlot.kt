@@ -142,7 +142,7 @@ data class TimeSlot(val dateStr: String = "?",
       "                <b>$band</b><br/>$album\n" +
       "              </td>\n" +
       "              <td width=\"25%\"><a class=\"pure-button $button\"\n" +
-      "                                 href=\"https://twitter.com/Trampolene_Band/status/1248645546971185153\"><i\n" +
+      "                                 href=\"$link\"><i\n" +
       "                class=\"fab fa-twitter-square\"></i></a></td>\n" +
       "            </tr>\n" +
       "          </table>\n" +
