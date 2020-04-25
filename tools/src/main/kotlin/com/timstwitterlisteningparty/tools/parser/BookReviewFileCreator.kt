@@ -39,39 +39,8 @@ class BookReviewFileCreator : HtmlFileCreator {
   }
 
   private fun pureTable(rows: List<BookReview>): String {
-    return rows.map{ it.buildHtmlRow() }.joinToString ( separator = "" )
+    return rows.joinToString(separator = "") { it.buildHtmlRow() }
 
   }
-
-
-//  private fun pureTable(rows: List<BookReview>?): String {
-//
-//    var h2Value = "Book Reviews & Shops"
-//
-//    var icon = "<i class=\"fas fa-book-open\"></i>"
-//
-//    val tableId = "id=\"book-reviews\""
-//    var htmlTable =
-//      "  <div class=\"card bg-light mb-2 border-dark \" style=\"max-width\">\n" +
-//        "    <div class=\"card-header\">$icon $h2Value</div>\n" +
-//        "    <div class=\"card-body p-0\">" +
-//        "            <div class=\"scroll-table\">\n" +
-//        "              <table $tableId width=\"100%\" class=\"pure-table\">\n" +
-//        "                <thead>\n" +
-//        "                <tr>\n" +
-//        "                  <th width=\"15%\">Author</th>\n" +
-//        "                  <th width=\"15%\">Title</th>\n" +
-//        "                  <th width=\"60%\">Description</th>\n" +
-//        "                  <th width=\"10%\">Buy Here</th>\n" +
-//        "                </tr>\n" +
-//        "                </thead>\n" +
-//        "                <tbody>"
-//
-//    // add each row
-//    rows?.forEach { htmlTable = htmlTable.plus(it.buildHtmlRow()) }
-//    // close table and divs
-//    return htmlTable.plus("\n                </tbody>\n" +
-//      "              </table>\n   </div></div></div>\n")
-//  }
 
 }

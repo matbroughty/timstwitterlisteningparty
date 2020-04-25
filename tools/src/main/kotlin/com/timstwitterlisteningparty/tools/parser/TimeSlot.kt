@@ -24,7 +24,9 @@ data class TimeSlot(val dateStr: String = "?",
                     @CsvBindByPosition(position = 2)
                     val album: String = "",
                     @CsvBindByPosition(position = 3)
-                    val link: String = "") : HtmlRow {
+                    val link: String = "",
+                    @CsvBindByPosition(position = 4)
+                    var replayLink: String = "") : HtmlRow {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -74,13 +76,13 @@ data class TimeSlot(val dateStr: String = "?",
     var hours = "?"
     // english date format - i.e. April 13th
     var engDate = "?"
-    var twitterIcon = "fa-twitter-square"
+    var twitterIcon = if (replayLink.isBlank()) {"fab fa-twitter-square"} else "fas fa-redo"
 
 
     // active button for today
     if (isoDate.year != 1970) {
       if (LocalDate.now().isEqual(isoDate.toLocalDate())) {
-        twitterIcon = "fa-twitter"
+        twitterIcon = "fab fa-twitter"
       }
       // date and time strings displayed in the html
       engDate = isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
@@ -102,8 +104,8 @@ data class TimeSlot(val dateStr: String = "?",
       "                  <td>$band</td>\n" +
       "                  <td>$album</td>\n" +
       "                  <td><a class=\"pure-button $button\"\n" +
-      "                                     href=\"$link\"><i\n" +
-      "                    class=\"fab fa-twitter-square\"></i></a></td>\n" +
+      "                                     href=\"${if(replayLink.isEmpty()) {link} else replayLink} \"><i\n" +
+      "                    class=\"$twitterIcon\"></i></a></td>\n" +
       "                </tr>"
 
   }
@@ -152,6 +154,17 @@ data class TimeSlot(val dateStr: String = "?",
       "          </table>\n" +
       "        </div>"
 
+  }
+
+  /**
+   * Create a hash of the band and album
+   */
+  fun hashBandAlbum() : Int{
+    return band.trim().toLowerCase().plus(album.trim().toLowerCase()).hashCode()
+  }
+
+  fun isEmpty() : Boolean{
+    return band.isEmpty()
   }
 
 }

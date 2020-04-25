@@ -65,5 +65,4 @@ class HtmlToCsvCommand {
     return null
   }
 
-
 }
