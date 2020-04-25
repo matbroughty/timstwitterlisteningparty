@@ -17,11 +17,11 @@ data class RecordStore(@CsvBindByPosition(position = 0)val name: String = "",
 
     val webSiteButton = if(webSite.isBlank()){
       "class=\"pure-button-disabled\""
-    } else "class=\"pure-button-active\""
+    } else "class=\"pure-button\""
 
     val twitterButton = if(twitterLink.isBlank()) {
       "class=\"pure-button-disabled\""
-    } else "class=\"pure-button-active\""
+    } else "class=\"pure-button\""
 
 
     /**

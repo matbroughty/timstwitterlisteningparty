@@ -74,12 +74,13 @@ data class TimeSlot(val dateStr: String = "?",
     var hours = "?"
     // english date format - i.e. April 13th
     var engDate = "?"
+    var twitterIcon = "fa-twitter-square"
 
 
     // active button for today
     if (isoDate.year != 1970) {
       if (LocalDate.now().isEqual(isoDate.toLocalDate())) {
-        button = "pure-button-primary"
+        twitterIcon = "fa-twitter"
       }
       // date and time strings displayed in the html
       engDate = isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
@@ -116,12 +117,13 @@ data class TimeSlot(val dateStr: String = "?",
      * Styling for normal link button, or active if today
      */
     var button = "pure-button-active"
+    var twitterIcon = "fa-twitter-square"
     var hours = "?"
     var amPm = ""
     // active button for today
     if (isoDate.year != 1970) {
       if (LocalDate.now().isEqual(isoDate.toLocalDate())) {
-        button = "pure-button-primary"
+        twitterIcon = "fa-twitter"
       }
       if (isoDate.hour != 0) {
         hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm"))
@@ -145,7 +147,7 @@ data class TimeSlot(val dateStr: String = "?",
       "              </td>\n" +
       "              <td width=\"15%\"><a class=\"pure-button $button\"\n" +
       "                                 href=\"$link\"><i\n" +
-      "                class=\"fab fa-twitter-square\"></i></a></td>\n" +
+      "                class=\"fab $twitterIcon\"></i></a></td>\n" +
       "            </tr>\n" +
       "          </table>\n" +
       "        </div>"

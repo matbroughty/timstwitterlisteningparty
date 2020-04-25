@@ -171,7 +171,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val sortedSlots = slots.sortedBy { it.isoDate }
     var hr = ""
     var date = sortedSlots.first().isoDate
-    section = section.plus("      <div class=\"card d mb-3\" style=\"width: 100%;\">\n" +
+    section = section.plus("      <div class=\"card d mb-3 border-dark\" style=\"width: 100%;\">\n" +
       "        <div class=\"card-header font-weight-bold\">\n" +
       "          <i class=\"fas fa-calendar-day\"></i> ${date.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))} \n" +
       "        </div>")

@@ -17,7 +17,7 @@ data class BookStore(@CsvBindByPosition(position = 0)val name: String = "",
 
     val webSiteButton = if(webSite.isBlank()){
       "class=\"pure-button-disabled\""
-    } else "class=\"pure-button-active\""
+    } else "class=\"pure-button\""
 
 
 
