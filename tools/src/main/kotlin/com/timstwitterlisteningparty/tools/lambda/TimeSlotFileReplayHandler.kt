@@ -27,15 +27,22 @@ class TimeSlotFileReplayHandler(private val bucketName: String = "timstwitterlis
     val fileData = TimeSlotFileReplayLink().addReplayLink(inputStream = objectData)
     print("fileData = $fileData")
     //sanity check
+    var msg = "TimeSlotFileReplayHandler"
     if(fileData.isNotEmpty() && fileData.length > 100){
       println("Writing to: $bucketName file $srcKeyTimeSlots ")
       try {
         s3Client.putObject(bucketName, srcKeyTimeSlots, fileData)
       } catch (e: AmazonServiceException) {
         System.err.println("We have an error writing to  $bucketName and file $srcKeyTimeSlots error is:  ${e.errorMessage}")
+
+        msg = msg.plus(" failed")
+
       }
     }
 
+    msg = msg.plus(" was a success!!!!!")
+
+    println(msg)
     return fileData
   }
 }

@@ -14,7 +14,7 @@ class AddReplayToCsvCommand(val timeSlotFileReplayLink: TimeSlotFileReplayLink) 
 
 
   fun updateFile() :String {
-    return  timeSlotFileReplayLink.addReplayLink()
+    return  timeSlotFileReplayLink.addReplayLink(writeToFile = true)
   }
 
 }
