@@ -3,6 +3,7 @@ package com.timstwitterlisteningparty.tools.lambda
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.amazonaws.services.lambda.runtime.events.S3Event
+import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.s3.event.S3EventNotification
 import java.lang.System.err
 import java.util.regex.Matcher
@@ -19,6 +20,7 @@ class RegenerateHtmlHandler : RequestHandler<S3Event, String> {
   override fun handleRequest(s3event: S3Event, context: Context?): String {
     try {
       println("In Handle Request with: $s3event")
+
 
       val record: S3EventNotification.S3EventNotificationRecord = s3event.records[0]
       val srcBucket = record.s3.bucket.name
