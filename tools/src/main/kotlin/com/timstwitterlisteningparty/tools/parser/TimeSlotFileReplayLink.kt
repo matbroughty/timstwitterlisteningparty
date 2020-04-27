@@ -18,12 +18,14 @@ class TimeSlotFileReplayLink {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  fun addReplayLink(fileName: String = "data/time-slot-data.csv", inputStream: InputStream? = null, writeToFile: Boolean = false): String {
+  fun addReplayLink(fileName: String = "data/time-slot-data.csv", inputStream: InputStream? = null,
+                    writeToFile: Boolean = false, newFileName: String = fileName): String {
 
     logger.info("Parsing URL from '{}'", "https://timstwitterlisteningparty.com/snippets/replay/feed_index_snippet.html")
     val doc: Document = Jsoup.connect("https://timstwitterlisteningparty.com/snippets/replay/feed_index_snippet.html").get()
     val replayMap: Map<Int, TimeSlot> = doc.select("tr")
       .stream()
+      .filter { it.children().select("div#album-div").isEmpty() } // don't want the random album titles
       .map { it.buildCsvRow() }
       .toList()
       .map { it.hashBandAlbum() to it }.toMap()
@@ -44,7 +46,7 @@ class TimeSlotFileReplayLink {
     existingList.forEach { logger.info(it.toString()) }
 
     if(writeToFile) {
-      val fileWriter = FileWriter(fileName)
+      val fileWriter = FileWriter(newFileName)
       val sbc = StatefulBeanToCsvBuilder<TimeSlot>(fileWriter)
         .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
         .build()

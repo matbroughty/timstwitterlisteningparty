@@ -47,7 +47,7 @@ data class TimeSlot(val dateStr: String = "?",
    * @param timeStr form 9:pm
    */
   private fun buildDate(dateStr: String, timeStr: String): LocalDateTime {
-    logger.info("Parsing date {} and time {} for band {} and album", dateStr, timeStr, band, album)
+    logger.debug("Parsing date {} and time {} for band {} and album", dateStr, timeStr, band, album)
     // no date yet
     if (dateStr.contains("?")) {
       return LocalDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC)
