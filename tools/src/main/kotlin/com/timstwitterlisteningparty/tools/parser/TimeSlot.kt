@@ -26,7 +26,10 @@ data class TimeSlot(val dateStr: String = "?",
                     @CsvBindByPosition(position = 3)
                     val link: String = "",
                     @CsvBindByPosition(position = 4)
-                    var replayLink: String = "") : HtmlRow {
+                    var replayLink: String = "",
+                    @CsvBindByPosition(position = 5)
+                    var tweeters: String = ""
+                    ) : HtmlRow {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -162,6 +165,30 @@ data class TimeSlot(val dateStr: String = "?",
   fun hashBandAlbum() : Int{
     return band.trim().toLowerCase().plus(album.trim().toLowerCase()).hashCode()
   }
+
+
+  /**
+   * Get a list from the ":" separated list of tweeters
+   * and turn into a proper twitter link list
+   */
+  fun tweeterLinkList() : List<String>{
+    if(tweeters.isEmpty()){
+      return Collections.emptyList();
+    }
+    return tweeters.split(":").map { "https://twitter.com/${it.replace("@", "").trim()}" }
+  }
+
+  /**
+   * Just a list of the @name twitter handle
+   * @see tweeterLinkList for full link
+   */
+  fun tweeterList() : List<String>{
+    if(tweeters.isEmpty()){
+      return Collections.emptyList();
+    }
+    return tweeters.split(":").map { it.trim() }
+  }
+
 
   fun isEmpty() : Boolean{
     return band.isEmpty()
