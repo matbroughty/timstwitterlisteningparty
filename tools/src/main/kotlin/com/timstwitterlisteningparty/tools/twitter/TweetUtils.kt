@@ -9,17 +9,17 @@ import twitter4j.conf.ConfigurationBuilder
 class TweetUtils {
   fun createCollection(replayId: String): String {
 
-    val cb = ConfigurationBuilder()
-    cb.setDebugEnabled(true)
-      .setOAuthConsumerKey("")
-      .setOAuthConsumerSecret("")
-      .setOAuthAccessToken("212513926-")
-      .setOAuthAccessTokenSecret("")
-    val tf = TwitterFactory(cb.build())
-    val twitter: Twitter = tf.instance
-
-    //val status = twitter.tweets().updateStatus("hello world")
-    val status = twitter.updateStatus("hello world")
+//    val cb = ConfigurationBuilder()
+//    cb.setDebugEnabled(true)
+//      .setOAuthConsumerKey("")
+//      .setOAuthConsumerSecret("")
+//      .setOAuthAccessToken("212513926-")
+//      .setOAuthAccessTokenSecret("")
+//    val tf = TwitterFactory(cb.build())
+//    val twitter: Twitter = tf.instance
+//
+//    //val status = twitter.tweets().updateStatus("hello world")
+//    val status = twitter.updateStatus("hello world")
 
 
     return ""
