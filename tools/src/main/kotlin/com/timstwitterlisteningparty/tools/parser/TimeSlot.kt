@@ -28,8 +28,9 @@ data class TimeSlot(val dateStr: String = "?",
                     @CsvBindByPosition(position = 4)
                     var replayLink: String = "",
                     @CsvBindByPosition(position = 5)
-                    var tweeters: String = ""
-                    ) : HtmlRow {
+                    var tweeters: String = "",
+                    @CsvBindByPosition(position = 6)
+                    var twitterCollectionLink: String = "") : HtmlRow {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -190,8 +191,17 @@ data class TimeSlot(val dateStr: String = "?",
   }
 
 
-  fun isEmpty() : Boolean{
+  private fun isEmpty() : Boolean{
     return band.isEmpty()
+  }
+
+  /**
+   * If we have a replay link then we have the tweets to create a collection but
+   * check we haven't already generated it
+   */
+  fun requiresTwitterCollection() : Boolean{
+    return !isEmpty() && replayLink.isNotEmpty() && twitterCollectionLink.isEmpty()
+
   }
 
 }

@@ -3,6 +3,7 @@ package com.timstwitterlisteningparty.tools.parser
 import com.opencsv.CSVWriter
 import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsvBuilder
+import com.timstwitterlisteningparty.tools.twitter.TweetUtils
 import org.apache.commons.lang3.StringUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -19,14 +20,14 @@ import kotlin.streams.toList
  * as column 5 and 6
  */
 @Component
-class TimeSlotFileReplayLink {
+class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
   fun addReplayLink(fileName: String = "data/time-slot-data.csv", inputStream: InputStream? = null,
                     writeToFile: Boolean = false, newFileName: String = fileName): String {
 
-
+    // slightly weirdly formed so use jsoup and then get rid of markup and parse as csv
     val stockURL = Jsoup.connect("http://www.sk7software.co.uk/listeningparty/scripts/listParties.php").get()
     val replayIds = stockURL.select("body").toString().replace("<body>\n", "").replace("</body>", "").replace("<br>", "")
     logger.info("replay ids $replayIds")
@@ -49,6 +50,9 @@ class TimeSlotFileReplayLink {
         // only set the tweeters if the
         if(it.tweeters.isEmpty()) {
           it.tweeters = replayMap[it.hashBandAlbum()]?.twitterIds ?: ""
+        }
+        if(it.requiresTwitterCollection()){
+          it.twitterCollectionLink = tweetUtils.createCollection(replayMap[it.hashBandAlbum()]?.trimmedId ?: "")
         }
       }
     }
