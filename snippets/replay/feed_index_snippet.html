@@ -34,20 +34,28 @@
         <script type="text/javascript">
           var index=0;
           var timeout;
-          function changeBanner(){ 
-            [].forEach.call(document.getElementsByClassName("album"),function (v,i) { 
-                document.getElementsByClassName("album")[i].hidden = i !== index
-            });
+          var lastIndex = document.getElementsByClassName("album").length - 1;
+          
+          // Hide all image divs except the current one
+          function changeImage(){ 
+            // Hide the previously shown image
+            document.getElementsByClassName("album")[lastIndex].hidden = true;
+            document.getElementsByClassName("album")[index].hidden = false;
+
+            // Find new index
+            lastIndex = index;
             index = (index+1) % document.getElementsByClassName("album").length;
           }
           
+          // Animage the moving finger and set the image loop going
           function randomiser() {
             togglepopup();
             var finger = document.getElementById("finger");
             $(finger).removeClass('paused');
-            timeout = setInterval(changeBanner, 70)
+            timeout = setInterval(changeImage, 70)
           }
           
+          // Show/hide popup
           function togglepopup() {
             document.getElementById("album-chooser").style.display = "block";
             document.getElementById("album-choose").style.display = "block";
@@ -55,21 +63,30 @@
             document.getElementById("randomiser").classList.toggle("show");              
           }
 
+          // Stop the randomiser and get the album that it was stopped on
           function stopit() {
             clearInterval(timeout);
+            // Get the current index div and make sure it is showing
             var selectedId = document.getElementsByClassName("album")[index].getAttribute("data-partyId");
-            changeBanner();
+            changeImage();
+            
+            // Find the bigger image and get the artist/album text (from the main list)
             document.getElementById("album-chosen-img").src = "replay/img/feed_" + selectedId + ".png";
             document.getElementById("album-chosen-txt").innerHTML = 
                     document.getElementById("party-" + selectedId).innerHTML;
+            
+            // Set the play button to load the feed if chosen
             document.getElementById("album-chosen-play").setAttribute( "onclick", "javascript: loadFeed(" + selectedId + ")");
 
+            // Stop the animated finger
             var finger = document.getElementById("finger");
             $(finger).addClass('paused');
 
+            // Show the choice after a short timeout (so that the stopped position can be seen)
             setTimeout("showchoice()", 700);
           }
           
+          // Show the chosen album
           function showchoice() {
             document.getElementById("album-chooser").style.display = "none";
             document.getElementById("album-chosen").style.display = "block";
@@ -77,27 +94,35 @@
           }
         </script>
         <script>
+            // Search function
             function searchreplays() {
                 var filter = document.getElementById("search-box").value.toLowerCase();
                 var doSearch = true;
 
-                if (filter === null || filter.length < 3) {
+                // Don't search if filter is not set
+                if (filter === null || filter.length === 0) {
                     doSearch = false;
                 }
 
+                // Loop over all date blocks
                 [].forEach.call(document.getElementsByClassName("replay-date"), function (v, i) {
+                    // Get the albums in the date block
                     var items = document.getElementsByClassName("replay-date")[i].querySelectorAll(".replay-item");
                     var itemShown = false;
                     items.forEach(function(i) {
+                        // Get the artist/album text in the div
                         var divid = i.getAttribute("data-divid");
                         var replaydiv = document.getElementById(divid);
-                        if (!doSearch || i.innerHTML.toLowerCase().includes(filter)) {
+                        // Strip HTML tags
+                        var text = '<div>' + i.innerHTML.toLowerCase() + '</div>';
+                        if (!doSearch || $(text).text().includes(filter)) {
                             itemShown = true;
                             replaydiv.style.display = "block";
                         } else {
                             replaydiv.style.display = "none";
                         }
                     });
+                    // If no items are shown in the date block, hide that too
                     if (itemShown) {
                         document.getElementsByClassName("replay-date")[i].style.display = "block";
                     } else {
@@ -221,6 +246,10 @@
                                     </td>
                                     <td style="padding-left:8px;padding-right:10px;vertical-align:middle">
                                     <div id="album-div">
+                                        <img class="album" src="replay/img/feed_95_small.png" data-partyId="95" hidden>
+                                        <img class="album" src="replay/img/feed_94_small.png" data-partyId="94" hidden>
+                                        <img class="album" src="replay/img/feed_93_small.png" data-partyId="93" hidden>
+                                        <img class="album" src="replay/img/feed_92_small.png" data-partyId="92" hidden>
                                         <img class="album" src="replay/img/feed_91_small.png" data-partyId="91" hidden>
                                         <img class="album" src="replay/img/feed_90_small.png" data-partyId="90" hidden>
                                         <img class="album" src="replay/img/feed_89_small.png" data-partyId="89" hidden>
@@ -335,6 +364,57 @@
             </div>
             <input id="search-box" type="search" oninput="searchreplays()"/>
                                 <div class="card d mb-3 replay-date" style="width: 100%;">
+                        <div class="card-header font-weight-bold">
+                            <i class="fas fa-calendar-day"></i> Thursday, April 30                        </div>
+                                        <div class="card-body" id="replay-95" style="display:block">
+                      <table style="display:block"  onClick="loadFeed(95)">
+                        <tr>
+                           <td style="padding-right:15px"><img src="replay/img/feed_95_small.png" alt="CD" style="width:50px;height:50px;"></td>
+                           <td class="replay-item" id="party-95" data-divid="replay-95"
+                                    style="text-align:left;">
+                            <b>Dan Le Sac vs Scroobius Pip</b><br/>Repent Replenish Repeat                           </td>
+                           <td></td>
+                        </tr>
+                      </table>
+                    </div>
+                                            <hr style="margin-top:0;margin-bottom:0">
+                                            <div class="card-body" id="replay-94" style="display:block">
+                      <table style="display:block"  onClick="loadFeed(94)">
+                        <tr>
+                           <td style="padding-right:15px"><img src="replay/img/feed_94_small.png" alt="CD" style="width:50px;height:50px;"></td>
+                           <td class="replay-item" id="party-94" data-divid="replay-94"
+                                    style="text-align:left;">
+                            <b>New Order</b><br/>Low-Life                           </td>
+                           <td></td>
+                        </tr>
+                      </table>
+                    </div>
+                                            <hr style="margin-top:0;margin-bottom:0">
+                                            <div class="card-body" id="replay-93" style="display:block">
+                      <table style="display:block"  onClick="loadFeed(93)">
+                        <tr>
+                           <td style="padding-right:15px"><img src="replay/img/feed_93_small.png" alt="CD" style="width:50px;height:50px;"></td>
+                           <td class="replay-item" id="party-93" data-divid="replay-93"
+                                    style="text-align:left;">
+                            <b>Sleaford Mods</b><br/>English Tapas                           </td>
+                           <td></td>
+                        </tr>
+                      </table>
+                    </div>
+                                            <hr style="margin-top:0;margin-bottom:0">
+                                            <div class="card-body" id="replay-92" style="display:block">
+                      <table style="display:block"  onClick="loadFeed(92)">
+                        <tr>
+                           <td style="padding-right:15px"><img src="replay/img/feed_92_small.png" alt="CD" style="width:50px;height:50px;"></td>
+                           <td class="replay-item" id="party-92" data-divid="replay-92"
+                                    style="text-align:left;">
+                            <b>Haircut 100</b><br/>Pelican West                           </td>
+                           <td></td>
+                        </tr>
+                      </table>
+                    </div>
+                                        </div>
+                                    <div class="card d mb-3 replay-date" style="width: 100%;">
                         <div class="card-header font-weight-bold">
                             <i class="fas fa-calendar-day"></i> Wednesday, April 29                        </div>
                                         <div class="card-body" id="replay-91" style="display:block">
