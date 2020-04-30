@@ -19,6 +19,8 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
+  implementation("org.springframework:spring-web")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("org.jsoup:jsoup:1.13.1")
   implementation("com.opencsv:opencsv:5.1")
   implementation("org.springframework.shell:spring-shell-starter:2.0.0.RELEASE")
