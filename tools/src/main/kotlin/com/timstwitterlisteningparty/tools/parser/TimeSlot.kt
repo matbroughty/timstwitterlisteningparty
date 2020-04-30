@@ -168,6 +168,7 @@ data class TimeSlot(val dateStr: String = "?",
   }
 
 
+
   /**
    * Get a list from the ":" separated list of tweeters
    * and turn into a proper twitter link list

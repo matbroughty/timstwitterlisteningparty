@@ -33,6 +33,9 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
     logger.info("replay ids $replayIds")
     val builder = CsvToBeanBuilder<Replay>(StringReader(replayIds))
     val idList: List<Replay> = builder.withType(Replay::class.java).withIgnoreEmptyLine(true).withSkipLines(1).build().parse()
+
+    //idList.forEach { logger.info("tweeted ${tweetUtils.tweet("Replay available:  ${it.band} : ${it.album} at ${fullReplayLink(it.trimmedId)} #TimsTwitterListeningParty")}") }
+
     idList.forEach { logger.info(it.toString()) }
     val replayMap: Map<Int, Replay> = idList.stream().filter { it.isEmpty().not() }.toList().map { it.hashBandAlbum() to it }.toMap()
 
@@ -46,14 +49,24 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
     val existingList: List<TimeSlot> = csvToBeanBuilder.withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
     existingList.forEach {
       if (replayMap.containsKey(it.hashBandAlbum())) {
-        it.replayLink = fullReplayLink(replayMap[it.hashBandAlbum()]?.trimmedId ?: "")
+        val replay = replayMap[it.hashBandAlbum()]
+        if (replay != null) {
+          // if we have no replay currently tweet about it
+          val replayLink = fullReplayLink(replay.trimmedId)
+          // a new replay - tell the world
+          if (it.replayLink.isEmpty() && replayLink.isNotEmpty()) {
+            logger.info("tweeted ${tweetUtils.tweet("Replay available:  ${it.band} : ${it.album} at $replayLink #TimsTwitterListeningParty")}")
+          }
+          it.replayLink = fullReplayLink(replay.trimmedId)
+        }
         // only set the tweeters if the
-        if(it.tweeters.isEmpty()) {
+        if (it.tweeters.isEmpty()) {
           it.tweeters = replayMap[it.hashBandAlbum()]?.twitterIds ?: ""
         }
-        if(it.requiresTwitterCollection()){
-          it.twitterCollectionLink = tweetUtils.createCollection(replayMap[it.hashBandAlbum()]?.trimmedId ?: "")
-        }
+
+//        if (it.requiresTwitterCollection()) {
+//          it.twitterCollectionLink = tweetUtils.createCollection(it.replayLink)   //createCollection(replayMap[it.hashBandAlbum()]?.trimmedId ?: "")
+//        }
       }
     }
     existingList.forEach { logger.info(it.toString()) }
