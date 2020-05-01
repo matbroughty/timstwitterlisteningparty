@@ -55,7 +55,7 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
           val replayLink = fullReplayLink(replay.trimmedId)
           // a new replay - tell the world
           if (it.replayLink.isEmpty() && replayLink.isNotEmpty()) {
-            logger.info("tweeted ${tweetUtils.tweet("Replay available:  ${it.band} : ${it.album} at $replayLink #TimsTwitterListeningParty")}")
+            logger.info("tweeted ${tweetUtils.tweet("Replay available ${it.tweeterList().first()} : ${it.band} : ${it.album} at $replayLink #TimsTwitterListeningParty")}")
           }
           it.replayLink = fullReplayLink(replay.trimmedId)
         }
