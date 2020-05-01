@@ -32,6 +32,12 @@ data class Replay(@CsvBindByPosition(position = 0)
     return band.isEmpty()
   }
 
+  fun fullReplayLink(): String {
+    if (trimmedId.isBlank()) {
+      return ""
+    }
+    return "https://timstwitterlisteningparty.com/pages/replay/feed_$trimmedId.html"
+  }
 
 
 }

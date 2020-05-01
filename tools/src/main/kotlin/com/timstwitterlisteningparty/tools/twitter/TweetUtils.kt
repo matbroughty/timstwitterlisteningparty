@@ -1,26 +1,30 @@
 package com.timstwitterlisteningparty.tools.twitter
 
-import org.springframework.boot.web.client.RestTemplateBuilder
+import com.timstwitterlisteningparty.tools.parser.TimeSlot
 import org.springframework.stereotype.Component
 import twitter4j.Twitter
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
 
 @Component
-class TweetUtils(val builder: RestTemplateBuilder) {
+class TweetUtils() {
 
-  fun tweet(msg: String) : String{
+  fun tweet(msg: String): String {
     var status = ""
-    try {
+    status = try {
       val cb = ConfigurationBuilder()
       val tf = TwitterFactory(cb.build())
       val twitter: Twitter = tf.instance
-      status = twitter.updateStatus(msg).text
-    }catch(e: Exception){
+      twitter.updateStatus(msg).text
+    } catch (e: Exception) {
       print("Some badness with sending $msg  as a tweet ${e.localizedMessage}")
-      status = e.localizedMessage
+      return e.localizedMessage
     }
     return status
+  }
+
+  fun tweetReplay(timeSlot: TimeSlot, replayLink: String): String {
+    return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty")
   }
 
   fun createCollection(replayId: String): String {

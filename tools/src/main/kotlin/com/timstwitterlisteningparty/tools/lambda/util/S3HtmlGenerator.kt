@@ -1,4 +1,4 @@
-package com.timstwitterlisteningparty.tools.lambda
+package com.timstwitterlisteningparty.tools.lambda.util
 
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.services.s3.AmazonS3Client

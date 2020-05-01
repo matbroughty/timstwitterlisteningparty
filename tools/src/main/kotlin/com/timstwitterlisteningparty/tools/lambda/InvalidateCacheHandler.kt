@@ -17,6 +17,7 @@ import java.time.LocalDateTime
 /**
  * Programmatically invalidate the cloud front cache.  This will
  * clear the whole cache
+ * @deprecated - the php script is probably a better bet direct in Lambda code
  */
 class InvalidateCacheHandler : RequestHandler<S3Event, String> {
 

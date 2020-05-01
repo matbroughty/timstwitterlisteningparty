@@ -4,10 +4,7 @@ import com.opencsv.CSVWriter
 import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsvBuilder
 import com.timstwitterlisteningparty.tools.twitter.TweetUtils
-import org.apache.commons.lang3.StringUtils
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import org.jsoup.nodes.TextNode
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.io.*
@@ -27,37 +24,24 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
   fun addReplayLink(fileName: String = "data/time-slot-data.csv", inputStream: InputStream? = null,
                     writeToFile: Boolean = false, newFileName: String = fileName): String {
 
-    // slightly weirdly formed so use jsoup and then get rid of markup and parse as csv
-    val stockURL = Jsoup.connect("http://www.sk7software.co.uk/listeningparty/scripts/listParties.php").get()
-    val replayIds = stockURL.select("body").toString().replace("<body>\n", "").replace("</body>", "").replace("<br>", "")
-    logger.info("replay ids $replayIds")
-    val builder = CsvToBeanBuilder<Replay>(StringReader(replayIds))
-    val idList: List<Replay> = builder.withType(Replay::class.java).withIgnoreEmptyLine(true).withSkipLines(1).build().parse()
-
-    //idList.forEach { logger.info("tweeted ${tweetUtils.tweet("Replay available:  ${it.band} : ${it.album} at ${fullReplayLink(it.trimmedId)} #TimsTwitterListeningParty")}") }
-
-    idList.forEach { logger.info(it.toString()) }
-    val replayMap: Map<Int, Replay> = idList.stream().filter { it.isEmpty().not() }.toList().map { it.hashBandAlbum() to it }.toMap()
-
+    val replayMap: Map<Int, Replay> = ReplayPHPScript().readPhpReplayScript()
     replayMap.forEach { logger.info(it.toString()) }
-
     val csvToBeanBuilder: CsvToBeanBuilder<TimeSlot> =
       if (inputStream != null) CsvToBeanBuilder<TimeSlot>(InputStreamReader(inputStream)) else {
         CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
       }
-
     val existingList: List<TimeSlot> = csvToBeanBuilder.withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
     existingList.forEach {
       if (replayMap.containsKey(it.hashBandAlbum())) {
         val replay = replayMap[it.hashBandAlbum()]
         if (replay != null) {
           // if we have no replay currently tweet about it
-          val replayLink = fullReplayLink(replay.trimmedId)
+          val replayLink = replay.fullReplayLink()
           // a new replay - tell the world
           if (it.replayLink.isEmpty() && replayLink.isNotEmpty()) {
-            logger.info("tweeted ${tweetUtils.tweet("Replay available ${it.tweeterList().first()} : ${it.band} : ${it.album} at $replayLink #TimsTwitterListeningParty")}")
+            logger.info("tweeted ${tweetUtils.tweetReplay(it, replayLink = replayLink)}")
           }
-          it.replayLink = fullReplayLink(replay.trimmedId)
+          it.replayLink = replay.fullReplayLink()
         }
         // only set the tweeters if the
         if (it.tweeters.isEmpty()) {
@@ -90,23 +74,30 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
 
   }
 
-  private fun fullReplayLink(id: String): String {
-    if (id.isBlank()) {
-      return ""
-    }
-    return "https://timstwitterlisteningparty.com/pages/replay/feed_$id.html"
-  }
+}
 
-  private fun Element?.buildCsvRow(): TimeSlot {
-    if (this != null) {
-      logger.debug("row {}", html())
-      return TimeSlot(
-        replayLink = StringUtils.substringAfter(StringUtils.substringBefore(select("img")[0].attr("src").toString(), "_small"), "feed_"),
-        album = (select("td")[1].childNode(3) as TextNode).text(),
-        band = (select("td")[1].childNode(1) as Element).text()
-      )
-    }
-    return TimeSlot()
+
+class ReplayPHPScript {
+
+  private val logger = LoggerFactory.getLogger(javaClass)
+
+  /**
+   * Reads the slightly weirdly formed listParties.php so uses jsoup and then gets rid of markup and finall parses as csv
+   * @return Map<Int, Replay> - a hash of band name/album to replay object
+   */
+  fun readPhpReplayScript(fileName: String = "http://www.sk7software.co.uk/listeningparty/scripts/listParties.php"): Map<Int, Replay> {
+    // slightly weirdly formed so use jsoup and then get rid of markup and parse as csv
+    val stockURL = Jsoup.connect(fileName).get()
+    val replayIds = stockURL.select("body").toString().replace("<body>\n", "").replace("</body>", "").replace("<br>", "")
+    logger.info("replay ids $replayIds")
+    val builder = CsvToBeanBuilder<Replay>(StringReader(replayIds))
+    val idList: List<Replay> = builder.withType(Replay::class.java).withIgnoreEmptyLine(true).withSkipLines(1).build().parse()
+    //idList.forEach { logger.info("tweeted ${tweetUtils.tweet("Replay available:  ${it.band} : ${it.album} at ${fullReplayLink(it.trimmedId)} #TimsTwitterListeningParty")}") }
+    idList.forEach { logger.info(it.toString()) }
+    return idList.stream().filter { it.isEmpty().not() }
+      .toList()
+      .map { it.hashBandAlbum() to it }
+      .toMap()
   }
 
 }

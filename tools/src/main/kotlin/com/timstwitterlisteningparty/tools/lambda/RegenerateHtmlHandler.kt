@@ -3,8 +3,8 @@ package com.timstwitterlisteningparty.tools.lambda
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.amazonaws.services.lambda.runtime.events.S3Event
-import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.s3.event.S3EventNotification
+import com.timstwitterlisteningparty.tools.lambda.util.S3HtmlGenerator
 import java.lang.System.err
 import java.util.regex.Matcher
 import java.util.regex.Pattern
