@@ -2,8 +2,14 @@ package com.timstwitterlisteningparty.tools.shell
 
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
-import org.springframework.shell.standard.ShellOption
 
+
+/**
+ * Calls the 'replay' and then 'allhtml' commands.
+ * <br>
+ * Effectively regenerates the html snippets via the [AllHtmlCommand.allhtml] and before that
+ * updates the data/time-slot-data.csv with any replay links via the [AddReplayToCsvCommand.timeSlotFileReplayLink]
+ */
 @ShellComponent
 class RegenerateCommand(val allHtmlCommand: AllHtmlCommand, val addReplayToCsvCommand: AddReplayToCsvCommand) {
 

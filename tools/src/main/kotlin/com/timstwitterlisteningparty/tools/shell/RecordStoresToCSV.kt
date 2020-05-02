@@ -14,6 +14,10 @@ import java.io.FileWriter
 import kotlin.streams.toList
 
 
+/**
+ * Pulls record store info from "https://indieretail.beggars.com/uk/" and puts it into data/generated-record-store-data.csv
+ * as a starting point for the data/record-store-data.csv which is then manually managed
+ */
 @ShellComponent
 class RecordStoresToCSV {
   private val logger = LoggerFactory.getLogger(javaClass)
@@ -37,7 +41,7 @@ class RecordStoresToCSV {
 
     stores.forEach { logger.info("retrieved store {}", it) }
 
-    val fileWriter = FileWriter("generated-record-store-data.csv")
+    val fileWriter = FileWriter("data/generated-record-store-data.csv")
     val sbc = StatefulBeanToCsvBuilder<RecordStore>(fileWriter)
       .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
       .build()
