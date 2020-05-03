@@ -35,10 +35,14 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
       if (replayMap.containsKey(it.hashBandAlbum())) {
         val replay = replayMap[it.hashBandAlbum()]
         if (replay != null) {
+          if(it.requiresTwitterCollection() && Integer.valueOf(replay.trimmedId) > 80){
+            logger.info("creating collection for replay $replay")
+            it.twitterCollectionLink = TweetUtils().createCollection(replay)
+          }
           // set it
           it.replayLink = replay.fullReplayLink()
         }
-        // only set the tweeters if the
+        // only set the tweeters if the time slot data was empty
         if (it.tweeters.isEmpty()) {
           it.tweeters = replayMap[it.hashBandAlbum()]?.twitterIds ?: ""
         }

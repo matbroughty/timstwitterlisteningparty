@@ -31,6 +31,7 @@ dependencies {
   implementation("com.amazonaws:aws-java-sdk-s3:1.11.762")
   implementation("com.amazonaws:aws-java-sdk-cloudfront:1.11.762")
   implementation("com.google.api-client:google-api-client:1.30.9")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.0")
 //  implementation("org.twitter4j:twitter4j-stream:4.0.7")
   implementation(files("$projectDir/commonjar/3rdparty/twitter4j-core-4.0.8-SNAPSHOT.jar"))
   implementation(files("$projectDir/commonjar/3rdparty/twitter4j-stream-4.0.8-SNAPSHOT.jar"))

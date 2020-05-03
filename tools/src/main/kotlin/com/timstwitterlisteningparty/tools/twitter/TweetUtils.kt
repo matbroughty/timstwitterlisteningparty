@@ -1,11 +1,11 @@
 package com.timstwitterlisteningparty.tools.twitter
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.timstwitterlisteningparty.tools.parser.Replay
 import com.timstwitterlisteningparty.tools.parser.TimeSlot
-import com.timstwitterlisteningparty.tools.twitter.collections.Collections
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import twitter4j.HttpParameter
+import twitter4j.JSONObject
 import twitter4j.Twitter
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
@@ -19,16 +19,29 @@ class TweetUtils() {
 
 
   fun getTwitter() : Twitter?{
-    var twitter: Twitter ?= null
+    var twitter: Twitter? = null
     try {
-      val cb = ConfigurationBuilder()
+      val consumerKey : String? = System.getenv("twitter4j_oauth_consumerKey")
+      val consumerSecret : String?  = System.getenv("twitter4j_oauth_consumerSecret")
+      val accessToken : String?  = System.getenv("twitter4j_oauth_accessToken")
+      val accessTokenSecret: String?  = System.getenv("twitter4j_oauth_accessTokenSecret")
+
+      val cb = if (consumerKey.isNullOrEmpty()) {
+        // in the properties file
+        ConfigurationBuilder()
+      } else {
+        ConfigurationBuilder()
+          .setOAuthConsumerKey(consumerKey)
+          .setOAuthConsumerSecret(consumerSecret)
+          .setOAuthAccessToken(accessToken)
+          .setOAuthAccessTokenSecret(accessTokenSecret)
+      }
       val tf = TwitterFactory(cb.build())
-       twitter = tf.instance
+      twitter = tf.instance
     } catch (e: Exception) {
-      print("Some badness with creating twitter ${e.localizedMessage}")
+      logger.info("Some badness with getting twitter instance ${e.localizedMessage}", e)
     }
     return twitter
-
   }
 
   fun tweet(msg: String): String {
@@ -48,44 +61,34 @@ class TweetUtils() {
     return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty")
   }
 
-  /**
-   *
-  "id" => "custom-821991848667287552",
-  "changes" => [
-  [ "op" => "add", "tweet_id" => "821127339513823232" ] ,
-  [ "op" => "add", "tweet_id" => "821122002253586432" ] ,
-  [ "op" => "remove", "tweet_id" => "821127416013688832" ] ,
-  [ "op" => "remove", "tweet_id" => "821127416013688832" ]
-   ]
-   */
   fun createCollection(replay: Replay?): String {
-
     if(replay == null){
       return "no replay to create collection from"
     }
-
-    val collectionCreate = "https://api.twitter.com/1.1/collections/create.json?name=${replay.getCollectionName()}&description=${replay.getCollectionName()}&timeline_order=tweet_chron"
-
-    val response = getTwitter()?.postResponse(collectionCreate)
-
-    logger.info("response from collection  is $response")
-
-
-    if(response != null && response.statusCode == 200) {
-      //val objectMapper = ObjectMapper().readValue<Collections>(response.asString())
-      replay.getListeningTweetList().chunked(100).forEach {
-
+    var retMsg = ""
+    try {
+      val response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/create.json",
+        HttpParameter("name", replay.getCollectionName()),
+        HttpParameter("description", replay.getCollectionDesc()),
+        HttpParameter("timeline_order", "tweet_chron")
+      )
+      logger.info("response from collection  is $response")
+      if (response != null && response.statusCode == 200) {
+        val collectionId = (response?.asJSONObject().get("response") as JSONObject).get("timeline_id").toString()
+        retMsg = retMsg.plus("https://twitter.com/LlSTENlNG_PARTY/timelines/${collectionId.substringAfter("custom-")}")
+        logger.info(retMsg)
+        replay.getListeningTweetList().forEach {
+          logger.info("adding tweet $it to collection id $collectionId")
+          getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/entries/add.json",
+            HttpParameter("tweet_id", it),
+            HttpParameter("id", collectionId)
+          )
+        }
       }
-
-
+    }catch( e : Exception){
+      logger.info("Some badness with createCollection on twitter  ${e.localizedMessage}", e)
     }
-
-//    getTwitter().pu
-//    val statusResponse = twitter.getResponse("https://api.twitter.com/1.1/collections/show.json?id=custom-1255049376134823938")
-//
-//    logger.info("http response $statusResponse")
-    return "" //statusResponse.asString()
-
+    return retMsg
   }
 
 }
