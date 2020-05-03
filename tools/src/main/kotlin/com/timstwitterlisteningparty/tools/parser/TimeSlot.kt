@@ -186,7 +186,7 @@ data class TimeSlot(val dateStr: String = "?",
    */
   fun tweeterList() : List<String>{
     if(tweeters.isEmpty()){
-      return Collections.emptyList();
+      return Collections.emptyList()
     }
     return tweeters.split(":").map { it.trim() }
   }
