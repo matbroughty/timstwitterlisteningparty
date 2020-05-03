@@ -1,6 +1,7 @@
 package com.timstwitterlisteningparty.tools.parser
 
 import com.opencsv.bean.CsvBindByPosition
+import org.jsoup.Jsoup
 
 /**
  * Reads the replay info from http://www.sk7software.co.uk/listeningparty/scripts/listParties.php
@@ -37,6 +38,22 @@ data class Replay(@CsvBindByPosition(position = 0)
       return ""
     }
     return "https://timstwitterlisteningparty.com/pages/replay/feed_$trimmedId.html"
+  }
+
+  fun getCollectionDesc() : String{
+    return "$band : Album : $album listening party on $date #TimsTwitterListeningParty"
+  }
+
+  fun getCollectionName() : String{
+    return album.take(25) // shouldn't be longer than 25...
+  }
+
+  /**
+   * Returns tweet id's from the replay link page
+   */
+  fun getListeningTweetList(): List<String> {
+    val replayFeedHtml = Jsoup.connect("https://timstwitterlisteningparty.com/snippets/replay/feed_${trimmedId}_snippet.html").get()
+    return replayFeedHtml.select("div[id^=tweet-feed-]").map { it.attr("data-url").toString().substringAfterLast("%2F") }.toList()
   }
 
 

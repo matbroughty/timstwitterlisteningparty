@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.model.GetObjectRequest
 import com.opencsv.bean.CsvToBeanBuilder
 import com.timstwitterlisteningparty.tools.parser.ReplayPHPScript
 import com.timstwitterlisteningparty.tools.parser.TimeSlot
-import com.timstwitterlisteningparty.tools.parser.TimeSlotFileReplayLink
 import com.timstwitterlisteningparty.tools.twitter.TweetUtils
 import org.slf4j.LoggerFactory
 import java.io.InputStream
@@ -14,7 +13,7 @@ import java.io.InputStreamReader
 import java.time.LocalDateTime
 
 /**
- * Uses the [TimeSlotFileReplayLink.readPhpReplayScript] to get the current replays
+ * Uses the [ReplayPHPScript.readPhpReplayScript] to get the current replays
  * and then checks against the time-slot-data.csv in the s3 bucket and tweets any replays
  * that are missing the s3 time-slot-data.csv but are in the
  */

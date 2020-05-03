@@ -35,22 +35,13 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
       if (replayMap.containsKey(it.hashBandAlbum())) {
         val replay = replayMap[it.hashBandAlbum()]
         if (replay != null) {
-          // if we have no replay currently tweet about it
-          val replayLink = replay.fullReplayLink()
-          // a new replay - tell the world
-          if (it.replayLink.isEmpty() && replayLink.isNotEmpty()) {
-            logger.info("tweeted ${tweetUtils.tweetReplay(it, replayLink = replayLink)}")
-          }
+          // set it
           it.replayLink = replay.fullReplayLink()
         }
         // only set the tweeters if the
         if (it.tweeters.isEmpty()) {
           it.tweeters = replayMap[it.hashBandAlbum()]?.twitterIds ?: ""
         }
-
-//        if (it.requiresTwitterCollection()) {
-//          it.twitterCollectionLink = tweetUtils.createCollection(it.replayLink)   //createCollection(replayMap[it.hashBandAlbum()]?.trimmedId ?: "")
-//        }
       }
     }
     existingList.forEach { logger.info(it.toString()) }
@@ -99,6 +90,14 @@ class ReplayPHPScript {
       .map { it.hashBandAlbum() to it }
       .toMap()
   }
+
+}
+
+
+class ReplayFeed {
+
+  private val logger = LoggerFactory.getLogger(javaClass)
+
 
 }
 
