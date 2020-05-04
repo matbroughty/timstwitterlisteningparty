@@ -18,13 +18,13 @@ class TweetUtils() {
   private val logger = LoggerFactory.getLogger(javaClass)
 
 
-  fun getTwitter() : Twitter?{
+  fun getTwitter(): Twitter? {
     var twitter: Twitter? = null
     try {
-      val consumerKey : String? = System.getenv("twitter4j_oauth_consumerKey")
-      val consumerSecret : String?  = System.getenv("twitter4j_oauth_consumerSecret")
-      val accessToken : String?  = System.getenv("twitter4j_oauth_accessToken")
-      val accessTokenSecret: String?  = System.getenv("twitter4j_oauth_accessTokenSecret")
+      val consumerKey: String? = System.getenv("twitter4j_oauth_consumerKey")
+      val consumerSecret: String? = System.getenv("twitter4j_oauth_consumerSecret")
+      val accessToken: String? = System.getenv("twitter4j_oauth_accessToken")
+      val accessTokenSecret: String? = System.getenv("twitter4j_oauth_accessTokenSecret")
 
       val cb = if (consumerKey.isNullOrEmpty()) {
         // in the properties file
@@ -55,37 +55,39 @@ class TweetUtils() {
 
 
   fun tweetReplay(timeSlot: TimeSlot, replayLink: String): String {
-    if(timeSlot.tweeterList().isEmpty()){
+    if (timeSlot.tweeterList().isEmpty()) {
       return "no band/artist to tweet replay"
     }
     return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty")
   }
 
   fun createCollection(replay: Replay?): String {
-    if(replay == null){
+    if (replay == null) {
       return "no replay to create collection from"
     }
     var retMsg = ""
     try {
-      val response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/create.json",
+      var response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/create.json",
         HttpParameter("name", replay.getCollectionName()),
         HttpParameter("description", replay.getCollectionDesc()),
         HttpParameter("timeline_order", "tweet_chron")
       )
-      logger.info("response from collection  is $response")
+      logger.info("response from collection create is $response")
       if (response != null && response.statusCode == 200) {
         val collectionId = (response?.asJSONObject().get("response") as JSONObject).get("timeline_id").toString()
         retMsg = retMsg.plus("https://twitter.com/LlSTENlNG_PARTY/timelines/${collectionId.substringAfter("custom-")}")
         logger.info(retMsg)
-        replay.getListeningTweetList().forEach {
-          logger.info("adding tweet $it to collection id $collectionId")
-          getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/entries/add.json",
-            HttpParameter("tweet_id", it),
-            HttpParameter("id", collectionId)
-          )
+        replay.getListeningTweetList().chunked(100).forEach {
+          var json = "{\"id\": \"$collectionId\",\"changes\": ["
+          json = json.plus(it.joinToString { tweetId -> "{ \"op\": \"add\", \"tweet_id\": \"$tweetId\"}" })
+          json = json.plus("]}")
+          logger.info("json curation json is $json")
+          response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/entries/curate.json", JSONObject(json))
+          logger.info("response from curate for collection $collectionId is $response")
         }
+
       }
-    }catch( e : Exception){
+    } catch (e: Exception) {
       logger.info("Some badness with createCollection on twitter  ${e.localizedMessage}", e)
     }
     return retMsg

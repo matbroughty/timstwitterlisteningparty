@@ -53,7 +53,7 @@ data class Replay(@CsvBindByPosition(position = 0)
    */
   fun getListeningTweetList(): List<String> {
     val replayFeedHtml = Jsoup.connect("https://timstwitterlisteningparty.com/snippets/replay/feed_${trimmedId}_snippet.html").get()
-    return replayFeedHtml.select("div[id^=tweet-feed-]").map { it.attr("data-url").toString().substringAfterLast("%2F") }.toList()
+    return replayFeedHtml.select("div[id^=tweet-feed-]").map { it.attr("data-url").toString().substringAfterLast("%2F") }.filter { it.isNotEmpty() }.toList()
   }
 
 

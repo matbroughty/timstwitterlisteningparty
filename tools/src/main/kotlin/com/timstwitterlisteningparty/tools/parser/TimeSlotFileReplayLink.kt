@@ -17,7 +17,7 @@ import kotlin.streams.toList
  * as column 5 and 6
  */
 @Component
-class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
+class TimeSlotFileReplayLink {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -35,7 +35,7 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
       if (replayMap.containsKey(it.hashBandAlbum())) {
         val replay = replayMap[it.hashBandAlbum()]
         if (replay != null) {
-          if(it.requiresTwitterCollection() && Integer.valueOf(replay.trimmedId) > 80){
+          if(it.requiresTwitterCollection()){
             logger.info("creating collection for replay $replay")
             it.twitterCollectionLink = TweetUtils().createCollection(replay)
           }

@@ -15,7 +15,8 @@ class RegenerateCommand(val allHtmlCommand: AllHtmlCommand, val addReplayToCsvCo
 
   @ShellMethod("Regenerates the site calling the command 'replay' and then 'allhtml' commands")
   fun regen() : String{
+    val updatedTimeSlotData = addReplayToCsvCommand.replay()
     val allHtml = allHtmlCommand.allhtml()
-    return "regen ${addReplayToCsvCommand.replay()} and allHtml length ${allHtml.length}"
+    return "regen $updatedTimeSlotData and allHtml length ${allHtml.length}"
   }
 }
