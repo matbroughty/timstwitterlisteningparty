@@ -21,9 +21,9 @@ class BookStoreFileCreator : HtmlFileCreator{
       }
 
     val beans: List<BookStore> = csvToBeanBuilder.withType(BookStore::class.java).withSkipLines(1).withIgnoreEmptyLine(true).build().parse()
-    beans.forEach { logger.info("Read in Bean {}", it) }
+    beans.forEach { logger.debug("Read in Bean {}", it) }
     val storeHtml = buildTable(beans)
-    logger.info("Store html {}", storeHtml)
+    logger.debug("Store html {}", storeHtml)
     val file = File("snippets/book-stores.html")
     if (writeToFile) {
       file.writeText(storeHtml)

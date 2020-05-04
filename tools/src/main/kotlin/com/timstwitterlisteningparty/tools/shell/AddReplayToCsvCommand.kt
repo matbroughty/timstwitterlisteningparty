@@ -9,7 +9,7 @@ class AddReplayToCsvCommand(val timeSlotFileReplayLink: TimeSlotFileReplayLink) 
 
   @ShellMethod("Add a column (5th) to the data/time-slot.date.csv file from the url view-source: http://www.sk7software.co.uk/listeningparty/scripts/listParties.php")
   fun replay(): String {
-    return "The generated-time-slot.date.csv file was created: ${updateFile()}"
+    return "The generated-time-slot.date.csv file was created\n: ${updateFile()}"
   }
 
 

@@ -25,7 +25,7 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
                     writeToFile: Boolean = false, newFileName: String = fileName): String {
 
     val replayMap: Map<Int, Replay> = ReplayPHPScript().readPhpReplayScript()
-    replayMap.forEach { logger.info(it.toString()) }
+    replayMap.forEach { logger.debug(it.toString()) }
     val csvToBeanBuilder: CsvToBeanBuilder<TimeSlot> =
       if (inputStream != null) CsvToBeanBuilder<TimeSlot>(InputStreamReader(inputStream)) else {
         CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
@@ -48,7 +48,7 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
         }
       }
     }
-    existingList.forEach { logger.info(it.toString()) }
+    existingList.forEach { logger.debug(it.toString()) }
 
     if (writeToFile) {
       val fileWriter = FileWriter(newFileName)
@@ -66,7 +66,6 @@ class TimeSlotFileReplayLink(val tweetUtils: TweetUtils) {
     sbc.write(existingList)
     writer.close()
     return writer.toString()
-
   }
 
 }
@@ -84,11 +83,11 @@ class ReplayPHPScript {
     // slightly weirdly formed so use jsoup and then get rid of markup and parse as csv
     val stockURL = Jsoup.connect(fileName).get()
     val replayIds = stockURL.select("body").toString().replace("<body>\n", "").replace("</body>", "").replace("<br>", "")
-    logger.info("replay ids $replayIds")
+    logger.debug("replay ids $replayIds")
     val builder = CsvToBeanBuilder<Replay>(StringReader(replayIds))
     val idList: List<Replay> = builder.withType(Replay::class.java).withIgnoreEmptyLine(true).withSkipLines(1).build().parse()
     //idList.forEach { logger.info("tweeted ${tweetUtils.tweet("Replay available:  ${it.band} : ${it.album} at ${fullReplayLink(it.trimmedId)} #TimsTwitterListeningParty")}") }
-    idList.forEach { logger.info(it.toString()) }
+    idList.forEach { logger.debug(it.toString()) }
     return idList.stream().filter { it.isEmpty().not() }
       .toList()
       .map { it.hashBandAlbum() to it }

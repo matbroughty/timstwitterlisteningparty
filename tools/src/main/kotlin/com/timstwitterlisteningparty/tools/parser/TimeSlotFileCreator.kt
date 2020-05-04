@@ -27,7 +27,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
         CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
       }
     val beans: List<TimeSlot> = csvToBeanBuilder.withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
-    beans.forEach { logger.info("Read in Bean {}", it) }
+    beans.forEach { logger.debug("Read in Bean {}", it) }
     val tbd = beans.stream()
       .filter { it.isoDate.year == 1970 }.collect(Collectors.toList())
     val completed = beans.stream()
@@ -36,9 +36,9 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val upcoming = beans.stream()
       .filter { it.isoDate.year != 1970 && it.isoDate.toLocalDate().isBefore(LocalDate.now()).not() }
       .collect(Collectors.toList())
-    tbd.forEach { logger.info("Dates to be confirmed {}", it) }
-    completed.forEach { logger.info("Completed listening {}", it) }
-    upcoming.forEach { logger.info("Upcoming listening {}", it) }
+    tbd.forEach { logger.debug("Dates to be confirmed {}", it) }
+    completed.forEach { logger.debug("Completed listening {}", it) }
+    upcoming.forEach { logger.debug("Upcoming listening {}", it) }
     val upcomingHtml = buildTable(upcoming, false, tbd = false)
     val upcomingFile = File("snippets/upcoming-time-slots.html")
     val upcomingHtmlCard = buildTableCard(upcoming)
@@ -57,7 +57,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
       allOneTableFile.writeText(allOneTableHtml)
       upcomingFileCard.writeText(upcomingHtmlCard)
     }
-    logger.info("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}", upcomingHtml, dateTbdHtml, completedHtml, allOneTableHtml)
+    logger.debug("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}", upcomingHtml, dateTbdHtml, completedHtml, allOneTableHtml)
 
     return mapOf(
       Pair("snippets/${upcomingFile.name}", upcomingHtml),
@@ -77,7 +77,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
       val first = sortedSlots.first()
       val startingMonday = first.isoDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
       val last = sortedSlots.last()
-      logger.info("first date {} startingMonday {} last date {}", first.isoDate, startingMonday, last.isoDate)
+      logger.debug("first date {} startingMonday {} last date {}", first.isoDate, startingMonday, last.isoDate)
       val map: HashMap<LocalDate, ArrayList<TimeSlot>> = HashMap()
       var start = startingMonday
       while (start.isAfter(last.isoDate).not()) {
