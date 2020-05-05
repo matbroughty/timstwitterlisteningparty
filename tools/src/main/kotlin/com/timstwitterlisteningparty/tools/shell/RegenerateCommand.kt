@@ -9,14 +9,16 @@ import org.springframework.shell.standard.ShellMethod
  * <br>
  * Effectively regenerates the html snippets via the [AllHtmlCommand.allhtml] and before that
  * updates the data/time-slot-data.csv with any replay links via the [AddReplayToCsvCommand.timeSlotFileReplayLink]
+ * and then the pages/list/collection_nn.html files via [collectionPagesGenerateCommand]
  */
 @ShellComponent
-class RegenerateCommand(val allHtmlCommand: AllHtmlCommand, val addReplayToCsvCommand: AddReplayToCsvCommand) {
+class RegenerateCommand(val allHtmlCommand: AllHtmlCommand, val addReplayToCsvCommand: AddReplayToCsvCommand,
+                        val collectionPagesGenerateCommand: CollectionPagesGenerateCommand) {
 
-  @ShellMethod("Regenerates the site calling the command 'replay' and then 'allhtml' commands")
+  @ShellMethod("Regenerates the site calling the command 'replay', 'allhtml' and 'collections' commands")
   fun regen() : String{
     val updatedTimeSlotData = addReplayToCsvCommand.replay()
     val allHtml = allHtmlCommand.allhtml()
-    return "regen $updatedTimeSlotData and allHtml length ${allHtml.length}"
+    return "regen $updatedTimeSlotData and allHtml length ${allHtml.length} and ${collectionPagesGenerateCommand.collections()}"
   }
 }

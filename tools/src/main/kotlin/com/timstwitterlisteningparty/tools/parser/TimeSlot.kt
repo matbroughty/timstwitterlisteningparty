@@ -40,7 +40,6 @@ data class TimeSlot(val dateStr: String = "?",
       isoDate = buildDate(dateStr, timeStr)
     }
 
-
   }
 
 
@@ -205,6 +204,14 @@ data class TimeSlot(val dateStr: String = "?",
 
   private fun isEmpty() : Boolean{
     return band.isEmpty()
+  }
+
+
+  fun replayId() : String{
+    if(replayLink.isNotEmpty()){
+      return StringUtils.substringBefore(replayLink.substringAfterLast("feed_"), ".html")
+    }
+    return ""
   }
 
   /**
