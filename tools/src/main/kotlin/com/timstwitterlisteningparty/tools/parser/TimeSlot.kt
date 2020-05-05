@@ -126,10 +126,15 @@ data class TimeSlot(val dateStr: String = "?",
     var twitterIcon = "fa-twitter-square"
     var hours = "?"
     var amPm = ""
+    val isNow = LocalDate.now().isEqual(isoDate.toLocalDate())
+    var twitterIds = ""
     // active button for today
     if (isoDate.year != 1970) {
-      if (LocalDate.now().isEqual(isoDate.toLocalDate())) {
+      if (isNow) {
         twitterIcon = "fa-twitter"
+        if(tweeters.isNotEmpty()){
+          twitterIds = buildTweeterLinks()
+        }
       }
       if (isoDate.hour != 0) {
         hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm"))
@@ -149,7 +154,7 @@ data class TimeSlot(val dateStr: String = "?",
       "                $hours<sup> $amPm</sup>\n" +
       "              </td>\n" +
       "              <td width=\"60%\" style=\"text-align:left;\">\n" +
-      "                <b>$band</b><br/>$album\n" +
+      "                <b>$band</b><br/>$album\n $twitterIds" +
       "              </td>\n" +
       "              <td width=\"15%\"><a class=\"pure-button $button\"\n" +
       "                                 href=\"$link\"><i\n" +
@@ -158,6 +163,12 @@ data class TimeSlot(val dateStr: String = "?",
       "          </table>\n" +
       "        </div>"
 
+  }
+
+  private fun buildTweeterLinks(): String {
+    var html = "<br/><small>"
+    html = html.plus(tweeterLinkList().map { "<a class=\"text-muted\" href=\"$it\">@${it.substringAfterLast("/")}</a>" }.toList())
+    return html.plus("</small>").replace("[", "").replace("]", "")
   }
 
   /**
