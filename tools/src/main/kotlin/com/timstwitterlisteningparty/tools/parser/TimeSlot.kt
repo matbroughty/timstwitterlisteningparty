@@ -167,7 +167,7 @@ data class TimeSlot(val dateStr: String = "?",
 
   private fun buildTweeterLinks(): String {
     var html = "<br/><small>"
-    html = html.plus(tweeterLinkList().map { "<a class=\"text-muted\" href=\"$it\">@${it.substringAfterLast("/")}</a>" }.toList())
+    html = html.plus(tweeterLinkList().map { "<a class=\"text-muted\" target=\"_blank\" href=\"$it\">@${it.substringAfterLast("/")}</a>" }.toList())
     return html.plus("</small>").replace("[", "").replace("]", "")
   }
 
