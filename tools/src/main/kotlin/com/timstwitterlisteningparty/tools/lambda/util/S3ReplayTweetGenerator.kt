@@ -46,7 +46,7 @@ class S3ReplayTweetGenerator {
             tweetMsg = tweetMsg.plus("\n").plus(tweet)
             logger.info("tweeted $tweet")
             // and tell them about the collection
-            tweetMsg = TweetUtils().tweetCollection(it, it.replayId())
+            tweetMsg = TweetUtils().tweetCollection(it, replayId = replay.trimmedId)
             logger.info("tweeted $tweet")
             tweetMsg = tweetMsg.plus("\n").plus(tweet)
           } else {
