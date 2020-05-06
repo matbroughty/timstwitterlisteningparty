@@ -45,6 +45,10 @@ class S3ReplayTweetGenerator {
             val tweet = tweetMsg.plus(TweetUtils().tweetReplay(it, replayLink = replay.fullReplayLink()))
             tweetMsg = tweetMsg.plus("\n").plus(tweet)
             logger.info("tweeted $tweet")
+            // and tell them about the collection
+            tweetMsg = TweetUtils().tweetCollection(it, it.replayId())
+            logger.info("tweeted $tweet")
+            tweetMsg = tweetMsg.plus("\n").plus(tweet)
           } else {
             logger.info("Already tweeted about replay for:  $replay")
           }
@@ -52,9 +56,22 @@ class S3ReplayTweetGenerator {
       } else {
         missingData = missingData.plus("!!!").plus(it)
         logger.info("Didn't find a match in the php for $it")
-
       }
     }
+
+    // randomly tweet about a collection if we didn't tweet about a new replay or collection
+    // as don't want to clog timeline
+    if(tweetMsg.isEmpty()) {
+      for (i in 1..3) {
+        val timeSlot = existingList.random()
+        if (timeSlot.twitterCollectionLink.isNotEmpty() && timeSlot.replayId().isNotEmpty()) {
+          val tweet = TweetUtils().tweetCollection(timeSlot, timeSlot.replayId())
+          tweetMsg = tweetMsg.plus("\n").plus(tweet)
+        }
+      }
+    }
+
+
     return "Ok: replayLink tweeted the following replay tweets $tweetMsg !!!! Did not match $missingData !!! : Generated time is :${LocalDateTime.now()} "
   }
 

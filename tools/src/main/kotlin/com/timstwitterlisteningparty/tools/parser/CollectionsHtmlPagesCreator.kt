@@ -39,9 +39,6 @@ class CollectionsHtmlPagesCreator {
     var template = getFreeMarker()
     existingList.filter { it.replayLink.isNotEmpty() }.forEach{it->
         val input: Map<String, TimeSlot> = mapOf(Pair("slot", it))
-        // Write output to the console
-        val consoleWriter: Writer = OutputStreamWriter(System.out)
-        template.process(input, consoleWriter)
         if (writeToFile) {
           val pageFileName = "pages/list/collection_${it.replayId()}.html"
           val fileWriter: Writer = FileWriter(File(pageFileName))

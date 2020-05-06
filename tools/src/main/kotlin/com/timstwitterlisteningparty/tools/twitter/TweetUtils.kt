@@ -2,6 +2,7 @@ package com.timstwitterlisteningparty.tools.twitter
 
 import com.timstwitterlisteningparty.tools.parser.Replay
 import com.timstwitterlisteningparty.tools.parser.TimeSlot
+import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import twitter4j.HttpParameter
@@ -58,7 +59,32 @@ class TweetUtils() {
     if (timeSlot.tweeterList().isEmpty()) {
       return "no band/artist to tweet replay"
     }
+    if(pageExists(replayLink)){
+      return "$replayLink page doesn't exist yet"
+    }
     return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty")
+  }
+
+  fun pageExists(link: String): Boolean {
+    try{
+      return Jsoup.connect(link).get().text().isNotEmpty()
+    }catch(e:Exception){
+      logger.warn("issue trying to get $link ${e.localizedMessage}")
+    }
+    return false;
+
+  }
+
+
+  fun tweetCollection(timeSlot: TimeSlot, replayId: String): String {
+    if (timeSlot.tweeterList().isEmpty() || replayId.isEmpty()) {
+      return "no band/artist to tweet collection"
+    }
+    val curatedTweetUrl = "https://timstwitterlisteningparty.com/pages/list/collection_${replayId}.html"
+    if(pageExists(curatedTweetUrl)){
+      return "$curatedTweetUrl page doesn't exist yet"
+    }
+    return tweet("Listening Party Tweet List available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $curatedTweetUrl #TimsTwitterListeningParty")
   }
 
   fun createCollection(replay: Replay?): String {
@@ -74,7 +100,7 @@ class TweetUtils() {
       )
       logger.info("response from collection create is $response")
       if (response != null && response.statusCode == 200) {
-        val collectionId = (response?.asJSONObject().get("response") as JSONObject).get("timeline_id").toString()
+        val collectionId = (response.asJSONObject().get("response") as JSONObject).get("timeline_id").toString()
         retMsg = retMsg.plus("https://twitter.com/LlSTENlNG_PARTY/timelines/${collectionId.substringAfter("custom-")}")
         logger.info(retMsg)
         replay.getListeningTweetList().chunked(100).forEach {
