@@ -29,7 +29,7 @@ class TweetCommand {
     val timeSlot = findTimeSlot(replayId)
     val msg: String
     msg = if(timeSlot != null) {
-      TweetUtils().tweetCollection(timeSlot, replayId = replayId)
+      TweetUtils().tweetReplay(timeSlot, timeSlot.replayLink)
     }else{
       "couldn't find TimeSlot for replayId $replayId - no tweet sent"
     }
