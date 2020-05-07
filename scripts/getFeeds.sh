@@ -132,9 +132,12 @@ fi
 if [ $index -eq 1 ]
 then
     echo ++++++++++ Generating Index Snippet
-    localfile=${LOCAL_PATH}/snippets/replay/feed_list_snippet.html
+    localfile=${LOCAL_PATH}/snippets/replay/feed_list${ids[0]}_snippet.html
     curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile
+    sed "s/\.\.\/snippets\/replay\/feed_.*_snippet.html/\.\.\/snippets\/replay\/feed_list${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
+    mv tmp.txt ${LOCAL_PATH}/pages/replay.html
     addtogit $localfile
+    addtogit ${LOCAL_PATH}/pages/replay.html
 fi
 
 for i in $(seq ${ids[@]})
