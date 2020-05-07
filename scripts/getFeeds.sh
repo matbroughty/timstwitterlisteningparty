@@ -133,7 +133,7 @@ if [ $index -eq 1 ]
 then
     echo ++++++++++ Generating Index Snippet
     localfile=${LOCAL_PATH}/snippets/replay/feed_list_snippet.html
-    curl "${REMOTE_PATH}/indexsnip.php" -o $localfile
+    curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile
     addtogit $localfile
 fi
 
