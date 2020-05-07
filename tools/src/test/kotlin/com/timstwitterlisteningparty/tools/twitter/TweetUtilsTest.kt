@@ -22,6 +22,7 @@ internal class TweetUtilsTest {
     assertFalse(TweetUtils().pageExists("https://timstwitterlisteningparty.com/whatthe.html"))
     assertTrue(TweetUtils().pageExists("http://timstwitterlisteningparty.com/pages/list/collection_35.html"))
     assertFalse(TweetUtils().pageExists("http://timstwitterlisteningparty.com/pages/list/collection_35908.html"))
+    assertTrue(TweetUtils().pageExists("https://timstwitterlisteningparty.com/pages/replay/feed_112.html"))
   }
 
 }

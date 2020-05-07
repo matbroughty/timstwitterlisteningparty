@@ -39,11 +39,15 @@ class CollectionsHtmlPagesCreator {
     var template = getFreeMarker()
     existingList.filter { it.replayLink.isNotEmpty() }.forEach{it->
         val input: Map<String, TimeSlot> = mapOf(Pair("slot", it))
+      try {
         if (writeToFile) {
           val pageFileName = "pages/list/collection_${it.replayId()}.html"
           val fileWriter: Writer = FileWriter(File(pageFileName))
           template.process(input, fileWriter)
         }
+      }catch(e :Exception){
+        logger.warn("issue writing collection file for TimeSlot $it")
+      }
     }
 
     // TODO return a map of pairs so we can use in lambda and write each one to s3

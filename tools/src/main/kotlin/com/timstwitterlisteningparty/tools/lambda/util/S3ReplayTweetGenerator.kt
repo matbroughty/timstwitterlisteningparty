@@ -42,13 +42,13 @@ class S3ReplayTweetGenerator {
           // a new replay - tell the world
           if (it.replayLink.isEmpty() && replay.fullReplayLink().isNotEmpty()) {
             logger.info("we have a new replay for:  $replay")
-            val tweet = tweetMsg.plus(TweetUtils().tweetReplay(it, replayLink = replay.fullReplayLink()))
+            // them about the collection
+            var tweet = TweetUtils().tweetCollection(it, replayId = replay.trimmedId)
             tweetMsg = tweetMsg.plus("\n").plus(tweet)
-            logger.info("tweeted $tweet")
-            // and tell them about the collection
-            tweetMsg = TweetUtils().tweetCollection(it, it.replayId())
-            logger.info("tweeted $tweet")
+            // and the replay
+            tweet = TweetUtils().tweetReplay(it, replayLink = replay.fullReplayLink())
             tweetMsg = tweetMsg.plus("\n").plus(tweet)
+            logger.info("tweeted $tweetMsg")
           } else {
             logger.info("Already tweeted about replay for:  $replay")
           }

@@ -59,7 +59,7 @@ class TweetUtils() {
     if (timeSlot.tweeterList().isEmpty()) {
       return "no band/artist to tweet replay"
     }
-    if(pageExists(replayLink)){
+    if(!pageExists(replayLink)){
       return "$replayLink page doesn't exist yet"
     }
     return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty")
@@ -81,8 +81,8 @@ class TweetUtils() {
       return "no band/artist to tweet collection"
     }
     val curatedTweetUrl = "https://timstwitterlisteningparty.com/pages/list/collection_${replayId}.html"
-    if(pageExists(curatedTweetUrl)){
-      return "$curatedTweetUrl page doesn't exist yet"
+    if(!pageExists(curatedTweetUrl)){
+      return "$curatedTweetUrl collection page doesn't exist yet"
     }
     return tweet("Listening Party Tweet List available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $curatedTweetUrl #TimsTwitterListeningParty")
   }
