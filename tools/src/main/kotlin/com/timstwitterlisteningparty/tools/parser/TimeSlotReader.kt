@@ -18,7 +18,7 @@ data class TimeSlotReader(val timeSlotFile: String = "data/time-slot-data.csv", 
       if (inputStream != null) CsvToBeanBuilder<TimeSlot>(InputStreamReader(inputStream)) else {
         CsvToBeanBuilder<TimeSlot>(FileReader(timeSlotFile))
       }
-    timeSlots = csvToBeanBuilder.withType(TimeSlot::class.java).withSkipLines(1).withIgnoreEmptyLine(true).build().parse()
+    timeSlots = csvToBeanBuilder.withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
   }
 
 }
