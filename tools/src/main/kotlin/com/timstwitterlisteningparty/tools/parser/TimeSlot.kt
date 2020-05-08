@@ -1,5 +1,6 @@
 package com.timstwitterlisteningparty.tools.parser
 
+import com.opencsv.bean.CsvBindByName
 import com.opencsv.bean.CsvBindByPosition
 import com.opencsv.bean.CsvDate
 import org.apache.commons.lang3.StringUtils
@@ -17,20 +18,36 @@ import java.util.*
  */
 data class TimeSlot(val dateStr: String = "?",
                     val timeStr: String = "?",
+                    @CsvBindByName(column = "iso-date")
                     @CsvBindByPosition(position = 0) @CsvDate(value = "yyyy-MM-dd'T'HH:mm")
                     var isoDate: LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC),
+                    @CsvBindByName(column = "band")
                     @CsvBindByPosition(position = 1)
                     val band: String = "",
+                    @CsvBindByName(column = "album")
                     @CsvBindByPosition(position = 2)
                     val album: String = "",
+                    @CsvBindByName(column = "confirmation-tweet")
                     @CsvBindByPosition(position = 3)
                     val link: String = "",
+                    @CsvBindByName(column = "replay-link")
                     @CsvBindByPosition(position = 4)
                     var replayLink: String = "",
+                    @CsvBindByName(column = "tweeters")
                     @CsvBindByPosition(position = 5)
                     var tweeters: String = "",
+                    @CsvBindByName(column = "curated-list")
                     @CsvBindByPosition(position = 6)
-                    var twitterCollectionLink: String = "") : HtmlRow {
+                    var twitterCollectionLink: String = "",
+                    @CsvBindByName(column = "spotify-link")
+                    @CsvBindByPosition(position = 7)
+                    var spotifyLink: String = "", // link to album
+                    @CsvBindByPosition(position = 8)
+                    @CsvBindByName(column = "spotify-img-link")
+                    var spotifyImgLink: String = "" // link to album artwork
+
+
+) : HtmlRow {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 

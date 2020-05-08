@@ -85,7 +85,7 @@
       <h1 class="brand-title">Tweet Archive</h1>
       <h4 class="status">Together Apart</h4>
       <h5 class="status"><a class="text-white justify-content-end"
-                            href="shop.html"><i
+                            href="../shop.html"><i
         class="fas fa-shopping-basket"></i> BUY RECORDS</a></h5>
 
       <a href="https://twitter.com/Tim_Burgess/status/1243311699941261313">

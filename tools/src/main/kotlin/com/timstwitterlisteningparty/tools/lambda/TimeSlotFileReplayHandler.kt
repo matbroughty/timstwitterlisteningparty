@@ -7,7 +7,7 @@ import com.amazonaws.services.lambda.runtime.events.S3Event
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.GetObjectRequest
-import com.timstwitterlisteningparty.tools.parser.TimeSlotFileReplayLink
+import com.timstwitterlisteningparty.tools.parser.TimeSlotFileEnrich
 import java.io.InputStream
 
 /**
@@ -25,7 +25,7 @@ class TimeSlotFileReplayHandler(private val bucketName: String = "timstwitterlis
     println("Object for $srcKeyTimeSlots from bucket $bucketName is $s3Object")
     val objectData: InputStream = s3Object.objectContent
     // no spring injection in the lambda
-    val fileData = TimeSlotFileReplayLink().addReplayLink(inputStream = objectData)
+    val fileData = TimeSlotFileEnrich().addReplayLink(inputStream = objectData)
     print("fileData = $fileData")
     //sanity check
     var msg = "TimeSlotFileReplayHandler"

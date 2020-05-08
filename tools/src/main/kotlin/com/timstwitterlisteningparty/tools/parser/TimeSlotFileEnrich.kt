@@ -16,11 +16,10 @@ import kotlin.streams.toList
 
 /**
  * Reads http://www.sk7software.co.uk/listeningparty/scripts/listParties.php to get the
- * replay id's and the tweeters and enriches the "data/time-slot-data.csv" with them
- * as column 5 and 6
+ * replay id's and the tweeters and spotify link and enriches the "data/time-slot-data.csv" with them
  */
 @Component
-class TimeSlotFileReplayLink {
+class TimeSlotFileEnrich {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -47,6 +46,11 @@ class TimeSlotFileReplayLink {
         if (it.tweeters.isEmpty()) {
           it.tweeters = replayMap[it.hashBandAlbum()]?.twitterIds ?: ""
         }
+        // spotify link could be useful
+        if(it.spotifyLink.isEmpty()){
+          it.spotifyLink = replayMap[it.hashBandAlbum()]?.spotifyLink ?: ""
+        }
+
       }
     }
     existingList.forEach { logger.debug(it.toString()) }
@@ -81,7 +85,7 @@ class ReplayPHPScript {
    * Reads the slightly weirdly formed listParties.php so uses jsoup and then gets rid of markup and finall parses as csv
    * @return Map<Int, Replay> - a hash of band name/album to replay object
    */
-  fun readPhpReplayScript(fileName: String = "http://www.sk7software.co.uk/listeningparty/scripts/listParties.php"): Map<Int, Replay> {
+  fun readPhpReplayScript(fileName: String = "http://www.sk7software.co.uk/listeningparty/replay/live/scripts/listParties.php"): Map<Int, Replay> {
     // slightly weirdly formed so use jsoup and then get rid of markup and parse as csv
     val stockURL = Jsoup.connect(fileName).get()
     val replayIds = stockURL.select("body").toString().replace("<body>\n", "").replace("</body>", "").replace("<br>", "")
