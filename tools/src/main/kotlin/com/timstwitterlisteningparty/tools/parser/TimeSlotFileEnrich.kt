@@ -23,8 +23,8 @@ class TimeSlotFileEnrich {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  fun addReplayLink(fileName: String = "data/time-slot-data.csv", inputStream: InputStream? = null,
-                    writeToFile: Boolean = false, newFileName: String = fileName): String {
+  fun enrich(fileName: String = "data/time-slot-data.csv", inputStream: InputStream? = null,
+             writeToFile: Boolean = false, newFileName: String = fileName): String {
 
     val replayMap: Map<Int, Replay> = ReplayPHPScript().readPhpReplayScript()
     replayMap.forEach { logger.debug(it.toString()) }
@@ -82,7 +82,7 @@ class ReplayPHPScript {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   /**
-   * Reads the slightly weirdly formed listParties.php so uses jsoup and then gets rid of markup and finall parses as csv
+   * Reads the slightly weirdly formed listParties.php so uses jsoup and then gets rid of markup and finally parses as csv
    * @return Map<Int, Replay> - a hash of band name/album to replay object
    */
   fun readPhpReplayScript(fileName: String = "http://www.sk7software.co.uk/listeningparty/replay/live/scripts/listParties.php"): Map<Int, Replay> {

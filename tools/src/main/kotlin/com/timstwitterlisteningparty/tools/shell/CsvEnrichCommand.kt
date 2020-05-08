@@ -15,7 +15,7 @@ class CsvEnrichCommand(val timeSlotFileEnrich: TimeSlotFileEnrich) {
 
 
   fun updateFile(): String {
-    return timeSlotFileEnrich.addReplayLink(writeToFile = true)
+    return timeSlotFileEnrich.enrich(writeToFile = true)
   }
 
 }
