@@ -2,6 +2,6 @@ package com.timstwitterlisteningparty.tools.parser
 
 interface HtmlRow {
 
-  fun buildHtmlRow() : String
+  fun buildHtmlRow(): String
 
 }

@@ -8,7 +8,6 @@ import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.GetObjectRequest
 import com.timstwitterlisteningparty.tools.parser.TimeSlotFileReplayLink
-import com.timstwitterlisteningparty.tools.twitter.TweetUtils
 import java.io.InputStream
 
 /**
@@ -30,7 +29,7 @@ class TimeSlotFileReplayHandler(private val bucketName: String = "timstwitterlis
     print("fileData = $fileData")
     //sanity check
     var msg = "TimeSlotFileReplayHandler"
-    if(fileData.isNotEmpty() && fileData.length > 100){
+    if (fileData.isNotEmpty() && fileData.length > 100) {
       println("Writing to: $bucketName file $srcKeyTimeSlots ")
       try {
         s3Client.putObject(bucketName, srcKeyTimeSlots, fileData)

@@ -8,8 +8,8 @@ import org.springframework.shell.standard.ShellOption
 class EchoCommand {
 
   @ShellMethod("Displays greeting message to the user whose name is supplied")
-  fun echo(@ShellOption("-N", "--name") name : String) : String{
-    return  "Hello $name! You are running spring shell cli-demo."
+  fun echo(@ShellOption("-N", "--name") name: String): String {
+    return "Hello $name! You are running spring shell cli-demo."
   }
 
 }

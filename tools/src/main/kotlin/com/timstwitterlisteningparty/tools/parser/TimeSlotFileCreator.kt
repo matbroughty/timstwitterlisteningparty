@@ -1,12 +1,10 @@
 package com.timstwitterlisteningparty.tools.parser
 
-import com.opencsv.bean.CsvToBeanBuilder
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.io.File
-import java.io.FileReader
 import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.StringWriter
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -22,11 +20,8 @@ class TimeSlotFileCreator : HtmlFileCreator {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   override fun createFiles(fileName: String, inputStream: InputStream?, writeToFile: Boolean): Map<String, String> {
-    val csvToBeanBuilder: CsvToBeanBuilder<TimeSlot> =
-      if (inputStream != null) CsvToBeanBuilder<TimeSlot>(InputStreamReader(inputStream)) else {
-        CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
-      }
-    val beans: List<TimeSlot> = csvToBeanBuilder.withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
+
+    val beans = TimeSlotReader(fileName, inputStream).timeSlots
     beans.forEach { logger.debug("Read in Bean {}", it) }
     val tbd = beans.stream()
       .filter { it.isoDate.year == 1970 }.collect(Collectors.toList())
@@ -43,7 +38,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val upcomingFile = File("snippets/upcoming-time-slots.html")
     val upcomingHtmlCard = buildTableCard(upcoming)
     val upcomingFileCard = File("snippets/upcoming-time-slots-card.html")
-    val dateTbdHtml = buildTable(tbd, false, tbd = true)
+    val dateTbdHtml = buildTbcCards(tbd)
     val dateTbdFile = File("snippets/date-tbd-time-slots.html")
     val completedHtml = buildTable(completed, true, tbd = false)
     val completedFile = File("snippets/completed-time-slots.html")
@@ -65,6 +60,18 @@ class TimeSlotFileCreator : HtmlFileCreator {
       Pair("snippets/${completedFile.name}", completedHtml),
       Pair("snippets/${allOneTableFile.name}", allOneTableHtml),
       Pair("snippets/${upcomingFileCard.name}", upcomingHtmlCard))
+  }
+
+
+  /**
+   * Uses template tbc.ftl to create the tbc card
+   */
+  private fun buildTbcCards(tbd: List<TimeSlot>): String {
+    val template = FreeMarkerUtils().getFreeMarker(TBC_FTL)
+    val input: Map<String, List<TimeSlot>> = mapOf(Pair("tbc_list", tbd.sortedBy { it.band }))
+    val htmlStr = StringWriter()
+    template.process(input, htmlStr)
+    return htmlStr.toString()
   }
 
 
@@ -184,8 +191,8 @@ class TimeSlotFileCreator : HtmlFileCreator {
           "          <i class=\"fas fa-calendar-day\"></i> ${it.isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))} \n" +
           "        </div>")
       } else {
-          section = section.plus(hr)
-           hr = "<hr/>"
+        section = section.plus(hr)
+        hr = "<hr/>"
       }
       // build the card body
       section = section.plus(it.buildHtmlCardBody())

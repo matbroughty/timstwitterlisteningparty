@@ -9,7 +9,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 
 @Component
-class BookStoreFileCreator : HtmlFileCreator{
+class BookStoreFileCreator : HtmlFileCreator {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 

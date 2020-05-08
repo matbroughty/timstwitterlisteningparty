@@ -28,11 +28,11 @@ class InvalidateCacheHandler : RequestHandler<S3Event, String> {
     val lastModified = AmazonS3ClientBuilder.defaultClient().getObject(srcBucket, srcKey).objectMetadata.lastModified
 //    // only do the invalidation if the file we are checking has
 //    return if (ChronoUnit.MINUTES.between(lasModified, LocalDateTime.now()) > 1) {
-      val invalidationBatch = InvalidationBatch(Paths().withItems("/*").withQuantity(1), LocalDateTime.now().toString())
-      AmazonCloudFrontClientBuilder
-        .defaultClient()
-        .createInvalidation(CreateInvalidationRequest("E3VMVDBEUWOSL5", invalidationBatch))
-      return "Created invalidation at ${LocalDateTime.now()} for $srcBucket and $srcKey and last modified $lastModified}"
+    val invalidationBatch = InvalidationBatch(Paths().withItems("/*").withQuantity(1), LocalDateTime.now().toString())
+    AmazonCloudFrontClientBuilder
+      .defaultClient()
+      .createInvalidation(CreateInvalidationRequest("E3VMVDBEUWOSL5", invalidationBatch))
+    return "Created invalidation at ${LocalDateTime.now()} for $srcBucket and $srcKey and last modified $lastModified}"
 //    } else {
 //      "DID NOT create invalidation at ${LocalDateTime.now()} for $srcBucket and $srcKey and last modified ${AmazonS3ClientBuilder.defaultClient().getObject(srcBucket, srcKey).objectMetadata.lastModified}"
 //    }

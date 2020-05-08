@@ -1,7 +1,6 @@
 package com.timstwitterlisteningparty.tools.parser
 
 import com.opencsv.bean.CsvBindByPosition
-import org.apache.commons.lang3.StringUtils
 
 data class BookReview(@CsvBindByPosition(position = 0) val author: String = "",
                       @CsvBindByPosition(position = 1) val title: String = "",

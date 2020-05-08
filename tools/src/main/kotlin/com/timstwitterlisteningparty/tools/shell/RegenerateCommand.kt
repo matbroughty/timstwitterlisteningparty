@@ -16,9 +16,9 @@ class RegenerateCommand(val allHtmlCommand: AllHtmlCommand, val addReplayToCsvCo
                         val collectionPagesGenerateCommand: CollectionPagesGenerateCommand) {
 
   @ShellMethod("Regenerates the site calling the command 'replay', 'allhtml' and 'collections' commands")
-  fun regen() : String{
+  fun regen(): String {
     val updatedTimeSlotData = addReplayToCsvCommand.replay()
     val allHtml = allHtmlCommand.allhtml()
-    return "regen $updatedTimeSlotData and allHtml length ${allHtml.length} and ${collectionPagesGenerateCommand.collections()}"
+    return "regen $updatedTimeSlotData and allHtml length ${allHtml.length} and collections generated = ${collectionPagesGenerateCommand.collections()}"
   }
 }

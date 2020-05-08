@@ -11,7 +11,7 @@ import com.timstwitterlisteningparty.tools.lambda.util.S3HtmlGenerator
  * based on a scheduled event
  */
 @Suppress("unused")
-class ScheduledRegenerateHtmlHandler : RequestHandler<ScheduledEvent, String>{
+class ScheduledRegenerateHtmlHandler : RequestHandler<ScheduledEvent, String> {
   override fun handleRequest(input: ScheduledEvent?, context: Context?): String {
     return S3HtmlGenerator().generate()
   }

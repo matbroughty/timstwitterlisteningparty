@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
 import java.io.FileWriter
-import java.util.stream.Collectors
 import kotlin.streams.toList
 
 
@@ -23,7 +22,7 @@ class HtmlToCsvCommand {
     return "The generated-time-slot.date.csv file was created: ${createFile()}"
   }
 
-  fun createFile() : Boolean{
+  fun createFile(): Boolean {
 
     val timeSlots = timeSlotList("https://timstwitterlisteningparty.com/snippets/time-slots.html")
     val completedTimeSlots = (timeSlotList("https://timstwitterlisteningparty.com/snippets/completed-time-slots.html"))

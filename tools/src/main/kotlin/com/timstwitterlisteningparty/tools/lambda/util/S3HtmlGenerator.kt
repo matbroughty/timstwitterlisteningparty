@@ -72,7 +72,7 @@ class S3HtmlGenerator {
       System.err.println("We have an error writing $dataFile to $bucketName with html $htmlSnippetStr error is:  ${e.errorMessage}")
       return msg.plus(" FAILED to update $bucketName using $dataFile and uploaded to $bucketName with object $htmlSnippetName}")
     }
-     msg = msg.plus("- Successfully updated $bucketName using $dataFile and uploaded to $bucketName with object $htmlSnippetName}")
+    msg = msg.plus("- Successfully updated $bucketName using $dataFile and uploaded to $bucketName with object $htmlSnippetName}")
     println(msg)
     return msg
   }

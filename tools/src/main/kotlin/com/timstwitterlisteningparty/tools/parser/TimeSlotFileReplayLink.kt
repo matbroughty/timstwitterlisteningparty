@@ -7,7 +7,10 @@ import com.timstwitterlisteningparty.tools.twitter.TweetUtils
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.io.*
+import java.io.FileWriter
+import java.io.InputStream
+import java.io.StringReader
+import java.io.StringWriter
 import kotlin.streams.toList
 
 
@@ -26,21 +29,19 @@ class TimeSlotFileReplayLink {
 
     val replayMap: Map<Int, Replay> = ReplayPHPScript().readPhpReplayScript()
     replayMap.forEach { logger.debug(it.toString()) }
-    val csvToBeanBuilder: CsvToBeanBuilder<TimeSlot> =
-      if (inputStream != null) CsvToBeanBuilder<TimeSlot>(InputStreamReader(inputStream)) else {
-        CsvToBeanBuilder<TimeSlot>(FileReader(fileName))
-      }
-    val existingList: List<TimeSlot> = csvToBeanBuilder.withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
+    val existingList = TimeSlotReader(fileName, inputStream).timeSlots
     existingList.forEach {
       if (replayMap.containsKey(it.hashBandAlbum())) {
         val replay = replayMap[it.hashBandAlbum()]
         if (replay != null) {
-          if(it.requiresTwitterCollection()){
+          // set the replay link
+          it.replayLink = replay.fullReplayLink()
+          // now check if we need to build a collection from it
+          if (it.requiresTwitterCollection()) {
             logger.info("creating collection for replay $replay")
             it.twitterCollectionLink = TweetUtils().createCollection(replay)
           }
-          // set it
-          it.replayLink = replay.fullReplayLink()
+
         }
         // only set the tweeters if the time slot data was empty
         if (it.tweeters.isEmpty()) {
@@ -55,15 +56,16 @@ class TimeSlotFileReplayLink {
       val sbc = StatefulBeanToCsvBuilder<TimeSlot>(fileWriter)
         .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
         .build()
-      sbc.write(existingList)
+      sbc.write(existingList.sortedBy{it.isoDate})
       fileWriter.close()
     }
 
+    // return it as a string by writing again
     val writer = StringWriter()
     val sbc = StatefulBeanToCsvBuilder<TimeSlot>(writer)
       .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
       .build()
-    sbc.write(existingList)
+    sbc.write(existingList.sortedBy{it.isoDate})
     writer.close()
     return writer.toString()
   }
@@ -96,11 +98,4 @@ class ReplayPHPScript {
 
 }
 
-
-class ReplayFeed {
-
-  private val logger = LoggerFactory.getLogger(javaClass)
-
-
-}
 

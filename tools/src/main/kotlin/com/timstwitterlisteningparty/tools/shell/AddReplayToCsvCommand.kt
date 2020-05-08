@@ -13,8 +13,8 @@ class AddReplayToCsvCommand(val timeSlotFileReplayLink: TimeSlotFileReplayLink) 
   }
 
 
-  fun updateFile() :String {
-    return  timeSlotFileReplayLink.addReplayLink(writeToFile = true)
+  fun updateFile(): String {
+    return timeSlotFileReplayLink.addReplayLink(writeToFile = true)
   }
 
 }
