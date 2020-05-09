@@ -8,9 +8,12 @@ import java.util.*
 
 const val COLLECTIONS_FTL = "collectionfeed.ftl"
 const val TBC_FTL = "tbc.ftl"
+const val UPCOMING_FTL = "upcoming.ftl"
+const val ALL_FTL = "all.ftl"
 const val RECORD_SHOPS_FTL = "recordshops.ftl"
 const val BOOK_SHOPS_FTL = "bookshops.ftl"
 const val BOOK_REVIEWS_FTL = "bookreviews.ftl"
+
 
 /**
  * Any methods handy for using the templates*.ftl files

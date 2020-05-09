@@ -43,6 +43,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val completedHtml = buildTable(completed, true, tbd = false)
     val completedFile = File("snippets/completed-time-slots.html")
     val allOneTableHtml = buildTable(beans, completed = true, tbd = true, all = true)
+    //val allOneTableHtml = buildAllTable(beans)
     val allOneTableFile = File("snippets/all-time-slots.html")
     // if called from Lambda we can't write to the file
     if (writeToFile) {
@@ -60,6 +61,14 @@ class TimeSlotFileCreator : HtmlFileCreator {
       Pair("snippets/${completedFile.name}", completedHtml),
       Pair("snippets/${allOneTableFile.name}", allOneTableHtml),
       Pair("snippets/${upcomingFileCard.name}", upcomingHtmlCard))
+  }
+
+  private fun buildAllTable(beans: List<TimeSlot>): String {
+    val template = FreeMarkerUtils().getFreeMarker(ALL_FTL)
+    val input: Map<String, List<TimeSlot>> = mapOf(Pair("all_list", beans.sortedBy { it.band }))
+    val htmlStr = StringWriter()
+    template.process(input, htmlStr)
+    return htmlStr.toString()
   }
 
 
@@ -174,14 +183,17 @@ class TimeSlotFileCreator : HtmlFileCreator {
   }
 
   private fun buildTableCard(slots: List<TimeSlot>): String {
-    var section = "<section class=\"post\">\n<div class=\"container-fluid\">"
     val sortedSlots = slots.sortedBy { it.isoDate }
+    var section = "<section class=\"post\">\n<div class=\"container-fluid\">"
+
     var hr = ""
     var date = sortedSlots.first().isoDate
     section = section.plus("      <div class=\"card d mb-3 border-dark\" style=\"width: 100%;\">\n" +
       "        <div class=\"card-header font-weight-bold\">\n" +
       "          <i class=\"fas fa-calendar-day\"></i> ${date.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))} \n" +
       "        </div>")
+
+
     sortedSlots.forEach {
 
       // new card header required if we have moved on
