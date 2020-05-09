@@ -19,14 +19,8 @@ class FreeMarkerUtils {
 
 
 
-
-
   fun getFreeMarker(templateName: String): Template {
 
-    // 1. Configure FreeMarker
-    //
-    // You should do this ONLY ONCE, when your application starts but we want to
-    // run this as a lambda and can't use spring easily there
     val cfg = Configuration(Configuration.VERSION_2_3_0)
 
     // Where do we load the templates from:

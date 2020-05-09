@@ -164,16 +164,20 @@ data class TimeSlot(val dateStr: String = "?",
       }
     }
 
+    val img = if(spotifyImgLink.isBlank()) {"img/blankcd.png"} else spotifyImgLink
+
+
     /**
      * The row html to populate
      */
     return "        <div class=\"card-body\">\n" +
       "          <table style=\"width: 100%;\">\n" +
       "            <tr>\n" +
-      "              <td width=\"25%\" class=\"font-weight-light\" style=\"text-align:left;\">\n" +
-      "                $hours<sup> $amPm</sup>\n" +
-      "              </td>\n" +
-      "              <td width=\"60%\" style=\"text-align:left;\">\n" +
+      "              <td width=\"35%\" class=\"font-weight-light\" style=\"text-align:left\"><a href=\"$spotifyLink\"><img src=\"$img\" alt=\"album\" style=\"width:80px;height:80px;\"></a><br><hr style=\"width:80px;margin-left:0;\">$hours<sup> $amPm</sup></td>\n" +
+//      "              <td width=\"20%\" class=\"font-weight-light\" style=\"text-align:left;\">\n" +
+//      "                $hours<sup> $amPm</sup>\n" +
+//      "              </td>\n" +
+      "              <td width=\"50%\" style=\"text-align:left;\">\n" +
       "                <b>$band</b><br/>$album\n $twitterIds" +
       "              </td>\n" +
       "              <td width=\"15%\"><a class=\"pure-button $button\"\n" +

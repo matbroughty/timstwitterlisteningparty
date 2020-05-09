@@ -32,7 +32,9 @@ dependencies {
   implementation("com.amazonaws:aws-java-sdk-cloudfront:1.11.762")
   implementation("com.google.api-client:google-api-client:1.30.9")
   implementation("org.freemarker:freemarker:2.3.30")
-  //implementation("se.michaelthelin.spotify:spotify-web-api-java:6.0.0-RC1")
+  implementation("se.michaelthelin.spotify:spotify-web-api-java:6.0.0-RC1"){
+    exclude(group = "org.slf4j")
+  }
 
   // had to add some additional code to allow for update of collections to twitter4j
   implementation(files("$projectDir/commonjar/3rdparty/twitter4j-core-4.0.8-SNAPSHOT.jar"))
@@ -44,9 +46,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
+
 }
-
-
 
 tasks.withType<Test> {
 	useJUnitPlatform()

@@ -3,6 +3,7 @@ package com.timstwitterlisteningparty.tools.parser
 import com.opencsv.CSVWriter
 import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsvBuilder
+import com.timstwitterlisteningparty.tools.twitter.SpotifyUtils
 import com.timstwitterlisteningparty.tools.twitter.TweetUtils
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
@@ -30,6 +31,16 @@ class TimeSlotFileEnrich {
     replayMap.forEach { logger.debug(it.toString()) }
     val existingList = TimeSlotReader(fileName, inputStream).timeSlots
     existingList.forEach {
+      if(it.spotifyImgLink.isEmpty()){
+        val album = SpotifyUtils().findAlbum(it.band, it.album)
+        if(album != null){
+          logger.info("found album $album")
+          it.spotifyImgLink = album.imgLink
+          it.spotifyLink = album.spotifyLink.toString()
+        }else{
+          logger.warn("Could not find album for $it")
+        }
+      }
       if (replayMap.containsKey(it.hashBandAlbum())) {
         val replay = replayMap[it.hashBandAlbum()]
         if (replay != null) {
@@ -46,7 +57,8 @@ class TimeSlotFileEnrich {
         if (it.tweeters.isEmpty()) {
           it.tweeters = replayMap[it.hashBandAlbum()]?.twitterIds ?: ""
         }
-        // spotify link could be useful
+
+        // spotify link from php if
         if(it.spotifyLink.isEmpty()){
           it.spotifyLink = replayMap[it.hashBandAlbum()]?.spotifyLink ?: ""
         }

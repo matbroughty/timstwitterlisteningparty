@@ -19,6 +19,7 @@ import java.time.LocalDateTime
  * clear the whole cache
  * @deprecated - the php script is probably a better bet direct in Lambda code
  */
+@Deprecated("The python script direct in aws lambda is used in preference tp this")
 class InvalidateCacheHandler : RequestHandler<S3Event, String> {
 
   override fun handleRequest(s3event: S3Event, context: Context?): String {
