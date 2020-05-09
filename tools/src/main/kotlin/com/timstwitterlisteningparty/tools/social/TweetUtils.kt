@@ -1,4 +1,4 @@
-package com.timstwitterlisteningparty.tools.twitter
+package com.timstwitterlisteningparty.tools.social
 
 import com.timstwitterlisteningparty.tools.parser.Replay
 import com.timstwitterlisteningparty.tools.parser.TimeSlot
@@ -13,7 +13,7 @@ import twitter4j.conf.ConfigurationBuilder
 
 
 @Component
-class TweetUtils() {
+class TweetUtils {
 
 
   private val logger = LoggerFactory.getLogger(javaClass)
@@ -59,19 +59,19 @@ class TweetUtils() {
     if (timeSlot.tweeterList().isEmpty()) {
       return "no band/artist to tweet replay"
     }
-    if(!pageExists(replayLink)){
+    if (!pageExists(replayLink)) {
       return "$replayLink page doesn't exist yet"
     }
     return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty")
   }
 
   fun pageExists(link: String): Boolean {
-    try{
+    try {
       return Jsoup.connect(link).get().text().isNotEmpty()
-    }catch(e:Exception){
+    } catch (e: Exception) {
       logger.warn("issue trying to get $link ${e.localizedMessage}")
     }
-    return false;
+    return false
 
   }
 
@@ -81,10 +81,10 @@ class TweetUtils() {
       return "no band/artist to tweet collection"
     }
     val curatedTweetUrl = "https://timstwitterlisteningparty.com/pages/list/collection_${replayId}.html"
-    if(!pageExists(curatedTweetUrl)){
+    if (!pageExists(curatedTweetUrl)) {
       return "$curatedTweetUrl collection page doesn't exist yet"
     }
-    return tweet("Listening Party Tweet List available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $curatedTweetUrl #TimsTwitterListeningParty")
+    return tweet("List available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $curatedTweetUrl #TimsTwitterListeningParty")
   }
 
   fun createCollection(replay: Replay?): String {

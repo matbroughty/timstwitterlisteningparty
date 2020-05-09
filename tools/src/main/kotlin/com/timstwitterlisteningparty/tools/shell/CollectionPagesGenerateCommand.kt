@@ -11,7 +11,7 @@ import org.springframework.shell.standard.ShellMethod
 class CollectionPagesGenerateCommand {
 
   @ShellMethod("Regenerates the pages/list collections ")
-  fun collections() : String{
-    return CollectionsHtmlPagesCreator().createTwitterListPages(writeToFile = true).toString()
+  fun collections(): Int {
+    return CollectionsHtmlPagesCreator().createTwitterListPages(writeToFile = true).size
   }
 }

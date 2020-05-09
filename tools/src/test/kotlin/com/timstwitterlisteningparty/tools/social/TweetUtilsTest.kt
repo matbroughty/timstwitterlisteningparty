@@ -1,9 +1,7 @@
-package com.timstwitterlisteningparty.tools.twitter
+package com.timstwitterlisteningparty.tools.social
 
-import com.timstwitterlisteningparty.tools.parser.Replay
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestTemplate
 
 
 internal class TweetUtilsTest {

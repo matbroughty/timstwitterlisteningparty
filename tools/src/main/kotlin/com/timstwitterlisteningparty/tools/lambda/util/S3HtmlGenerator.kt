@@ -42,6 +42,8 @@ class S3HtmlGenerator {
     val bookSlotsMsg = createHtmlFile(BookStoreFileCreator(), bucketName, s3Client, srcKeyBookStores, "snippets/book-stores.html")
     val bookReviewMsg = createHtmlFile(BookReviewFileCreator(), bucketName, s3Client, srcKeyBookReviews, "snippets/book-reviews-shops.html")
 
+
+
     //finally write an invalidation.txt file to indicate the cloud front edge needs refreshing
     try {
       // wait 5 seconds before writing this so the invalidation trigger doesn't fire too quickly
@@ -72,7 +74,7 @@ class S3HtmlGenerator {
       System.err.println("We have an error writing $dataFile to $bucketName with html $htmlSnippetStr error is:  ${e.errorMessage}")
       return msg.plus(" FAILED to update $bucketName using $dataFile and uploaded to $bucketName with object $htmlSnippetName}")
     }
-     msg = msg.plus("- Successfully updated $bucketName using $dataFile and uploaded to $bucketName with object $htmlSnippetName}")
+    msg = msg.plus("- Successfully updated $bucketName using $dataFile and uploaded to $bucketName with object $htmlSnippetName}")
     println(msg)
     return msg
   }

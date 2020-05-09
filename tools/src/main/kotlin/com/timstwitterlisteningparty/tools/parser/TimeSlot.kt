@@ -1,5 +1,6 @@
 package com.timstwitterlisteningparty.tools.parser
 
+import com.opencsv.bean.CsvBindByName
 import com.opencsv.bean.CsvBindByPosition
 import com.opencsv.bean.CsvDate
 import org.apache.commons.lang3.StringUtils
@@ -17,20 +18,36 @@ import java.util.*
  */
 data class TimeSlot(val dateStr: String = "?",
                     val timeStr: String = "?",
+                    @CsvBindByName(column = "iso-date")
                     @CsvBindByPosition(position = 0) @CsvDate(value = "yyyy-MM-dd'T'HH:mm")
                     var isoDate: LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC),
+                    @CsvBindByName(column = "band")
                     @CsvBindByPosition(position = 1)
                     val band: String = "",
+                    @CsvBindByName(column = "album")
                     @CsvBindByPosition(position = 2)
                     val album: String = "",
+                    @CsvBindByName(column = "confirmation-tweet")
                     @CsvBindByPosition(position = 3)
                     val link: String = "",
+                    @CsvBindByName(column = "replay-link")
                     @CsvBindByPosition(position = 4)
                     var replayLink: String = "",
+                    @CsvBindByName(column = "tweeters")
                     @CsvBindByPosition(position = 5)
                     var tweeters: String = "",
+                    @CsvBindByName(column = "curated-list")
                     @CsvBindByPosition(position = 6)
-                    var twitterCollectionLink: String = "") : HtmlRow {
+                    var twitterCollectionLink: String = "",
+                    @CsvBindByName(column = "spotify-link")
+                    @CsvBindByPosition(position = 7)
+                    var spotifyLink: String = "", // link to album
+                    @CsvBindByPosition(position = 8)
+                    @CsvBindByName(column = "spotify-img-link")
+                    var spotifyImgLink: String = "" // link to album artwork
+
+
+) : HtmlRow {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -79,7 +96,9 @@ data class TimeSlot(val dateStr: String = "?",
     var hours = "?"
     // english date format - i.e. April 13th
     var engDate = "?"
-    var twitterIcon = if (replayLink.isBlank()) {"fab fa-twitter-square"} else "fas fa-redo"
+    var twitterIcon = if (replayLink.isBlank()) {
+      "fab fa-twitter-square"
+    } else "fas fa-redo"
 
 
     // active button for today
@@ -101,13 +120,15 @@ data class TimeSlot(val dateStr: String = "?",
      * The row html to populate
      * @see buildHtmlRow
      */
-     return  "                <tr>\n" +
+    return "                <tr>\n" +
       "                  <td>$engDate</td>\n" +
       "                  <td style=\"text-align:right\">$hours</td>\n" +
       "                  <td>$band</td>\n" +
       "                  <td>$album</td>\n" +
       "                  <td><a class=\"pure-button $button\"\n" +
-      "                                     href=\"${if(replayLink.isEmpty()) {link} else replayLink} \"><i\n" +
+      "                                     href=\"${if (replayLink.isEmpty()) {
+        link
+      } else replayLink} \"><i\n" +
       "                    class=\"$twitterIcon\"></i></a></td>\n" +
       "                </tr>"
 
@@ -131,7 +152,7 @@ data class TimeSlot(val dateStr: String = "?",
     if (isoDate.year != 1970) {
       if (isNow) {
         twitterIcon = "fa-twitter"
-        if(tweeters.isNotEmpty()){
+        if (tweeters.isNotEmpty()) {
           twitterIds = buildTweeterLinks()
         }
       }
@@ -143,16 +164,20 @@ data class TimeSlot(val dateStr: String = "?",
       }
     }
 
+    val img = if(spotifyImgLink.isBlank()) {"img/blankcd.png"} else spotifyImgLink
+
+
     /**
      * The row html to populate
      */
-    return  "        <div class=\"card-body\">\n" +
+    return "        <div class=\"card-body\">\n" +
       "          <table style=\"width: 100%;\">\n" +
       "            <tr>\n" +
-      "              <td width=\"25%\" class=\"font-weight-light\" style=\"text-align:left;\">\n" +
-      "                $hours<sup> $amPm</sup>\n" +
-      "              </td>\n" +
-      "              <td width=\"60%\" style=\"text-align:left;\">\n" +
+      "              <td width=\"35%\" class=\"font-weight-light\" style=\"text-align:left\"><a href=\"$spotifyLink\"><img src=\"$img\" alt=\"album\" style=\"width:80px;height:80px;\"></a><br><hr style=\"width:80px;margin-left:0;\">$hours<sup> $amPm</sup></td>\n" +
+//      "              <td width=\"20%\" class=\"font-weight-light\" style=\"text-align:left;\">\n" +
+//      "                $hours<sup> $amPm</sup>\n" +
+//      "              </td>\n" +
+      "              <td width=\"50%\" style=\"text-align:left;\">\n" +
       "                <b>$band</b><br/>$album\n $twitterIds" +
       "              </td>\n" +
       "              <td width=\"15%\"><a class=\"pure-button $button\"\n" +
@@ -173,19 +198,18 @@ data class TimeSlot(val dateStr: String = "?",
   /**
    * Create a hash of the band and album
    */
-  fun hashBandAlbum() : Int{
+  fun hashBandAlbum(): Int {
     return band.trim().toLowerCase().plus(album.trim().toLowerCase()).hashCode()
   }
-
 
 
   /**
    * Get a list from the ":" separated list of tweeters
    * and turn into a proper twitter link list
    */
-  fun tweeterLinkList() : List<String>{
-    if(tweeters.isEmpty()){
-      return Collections.emptyList();
+  fun tweeterLinkList(): List<String> {
+    if (tweeters.isEmpty()) {
+      return Collections.emptyList()
     }
     return tweeters.split(":").map { "https://twitter.com/${it.replace("@", "").trim()}" }
   }
@@ -194,21 +218,21 @@ data class TimeSlot(val dateStr: String = "?",
    * Just a list of the @name twitter handle
    * @see tweeterLinkList for full link
    */
-  fun tweeterList() : List<String>{
-    if(tweeters.isEmpty()){
+  fun tweeterList(): List<String> {
+    if (tweeters.isEmpty()) {
       return Collections.emptyList()
     }
     return tweeters.split(":").map { it.trim() }
   }
 
 
-  private fun isEmpty() : Boolean{
+  private fun isEmpty(): Boolean {
     return band.isEmpty()
   }
 
 
-  fun replayId() : String{
-    if(replayLink.isNotEmpty()){
+  fun replayId(): String {
+    if (replayLink.isNotEmpty()) {
       return StringUtils.substringBefore(replayLink.substringAfterLast("feed_"), ".html")
     }
     return ""
@@ -218,7 +242,7 @@ data class TimeSlot(val dateStr: String = "?",
    * If we have a replay link then we have the tweets to create a collection but
    * check we haven't already generated it
    */
-  fun requiresTwitterCollection() : Boolean{
+  fun requiresTwitterCollection(): Boolean {
     return !isEmpty() && replayLink.isNotEmpty() && twitterCollectionLink.isEmpty()
 
   }

@@ -1,6 +1,5 @@
 package com.timstwitterlisteningparty.tools.shell
 
-import com.timstwitterlisteningparty.tools.parser.BookReviewFileCreator
 import com.timstwitterlisteningparty.tools.parser.BookStoreFileCreator
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod

@@ -31,9 +31,9 @@ class RecordStoresToCSV {
     val doc: Document = Jsoup.connect("https://indieretail.beggars.com/uk/").get()
     val stores = doc.select("li")
       .stream()
-      .filter{it.text() != "Mailorder Available"}
-      .filter{it.text() != "Pick Up Available"}
-      .filter{it.text() != "Local Delivery Available"}
+      .filter { it.text() != "Mailorder Available" }
+      .filter { it.text() != "Pick Up Available" }
+      .filter { it.text() != "Local Delivery Available" }
       .filter { it.children().`is`("a").not() }
       .map { it.buildCsvRow() }
       .filter { it != null }

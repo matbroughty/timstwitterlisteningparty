@@ -11,7 +11,7 @@ import com.timstwitterlisteningparty.tools.lambda.util.S3ReplayTweetGenerator
  * [S3ReplayTweetGenerator.tweetReplay]
  */
 @Suppress("unused")
-class ScheduledReplayTweetHandler : RequestHandler<ScheduledEvent, String>{
+class ScheduledReplayTweetHandler : RequestHandler<ScheduledEvent, String> {
   override fun handleRequest(input: ScheduledEvent?, context: Context?): String {
     return S3ReplayTweetGenerator().tweetReplay()
   }

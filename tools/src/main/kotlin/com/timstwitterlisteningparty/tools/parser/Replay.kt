@@ -15,7 +15,9 @@ data class Replay(@CsvBindByPosition(position = 0)
                   @CsvBindByPosition(position = 3)
                   val date: String = "",
                   @CsvBindByPosition(position = 4)
-                  var twitterIds: String = ""){
+                  val spotifyLink: String = "",
+                  @CsvBindByPosition(position = 5)
+                  var twitterIds: String = "") {
 
 
   val trimmedId: String
@@ -25,11 +27,11 @@ data class Replay(@CsvBindByPosition(position = 0)
   /**
    * Create a hash of the band and album
    */
-  fun hashBandAlbum() : Int{
+  fun hashBandAlbum(): Int {
     return band.trim().toLowerCase().plus(album.trim().toLowerCase()).hashCode()
   }
 
-  fun isEmpty() : Boolean{
+  fun isEmpty(): Boolean {
     return band.isEmpty()
   }
 
@@ -40,11 +42,11 @@ data class Replay(@CsvBindByPosition(position = 0)
     return "https://timstwitterlisteningparty.com/pages/replay/feed_$trimmedId.html"
   }
 
-  fun getCollectionDesc() : String{
+  fun getCollectionDesc(): String {
     return "$band : Album : $album listening party on $date #TimsTwitterListeningParty"
   }
 
-  fun getCollectionName() : String{
+  fun getCollectionName(): String {
     return album.take(25) // shouldn't be longer than 25...
   }
 
