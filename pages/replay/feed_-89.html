@@ -40,7 +40,6 @@
       return t;
     }(document, "script", "twitter-wjs"));
     </script>
-    <script src="../../js/feed_1.min.js"></script>
     <style type="text/css">
         .blinking{
             animation:blinkingText 2.0s infinite;
@@ -63,7 +62,16 @@
 
     gtag('config', 'UA-165104432-1');
   </script>
-  
+  <script>
+    var timeout,counter=0,startms=0,mssofar=0,delaysofar=0,timeOfNextTweet=0,firstTweetLoaded=!1,paused=!1,pausedTime=0,pauseText="Paused";
+    function playPause(){if(firstTweetLoaded)if(paused){var a=(new Date).getTime();paused=!1;document.getElementById("play-pause-btn").className="fas fa-pause";document.getElementById("advance").style.display="block";var b=a-pausedTime;startms+=b;timeOfNextTweet+=b;timeout=setTimeout("showIt()",timeOfNextTweet-a);document.getElementById("timer").className="not-blinking";document.getElementById("stand-by-arrow").style.display="none";pauseText="Paused"}else paused=!0,document.getElementById("play-pause-btn").className=
+    "fas fa-play",document.getElementById("advance").style.display="none",pausedTime=(new Date).getTime(),clearTimeout(timeout)}function advance(){clearTimeout(timeout);var a=(new Date).getTime();startms-=timeOfNextTweet-a;timeOfNextTweet=a;showIt()}function hideUserPanel(){if(4<=counter){var a=document.getElementById("users-panel");$(a).slideUp("slow")}}
+    function loadTweet(a){var b=document.getElementById("tweet-feed-"+a);null!==b&&(b=$(b).attr("data-url"),null!==b&&void 0!==b&&$.ajax({type:"GET",url:"https://publish.twitter.com/oembed?url="+b+"&omit_script=true&dnt=true",dataType:"jsonp",success:function(b){$("#tweet-feed-"+a).html(b.html);4>a&&(loadTweet(a+1),0===a&&(timeout=setTimeout("showIt()",250)));twttr.widgets.load(document.getElementById("#tweet-feed-"+a))},error:function(a,b,e){404!==a.status?alert("Unable to load feed - please check that you are able to access Twitter on this device. If the problem persists, please try reloading the page. ["+
+    a.status+" - "+b+"]"):console.log("404 - tweet deleted")}}))}
+    function showIt(){0===counter&&(startms=(new Date).getTime());mssofar=(new Date).getTime()-startms;var a=document.getElementById("tweet-feed-"+counter);hideUserPanel();if(null!==a){for(var b=Number($(a).attr("data-delay"));delaysofar+b<=mssofar&&null!==a;)if(delaysofar+=b,$(a).slideDown("slow"),counter++,a=document.getElementById("tweet-feed-"+counter),null!==a)b=Number($(a).attr("data-delay")),loadTweet(counter+4);else{var c=document.getElementById("tweet-feed-"+(counter-1));$(c).slideDown("slow");
+    c=document.getElementById("timer-div");$(c).slideUp("slow")}if(null!==a){mssofar=(new Date).getTime()-startms;a=delaysofar+b-mssofar;0>a&&(a=1);timeOfNextTweet=(new Date).getTime()+a;timeout=setTimeout("showIt()",a);firstTweetLoaded?document.getElementById("timer").className="not-blinking":(firstTweetLoaded=!0,pauseText="Press PLAY",document.getElementById("stand-by-arrow").style.display="block",playPause());var d=setInterval(function(){if(paused)document.getElementById("timer").innerHTML=pauseText;
+    else{var a=timeOfNextTweet-(new Date).getTime();a=Math.floor(a/1E3);1>a?(clearInterval(d),document.getElementById("timer").innerHTML="Next tweet coming up..."):document.getElementById("timer").innerHTML="Next tweet in "+a+(1!==a?" seconds":" second")}},1E3)}}};
+  </script>
   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-"
         crossorigin="anonymous">
 
