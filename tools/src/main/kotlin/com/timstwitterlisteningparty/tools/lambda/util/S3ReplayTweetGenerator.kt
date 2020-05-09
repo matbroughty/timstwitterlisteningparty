@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.GetObjectRequest
 import com.timstwitterlisteningparty.tools.parser.ReplayPHPScript
 import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
-import com.timstwitterlisteningparty.tools.twitter.TweetUtils
+import com.timstwitterlisteningparty.tools.social.TweetUtils
 import org.slf4j.LoggerFactory
 import java.io.InputStream
 import java.time.LocalDateTime

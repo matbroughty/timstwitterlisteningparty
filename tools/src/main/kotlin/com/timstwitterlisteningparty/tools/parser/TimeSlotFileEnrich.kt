@@ -3,8 +3,8 @@ package com.timstwitterlisteningparty.tools.parser
 import com.opencsv.CSVWriter
 import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsvBuilder
-import com.timstwitterlisteningparty.tools.twitter.SpotifyUtils
-import com.timstwitterlisteningparty.tools.twitter.TweetUtils
+import com.timstwitterlisteningparty.tools.social.SpotifyUtils
+import com.timstwitterlisteningparty.tools.social.TweetUtils
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component

@@ -1,4 +1,4 @@
-package com.timstwitterlisteningparty.tools.twitter
+package com.timstwitterlisteningparty.tools.social
 
 import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
 import com.wrapper.spotify.SpotifyApi
@@ -16,13 +16,14 @@ class SpotifyUtils {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  private val clientId = "d8889b1a2b92487d8b1f88348b03de15"
-  private val clientSecret = ""
-
-
   fun findAlbum(artist: String, albumStr: String, spotifyApiParam: SpotifyApi? = null): Album? {
     try {
       val spotifyApi = spotifyApiParam ?: getSpotify()
+      if(albumStr == "?"){
+        logger.info("Album not decided yet so spotify search not done for $artist")
+        return null
+      }
+
       logger.info("Searching on album $albumStr and band $artist")
 
       // try for all of the artists albums
@@ -97,22 +98,13 @@ class SpotifyUtils {
   }
 
   private fun buildQuery(artist: String, album: String): String {
-    //"album:arrival artist:abba"
     return "album:${album.trim()} artist:${artist.trim()}"
   }
 
-  fun enrich(): String {
-    val spotify = getSpotify()
-    return TimeSlotReader().timeSlots.mapNotNull { findAlbum(it.band, it.album, spotify) }
-      .joinToString { album ->
-        "Album href is ${album.spotifyLink} " +
-          "and ${album.albumName} and images = ${album.imgLink} and release ${album.releaseDate} and id ${album.spotifyId}"
-      }
-  }
-
-
   private fun getSpotify(): SpotifyApi {
 
+    val clientId: String? = System.getenv("spotify_client_id")
+    val clientSecret: String? = System.getenv("spotify_client_secret")
     val spotifyApi = SpotifyApi.Builder()
       .setClientId(clientId)
       .setClientSecret(clientSecret)
@@ -132,11 +124,6 @@ class SpotifyUtils {
 fun AlbumSimplified.toAlbum(): Album {
   return Album(spotifyLink = externalUrls.externalUrls["spotify"], imgLink = images[1].url, spotifyId = id, releaseDate = releaseDate, albumName = name)
 }
-
-fun String.replaceSpace(): String {
-  return replace("\\s".toRegex(), "+").trim()
-}
-
 
 data class Album(val spotifyLink: String?, val imgLink: String, val spotifyId: String, val releaseDate: String, val albumName: String)
 

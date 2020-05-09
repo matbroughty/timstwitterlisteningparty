@@ -2,7 +2,7 @@ package com.timstwitterlisteningparty.tools.shell
 
 import com.timstwitterlisteningparty.tools.parser.TimeSlot
 import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
-import com.timstwitterlisteningparty.tools.twitter.TweetUtils
+import com.timstwitterlisteningparty.tools.social.TweetUtils
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption

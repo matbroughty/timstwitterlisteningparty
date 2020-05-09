@@ -1,4 +1,4 @@
-package com.timstwitterlisteningparty.tools.twitter
+package com.timstwitterlisteningparty.tools.social
 
 import com.timstwitterlisteningparty.tools.parser.Replay
 import com.timstwitterlisteningparty.tools.parser.TimeSlot

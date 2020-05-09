@@ -1,6 +1,6 @@
 package com.timstwitterlisteningparty.tools.shell
 
-import com.timstwitterlisteningparty.tools.twitter.SpotifyUtils
+import com.timstwitterlisteningparty.tools.social.SpotifyUtils
 import org.slf4j.LoggerFactory
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
@@ -20,14 +20,6 @@ class SpotifyCommand {
         "and ${album.albumName} and images = ${album.imgLink} and release ${album.releaseDate} and id ${album.spotifyId}")
     }
     return album.toString()
-  }
-
-
-  @ShellMethod("enriches the csv")
-  fun spotifyEnrich(): String? {
-    val found = SpotifyUtils().enrich()
-    logger.info(found)
-    return found
   }
 
 
