@@ -8,7 +8,7 @@
       <div class="card-body">
         <table style="width: 100%;">
           <tr>
-            <td width="35%" class="font-weight-light" style="text-align:left"><a href="${slot.spotifyLink}"><img src="${slot.spotifyImgLink}" alt="album" style="width:80px;height:80px;"></a><br><hr style="width:80px;margin-left:0;">TBC</td>
+            <td width="35%" class="font-weight-light" style="text-align:left"><a href="${slot.spotifyLink}" target="_blank"><img src="${slot.spotifyImgLink}" alt="album" style="width:80px;height:80px;"></a><br><hr style="width:80px;margin-left:0;">TBC</td>
             <td width="50%" style="text-align:left;">
               <b>${slot.band}</b><br/>${slot.album}
             </td>

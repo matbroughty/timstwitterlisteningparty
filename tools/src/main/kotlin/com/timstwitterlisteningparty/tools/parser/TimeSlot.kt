@@ -173,7 +173,7 @@ data class TimeSlot(val dateStr: String = "?",
     return "        <div class=\"card-body\">\n" +
       "          <table style=\"width: 100%;\">\n" +
       "            <tr>\n" +
-      "              <td width=\"35%\" class=\"font-weight-light\" style=\"text-align:left\"><a href=\"$spotifyLink\"><img src=\"$img\" alt=\"album\" style=\"width:80px;height:80px;\"></a><br><hr style=\"width:80px;margin-left:0;\">$hours<sup> $amPm</sup></td>\n" +
+      "              <td width=\"35%\" class=\"font-weight-light\" style=\"text-align:left\"><a href=\"$spotifyLink\" target=\"_blank\"><img src=\"$img\" alt=\"album\" style=\"width:80px;height:80px;\"></a><br><hr style=\"width:80px;margin-left:0;\">$hours<sup> $amPm</sup></td>\n" +
 //      "              <td width=\"20%\" class=\"font-weight-light\" style=\"text-align:left;\">\n" +
 //      "                $hours<sup> $amPm</sup>\n" +
 //      "              </td>\n" +
