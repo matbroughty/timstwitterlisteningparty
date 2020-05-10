@@ -244,7 +244,27 @@ data class TimeSlot(val dateStr: String = "?",
    */
   fun requiresTwitterCollection(): Boolean {
     return !isEmpty() && replayLink.isNotEmpty() && twitterCollectionLink.isEmpty()
+  }
 
+  /**
+   * Displays the isoDate in format or TBC if 1970
+   * used in freemarker template
+   */
+  @Suppress("unused")
+  fun dateDisplayString(): String{
+    if(isoDate.year == 1970){
+      return "TBC"
+    }
+    return isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
+  }
+
+  /**
+   * Gets the archive collection full link from the replayId
+   * used in freemarker template
+   */
+  @Suppress("unused")
+  fun getCollectionLink() :String{
+    return "https://timstwitterlisteningparty.com/pages/list/collection_${replayId()}.html"
   }
 
 }

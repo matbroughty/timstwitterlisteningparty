@@ -34,29 +34,25 @@ class TimeSlotFileCreator : HtmlFileCreator {
     tbd.forEach { logger.debug("Dates to be confirmed {}", it) }
     completed.forEach { logger.debug("Completed listening {}", it) }
     upcoming.forEach { logger.debug("Upcoming listening {}", it) }
-    val upcomingHtml = buildTable(upcoming, false, tbd = false)
-    val upcomingFile = File("snippets/upcoming-time-slots.html")
+    // the new card based table
     val upcomingHtmlCard = buildTableCard(upcoming)
     val upcomingFileCard = File("snippets/upcoming-time-slots-card.html")
     val dateTbdHtml = buildTbcCards(tbd)
     val dateTbdFile = File("snippets/date-tbd-time-slots.html")
     val completedHtml = buildTable(completed, true, tbd = false)
     val completedFile = File("snippets/completed-time-slots.html")
-    val allOneTableHtml = buildTable(beans, completed = true, tbd = true, all = true)
-    //val allOneTableHtml = buildAllTable(beans)
+    val allOneTableHtml = buildAllTable(beans)
     val allOneTableFile = File("snippets/all-time-slots.html")
     // if called from Lambda we can't write to the file
     if (writeToFile) {
       completedFile.writeText(completedHtml)
-      upcomingFile.writeText(upcomingHtml)
       dateTbdFile.writeText(dateTbdHtml)
       allOneTableFile.writeText(allOneTableHtml)
       upcomingFileCard.writeText(upcomingHtmlCard)
     }
-    logger.debug("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}", upcomingHtml, dateTbdHtml, completedHtml, allOneTableHtml)
+    logger.debug("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}",upcomingHtmlCard, dateTbdHtml, completedHtml, allOneTableHtml)
 
     return mapOf(
-      Pair("snippets/${upcomingFile.name}", upcomingHtml),
       Pair("snippets/${dateTbdFile.name}", dateTbdHtml),
       Pair("snippets/${completedFile.name}", completedHtml),
       Pair("snippets/${allOneTableFile.name}", allOneTableHtml),
@@ -65,7 +61,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
 
   private fun buildAllTable(beans: List<TimeSlot>): String {
     val template = FreeMarkerUtils().getFreeMarker(ALL_FTL)
-    val input: Map<String, List<TimeSlot>> = mapOf(Pair("all_list", beans.sortedBy { it.band }))
+    val input: Map<String, List<TimeSlot>> = mapOf(Pair("all_list", beans.sortedBy { it.album }))
     val htmlStr = StringWriter()
     template.process(input, htmlStr)
     return htmlStr.toString()

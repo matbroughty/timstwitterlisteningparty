@@ -11,18 +11,16 @@
             <th width="25%">Album</th>
             <th width="10%">Link</th>
             <th width="10%">Replay</th>
-            <th width="10%">List</th>
+            <th width="10%">Archive</th>
           </tr>
           </thead>
           <tbody>
           <#list all_list as slot>
           <tr>
             <td>
-              <#if slot.timeStr.year != 1970 >
-              slot.isoDate
-              <#else>
-                ?
-               </#if>
+
+            ${slot.dateDisplayString()}
+
             </td>
             <td>${slot.band}</td>
             <td>${slot.album}</td>
@@ -45,7 +43,7 @@
               <#else>
               class="pure-button-disabled"
             </#if>
-                   href="${slot.twitterCollectionLink}"><i class="fab fa-twitter"></i></a></td>
+                   href="${slot.getCollectionLink()}"><i class="fab fa-twitter"></i></a></td>
           </tr>
           </#list>
           <script>
