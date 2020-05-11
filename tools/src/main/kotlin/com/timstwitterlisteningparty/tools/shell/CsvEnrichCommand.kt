@@ -9,7 +9,7 @@ class CsvEnrichCommand(val timeSlotFileEnrich: TimeSlotFileEnrich) {
 
   @ShellMethod("Adds the replay link and spotify links to  data/time-slot.date.csv file from " +
     "the listParties.php")
-  fun replay(): String {
+  fun enrich(): String {
     return "The updated time-slot.date.csv file was created\n: ${updateFile()}"
   }
 

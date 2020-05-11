@@ -1,6 +1,5 @@
 package com.timstwitterlisteningparty.tools.social
 
-import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
 import com.wrapper.spotify.SpotifyApi
 import com.wrapper.spotify.enums.ModelObjectType
 import com.wrapper.spotify.exceptions.SpotifyWebApiException
@@ -16,29 +15,33 @@ class SpotifyUtils {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
+  /**
+   * Tries a search on album and artist, then all albums by artist, then all albums by name
+   */
   fun findAlbum(artist: String, albumStr: String, spotifyApiParam: SpotifyApi? = null): Album? {
     try {
       val spotifyApi = spotifyApiParam ?: getSpotify()
-      if(albumStr == "?"){
+      if (albumStr == "?") {
         logger.info("Album not decided yet so spotify search not done for $artist")
         return null
       }
-
-      logger.info("Searching on album $albumStr and band $artist")
-
-      // try for all of the artists albums
-      var albumRequest = spotifyApi.searchAlbums(artist.trim()).limit(50).build()
-      var albums = albumRequest.execute()
-
-      var album = scrollAlbums(albums, albumStr)
-      // no luck - try on album name
+      var album = search(artist, albumStr, spotifyApi)
       if(album == null) {
-        logger.info("couldn't find $albumStr by band $artist trying by band name")
-        // try on album
-        albumRequest = spotifyApi.searchAlbums(albumStr.trim()).limit(50).build()
-        albums = albumRequest.execute()
-        album = scrollAlbums(albums, albumStr)
-        logger.info("Found $album by  $albumStr by band $artist ")
+        // try for all of the artists albums
+        var albumRequest = spotifyApi.searchAlbums(artist.trim()).limit(50).build()
+        var albums = albumRequest.execute()
+        logger.info("Search ${buildQuery(artist, albumStr)} didn't find anything, searching through artist albums")
+        album = scrollAlbums( albums, albumStr)
+
+        // no luck - try on album name
+        if (album == null) {
+          logger.info("couldn't find $albumStr by band $artist trying by band name")
+          // try on album
+          albumRequest = spotifyApi.searchAlbums(albumStr.trim()).limit(50).build()
+          albums = albumRequest.execute()
+          album = scrollAlbums(albums, albumStr)
+          logger.info("Found $album by  $albumStr by band $artist ")
+        }
       }
       return album
     } catch (e: IOException) {
@@ -74,8 +77,7 @@ class SpotifyUtils {
 
       val q = buildQuery(artist, album)
       logger.info("query is $q")
-      val search = spotifyApi.searchItem(artist.trim(), ModelObjectType.ALBUM.type).offset(0).limit(50).build()
-
+      val search = spotifyApi.searchItem(q, "${ModelObjectType.ALBUM.type},${ModelObjectType.ARTIST.type}").offset(0).limit(50).build()
       val searchRequest = search.execute()
       searchRequest.albums.items.forEach { it ->
         logger.debug("album is ${it.name}")
