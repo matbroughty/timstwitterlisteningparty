@@ -13,7 +13,7 @@
               <b>${slot.band}</b><br/>${slot.album}
             </td>
             <td width="15%"><a class="pure-button pure-button-active"
-                               href="${slot.getCollectionLink()}" target="_blank"><i
+                               href="${slot.getCollectionLink()}"><i
               class="fab fa-twitter"></i></a></td>
           </tr>
         </table>
