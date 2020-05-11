@@ -92,7 +92,7 @@ data class TimeSlot(val dateStr: String = "?",
     /**
      * Styling for normal link button, or active if today
      */
-    var button = "pure-button-active"
+    val button = "pure-button-active"
     var hours = "?"
     // english date format - i.e. April 13th
     var engDate = "?"
@@ -142,7 +142,7 @@ data class TimeSlot(val dateStr: String = "?",
     /**
      * Styling for normal link button, or active if today
      */
-    var button = "pure-button-active"
+    val button = "pure-button-active"
     var twitterIcon = "fa-twitter-square"
     var hours = "?"
     var amPm = ""
