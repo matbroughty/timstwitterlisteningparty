@@ -8,6 +8,7 @@ import java.util.*
 
 const val COLLECTIONS_FTL = "collectionfeed.ftl"
 const val TBC_FTL = "tbc.ftl"
+const val ARCHIVE_FTL = "archive.ftl"
 const val UPCOMING_FTL = "upcoming.ftl"
 const val ALL_FTL = "all.ftl"
 const val RECORD_SHOPS_FTL = "recordshops.ftl"
