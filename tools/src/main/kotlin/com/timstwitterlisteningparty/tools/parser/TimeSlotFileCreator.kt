@@ -6,9 +6,16 @@ import java.io.File
 import java.io.InputStream
 import java.io.StringWriter
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.stream.Collectors
 
+/**
+ * Builds the following files based on the data/time-slot-data.csv [TimeSlotReader]:
+ *
+ *   * snippets/upcoming-time-slots-card.html used on index.html from the [UPCOMING_FTL]
+ *   * snippets/date-tbd-time-slots.html used on the tbc.html from the [TBC_FTL]
+ *   * snippets/completed-time-slots.html used on the list.html from the [ARCHIVE_FTL]
+ *   * snippets/all-time-slots.html used on the all.html from the [ALL_FTL]
+ */
 @Component
 class TimeSlotFileCreator : HtmlFileCreator {
 
@@ -30,7 +37,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     completed.forEach { logger.debug("Completed listening {}", it) }
     upcoming.forEach { logger.debug("Upcoming listening {}", it) }
     // the new card based table
-    val upcomingHtmlCard = buildTableCard(upcoming)
+    val upcomingHtmlCard = buildUpcomingCards(upcoming)  //buildTableCard(upcoming)
     val upcomingFileCard = File("snippets/upcoming-time-slots-card.html")
     val dateTbdHtml = buildTbcCards(tbd)
     val dateTbdFile = File("snippets/date-tbd-time-slots.html")
@@ -54,6 +61,17 @@ class TimeSlotFileCreator : HtmlFileCreator {
       Pair("snippets/${upcomingFileCard.name}", upcomingHtmlCard))
   }
 
+  private fun buildUpcomingCards(upcoming: List<TimeSlot>): String {
+    val template = FreeMarkerUtils().getFreeMarker(UPCOMING_FTL)
+    val input: Map<String, Any> = mapOf(
+      Pair("upcoming_list", upcoming.sortedBy { it.isoDate }),
+      Pair("startDate", upcoming.first().isoDate),
+      Pair("startDateFormatted", upcoming.first().dateDisplayString())
+      )
+    val htmlStr = StringWriter()
+    template.process(input, htmlStr)
+    return htmlStr.toString()
+  }
 
   private fun buildAllTable(beans: List<TimeSlot>): String {
     val template = FreeMarkerUtils().getFreeMarker(ALL_FTL)
@@ -82,39 +100,5 @@ class TimeSlotFileCreator : HtmlFileCreator {
     template.process(input, htmlStr)
     return htmlStr.toString()
   }
-
-
-  private fun buildTableCard(slots: List<TimeSlot>): String {
-    val sortedSlots = slots.sortedBy { it.isoDate }
-    var section = "<section class=\"post\">\n<div class=\"container-fluid\">"
-
-    var hr = ""
-    var date = sortedSlots.first().isoDate
-    section = section.plus("      <div class=\"card d mb-3 border-dark\" style=\"width: 100%;\">\n" +
-      "        <div class=\"card-header font-weight-bold\">\n" +
-      "          <i class=\"fas fa-calendar-day\"></i> ${date.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))} \n" +
-      "        </div>")
-
-
-    sortedSlots.forEach {
-
-      // new card header required if we have moved on
-      if (it.isoDate.toLocalDate().isAfter(date.toLocalDate())) {
-        section = section.plus("      </div><div class=\"card d mb-3\" style=\"width: 100%;\">\n" +
-          "        <div class=\"card-header font-weight-bold\">\n" +
-          "          <i class=\"fas fa-calendar-day\"></i> ${it.isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))} \n" +
-          "        </div>")
-      } else {
-        section = section.plus(hr)
-        hr = "<hr/>"
-      }
-      // build the card body
-      section = section.plus(it.buildHtmlCardBody())
-      date = it.isoDate
-    }
-
-    return section.plus("\n</div></div>\n</section>")
-  }
-
 
 }

@@ -13,9 +13,10 @@ import java.util.*
 
 /**
  * Represent a row in the data/time-slot-data.csv
- * Note - also used to parse the existing html in completed-time-slots.html,
- * date-tbd-time-slots.html and upcoming-time-slots.html and these have times as date and time string, hence constructor
+ * Note - also used to parse the existing html in completed-time-slots.html using the [FreeMarkerUtils] and
+ * [UPCOMING_FTL] and why we have the suppressed unused
  */
+@Suppress("unused")
 data class TimeSlot(val dateStr: String = "?",
                     val timeStr: String = "?",
                     @CsvBindByName(column = "iso-date")
@@ -47,7 +48,7 @@ data class TimeSlot(val dateStr: String = "?",
                     var spotifyImgLink: String = "" // link to album artwork
 
 
-) : HtmlRow {
+){
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -85,123 +86,16 @@ data class TimeSlot(val dateStr: String = "?",
 
 
   /**
-   * When converting back to an html row this will do the biz
-   */
-  override fun buildHtmlRow(): String {
-
-    /**
-     * Styling for normal link button, or active if today
-     */
-    val button = "pure-button-active"
-    var hours = "?"
-    // english date format - i.e. April 13th
-    var engDate = "?"
-    var twitterIcon = if (replayLink.isBlank()) {
-      "fab fa-twitter-square"
-    } else "fas fa-redo"
-
-
-    // active button for today
-    if (isoDate.year != 1970) {
-      if (LocalDate.now().isEqual(isoDate.toLocalDate())) {
-        twitterIcon = "fab fa-twitter"
-      }
-      // date and time strings displayed in the html
-      engDate = isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
-      // if time is 00 but date isn't 1970 then we know the day but not the time so set to TBC
-      if (isoDate.hour != 0) {
-        hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm a"))
-      } else {
-        hours = "TBC"
-      }
-    }
-
-    /**
-     * The row html to populate
-     * @see buildHtmlRow
-     */
-    return "                <tr>\n" +
-      "                  <td>$engDate</td>\n" +
-      "                  <td style=\"text-align:right\">$hours</td>\n" +
-      "                  <td>$band</td>\n" +
-      "                  <td>$album</td>\n" +
-      "                  <td><a class=\"pure-button $button\"\n" +
-      "                                     href=\"${if (replayLink.isEmpty()) {
-        link
-      } else replayLink} \"><i\n" +
-      "                    class=\"$twitterIcon\"></i></a></td>\n" +
-      "                </tr>"
-
-  }
-
-  /**
-   * When converting back to an html row this will do the biz
-   */
-  fun buildHtmlCardBody(): String {
-
-    /**
-     * Styling for normal link button, or active if today
-     */
-    val button = "pure-button-active"
-    var twitterIcon = "fa-twitter-square"
-    var hours = "?"
-    var amPm = ""
-    val isNow = LocalDate.now().isEqual(isoDate.toLocalDate())
-    var twitterIds = ""
-    // active button for today
-    if (isoDate.year != 1970) {
-      if (isNow) {
-        twitterIcon = "fa-twitter"
-        if (tweeters.isNotEmpty()) {
-          twitterIds = buildTweeterLinks()
-        }
-      }
-      if (isoDate.hour != 0) {
-        hours = isoDate.format(DateTimeFormatter.ofPattern("h:mm"))
-        amPm = isoDate.format(DateTimeFormatter.ofPattern("a"))
-      } else {
-        hours = "TBC"
-      }
-    }
-
-    val img = if(spotifyImgLink.isBlank()) {"img/blankcd.png"} else spotifyImgLink
-
-
-    /**
-     * The row html to populate
-     */
-    return "        <div class=\"card-body\">\n" +
-      "          <table style=\"width: 100%;\">\n" +
-      "            <tr>\n" +
-      "              <td width=\"35%\" class=\"font-weight-light\" style=\"text-align:left\"><a href=\"$spotifyLink\" target=\"_blank\"><img src=\"$img\" alt=\"album\" style=\"width:80px;height:80px;\"></a><br><hr style=\"width:80px;margin-left:0;\">$hours<sup> $amPm</sup></td>\n" +
-//      "              <td width=\"20%\" class=\"font-weight-light\" style=\"text-align:left;\">\n" +
-//      "                $hours<sup> $amPm</sup>\n" +
-//      "              </td>\n" +
-      "              <td width=\"50%\" style=\"text-align:left;\">\n" +
-      "                <b>$band</b><br/>$album\n $twitterIds" +
-      "              </td>\n" +
-      "              <td width=\"15%\"><a class=\"pure-button $button\"\n" +
-      "                                 href=\"$link\" target=\"_blank\" ><i\n" +
-      "                class=\"fab $twitterIcon\"></i></a></td>\n" +
-      "            </tr>\n" +
-      "          </table>\n" +
-      "        </div>"
-
-  }
-
-  private fun buildTweeterLinks(): String {
-    var html = "<br/><small>"
-    html = html.plus(tweeterLinkList().map { "<a class=\"text-muted\" target=\"_blank\" href=\"$it\">@${it.substringAfterLast("/")}</a>" }.toList())
-    return html.plus("</small>").replace("[", "").replace("]", "")
-  }
-
-  /**
    * Create a hash of the band and album
    */
   fun hashBandAlbum(): Int {
     return band.trim().toLowerCase().plus(album.trim().toLowerCase()).hashCode()
   }
 
+
+  fun getSpotifyImageLink(): String {
+    return if(spotifyImgLink.isBlank()) {"img/blankcd.png"} else spotifyImgLink
+  }
 
   /**
    * Get a list from the ":" separated list of tweeters
@@ -245,6 +139,15 @@ data class TimeSlot(val dateStr: String = "?",
   fun requiresTwitterCollection(): Boolean {
     return !isEmpty() && replayLink.isNotEmpty() && twitterCollectionLink.isEmpty()
   }
+  @Suppress("unused")
+  fun isToday() : Boolean{
+    return LocalDate.now().isEqual(isoDate.toLocalDate())
+  }
+
+
+  fun isAfter(date : LocalDateTime): Boolean{
+    return isoDate.toLocalDate().isAfter(date.toLocalDate())
+  }
 
   /**
    * Displays the isoDate in format or TBC if 1970
@@ -265,6 +168,24 @@ data class TimeSlot(val dateStr: String = "?",
   @Suppress("unused")
   fun getCollectionLink() :String{
     return "https://timstwitterlisteningparty.com/pages/list/collection_${replayId()}.html"
+  }
+  @Suppress("unused")
+  fun timeDisplayString(): String{
+    return isoDate.format(DateTimeFormatter.ofPattern("h:mm"))
+  }
+  @Suppress("unused")
+  fun amPmDisplayString(): String{
+    return isoDate.format(DateTimeFormatter.ofPattern("a"))
+  }
+
+  /**
+   * This should probably be done in the template...
+   */
+  @Suppress("unused")
+  fun buildTweeterLinks(): String {
+    var html = "<br/><small>"
+    html = html.plus(tweeterLinkList().map { "<a class=\"text-muted\" target=\"_blank\" href=\"$it\">@${it.substringAfterLast("/")}</a>" }.toList())
+    return html.plus("</small>").replace("[", "").replace("]", "")
   }
 
 }
