@@ -3,6 +3,7 @@
   $('[data-toggle="tooltip"]').tooltip()
 })
 </script>
+
 <section class="post">
   <div class="container-fluid">
     <div class="card d mb-3" style="width: 100%;">
