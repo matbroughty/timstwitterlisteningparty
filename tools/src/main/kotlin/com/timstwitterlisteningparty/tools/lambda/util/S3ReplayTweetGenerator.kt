@@ -39,6 +39,7 @@ class S3ReplayTweetGenerator {
           // a new replay - tell the world
           if (it.replayLink.isEmpty() && replay.fullReplayLink().isNotEmpty()) {
             logger.info("we have a new replay for:  $replay")
+
             // tweet them about the collection - disabled for now
             // var tweet = TweetUtils().tweetCollection(it, replayId = replay.trimmedId)
             // tweetMsg = tweetMsg.plus("\n").plus(tweet)
