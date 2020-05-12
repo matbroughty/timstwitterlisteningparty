@@ -1,3 +1,8 @@
+<script>
+  $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
 <section class="post">
   <div class="container-fluid">
     <#assign hr = "">
@@ -22,7 +27,7 @@
           <tr>
             <td width="35%" class="font-weight-light" style="text-align:left"><a
               href="${slot.spotifyLink}" target="_blank">
-              <img
+              <img data-toggle="tooltip" data-placement="top" title="${slot.album} Spotify album link"
 
               <#if slot.spotifyImgLink?has_content >
               src="${slot.spotifyImgLink}"
