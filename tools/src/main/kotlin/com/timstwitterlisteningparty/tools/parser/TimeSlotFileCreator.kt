@@ -45,20 +45,35 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val completedFile = File("snippets/completed-time-slots.html")
     val allOneTableHtml = buildAllTable(beans)
     val allOneTableFile = File("snippets/all-time-slots.html")
+    val wallHtml = buildWallHtml(completed)
+    val wallFile = File("pages/wall.html")
+
     // if called from Lambda we can't write to the file
     if (writeToFile) {
       completedFile.writeText(completedHtml)
       dateTbdFile.writeText(dateTbdHtml)
       allOneTableFile.writeText(allOneTableHtml)
       upcomingFileCard.writeText(upcomingHtmlCard)
+      wallFile.writeText(wallHtml)
     }
     logger.debug("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}", upcomingHtmlCard, dateTbdHtml, completedHtml, allOneTableHtml)
-
     return mapOf(
       Pair("snippets/${dateTbdFile.name}", dateTbdHtml),
       Pair("snippets/${completedFile.name}", completedHtml),
       Pair("snippets/${allOneTableFile.name}", allOneTableHtml),
-      Pair("snippets/${upcomingFileCard.name}", upcomingHtmlCard))
+      Pair("snippets/${upcomingFileCard.name}", upcomingHtmlCard),
+      Pair("pages/${wallFile.name}", wallHtml)
+      )
+  }
+
+  private fun buildWallHtml(beans: List<TimeSlot>): String {
+    val template = FreeMarkerUtils().getFreeMarker(WALL_FTL)
+
+    val list: List<List<TimeSlot>> = beans.sortedBy { it.isoDate }.chunked(10).toList()
+    val input: Map<String, List<List<TimeSlot>>> = mapOf(Pair("completed_list", list))
+    val htmlStr = StringWriter()
+    template.process(input, htmlStr)
+    return htmlStr.toString()
   }
 
   private fun buildUpcomingCards(upcoming: List<TimeSlot>): String {
