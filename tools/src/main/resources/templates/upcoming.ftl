@@ -21,8 +21,16 @@
         <table style="width: 100%;">
           <tr>
             <td width="35%" class="font-weight-light" style="text-align:left"><a
-              href="${slot.getSpotifyImageLink()}" target="_blank"><img
-              src="${slot.spotifyImgLink}" alt="album"
+              href="${slot.spotifyLink}" target="_blank">
+              <img
+
+              <#if slot.spotifyImgLink?has_content >
+              src="${slot.spotifyImgLink}"
+              <#else>
+              src="https://timstwitterlisteningparty.com/img/blankcd.png"
+              </#if>
+
+              alt="${slot.album} spotify album"
               style="width:80px;height:80px;"></a><br>
               <hr style="width:80px;margin-left:0;">
               ${slot.timeDisplayString()}<sup> ${slot.amPmDisplayString()}</sup>
