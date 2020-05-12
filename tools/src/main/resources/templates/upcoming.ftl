@@ -64,5 +64,5 @@
     </#list>
 
     </div>
-  </div>0[
+  </div>
 </section>
