@@ -46,7 +46,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val allOneTableHtml = buildAllTable(beans)
     val allOneTableFile = File("snippets/all-time-slots.html")
     val wallHtml = buildWallHtml(completed)
-    val wallFile = File("pages/wall.html")
+    val wallFile = File("pages/album-wall.html")
 
     // if called from Lambda we can't write to the file
     if (writeToFile) {

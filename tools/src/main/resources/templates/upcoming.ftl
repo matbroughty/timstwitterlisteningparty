@@ -27,7 +27,13 @@
           <tr>
             <td width="35%" class="font-weight-light" style="text-align:left"><a
               href="${slot.spotifyLink}" target="_blank">
-              <img data-toggle="tooltip" data-placement="top" title="${slot.album} Spotify album link"
+              <img data-toggle="tooltip" data-placement="top" title="${slot.album}
+
+              <#if slot.isActuallySpotifyLink() >
+                Spotify album link   "
+                <#else>
+                link   "
+              </#if>
 
               <#if slot.spotifyImgLink?has_content >
               src="${slot.spotifyImgLink}"

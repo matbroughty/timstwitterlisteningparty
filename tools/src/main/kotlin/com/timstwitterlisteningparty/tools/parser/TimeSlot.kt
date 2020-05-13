@@ -150,6 +150,14 @@ data class TimeSlot(val dateStr: String = "?",
   }
 
   /**
+   * If doesn't exist on spotify or some other link held in the [spotifyLink]
+   * field then this method will tell us
+   */
+  fun isActuallySpotifyLink() : Boolean{
+    return spotifyLink.contains("spotify")
+  }
+
+  /**
    * Displays the isoDate in format or TBC if 1970
    * used in freemarker template
    */
