@@ -68,7 +68,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
 
   private fun buildWallHtml(beans: List<TimeSlot>): String {
     val template = FreeMarkerUtils().getFreeMarker(WALL_FTL)
-    val list: List<List<TimeSlot>> = beans.filter { it.tweeterLinkList().isNotEmpty() && it.spotifyImgLink.startsWith("https://i.scdn")}.sortedBy { it.isoDate }.chunked(10).toList()
+    val list: List<List<TimeSlot>> = beans.filter { it.tweeterLinkList().isNotEmpty() && it.spotifyImgLink.startsWith("https://i.scdn")}.sortedBy { it.isoDate }.chunked(8).toList()
     val input: Map<String, List<List<TimeSlot>>> = mapOf(Pair("completed_list", list))
     val htmlStr = StringWriter()
     template.process(input, htmlStr)

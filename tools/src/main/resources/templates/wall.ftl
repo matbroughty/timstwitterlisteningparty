@@ -70,17 +70,42 @@
 
 </head>
 <body>
-<div class="justify-content-center rounded">
-<div class="container ">
-  <#list completed_list as slots>
-  <div class="row no-gutters">
-    <#list slots as slot>
-    <div>
-      <a href="${slot.spotifyLink}" target="_blank"><img src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top" title="${slot.band}  ${slot.album}" alt="album" style="width:50px;height:50px;"></a>
-    </div>
-    </#list>
+
+<div id="layout" class="pure-g">
+<div class="sidebar pure-u-1 pure-u-md-1-3 pure-u-lg-1-4">
+  <div class="header">
+    <h1 class="brand-title">Album Artwork Wall</h1>
+    <h4 class="status">Together Apart</h4>
+    <h5 class="status"><a class="text-white justify-content-end"
+                          href="shop.html"><i
+      class="fas fa-shopping-basket"></i> BUY RECORDS</a></h5>
+    <a href="https://twitter.com/Tim_Burgess/status/1243311699941261313">
+      <img src="../img/ladylisteningroom_opt.jpg" class="img-fluid rounded mx-auto d-block" alt="tim's listening party room">
+    </a>
+
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a class="pure-button" href="../index.html"><i class="fas fa-home"></i> Home</a>
+      </li>
+
+    </ul>
   </div>
-</#list>
+</div>
+
+<div class="content pure-u-1 pure-u-md-2-3 pure-u-lg-3-4">
+  <div>
+      <div class="container ">
+      <#list completed_list as slots>
+        <div class="row no-gutters">
+        <#list slots as slot>
+          <div>
+            <a href="${slot.spotifyLink}" target="_blank"><img src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top" title="${slot.band}  ${slot.album}" alt="album" style="width:50px;height:50px;"></a>
+          </div>
+        </#list>
+        </div>
+     </#list>
+     </div>
+  </div>
 </div>
 </div>
 </body>
