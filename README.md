@@ -109,15 +109,14 @@ the files above back to the bucket (including the record stores which are derive
 - [x] Add new archive page
 - [x] Investigate twitter api for listening period date range for archive page
 - [ ] Add shell command to preview index.html
-- [ ] Add shell command to add, commit and push code
-- [ ] Add command to call aws
 - [x] Add TBC Page
 - [x] Sort archive page latest to oldest
 - [x] Add lambda to auto create html snippets from csv in github
 - [x] Update lambda to invalidate the Cloud Front cache after writing the html to the s3 buckets
 - [x] Redesign tables to use cardgroups
 - [x] Move data csv files to a separate folder
-- [ ] Show tweeters involved in listening party on index
+- [x] Show tweeters involved in listening party on index
 - [ ] rejig menu/button options
-- [ ] add each replay tweets to a twitter collection
-
+- [X] add each replay tweets to a twitter collection
+- [ ] rejig the all.html and use cards/implement a better search
+- [ ] rejig the wall.html to work on all viewports

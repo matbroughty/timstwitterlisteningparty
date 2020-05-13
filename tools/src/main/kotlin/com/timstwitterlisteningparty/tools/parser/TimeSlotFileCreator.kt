@@ -37,7 +37,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     completed.forEach { logger.debug("Completed listening {}", it) }
     upcoming.forEach { logger.debug("Upcoming listening {}", it) }
     // the new card based table
-    val upcomingHtmlCard = buildUpcomingCards(upcoming)  //buildTableCard(upcoming)
+    val upcomingHtmlCard = buildUpcomingCards(upcoming)
     val upcomingFileCard = File("snippets/upcoming-time-slots-card.html")
     val dateTbdHtml = buildTbcCards(tbd)
     val dateTbdFile = File("snippets/date-tbd-time-slots.html")
@@ -68,7 +68,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
 
   private fun buildWallHtml(beans: List<TimeSlot>): String {
     val template = FreeMarkerUtils().getFreeMarker(WALL_FTL)
-    val list: List<List<TimeSlot>> = beans.filter { it.tweeterLinkList().isNotEmpty() && it.spotifyImgLink.startsWith("https://i.scdn")}.sortedBy { it.isoDate }.chunked(5).toList()
+    val list: List<List<TimeSlot>> = beans.filter { it.tweeterLinkList().isNotEmpty() && it.spotifyImgLink.startsWith("https://i.scdn")}.sortedBy { it.isoDate }.chunked(10).toList()
     val input: Map<String, List<List<TimeSlot>>> = mapOf(Pair("completed_list", list))
     val htmlStr = StringWriter()
     template.process(input, htmlStr)
@@ -94,7 +94,6 @@ class TimeSlotFileCreator : HtmlFileCreator {
     template.process(input, htmlStr)
     return htmlStr.toString()
   }
-
 
   /**
    * Uses template tbc.ftl to create the tbc card

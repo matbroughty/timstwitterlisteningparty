@@ -99,7 +99,7 @@
         <div class="row no-gutters">
         <#list slots as slot>
           <div>
-            <a href="${slot.spotifyLink}" target="_blank"><img src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top" title="${slot.band}  ${slot.album}" alt="album" style="width:50px;height:50px;"></a>
+            <a href="${slot.spotifyLink}" target="_blank"><img src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top" title="${slot.band}  ${slot.album}" alt="album" style="width:80px;height:80px;"></a>
           </div>
         </#list>
         </div>
