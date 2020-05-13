@@ -68,19 +68,20 @@
   <meta name="twitter:description" content="Album Covers from all Listening parties" />
   <meta name="twitter:image" content="https://timstwitterlisteningparty.com/img/rsz_timogen.jpg" />
 
-
 </head>
 <body>
-<div class="container">
+<div class="justify-content-center rounded">
+<div class="container ">
   <#list completed_list as slots>
   <div class="row no-gutters">
     <#list slots as slot>
     <div>
-      <a href="${slot.spotifyLink}" target="_blank"><img src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top" title="${slot.band}  ${slot.album}" alt="album" style="width:100px;height:100px;"></a>
+      <a href="${slot.spotifyLink}" target="_blank"><img src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top" title="${slot.band}  ${slot.album}" alt="album" style="width:50px;height:50px;"></a>
     </div>
     </#list>
   </div>
 </#list>
+</div>
 </div>
 </body>
 </html>
