@@ -15,6 +15,7 @@ import java.util.stream.Collectors
  *   * snippets/date-tbd-time-slots.html used on the tbc.html from the [TBC_FTL]
  *   * snippets/completed-time-slots.html used on the list.html from the [ARCHIVE_FTL]
  *   * snippets/all-time-slots.html used on the all.html from the [ALL_FTL]
+ *   * pages/album-wall.html  from the [WALL_FTL]
  */
 @Component
 class TimeSlotFileCreator : HtmlFileCreator {
@@ -45,7 +46,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val completedFile = File("snippets/completed-time-slots.html")
     val allOneTableHtml = buildAllTable(beans)
     val allOneTableFile = File("snippets/all-time-slots.html")
-    val wallHtml = buildWallHtml(completed)
+    val wallHtml = buildWallHtml(completed, upcoming)
     val wallFile = File("pages/album-wall.html")
 
     // if called from Lambda we can't write to the file
@@ -66,10 +67,12 @@ class TimeSlotFileCreator : HtmlFileCreator {
       )
   }
 
-  private fun buildWallHtml(beans: List<TimeSlot>): String {
+  private fun buildWallHtml(completed: List<TimeSlot>, upcoming: List<TimeSlot>): String {
     val template = FreeMarkerUtils().getFreeMarker(WALL_FTL)
-    val list: List<List<TimeSlot>> = beans.filter { it.tweeterLinkList().isNotEmpty() && it.spotifyImgLink.startsWith("https://i.scdn")}.sortedBy { it.isoDate }.chunked(10).toList()
-    val input: Map<String, List<List<TimeSlot>>> = mapOf(Pair("completed_list", list))
+    val completedList: List<List<TimeSlot>> = completed.filter { it.tweeterLinkList().isNotEmpty() && it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(7).toList()
+    val upcomingList: List<List<TimeSlot>> = upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(7).toList()
+
+    val input: Map<String, List<List<TimeSlot>>> = mapOf(Pair("completed_list", completedList), Pair("upcoming_list", upcomingList))
     val htmlStr = StringWriter()
     template.process(input, htmlStr)
     return htmlStr.toString()
