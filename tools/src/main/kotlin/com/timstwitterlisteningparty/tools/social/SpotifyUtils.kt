@@ -1,5 +1,6 @@
 package com.timstwitterlisteningparty.tools.social
 
+import com.neovisionaries.i18n.CountryCode
 import com.wrapper.spotify.SpotifyApi
 import com.wrapper.spotify.enums.ModelObjectType
 import com.wrapper.spotify.exceptions.SpotifyWebApiException
@@ -77,11 +78,11 @@ class SpotifyUtils {
 
       val q = buildQuery(artist, album)
       logger.info("query is $q")
-      val search = spotifyApi.searchItem(q, "${ModelObjectType.ALBUM.type},${ModelObjectType.ARTIST.type}").offset(0).limit(50).build()
+      val search = spotifyApi.searchItem(q, ModelObjectType.ALBUM.type).market(CountryCode.GB).offset(0).limit(50).build()
       val searchRequest = search.execute()
       searchRequest.albums.items.forEach { it ->
         logger.debug("album is ${it.name}")
-        if (it.name.equals(album, ignoreCase = true)) {
+        if (it.name.equals(album, ignoreCase = true) || it.name.contains(album.substringBefore(" ")) || it.name.contains(album.substringBefore(" "))) {
           logger.debug("found artist $artist - returning album ${it.href}")
           // got it
           return it.toAlbum()
@@ -124,8 +125,8 @@ class SpotifyUtils {
 }
 
 fun AlbumSimplified.toAlbum(): Album {
-  return Album(spotifyLink = externalUrls.externalUrls["spotify"], imgLink = images[1].url, spotifyId = id, releaseDate = releaseDate, albumName = name)
+  return Album(spotifyLink = externalUrls.externalUrls["spotify"], imgLink = images[1].url, smallImgLink = images[2].url, spotifyId = id, releaseDate = releaseDate, albumName = name)
 }
 
-data class Album(val spotifyLink: String?, val imgLink: String, val spotifyId: String, val releaseDate: String, val albumName: String)
+data class Album(val spotifyLink: String?, val imgLink: String, val smallImgLink: String, val spotifyId: String, val releaseDate: String, val albumName: String)
 
