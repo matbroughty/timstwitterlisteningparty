@@ -15,7 +15,7 @@ import java.util.stream.Collectors
  *   * snippets/date-tbd-time-slots.html used on the tbc.html from the [TBC_FTL]
  *   * snippets/completed-time-slots.html used on the list.html from the [ARCHIVE_FTL]
  *   * snippets/all-time-slots.html used on the all.html from the [ALL_FTL]
- *   * pages/album-wall.html  from the [WALL_FTL]
+ *   * snippets/wall.html  from the [WALL_FTL]
  */
 @Component
 class TimeSlotFileCreator : HtmlFileCreator {
@@ -47,7 +47,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val allOneTableHtml = buildAllTable(beans)
     val allOneTableFile = File("snippets/all-time-slots.html")
     val wallHtml = buildWallHtml(completed, upcoming)
-    val wallFile = File("pages/album-wall.html")
+    val wallFile = File("snippets/wall.html")
 
     // if called from Lambda we can't write to the file
     if (writeToFile) {
