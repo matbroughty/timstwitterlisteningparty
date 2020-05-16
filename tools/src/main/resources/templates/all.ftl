@@ -43,7 +43,7 @@
               <#else>
               class="pure-button-disabled"
             </#if>
-                   href="${slot.getCollectionLink()}"><i class="fab fa-twitter"></i></a></td>
+                   href="${slot.getCollectionLink()}"><i class="fas fa-archive"></i></a></td>
           </tr>
           </#list>
           <script>
