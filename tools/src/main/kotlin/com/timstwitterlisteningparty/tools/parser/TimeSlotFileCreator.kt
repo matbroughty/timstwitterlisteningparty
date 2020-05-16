@@ -13,7 +13,7 @@ import java.util.stream.Collectors
  *
  *   * snippets/upcoming-time-slots-card.html used on index.html from the [UPCOMING_FTL]
  *   * snippets/date-tbd-time-slots.html used on the tbc.html from the [TBC_FTL]
- *   * snippets/completed-time-slots.html used on the list.html from the [ARCHIVE_FTL]
+ *   * snippets/completed-time-slots.html used on the archive.html from the [ARCHIVE_FTL]
  *   * snippets/all-time-slots.html used on the all.html from the [ALL_FTL]
  *   * snippets/wall.html  from the [WALL_FTL]
  */
