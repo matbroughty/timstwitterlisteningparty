@@ -36,11 +36,22 @@ class TimeSlotFileEnrich {
         if(album != null){
           logger.info("found album $album")
           it.spotifyImgLink = album.imgLink
+          it.spotifyImgLinkSmall = album.smallImgLink
           it.spotifyLink = album.spotifyLink.toString()
         }else{
           logger.warn("Could not find album for $it")
         }
       }
+      // update those without small image that do have a spotify large image
+      if(it.spotifyImgLinkSmall.isEmpty() && it.spotifyImgLink.contains("i.scdn.co")){
+        val album = SpotifyUtils().findAlbum(it.band, it.album)
+        if(album != null) {
+          it.spotifyImgLinkSmall = album.smallImgLink
+        }else{
+          logger.warn("Could not find album for $it so no small image")
+        }
+      }
+
       if (replayMap.containsKey(it.hashBandAlbum())) {
         val replay = replayMap[it.hashBandAlbum()]
         if (replay != null) {

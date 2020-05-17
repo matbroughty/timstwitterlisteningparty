@@ -45,10 +45,12 @@ data class TimeSlot(val dateStr: String = "?",
                     var spotifyLink: String = "", // link to album
                     @CsvBindByPosition(position = 8)
                     @CsvBindByName(column = "spotify-img-link")
-                    var spotifyImgLink: String = "" // link to album artwork
+                    var spotifyImgLink: String = "", // link to album artwork  300/300
+                    @CsvBindByPosition(position = 9)
+                    @CsvBindByName(column = "spotify-img-link-small")
+                    var spotifyImgLinkSmall: String = "" // link to album artwork 60/60
 
-
-){
+) {
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -94,7 +96,9 @@ data class TimeSlot(val dateStr: String = "?",
 
 
   fun getSpotifyImageLink(): String {
-    return if(spotifyImgLink.isBlank()) {"img/blankcd.png"} else spotifyImgLink
+    return if (spotifyImgLink.isBlank()) {
+      "img/blankcd.png"
+    } else spotifyImgLink
   }
 
   /**
@@ -139,13 +143,14 @@ data class TimeSlot(val dateStr: String = "?",
   fun requiresTwitterCollection(): Boolean {
     return !isEmpty() && replayLink.isNotEmpty() && twitterCollectionLink.isEmpty()
   }
+
   @Suppress("unused")
-  fun isToday() : Boolean{
+  fun isToday(): Boolean {
     return LocalDate.now().isEqual(isoDate.toLocalDate())
   }
 
 
-  fun isAfter(date : LocalDateTime): Boolean{
+  fun isAfter(date: LocalDateTime): Boolean {
     return isoDate.toLocalDate().isAfter(date.toLocalDate())
   }
 
@@ -153,7 +158,7 @@ data class TimeSlot(val dateStr: String = "?",
    * If doesn't exist on spotify or some other link held in the [spotifyLink]
    * field then this method will tell us
    */
-  fun isActuallySpotifyLink() : Boolean{
+  fun isActuallySpotifyLink(): Boolean {
     return spotifyLink.contains("spotify")
   }
 
@@ -162,8 +167,8 @@ data class TimeSlot(val dateStr: String = "?",
    * used in freemarker template
    */
   @Suppress("unused")
-  fun dateDisplayString(): String{
-    if(isoDate.year == 1970){
+  fun dateDisplayString(): String {
+    if (isoDate.year == 1970) {
       return "TBC"
     }
     return isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
@@ -174,15 +179,17 @@ data class TimeSlot(val dateStr: String = "?",
    * used in freemarker template
    */
   @Suppress("unused")
-  fun getCollectionLink() :String{
+  fun getCollectionLink(): String {
     return "https://timstwitterlisteningparty.com/pages/list/collection_${replayId()}.html"
   }
+
   @Suppress("unused")
-  fun timeDisplayString(): String{
+  fun timeDisplayString(): String {
     return isoDate.format(DateTimeFormatter.ofPattern("h:mm"))
   }
+
   @Suppress("unused")
-  fun amPmDisplayString(): String{
+  fun amPmDisplayString(): String {
     return isoDate.format(DateTimeFormatter.ofPattern("a"))
   }
 
