@@ -16,42 +16,42 @@
           </thead>
           <tbody>
           <#list all_list as slot>
-          <tr>
-            <td>
+            <tr>
+              <td>
 
-            ${slot.dateDisplayString()}
+                ${slot.dateDisplayString()}
 
-            </td>
-            <td>${slot.band}</td>
-            <td>${slot.album}</td>
-            <td><a class="pure-button pure-button-active"
-                   href="${slot.link}"><i
-              class="fab fa-twitter-square"></i></a></td>
+              </td>
+              <td>${slot.band}</td>
+              <td>${slot.album}</td>
+              <td><a class="pure-button pure-button-active"
+                     href="${slot.link}"><i
+                          class="fab fa-twitter-square"></i></a></td>
 
-            <td><a
-              <#if slot.replayLink?has_content >
-              class="pure-button pure-button-active"
-              <#else>
-              class="pure-button-disabled"
-              </#if>
-              href="${slot.replayLink}"><i
-              class="fas fa-redo"></i></a></td>
-            <td>
-            <a
-              <#if slot.twitterCollectionLink?has_content >
-              class="pure-button pure-button-active"
-              <#else>
-              class="pure-button-disabled"
-            </#if>
-                   href="${slot.getCollectionLink()}"><i class="fas fa-archive"></i></a></td>
-          </tr>
+              <td><a
+                        <#if slot.replayLink?has_content >
+                          class="pure-button pure-button-active"
+                        <#else>
+                          class="pure-button-disabled"
+                        </#if>
+                        href="${slot.replayLink}"><i
+                          class="fas fa-redo"></i></a></td>
+              <td>
+                <a
+                        <#if slot.twitterCollectionLink?has_content >
+                          class="pure-button pure-button-active"
+                        <#else>
+                          class="pure-button-disabled"
+                        </#if>
+                        href="${slot.getCollectionLink()}"><i class="fas fa-archive"></i></a></td>
+            </tr>
           </#list>
           <script>
-    $(document).ready(function() {
-      $('#time-slots').DataTable({
-        "paging": false
-      });
-    });
+            $(document).ready(function () {
+              $('#time-slots').DataTable({
+                "paging": false
+              });
+            });
           </script>
           </tbody>
         </table>
