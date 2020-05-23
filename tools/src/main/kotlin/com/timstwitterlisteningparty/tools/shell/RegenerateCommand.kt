@@ -19,6 +19,6 @@ class RegenerateCommand(val allHtmlCommand: AllHtmlCommand, val enrishCsvCommand
   fun regen(): String {
     val updatedTimeSlotData = enrishCsvCommand.enrich()
     val allHtml = allHtmlCommand.allhtml()
-    return "regen $updatedTimeSlotData and allHtml length ${allHtml.length} and collections generated = ${collectionPagesGenerateCommand.collections()}"
+    return "regen: ${updatedTimeSlotData.split("\n").count()} rows in time-slot-data and allHtml length ${allHtml.length} and collections generated = ${collectionPagesGenerateCommand.collections()}"
   }
 }
