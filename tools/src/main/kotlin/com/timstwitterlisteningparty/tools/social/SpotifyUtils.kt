@@ -125,8 +125,8 @@ class SpotifyUtils {
 }
 
 fun AlbumSimplified.toAlbum(): Album {
-  return Album(spotifyLink = externalUrls.externalUrls["spotify"], imgLink = images[1].url, smallImgLink = images[2].url, spotifyId = id, releaseDate = releaseDate, albumName = name)
+  return Album(spotifyLink = externalUrls.externalUrls["spotify"], imgLink = images[1].url, smallImgLink = images[2].url, spotifyId = id, releaseDate = releaseDate, albumName = name, year = releaseDate)
 }
 
-data class Album(val spotifyLink: String?, val imgLink: String, val smallImgLink: String, val spotifyId: String, val releaseDate: String, val albumName: String)
+data class Album(val spotifyLink: String?, val imgLink: String, val smallImgLink: String, val spotifyId: String, val releaseDate: String, val albumName: String, val year:String)
 

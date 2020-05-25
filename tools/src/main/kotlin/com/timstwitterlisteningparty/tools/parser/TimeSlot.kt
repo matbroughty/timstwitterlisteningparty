@@ -48,7 +48,10 @@ data class TimeSlot(val dateStr: String = "?",
                     var spotifyImgLink: String = "", // link to album artwork  300/300
                     @CsvBindByPosition(position = 9)
                     @CsvBindByName(column = "spotify-img-link-small")
-                    var spotifyImgLinkSmall: String = "" // link to album artwork 60/60
+                    var spotifyImgLinkSmall: String = "", // link to album artwork 60/60
+                    @CsvBindByPosition(position = 10)
+                    @CsvBindByName(column = "spotify-year")
+                    var spotifyYear: String = "" // year album released
 
 ) {
 
@@ -201,6 +204,11 @@ data class TimeSlot(val dateStr: String = "?",
     var html = "<br/><small>"
     html = html.plus(tweeterLinkList().map { "<a class=\"text-muted\" target=\"_blank\" href=\"$it\">@${it.substringAfterLast("/")}</a>" }.toList())
     return html.plus("</small>").replace("[", "").replace("]", "")
+  }
+
+
+  fun spotifyDateDisplay(): String {
+    return if(spotifyYear.isEmpty()) "" else spotifyYear.substring(0, 4)
   }
 
 }

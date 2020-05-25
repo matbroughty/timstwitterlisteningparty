@@ -38,6 +38,7 @@ class TimeSlotFileEnrich {
           it.spotifyImgLink = album.imgLink
           it.spotifyImgLinkSmall = album.smallImgLink
           it.spotifyLink = album.spotifyLink.toString()
+          it.spotifyYear = album.year
         }else{
           logger.warn("Could not find album for $it")
         }

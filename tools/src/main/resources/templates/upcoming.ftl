@@ -52,6 +52,7 @@
               <#if slot.isToday() >
                 ${slot.buildTweeterLinks()}
               </#if>
+              <br><small>${slot.spotifyDateDisplay()}</small>
             </td>
             <td width="15%"><a class="pure-button pure-button-active"
                                href="${slot.link}" target="_blank">
