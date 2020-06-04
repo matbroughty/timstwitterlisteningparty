@@ -62,6 +62,7 @@ class TimeSlotFileEnrich {
           if (it.requiresTwitterCollection()) {
             logger.info("creating collection for replay $replay")
             it.twitterCollectionLink = TweetUtils().createCollection(replay)
+            TweetUtils().ttlpFirstTweetCollection(replayIdStr = replay.trimmedId)
           }
 
         }

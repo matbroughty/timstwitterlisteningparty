@@ -35,6 +35,12 @@ class TweetCommand {
     return "tweet replay for $replayId = $msg"
   }
 
+  @ShellMethod("Build collection from first tweet in every replay ")
+  fun firstTweets(): String {
+    return "tweet list collection ${TweetUtils().ttlpFirstTweetCollection()}"
+  }
+
+
   private fun findTimeSlot(replayId: String): TimeSlot? {
     val beans = TimeSlotReader().timeSlots
     return beans.find { it.replayId().trim() == replayId.trim() }

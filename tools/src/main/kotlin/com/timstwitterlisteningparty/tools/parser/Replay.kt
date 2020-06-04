@@ -58,5 +58,10 @@ data class Replay(@CsvBindByPosition(position = 0)
     return replayFeedHtml.select("div[id^=tweet-feed-]").map { it.attr("data-url").toString().substringAfterLast("%2F") }.filter { it.isNotEmpty() }.toList()
   }
 
-
+  /**
+   * Gets the first tweet for the replay (which is actually the last tweet in the list)
+   */
+  fun getFirstListeningTweet(): String {
+    return if(getListeningTweetList().isEmpty()) "" else getListeningTweetList().last()
+  }
 }

@@ -104,12 +104,7 @@ class TweetUtils {
         retMsg = retMsg.plus("https://twitter.com/LlSTENlNG_PARTY/timelines/${collectionId.substringAfter("custom-")}")
         logger.info(retMsg)
         replay.getListeningTweetList().chunked(100).forEach {
-          var json = "{\"id\": \"$collectionId\",\"changes\": ["
-          json = json.plus(it.joinToString { tweetId -> "{ \"op\": \"add\", \"tweet_id\": \"$tweetId\"}" })
-          json = json.plus("]}")
-          logger.info("json curation json is $json")
-          response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/entries/curate.json", JSONObject(json))
-          logger.info("response from curate for collection $collectionId is $response")
+          addToCollection(it, collectionId)
         }
 
       }
@@ -118,5 +113,56 @@ class TweetUtils {
     }
     return retMsg
   }
+
+  /**
+   * Builds up collection - already created collection so adds to it
+   */
+  fun ttlpFirstTweetCollection(collectionId: String = "1268620253954740224", replayIdStr: String = "1"): String {
+
+    var retMsg = ""
+    try {
+      var replayId = replayIdStr.toInt()
+      var replayFeedHtml = Jsoup.connect("https://timstwitterlisteningparty.com/snippets/replay/feed_${replayId}_snippet.html").get()
+      val tweetList = ArrayList<String>()
+      while (replayFeedHtml != null) {
+        val replay = Replay(replayId = replayId.toString())
+        val tweetId = replay.getFirstListeningTweet()
+        if (tweetId.isNotBlank()) {
+          tweetList.add(tweetId)
+        }
+        logger.info("added tweetid $tweetId for first tweet collection")
+        replayId++
+
+        replayFeedHtml = try {
+          Jsoup.connect("https://timstwitterlisteningparty.com/snippets/replay/feed_${replayId}_snippet.html").get()
+        } catch (e: Exception) {
+          null;
+        }
+      }
+
+      retMsg = retMsg.plus("https://twitter.com/LlSTENlNG_PARTY/timelines/$collectionId")
+      logger.info("collection id for first tweet list is $collectionId and return message is  $retMsg")
+      tweetList.chunked(100).forEach {
+        addToCollection(it, collectionId)
+      }
+    } catch (e: Exception) {
+      logger.info("Some badness with createCollection on twitter  ${e.localizedMessage}", e)
+    }
+
+    return retMsg
+
+  }
+
+
+  fun addToCollection(tweetIds: List<String>, collectionId: String) {
+
+    var json = "{\"id\": \"$collectionId\",\"changes\": ["
+    json = json.plus(tweetIds.joinToString { tweetId -> "{ \"op\": \"add\", \"tweet_id\": \"$tweetId\"}" })
+    json = json.plus("]}")
+    logger.info("json curation json is $json")
+    val response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/entries/curate.json", JSONObject(json))
+    logger.info("response from curate for collection $collectionId is $response")
+  }
+
 
 }

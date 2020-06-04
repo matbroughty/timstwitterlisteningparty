@@ -30,7 +30,7 @@ class CollectionsHtmlPagesCreator {
     val template = FreeMarkerUtils().getFreeMarker(COLLECTIONS_FTL)
     val pageMap = mutableListOf<Pair<String, String>>()
     // create a new page for each available replay
-    existingList.filter { it.replayLink.isNotEmpty() }.forEach { it ->
+    existingList.filter { it.replayLink.isNotEmpty() }.forEach {
       // the data
       val input: Map<String, TimeSlot> = mapOf(Pair("slot", it))
       try {
