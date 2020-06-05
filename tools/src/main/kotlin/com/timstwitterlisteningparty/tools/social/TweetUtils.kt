@@ -143,7 +143,7 @@ class TweetUtils {
       retMsg = retMsg.plus("https://twitter.com/LlSTENlNG_PARTY/timelines/$collectionId")
       logger.info("collection id for first tweet list is $collectionId and return message is  $retMsg")
       tweetList.chunked(100).forEach {
-        addToCollection(it, collectionId)
+        addToCollection(it, "custom-$collectionId")
       }
     } catch (e: Exception) {
       logger.info("Some badness with createCollection on twitter  ${e.localizedMessage}", e)

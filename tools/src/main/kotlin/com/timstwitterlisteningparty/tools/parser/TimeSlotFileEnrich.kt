@@ -27,6 +27,7 @@ class TimeSlotFileEnrich {
   fun enrich(fileName: String = "data/time-slot-data.csv", inputStream: InputStream? = null,
              writeToFile: Boolean = false, newFileName: String = fileName): String {
 
+    val addedReplayId = ArrayList<Int>()
     val replayMap: Map<Int, Replay> = ReplayPHPScript().readPhpReplayScript()
     replayMap.forEach { logger.debug(it.toString()) }
     val existingList = TimeSlotReader(fileName, inputStream).timeSlots
@@ -53,6 +54,7 @@ class TimeSlotFileEnrich {
         }
       }
 
+
       if (replayMap.containsKey(it.hashBandAlbum())) {
         val replay = replayMap[it.hashBandAlbum()]
         if (replay != null) {
@@ -62,7 +64,7 @@ class TimeSlotFileEnrich {
           if (it.requiresTwitterCollection()) {
             logger.info("creating collection for replay $replay")
             it.twitterCollectionLink = TweetUtils().createCollection(replay)
-            TweetUtils().ttlpFirstTweetCollection(replayIdStr = replay.trimmedId)
+            addedReplayId.add(replay.trimmedId.toInt())
           }
 
         }
@@ -77,7 +79,12 @@ class TimeSlotFileEnrich {
         }
 
       }
+
+
+
     }
+
+
     existingList.forEach { logger.debug(it.toString()) }
 
     if (writeToFile) {
@@ -96,6 +103,12 @@ class TimeSlotFileEnrich {
       .build()
     sbc.write(existingList.sortedBy{it.isoDate})
     writer.close()
+
+    // add any new replay id's to the collection.
+    if(addedReplayId.isNotEmpty()){
+      TweetUtils().ttlpFirstTweetCollection(replayIdStr = addedReplayId.min()!!.toString())
+    }
+
     return writer.toString()
   }
 
