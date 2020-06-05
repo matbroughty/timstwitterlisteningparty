@@ -104,9 +104,11 @@ class TimeSlotFileEnrich {
     sbc.write(existingList.sortedBy{it.isoDate})
     writer.close()
 
-    // add any new replay id's to the collection.
+    // add any new replay id's to the collections.  Hardcoded collection-ids as the first-tweet.html uses them
     if(addedReplayId.isNotEmpty()){
-      TweetUtils().ttlpFirstTweetCollection(replayIdStr = addedReplayId.min()!!.toString())
+      TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "custom-1268856689010376706", replayIdStr = addedReplayId.min()!!.toString())
+      // specify order but not used as we already have the collection
+      TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "custom-1268856779288588289", replayIdStr = addedReplayId.min()!!.toString(), order = "tweet_reverse_chron")
     }
 
     return writer.toString()

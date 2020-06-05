@@ -30,6 +30,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
       .filter { it.isoDate.year == 1970 }.collect(Collectors.toList())
     val completed = beans.stream()
       .filter { it.isoDate.year != 1970 && it.isoDate.toLocalDate().isBefore(LocalDate.now()) }
+      .filter{it.replayLink.isNotBlank()}
       .collect(Collectors.toList())
     val upcoming = beans.stream()
       .filter { it.isoDate.year != 1970 && it.isoDate.toLocalDate().isBefore(LocalDate.now()).not() }

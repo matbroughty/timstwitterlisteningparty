@@ -35,9 +35,10 @@ class TweetCommand {
     return "tweet replay for $replayId = $msg"
   }
 
-  @ShellMethod("Build collection from first tweet in every replay ")
+  @ShellMethod("Builds new collections (chron and reverse chron) from the first tweet in every replay ")
   fun firstTweets(): String {
-    return "tweet list collection ${TweetUtils().ttlpFirstTweetCollection()}"
+    return "tweet list oldest first collection = " +
+      "${TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "")} newest first collection = ${TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "", order = "tweet_reverse_chron")}"
   }
 
 
