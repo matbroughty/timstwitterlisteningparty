@@ -4,9 +4,6 @@ pause
 REM now the next function ScheduledHtmlGenerator
 aws lambda update-function-code --function-name ScheduledHtmlGenerator --s3-bucket timstwitterlisteningparty.com --s3-key tools-1.0.0-all.jar
 pause
-REM now the next function InvalidateCacheHandler
-aws lambda update-function-code --function-name InvalidateCacheHandler --s3-bucket timstwitterlisteningparty.com --s3-key tools-1.0.0-all.jar
-pause
 REM now the next function ScheduledReplayTweeter
 aws lambda update-function-code --function-name ScheduledReplayTweeter --s3-bucket timstwitterlisteningparty.com --s3-key tools-1.0.0-all.jar
 pause
