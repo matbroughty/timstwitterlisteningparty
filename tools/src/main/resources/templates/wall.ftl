@@ -9,9 +9,9 @@
   <h1 class="content-subhead">Completed Listening Parties</h1>
 
   <div class="content pure-u-1 pure-u-md-2-3 pure-u-lg-3-4">
-    <div class="btn-group-toggle" data-toggle="buttons">
+    <div class="btn-group-toggle d-flex justify-content-center" data-toggle="buttons">
       <label class="btn btn-secondary active">
-        <input type="checkbox" checked autocomplete="off" onclick="link()"> Album Cover Link
+        <input type="checkbox" checked autocomplete="off" onclick="link()"> Change Album Cover Link
       </label>
     </div>
   </div>
