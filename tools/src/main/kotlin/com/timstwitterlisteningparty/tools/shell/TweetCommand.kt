@@ -41,6 +41,13 @@ class TweetCommand {
       "${TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "")} newest first collection = ${TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "", order = "tweet_reverse_chron")}"
   }
 
+  @ShellMethod("Tweet any anniversaries based on spotify alum date in teh time-slot-data.csv")
+  fun tweetAnniversary(): String {
+    return "tweet anniversary - anything to tweet = " +
+      "${TweetUtils().tweetAnniversary()}"
+  }
+
+
 
   private fun findTimeSlot(replayId: String): TimeSlot? {
     val beans = TimeSlotReader().timeSlots

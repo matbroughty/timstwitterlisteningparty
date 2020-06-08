@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.GetObjectRequest
 import com.timstwitterlisteningparty.tools.parser.ReplayPHPScript
+import com.timstwitterlisteningparty.tools.parser.TimeSlot
 import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
 import com.timstwitterlisteningparty.tools.social.TweetUtils
 import org.slf4j.LoggerFactory
@@ -22,13 +23,8 @@ class S3ReplayTweetGenerator {
   fun tweetReplay(bucketName: String = "timstwitterlisteningparty.com",
                   srcKeyTimeSlots: String = "data/time-slot-data.csv"
   ): String {
-    print("bucket = $bucketName and file = $srcKeyTimeSlots")
-    val s3Client = AmazonS3ClientBuilder.defaultClient() as AmazonS3Client
-    println("Getting $srcKeyTimeSlots from bucket $bucketName")
-    val s3Object = s3Client.getObject(GetObjectRequest(bucketName, srcKeyTimeSlots))
-    println("Object for $srcKeyTimeSlots from bucket $bucketName is $s3Object")
-    val objectData: InputStream = s3Object.objectContent
-    val existingList = TimeSlotReader(inputStream = objectData).timeSlots
+
+    val existingList = getTimeSlots(bucketName, srcKeyTimeSlots)
     val replayMap = ReplayPHPScript().readPhpReplayScript()
     var tweetMsg = ""
     var missingData = ""
@@ -44,7 +40,7 @@ class S3ReplayTweetGenerator {
             // var tweet = TweetUtils().tweetCollection(it, replayId = replay.trimmedId)
             // tweetMsg = tweetMsg.plus("\n").plus(tweet)
             // and the replay
-            var tweet = TweetUtils().tweetReplay(it, replayLink = replay.fullReplayLink())
+            val tweet = TweetUtils().tweetReplay(it, replayLink = replay.fullReplayLink())
             tweetMsg = tweetMsg.plus("\n").plus(tweet)
             logger.info("tweeted $tweetMsg")
           } else {
@@ -71,6 +67,27 @@ class S3ReplayTweetGenerator {
 
 
     return "Ok: replayLink tweeted the following replay tweets $tweetMsg !!!! Did not match $missingData !!! : Generated time is :${LocalDateTime.now()} "
+  }
+
+
+  /**
+   * Find any completed listening parties and if the album was released today N years ago then
+   * tweet about it
+   */
+  fun tweetAnniversary(bucketName: String = "timstwitterlisteningparty.com",
+                         srcKeyTimeSlots: String = "data/time-slot-data.csv"): String {
+    return "anniversary to tweet about = ${TweetUtils().tweetAnniversary(getTimeSlots(bucketName, srcKeyTimeSlots))}"
+    }
+
+
+  private fun getTimeSlots(bucketName: String, srcKeyTimeSlots: String): List<TimeSlot> {
+    print("bucket = $bucketName and file = $srcKeyTimeSlots")
+    val s3Client = AmazonS3ClientBuilder.defaultClient() as AmazonS3Client
+    println("Getting $srcKeyTimeSlots from bucket $bucketName")
+    val s3Object = s3Client.getObject(GetObjectRequest(bucketName, srcKeyTimeSlots))
+    println("Object for $srcKeyTimeSlots from bucket $bucketName is $s3Object")
+    val objectData: InputStream = s3Object.objectContent
+    return TimeSlotReader(inputStream = objectData).timeSlots
   }
 
 }

@@ -2,11 +2,15 @@ package com.timstwitterlisteningparty.tools.social
 
 import com.timstwitterlisteningparty.tools.parser.Replay
 import com.timstwitterlisteningparty.tools.parser.TimeSlot
+import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import twitter4j.*
 import twitter4j.conf.ConfigurationBuilder
+import java.time.LocalDate
+import java.time.MonthDay
+import java.time.format.DateTimeFormatter
 
 
 @Component
@@ -57,6 +61,29 @@ class TweetUtils {
     }
   }
 
+  /**
+   * Runs through the [TimeSlotReader#timeSlots] and if today is an anniversary tweets it
+   */
+  fun tweetAnniversary(timeSlots: List<TimeSlot> = emptyList()): Boolean {
+    val now = MonthDay.from(LocalDate.now())
+    var anniversaryToTweet = false
+    val timeSlotList = if (timeSlots.isEmpty()) TimeSlotReader().timeSlots else timeSlots
+    timeSlotList.filter { it.spotifyYear.length == 10 }
+      .filter { it.tweeters.isNotEmpty() && it.replayLink.isNotEmpty() }
+      .filter {
+        val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
+        logger.info("checking ${MonthDay.of(releaseDate.month, releaseDate.dayOfMonth)} of ${it.album} to see if anniversary against now $now")
+        now == MonthDay.of(releaseDate.month, releaseDate.dayOfMonth)
+      }
+      .forEach {
+        logger.info("found an anniversary for $it")
+        anniversaryToTweet = true
+        val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
+        tweet("${releaseDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))}. " +
+          "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty")
+      }
+    return anniversaryToTweet
+  }
 
   fun tweetReplay(timeSlot: TimeSlot, replayLink: String): String {
     if (timeSlot.tweeterList().isEmpty()) {
@@ -125,9 +152,9 @@ class TweetUtils {
   fun ttlpFirstTweetCollection(collectionIdStr: String = "custom-1268620253954740224", replayIdStr: String = "1", order: String = "tweet_chron"): String {
 
     var retMsg = ""
-    var collectionId  = collectionIdStr
+    var collectionId = collectionIdStr
     try {
-      if(collectionId.isEmpty()){
+      if (collectionId.isEmpty()) {
         collectionId = createCollection("Drop The Needle", "First Tweet: Every Replay:  ${if (order.equals("tweet_chron")) " Oldest " else " Most Recent "} First", order)
       }
       var replayId = replayIdStr.toInt()
