@@ -24,7 +24,14 @@
                 <b>${slot.band}</b><br/>${slot.album}
               </td>
               <td width="15%"><a class="pure-button pure-button-active"
-                                 href="${slot.replayLink}" target="_blank">
+
+                                 <#if slot.hasReplay()>
+                                 href="${slot.replayLink}"
+                                 <#else>
+                                   href="${slot.link}"
+                                 </#if>
+
+                                 target="_blank">
                   <#if slot.hasReplay()>
                     Replay
                   <i class="fas fa-redo"></i>
