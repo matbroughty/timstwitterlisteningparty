@@ -33,10 +33,8 @@
 
                                  target="_blank">
                   <#if slot.hasReplay()>
-                    Replay
                   <i class="fas fa-redo"></i>
                   <#else>
-                    Future
                   <i class="fab fa-twitter-square"></i>
                   </#if>
               </a></td>
