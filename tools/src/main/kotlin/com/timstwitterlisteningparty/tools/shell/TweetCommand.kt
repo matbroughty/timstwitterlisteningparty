@@ -42,9 +42,9 @@ class TweetCommand {
   }
 
   @ShellMethod("Tweet any anniversaries based on spotify alum date in teh time-slot-data.csv")
-  fun tweetAnniversary(): String {
+  fun tweetAnniversary(@ShellOption("-L", "--log") logOnly: String): String {
     return "tweet anniversary - anything to tweet = " +
-      "${TweetUtils().tweetAnniversary()}"
+      "${TweetUtils().tweetAnniversary(logOnly = logOnly.toBoolean())}"
   }
 
 

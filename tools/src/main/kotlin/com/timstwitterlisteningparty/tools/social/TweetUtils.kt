@@ -62,9 +62,10 @@ class TweetUtils {
   }
 
   /**
-   * Runs through the [TimeSlotReader#timeSlots] and if today is an anniversary tweets it
+   * Runs through the ([TimeSlotReader#timeSlots] of timeSlots is empty) and if today is an anniversary tweets it
+   * or logs it only if logOnly = true
    */
-  fun tweetAnniversary(timeSlots: List<TimeSlot> = emptyList()): Boolean {
+  fun tweetAnniversary(timeSlots: List<TimeSlot> = emptyList(), logOnly: Boolean = false): Boolean {
     val now = MonthDay.from(LocalDate.now())
     var anniversaryToTweet = false
     val timeSlotList = if (timeSlots.isEmpty()) TimeSlotReader().timeSlots else timeSlots
@@ -78,8 +79,13 @@ class TweetUtils {
         logger.info("found an anniversary for $it")
         anniversaryToTweet = true
         val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
-        tweet("${releaseDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))}. " +
-          "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty")
+        val msg = "${releaseDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))}. " +
+          "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty"
+        if(logOnly){
+          logger.info(msg)
+        }else{
+          tweet(msg)
+        }
       }
     return anniversaryToTweet
   }
