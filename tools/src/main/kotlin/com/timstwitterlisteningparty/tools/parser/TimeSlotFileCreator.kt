@@ -6,6 +6,7 @@ import java.io.File
 import java.io.InputStream
 import java.io.StringWriter
 import java.time.LocalDate
+import java.time.MonthDay
 import java.util.stream.Collectors
 
 /**
@@ -16,6 +17,7 @@ import java.util.stream.Collectors
  *   * snippets/completed-time-slots.html used on the archive.html from the [ARCHIVE_FTL]
  *   * snippets/all-time-slots.html used on the all.html from the [ALL_FTL]
  *   * snippets/wall.html  from the [WALL_FTL]
+ *   * snippets/anniversary-albums.html from the [ANNIVERSARY_FTL]
  */
 @Component
 class TimeSlotFileCreator : HtmlFileCreator {
@@ -43,6 +45,8 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val upcomingFileCard = File("snippets/upcoming-time-slots-card.html")
     val dateTbdHtml = buildTbcCards(tbd)
     val dateTbdFile = File("snippets/date-tbd-time-slots.html")
+    val anniversaryHtml = buildAnniversaryCards(beans)
+    val anniversaryFile = File("snippets/anniversary-albums.html")
     val completedHtml = buildCompletedTableCards(completed)
     val completedFile = File("snippets/completed-time-slots.html")
     val allOneTableHtml = buildAllTable(beans)
@@ -57,6 +61,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
       allOneTableFile.writeText(allOneTableHtml)
       upcomingFileCard.writeText(upcomingHtmlCard)
       wallFile.writeText(wallHtml)
+      anniversaryFile.writeText(anniversaryHtml)
     }
     logger.debug("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}", upcomingHtmlCard, dateTbdHtml, completedHtml, allOneTableHtml)
     return mapOf(
@@ -64,9 +69,12 @@ class TimeSlotFileCreator : HtmlFileCreator {
       Pair("snippets/${completedFile.name}", completedHtml),
       Pair("snippets/${allOneTableFile.name}", allOneTableHtml),
       Pair("snippets/${upcomingFileCard.name}", upcomingHtmlCard),
+      Pair("snippets/${anniversaryFile.name}", anniversaryHtml),
       Pair("pages/${wallFile.name}", wallHtml)
       )
   }
+
+
 
   private fun buildWallHtml(completed: List<TimeSlot>, upcoming: List<TimeSlot>): String {
     val template = FreeMarkerUtils().getFreeMarker(WALL_FTL)
@@ -89,6 +97,19 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val htmlStr = StringWriter()
     template.process(input, htmlStr)
     return htmlStr.toString()
+  }
+
+
+  private fun buildAnniversaryCards(all: List<TimeSlot>): String {
+    val template = FreeMarkerUtils().getFreeMarker(ANNIVERSARY_FTL)
+    val now = MonthDay.from(LocalDate.now())
+    val filtered = all.filter { it.spotifyYear.length == 10 }.filter { !it.spotifyThisYear() }.sortedWith(compareBy({it.spotifyMonthDay()},{it.spotifyMonthDay()}))
+    val(after, before) = filtered.partition { it.spotifyMonthDay() >= now }
+    val input: Map<String, List<TimeSlot>> = mapOf(Pair("anniversary_list", listOf(after, before).flatten()))
+    val htmlStr = StringWriter()
+    template.process(input, htmlStr)
+    return htmlStr.toString()
+
   }
 
   private fun buildAllTable(beans: List<TimeSlot>): String {

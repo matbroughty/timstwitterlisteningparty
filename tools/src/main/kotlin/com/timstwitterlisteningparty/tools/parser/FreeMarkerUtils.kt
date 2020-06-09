@@ -15,6 +15,7 @@ const val RECORD_SHOPS_FTL = "recordshops.ftl"
 const val BOOK_SHOPS_FTL = "bookshops.ftl"
 const val BOOK_REVIEWS_FTL = "bookreviews.ftl"
 const val WALL_FTL = "wall.ftl"
+const val ANNIVERSARY_FTL = "anniversary.ftl"
 
 
 /**

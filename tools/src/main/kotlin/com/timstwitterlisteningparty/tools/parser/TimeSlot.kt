@@ -211,4 +211,27 @@ data class TimeSlot(val dateStr: String = "?",
     return if(spotifyYear.isEmpty()) "" else spotifyYear.substring(0, 4)
   }
 
+  fun spotifyDateDisplayFull(): String {
+    return if(spotifyYear.isEmpty() || spotifyYear.length < 10) ""
+    else LocalDate.parse(spotifyYear, DateTimeFormatter.ISO_DATE).format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
+  }
+
+  fun spotifyMonthDay(): MonthDay {
+    val releaseDate = LocalDate.parse(spotifyYear, DateTimeFormatter.ISO_DATE)
+    return MonthDay.of(releaseDate.month, releaseDate.dayOfMonth)
+  }
+
+
+  fun spotifyThisYear(): Boolean {
+    if(spotifyYear.isNotBlank() && spotifyYear.length < 10){
+      return false
+    }
+    val releaseDate = LocalDate.parse(spotifyYear, DateTimeFormatter.ISO_DATE)
+    return releaseDate.year == LocalDate.now().year
+  }
+
+  fun hasReplay() : Boolean{
+    return replayLink.isNotBlank()
+  }
+
 }

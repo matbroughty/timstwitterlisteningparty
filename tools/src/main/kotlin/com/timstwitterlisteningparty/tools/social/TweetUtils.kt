@@ -69,7 +69,7 @@ class TweetUtils {
     val now = MonthDay.from(LocalDate.now())
     var anniversaryToTweet = false
     val timeSlotList = if (timeSlots.isEmpty()) TimeSlotReader().timeSlots else timeSlots
-    timeSlotList.filter { it.spotifyYear.length == 10 }
+    timeSlotList.filter { it.spotifyYear.length == 10 }.filter { !it.spotifyThisYear() }
       .filter { it.tweeters.isNotEmpty() && it.replayLink.isNotEmpty() }
       .filter {
         val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
