@@ -72,7 +72,6 @@ class TweetUtils {
       .filter { it.tweeters.isNotEmpty() && it.replayLink.isNotEmpty() }
       .filter {
         val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
-        logger.info("checking ${MonthDay.of(releaseDate.month, releaseDate.dayOfMonth)} of ${it.album} to see if anniversary against now $now")
         now == MonthDay.of(releaseDate.month, releaseDate.dayOfMonth)
       }
       .forEach {
