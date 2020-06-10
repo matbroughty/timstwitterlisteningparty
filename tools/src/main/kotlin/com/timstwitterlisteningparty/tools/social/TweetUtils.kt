@@ -69,8 +69,10 @@ class TweetUtils {
     val now = MonthDay.from(LocalDate.now())
     var anniversaryToTweet = false
     val timeSlotList = if (timeSlots.isEmpty()) TimeSlotReader().timeSlots else timeSlots
-    timeSlotList.filter { it.spotifyYear.length == 10 }.filter { !it.spotifyThisYear() }
-      .filter { it.tweeters.isNotEmpty() && it.replayLink.isNotEmpty() }
+    timeSlotList
+      .filter { it.spotifyYear.length == 10 }
+      .filter { !it.spotifyThisYear() }
+      .filter { it.tweeters.isNotEmpty() }
       .filter {
         val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
         now == MonthDay.of(releaseDate.month, releaseDate.dayOfMonth)
@@ -80,10 +82,14 @@ class TweetUtils {
         anniversaryToTweet = true
         val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
         val msg = "${releaseDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))}. " +
-          "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty"
-        if(logOnly){
+          if (it.replayLink.isEmpty()) {
+            "${it.band} released ${it.album}. ${it.tweeterList().first()} will be hosting an upcoming listening party. ${it.link} #TimsTwitterListeningParty"
+          } else {
+            "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty"
+          }
+        if (logOnly) {
           logger.info(msg)
-        }else{
+        } else {
           tweet(msg)
         }
       }
