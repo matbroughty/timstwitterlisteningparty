@@ -3,10 +3,9 @@
   $('[data-toggle="tooltip"]').tooltip()
 })
 </script>
-
 <section class="post">
   <div class="container-fluid">
-    <div class="card d mb-3" style="width: 100%;">
+    <div class="card d mb-3" style="width: 100%;" id="archive-cards">
       <div class="card-header font-weight-bold">
         <i class="fas fa-archive"></i>  Archived Tweet List
       </div>
@@ -20,9 +19,9 @@
               <b>${slot.band}</b><br/>${slot.album}
               </a>
             </td>
-            <td width="15%"><a class="pure-button pure-button-active"
-                               href="${slot.getCollectionLink()}"><i
-              class="fab fa-twitter"></i></a></td>
+            <td width="15%">
+              <a class="pure-button pure-button-active" href="${slot.getCollectionLink()}" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Tweet Collection"><i class="fas fa-archive"></i></a>
+            </td>
           </tr>
         </table>
         <hr/>
