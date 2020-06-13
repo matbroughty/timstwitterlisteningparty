@@ -114,7 +114,9 @@ class TimeSlotFileCreator : HtmlFileCreator {
 
   private fun buildAllTable(beans: List<TimeSlot>): String {
     val template = FreeMarkerUtils().getFreeMarker(ALL_FTL)
-    val input: Map<String, List<TimeSlot>> = mapOf(Pair("all_list", beans.sortedByDescending { it.album }))
+    // we want the completed ones to display first
+    val(tbc, upcoming) = beans.sortedBy { it.isoDate }.partition { it.dateDisplayString() == "TBC"}
+    val input: Map<String, List<TimeSlot>> = mapOf(Pair("all_list", listOf(upcoming, tbc).flatten()))
     val htmlStr = StringWriter()
     template.process(input, htmlStr)
     return htmlStr.toString()

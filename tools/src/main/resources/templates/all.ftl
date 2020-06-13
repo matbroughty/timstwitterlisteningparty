@@ -1,60 +1,62 @@
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
 <section class="post">
-  <div class="card bg-light mb-2 border-dark " style="max-width: 100%">
-    <div class="card-header"><i class="fas fa-calendar-check"></i> All Events - Searchable & Sortable</div>
-    <div class="card-body p-0">
-      <div class="scroll-table">
-        <table id="time-slots" width="100%" class="pure-table">
-          <thead>
-          <tr>
-            <th width="20%">Date</th>
-            <th width="25%">Band</th>
-            <th width="25%">Album</th>
-            <th width="10%">Link</th>
-            <th width="10%">Replay</th>
-            <th width="10%">Archive</th>
-          </tr>
-          </thead>
-          <tbody>
-          <#list all_list as slot>
+  <div class="container-fluid">
+    <div class="card d mb-3" style="width: 100%;" id="archive-cards">
+      <div class="card-header font-weight-bold">
+        <i class="fas fa-archive"></i> All Listening Parties
+      </div>
+      <#list all_list as slot>
+        <div class="card-body">
+          <table style="width: 100%;">
             <tr>
-              <td data-order="${slot.dateOrderDisplay()}">
-                ${slot.dateDisplayString()}
+              <td width="30%" class="font-weight-light" style="text-align:left"><a href="${slot.spotifyLink}"
+                                                                                   target="_blank"><img
+                          src="${slot.getSpotifyImageLink()}" alt="album" data-toggle="tooltip" data-placement="top"
+                          title="${slot.album} Spotify Link" style="width:80px;height:80px;"></a><br>
+                <hr style="width:80px;margin-left:0;">${slot.dateDisplayString()}</td>
+              <td width="40%" style="text-align:left;">
+                <a href="${slot.getCollectionLink()}" target="_blank" class="text-muted">
+                  <b>${slot.band}</b><br/>${slot.album}
+                </a>
+                ${slot.buildTweeterLinks()}
+                <br><small>${slot.spotifyDateDisplay()}</small>
               </td>
-              <td>${slot.band}</td>
-              <td>${slot.album}</td>
-              <td><a class="pure-button pure-button-active"
-                     href="${slot.link}"><i
-                          class="fab fa-twitter-square"></i></a></td>
+              <td width="30%">
 
-              <td><a
+                <a class="pure-button pure-button-active" data-toggle="tooltip" data-placement="top"
+                   title="Tweet Link"
+                   href="${slot.link}" target="_blank"><i class="fab fa-twitter-square"></i></a>
+                <hr>
+                <a
                         <#if slot.replayLink?has_content >
                           class="pure-button pure-button-active"
                         <#else>
                           class="pure-button-disabled"
                         </#if>
-                        href="${slot.replayLink}"><i
-                          class="fas fa-redo"></i></a></td>
-              <td>
+                        href="${slot.replayLink}" target="_blank" data-toggle="tooltip" data-placement="top"
+                        title="Replay Link"><i class="fas fa-redo"></i></a>
+                <hr>
                 <a
                         <#if slot.twitterCollectionLink?has_content >
                           class="pure-button pure-button-active"
                         <#else>
                           class="pure-button-disabled"
                         </#if>
-                        href="${slot.getCollectionLink()}"><i class="fas fa-archive"></i></a></td>
+                        href="${slot.getCollectionLink()}" target="_blank" data-toggle="tooltip" data-placement="top"
+                        title="Archive Tweet Link"><i class="fas fa-archive"></i></a>
+
+              </td>
+
             </tr>
-          </#list>
-          <script>
-            $(document).ready(function () {
-              $('#time-slots').DataTable({
-                "paging": false
-              });
-            });
-          </script>
-          </tbody>
-        </table>
-      </div>
+          </table>
+          <hr/>
+        </div>
+      </#list>
+      <hr/>
     </div>
   </div>
-
 </section>
