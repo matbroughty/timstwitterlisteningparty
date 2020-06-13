@@ -1,5 +1,5 @@
 <section class="post">
-  <div class="card bg-light mb-2 border-dark " style="max-width">
+  <div class="card bg-light mb-2 border-dark " style="max-width: 100%">
     <div class="card-header"><i class="fas fa-calendar-check"></i> All Events - Searchable & Sortable</div>
     <div class="card-body p-0">
       <div class="scroll-table">
@@ -17,10 +17,8 @@
           <tbody>
           <#list all_list as slot>
             <tr>
-              <td>
-
+              <td data-order="${slot.dateOrderDisplay()}">
                 ${slot.dateDisplayString()}
-
               </td>
               <td>${slot.band}</td>
               <td>${slot.album}</td>

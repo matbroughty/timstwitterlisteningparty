@@ -114,7 +114,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
 
   private fun buildAllTable(beans: List<TimeSlot>): String {
     val template = FreeMarkerUtils().getFreeMarker(ALL_FTL)
-    val input: Map<String, List<TimeSlot>> = mapOf(Pair("all_list", beans.sortedBy { it.album }))
+    val input: Map<String, List<TimeSlot>> = mapOf(Pair("all_list", beans.sortedByDescending { it.album }))
     val htmlStr = StringWriter()
     template.process(input, htmlStr)
     return htmlStr.toString()

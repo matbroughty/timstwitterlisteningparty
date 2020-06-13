@@ -178,6 +178,16 @@ data class TimeSlot(val dateStr: String = "?",
   }
 
   /**
+   * formats in yyyy-MM-dd
+   */
+  fun dateOrderDisplay(): String {
+    if (isoDate.year == 1970) {
+      return "TBC"
+    }
+    return isoDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+  }
+
+  /**
    * Gets the archive collection full link from the replayId
    * used in freemarker template
    */
@@ -215,6 +225,8 @@ data class TimeSlot(val dateStr: String = "?",
     return if(spotifyYear.isEmpty() || spotifyYear.length < 10) ""
     else LocalDate.parse(spotifyYear, DateTimeFormatter.ISO_DATE).format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
   }
+
+
 
   fun spotifyMonthDay(): MonthDay {
     val releaseDate = LocalDate.parse(spotifyYear, DateTimeFormatter.ISO_DATE)
