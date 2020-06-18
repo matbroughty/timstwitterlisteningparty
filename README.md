@@ -118,5 +118,7 @@ the files above back to the bucket (including the record stores which are derive
 - [x] Show tweeters involved in listening party on index
 - [ ] rejig menu/button options
 - [X] add each replay tweets to a twitter collection
-- [ ] rejig the all.html and use cards/implement a better search
-- [ ] rejig the wall.html to work on all viewports
+- [x] rejig the all.html and use cards/implement a better search
+- [x] rejig the wall.html to work on all viewports
+- [ ] rejig the record stores into cards
+- [ ] banner needs improving
