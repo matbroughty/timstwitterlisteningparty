@@ -28,22 +28,22 @@
           <tr>
             <td width="35%" class="font-weight-light" style="text-align:left"><a
                       href="${slot.spotifyLink}" target="_blank">
-                <img data-toggle="tooltip" data-placement="top" title="${slot.album}
+                <img data-toggle="tooltip" data-placement="top"
 
-              <#if slot.isActuallySpotifyLink() >
-                Spotify album link   "
-                  <#else>
-                     link"
-                </#if>
+                        <#if slot.isActuallySpotifyLink() >
+                          title="${slot.album} Spotify album link   "
+                        <#else>
+                          title="${slot.album} link"
+                        </#if>
 
-                <#if slot.spotifyImgLink?has_content >
-                  src="${slot.spotifyImgLink}"
-                <#else>
-                  src="https://timstwitterlisteningparty.com/img/blankcd.png"
-                </#if>
+                        <#if slot.spotifyImgLink?has_content >
+                          src="${slot.spotifyImgLink}"
+                        <#else>
+                          src="https://timstwitterlisteningparty.com/img/blankcd.png"
+                        </#if>
 
-                alt="${slot.album} spotify album"
-                style="width:80px;height:80px;"></a><br>
+                     alt="${slot.album} spotify album"
+                     style="width:80px;height:80px;"></a><br>
               <hr style="width:80px;margin-left:0;">
               ${slot.timeDisplayString()}<sup> ${slot.amPmDisplayString()}</sup>
             </td>
@@ -55,7 +55,8 @@
               <br><small>${slot.spotifyDateDisplay()}</small>
             </td>
             <td width="15%"><a class="pure-button pure-button-active"
-                               href="${slot.link}" target="_blank">
+                               href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
+                               title="Twitter Listening Party Announcement">
 
                 <#if slot.isToday() >
                   <i class="fab fa-twitter"></i>
