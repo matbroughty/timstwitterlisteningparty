@@ -122,3 +122,5 @@ the files above back to the bucket (including the record stores which are derive
 - [x] rejig the wall.html to work on all viewports
 - [ ] rejig the record stores into cards
 - [ ] banner needs improving
+- [ ] cater on index.html for no upcoming events
+- [ ] scheduled random replay when no anniversary tweets
