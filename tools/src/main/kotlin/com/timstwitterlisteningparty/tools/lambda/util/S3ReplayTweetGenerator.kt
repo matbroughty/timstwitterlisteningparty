@@ -75,9 +75,23 @@ class S3ReplayTweetGenerator {
    * tweet about it
    */
   fun tweetAnniversary(bucketName: String = "timstwitterlisteningparty.com",
-                         srcKeyTimeSlots: String = "data/time-slot-data.csv"): String {
-    return "anniversary to tweet about = ${TweetUtils().tweetAnniversary(getTimeSlots(bucketName, srcKeyTimeSlots))}"
-    }
+                       srcKeyTimeSlots: String = "data/time-slot-data.csv"): String {
+    val slots = getTimeSlots(bucketName, srcKeyTimeSlots)
+    val anythingTweeted = TweetUtils().tweetAnniversary(slots)
+//    // if we didn't tweet anything then lets give an old replay a kick
+//    if(!anythingTweeted){
+//      val timeSlot = slots
+//        .filter { it.hasReplay()  }
+//        .filter { it.tweeters.isNotEmpty() }
+//        .filter { it.isoDate.isBefore(LocalDateTime.now().minusDays(14)) } // not any that happened in last couple of weeks
+//        .random()
+//      TweetUtils().tweet("On ${timeSlot.isoDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))} we " +
+//        "had a listening party for ${timeSlot.band} album '${timeSlot.album}'. " +
+//        "You can replay the ${timeSlot.tweeterList().first()} event here ${timeSlot.replayLink} #TimsTwitterListeningParty")
+//
+//    }
+    return "anniversary to tweet about = $anythingTweeted"
+  }
 
 
   private fun getTimeSlots(bucketName: String, srcKeyTimeSlots: String): List<TimeSlot> {
