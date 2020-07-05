@@ -4,6 +4,7 @@
   })
 
 </script>
+
 <div class="container-fluid">
 
   <h1 class="content-subhead">Completed Listening Parties</h1>
@@ -11,7 +12,7 @@
   <div class="content pure-u-1 pure-u-md-2-3 pure-u-lg-3-4">
     <div class="btn-group-toggle d-flex justify-content-center" data-toggle="buttons">
       <label class="btn btn-secondary active">
-        <input type="checkbox" checked autocomplete="off" onclick="link()"> Change Album Cover Link
+        <input id="cover-link" type="checkbox" checked autocomplete="off" onclick="link()"> Change Album Cover Link
       </label>
     </div>
   </div>
@@ -54,12 +55,14 @@
     function link() {
       const spotify = document.getElementById("spotify-lnk");
       const replay = document.getElementById("replay-lnk");
+
       if (spotify.style.display === "none") {
         spotify.style.display = "block";
         replay.style.display = "none";
       } else {
         spotify.style.display = "none";
         replay.style.display = "block";
+
       }
     }
   </script>
