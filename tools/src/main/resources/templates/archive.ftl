@@ -7,7 +7,7 @@
   <div class="container-fluid">
     <div class="card d mb-3" style="width: 100%;" id="archive-cards">
       <div class="card-header font-weight-bold">
-        <i class="fas fa-archive"></i>  Archived Tweet List
+        <i class="fas fa-list-ol"></i>  Archived Tweet List
       </div>
       <#list completed_list as slot>
       <div class="card-body">
@@ -20,7 +20,7 @@
               </a>
             </td>
             <td width="15%">
-              <a class="pure-button pure-button-active" href="${slot.getCollectionLink()}" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Tweet Collection"><i class="fas fa-archive"></i></a>
+              <a class="pure-button pure-button-active" href="${slot.getCollectionLink()}" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Tweet Collection"><i class="fas fa-list-ol"></i></a>
             </td>
           </tr>
         </table>

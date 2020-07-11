@@ -7,7 +7,7 @@
   <div class="container-fluid">
     <div class="card d mb-3" style="width: 100%;" id="archive-cards">
       <div class="card-header font-weight-bold">
-        <i class="fas fa-archive"></i> All Listening Parties
+        <i class="fas fa-list-ol"></i> All Listening Parties
       </div>
       <#list all_list as slot>
         <div class="card-body">
@@ -47,7 +47,7 @@
                           class="pure-button-disabled"
                         </#if>
                         href="${slot.getCollectionLink()}" target="_blank" data-toggle="tooltip" data-placement="top"
-                        title="Archive Tweet Link"><i class="fas fa-archive"></i></a>
+                        title="Archive Tweet Link"><i class="fas fa-list-ol"></i></a>
 
               </td>
 
