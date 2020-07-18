@@ -13,19 +13,19 @@
         <div class="card-body">
           <table style="width: 100%;">
             <tr>
-              <td width="30%" class="font-weight-light" style="text-align:left"><a href="${slot.spotifyLink}"
-                                                                                   target="_blank"><img
+              <td style="width:30%;text-align:left" class="font-weight-light"><a href="${slot.spotifyLink}"
+                                                                                 target="_blank"><img
                           src="${slot.getSpotifyImageLink()}" alt="album" data-toggle="tooltip" data-placement="top"
                           title="${slot.album} Spotify Link" style="width:80px;height:80px;"></a><br>
                 <hr style="width:80px;margin-left:0;">${slot.dateDisplayString()}</td>
-              <td width="40%" style="text-align:left;">
+              <td style="width:40%;text-align:left;">
                 <a href="${slot.getCollectionLink()}" target="_blank" class="text-muted">
                   <b>${slot.band}</b><br/>${slot.album}
                 </a>
                 ${slot.buildTweeterLinks()}
                 <br><small>${slot.spotifyDateDisplay()}</small>
               </td>
-              <td width="30%">
+              <td style="width:30%">
 
                 <a class="pure-button pure-button-active" data-toggle="tooltip" data-placement="top"
                    title="Tweet Link"

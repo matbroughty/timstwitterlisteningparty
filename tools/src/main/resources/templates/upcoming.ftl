@@ -26,7 +26,7 @@
       <div class="card-body">
         <table style="width: 100%;">
           <tr>
-            <td width="35%" class="font-weight-light" style="text-align:left"><a
+            <td style="width:35%;text-align:left" class="font-weight-light"><a
                       href="${slot.spotifyLink}" target="_blank">
                 <img data-toggle="tooltip" data-placement="top"
 
@@ -47,16 +47,16 @@
               <hr style="width:80px;margin-left:0;">
               ${slot.timeDisplayString()}<sup> ${slot.amPmDisplayString()}</sup>
             </td>
-            <td width="50%" style="text-align:left;">
+            <td style="width:50%;text-align:left;">
               <b>${slot.band}</b><br/>${slot.album}
               <#if slot.isToday() >
                 ${slot.buildTweeterLinks()}
               </#if>
               <br><small>${slot.spotifyDateDisplay()}</small>
             </td>
-            <td width="15%"><a class="pure-button pure-button-active"
-                               href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
-                               title="Twitter Listening Party Announcement">
+            <td style="width:15%"><a class="pure-button pure-button-active"
+                                     href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
+                                     title="Twitter Listening Party Announcement">
 
                 <#if slot.isToday() >
                   <i class="fab fa-twitter"></i>

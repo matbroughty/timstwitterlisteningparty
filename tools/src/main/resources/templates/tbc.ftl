@@ -13,25 +13,26 @@
         <div class="card-body">
           <table style="width: 100%;">
             <tr>
-              <td width="35%" class="font-weight-light" style="text-align:left"><a href="${slot.spotifyLink}"
-                                                                                   target="_blank"><img
-                          src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top" title="${slot.album}
+              <td style="width:35%;text-align:left" class="font-weight-light"><a href="${slot.spotifyLink}"
+                                                                                 target="_blank">
+                  <img alt="album image" src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top"
+                       title="${slot.album}
 
               <#if slot.isActuallySpotifyLink() >
                 Spotify album link   "
                     <#else>
-                          link"
+                       link"
                   </#if>
 
                   " alt="album" style="width:80px;height:80px;"></a><br>
                 <hr style="width:80px;margin-left:0;">
                 TBC
               </td>
-              <td width="50%" style="text-align:left;">
+              <td style="width:50%;text-align:left;">
                 <b>${slot.band}</b><br/>${slot.album}
               </td>
-              <td width="15%"><a class="pure-button pure-button-active"
-                                 href="${slot.link}" target="_blank"><i
+              <td style="width:15%"><a class="pure-button pure-button-active"
+                                       href="${slot.link}" target="_blank"><i
                           class="fab fa-twitter-square"></i></a></td>
             </tr>
           </table>
