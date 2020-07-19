@@ -14,10 +14,10 @@
           <table style="width: 100%;">
             <tr>
               <td style="width:35%;text-align:left" class="font-weight-light"><a href="${slot.spotifyLink}"
-                                                                                 target="_blank"><img
-                          src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top"
-                          title="${slot.album} Spotify album link "
-                          alt="album" style="width:80px;height:80px;"></a><br>
+                                                                                 target="_blank">
+                  <img src="${slot.spotifyImgLink}" data-toggle="tooltip" data-placement="top"
+                       title="${slot.album} Spotify album link "
+                       alt="album" style="width:80px;height:80px;"></a><br>
                 <hr style="width:80px;margin-left:0;">
                 ${slot.spotifyDateDisplayFull()}
               </td>
