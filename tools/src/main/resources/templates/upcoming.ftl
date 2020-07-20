@@ -7,7 +7,7 @@
   <div class="container-fluid">
     <#assign hr = "">
     <#assign date = startDate>
-    <div class="card d mb-3 border-dark" style="width: 100%;">
+    <div class="card d mb-3 border-dark rounded" style="width: 100%;">
       <div class="card-header font-weight-bold">
         <i class="fas fa-calendar-day"></i> ${startDateFormatted}
       </div>
