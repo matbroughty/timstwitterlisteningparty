@@ -7,7 +7,11 @@
 
 <div class="container-fluid">
 
+
   <h1 class="content-subhead">Completed Listening Parties</h1>
+
+  <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-via="LlSTENlNG_PARTY" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 
   <div class="content pure-u-1 pure-u-md-2-3 pure-u-lg-3-4">
     <div class="btn-group-toggle d-flex justify-content-center" data-toggle="buttons">

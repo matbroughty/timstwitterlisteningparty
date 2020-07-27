@@ -4,7 +4,7 @@
   })
 </script>
 <section class="post">
-  <div class="container-fluid">
+   <div class="container-fluid">
     <#assign hr = "">
     <#assign date = startDate>
     <div class="card d mb-3 border-dark rounded" style="width: 100%;">
