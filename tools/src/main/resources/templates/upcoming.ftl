@@ -54,7 +54,7 @@
               </#if>
               <br><small>${slot.spotifyDateDisplay()}</small>
             </td>
-            <td style="width:15%"><a class="pure-button pure-button-active"
+            <td style="width:15%"><a class="pure-button pure-button-disabled"
                                      href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
                                      title="Twitter Listening Party Announcement">
 
