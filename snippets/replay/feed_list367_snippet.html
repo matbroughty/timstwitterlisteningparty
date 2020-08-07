@@ -1,0 +1,439 @@
+<section class="post">
+        <style>
+            #listening {
+              border-collapse: collapse;
+            }
+
+            #listening td, #listening th {
+              border: 1px solid #ddd;
+              padding: 8px;
+            }
+
+            #listening tr:nth-child(even){background-color: #f2f2f2;}
+
+            #listening tr:hover {
+                background-color: #ddd;
+                cursor: pointer;
+            }
+        </style>
+        <style>
+            ::-webkit-search-cancel-button {
+                height: 12px;
+                width: 12px;
+                display: inline-block;
+                background-image: url(replay/img/cancel.png);
+                background-repeat: no-repeat;
+            }
+        </style>
+        <script>
+            function loadFeed(partyId) {
+                location.href = "replay/feed_" + partyId + ".html";
+            }
+        </script>
+
+        <script type="text/javascript">
+          var index=0;
+          var timeout;
+          var lastIndex = document.getElementsByClassName("album").length - 1;
+          
+          // Hide all image divs except the current one
+          function changeImage(){ 
+            // Hide the previously shown image
+            document.getElementsByClassName("album")[lastIndex].hidden = true;
+            document.getElementsByClassName("album")[index].hidden = false;
+
+            // Find new index
+            lastIndex = index;
+            index = (index+1) % document.getElementsByClassName("album").length;
+          }
+          
+          // Animage the moving finger and set the image loop going
+          function randomiser() {
+            togglepopup();
+            var finger = document.getElementById("finger");
+            $(finger).removeClass('paused');
+            timeout = setInterval(changeImage, 70);
+            
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'surprise',
+                eventAction: 'start'
+            });
+          }
+          
+          // Show/hide popup
+          function togglepopup() {
+            document.getElementById("album-chooser").style.display = "block";
+            document.getElementById("album-choose").style.display = "block";
+            document.getElementById("album-chosen").style.display = "none";
+            document.getElementById("album-stop").hidden = true;
+            document.getElementById("randomiser").classList.toggle("show");              
+          }
+
+          function getRandomParty(numParties) {
+              while (true) {
+                 var selectedId = Math.ceil(Math.random() * numParties); 
+                 var selectedParty = document.getElementById("replay-" + selectedId);
+                 if (selectedParty !== null) {
+                     return selectedId;
+                 }
+              }
+          }
+          
+          // Stop the randomiser and get the album that it was stopped on
+          function stopit(numParties) {
+            clearInterval(timeout);
+            var selectedId = getRandomParty(numParties);
+            var artwork = document.getElementById("artwork-" + selectedId).src;
+            var fullArtwork = document.getElementById("preview-" + selectedId).getAttribute("data-background");
+            document.getElementsByClassName("album")[lastIndex].hidden = true;
+            
+            // Get the artist/album text (from the main list)
+            document.getElementById("album-stop").src = artwork;
+            document.getElementById("album-stop").hidden = false;
+            document.getElementById("album-chosen-img").src = fullArtwork;
+            document.getElementById("album-chosen-txt").innerHTML = 
+                    document.getElementById("party-" + selectedId).innerHTML;
+            
+            // Set the play button to load the feed if chosen
+            document.getElementById("album-chosen-play").setAttribute( "onclick", "javascript: loadFeed(" + selectedId + ")");
+
+            // Stop the animated finger
+            var finger = document.getElementById("finger");
+            $(finger).addClass('paused');
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'surprise',
+                eventAction: 'stop',
+                eventLabel: selectedId
+            });
+
+            // Show the choice after a short timeout (so that the stopped position can be seen)
+            setTimeout("showchoice()", 700);
+          }
+          
+          // Show the chosen album
+          function showchoice() {
+            document.getElementById("album-chooser").style.display = "none";
+            document.getElementById("album-chosen").style.display = "block";
+          }
+        </script>
+        <script>
+            // Search function
+            function searchreplays() {
+                var filter = document.getElementById("search-box").value.toLowerCase();
+                var doSearch = true;
+
+                // Don't search if filter is not set
+                if (filter === null || filter.length === 0) {
+                    doSearch = false;
+                }
+
+                // Loop over all date blocks
+                [].forEach.call(document.getElementsByClassName("replay-date"), function (v, i) {
+                    // Get the albums in the date block
+                    var items = document.getElementsByClassName("replay-date")[i].querySelectorAll(".replay-item");
+                    var itemShown = false;
+                    items.forEach(function(i) {
+                        // Get the artist/album text in the div
+                        var divid = i.getAttribute("data-divid");
+                        var replaydiv = document.getElementById(divid);
+                        var previewbardiv = document.getElementById(divid + "-preview-bar");
+                        var arrowdiv = document.getElementById(divid + "-arrow");
+                        // Strip HTML tags
+                        var text = '<div>' + i.innerHTML.toLowerCase() + '</div>';
+                        if (!doSearch || $(text).text().includes(filter)) {
+                            itemShown = true;
+                            replaydiv.style.display = "block";
+                            previewbardiv.style.display = "block";
+                            arrowdiv.style.display = "block";
+                        } else {
+                            replaydiv.style.display = "none";
+                            previewbardiv.style.display = "none";
+                            arrowdiv.style.display = "none";
+                        }
+                    });
+                    // If no items are shown in the date block, hide that too
+                    if (itemShown) {
+                        document.getElementsByClassName("replay-date")[i].style.display = "block";
+                    } else {
+                        document.getElementsByClassName("replay-date")[i].style.display = "none";
+                    }
+                });
+            }
+        </script>
+        <script type="text/javascript">
+            var previewTimeout;
+            
+            function loadPreviewTweet(id, index) {
+                if (index > 6) {
+                    return;
+                }
+                
+                if (document.getElementById("tweet-" + id + "-" + index) === null) {
+                    return;
+                }
+                
+                // Ensure only gets loaded once
+                if ($("#tweet-" + id + "-" + index).html().trim().startsWith('Tweet') === false) {
+                    loadPreviewTweet(id, index+1);
+                    return;
+                }
+                
+                var url = document.getElementById('tweet-' + id + '-' + index).getAttribute('data-url');
+                $.ajax({
+                    type: "GET",
+                    url: "https://publish.twitter.com/oembed?url=" + url + "&omit_script=true&dnt=true",
+                    dataType: "jsonp",
+                    success: function (data) {
+                        $("#tweet-" + id + '-' + index).html(data.html);
+                        twttr.widgets.load(
+                            document.getElementById("preview-" + id)
+                        );
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("Error loading tweet " + id + "-" + index);
+                    }
+                });
+
+                loadPreviewTweet(id, index+1);
+            }
+
+    
+            function preview(id) {
+               loadPreviewTweet(id, 1);
+               var audio = document.getElementById("audio-" + id);
+               var divpanel = document.getElementById("preview-" + id);
+               var volOn = document.getElementById("vol-on-" + id);
+               var volOff = document.getElementById("vol-off-" + id);
+
+               for (var j=0; j<=6; j++) {
+                   if (document.getElementById("tweet-" + id + '-' + j) !== null) {
+                       document.getElementById("tweet-" + id + '-' + j).style.display = 'none';
+                   }
+               }
+               
+               // Pause all audio
+               [].forEach.call(document.getElementsByClassName("preview-audio"), function (v, i) {
+                   var a = document.getElementsByClassName("preview-audio")[i];
+                   a.pause();
+                   a.currentTime = 0;
+               });
+               
+               // Load twitter images
+               [].forEach.call(document.getElementsByClassName("img-" + id), function (v, i) {
+                   var a = document.getElementsByClassName("img-" + id)[i];
+                   a.src = a.getAttribute("data-img");
+               });
+               
+               // Close all open previews
+               [].forEach.call(document.getElementsByClassName("preview-panel"), function (v, i) {
+                   var p = document.getElementsByClassName("preview-panel")[i];
+                   if (p.offsetParent !== null) {
+                       $(p).slideUp("slow");
+                       clearTimeout(previewTimeout);
+                   }
+               });
+               
+               if (divpanel.offsetParent === null) {
+                  var bgImage = divpanel.getAttribute("data-background");
+                  document.getElementById("preview-img-" + id).src = bgImage;
+                  $(divpanel).slideDown("slow");
+                  document.getElementById("tweet-" + id + "-0").style.display = 'block';
+                  var audioSrc = document.getElementById("tweet-" + id + "-0").getAttribute("data-audio");
+                  if (audioSrc !== null && audioSrc.length > 1) {
+                    audio.src = audioSrc;
+                    volOn.style.display = 'none';
+                    volOff.style.display = 'block';
+                    audio.volume = 0;
+                    audio.play();
+                    $(audio).animate({volume:1.0},4000);
+                  } else {
+                    volOn.style.display = 'none';
+                    volOff.style.display = 'none';                      
+                  }
+                  previewTimeout = setTimeout("showIt(" + id + ",1)", 4000);
+                  ga('send', {
+                      hitType: 'event',
+                      eventCategory: 'preview',
+                      eventAction: 'show',
+                      eventLabel: 'feed-' + id
+                  });
+              }
+            }
+
+            function volume(id, level) {
+               var audio = document.getElementById("audio-" + id);
+               var volOn = document.getElementById("vol-on-" + id);
+               var volOff = document.getElementById("vol-off-" + id);
+               audio.volume = level;
+               if (level === 0) {
+                  volOn.style.display = 'block';
+                  volOff.style.display = 'none';
+              } else {
+                  volOn.style.display = 'none';
+                  volOff.style.display = 'block';              
+              }
+            }
+
+            function showIt(id, index) {
+               var hide = index - 1;
+               var audio = document.getElementById("audio-" + id);
+               
+               if (index === 6) {
+                    $(audio).animate({volume:0.0},4500);                   
+               }
+               var tweet = document.getElementById("tweet-" + id + "-" + hide);
+               var show = document.getElementById("tweet-" + id + "-" + index);
+               
+               if (show !== null) {
+                   $(tweet).hide("slow");
+                   $(show).show("slow");
+               }
+               
+               if (index < 6) {
+                   previewTimeout = setTimeout("showIt(" + id + "," + (index+1) + ")", 4500);
+               } else {
+                   previewTimeout = setTimeout("preview(" + id + ")", 4500);
+               }
+            }
+        </script>
+        <style>
+            /* Popup container */
+            .popup {
+                position: relative;
+                left: -40px;
+                bottom: 28px;
+                display: inline-block;
+                cursor: pointer;
+            }
+
+            /* The actual popup (appears on top) */
+            .popup .popuptext {
+                visibility: hidden;
+                width: 220px;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 8px 0;
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -80px;
+            }
+
+            /* Popup arrow */
+            .popup .popuptext::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+
+            /* Toggle this class when clicking on the popup container (hide and show the popup) */
+            .popup .show {
+                visibility: visible;
+                -webkit-animation: fadeIn 1s;
+                animation: fadeIn 1s
+            }
+
+            /* Add animation (fade in the popup) */
+            @-webkit-keyframes fadeIn {
+                from {opacity: 0;}
+                to {opacity: 1;}
+            }
+
+            @keyframes fadeIn {
+                from {opacity: 0;}
+                to {opacity:1 ;}
+            }
+        </style>
+        <style>
+            .floating {  
+                animation-name: floating;
+                animation-duration: 1000ms;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                margin-left: 0px;
+                margin-top: 0px;
+            }
+            .paused {
+                animation-play-state: paused;
+            }
+            @keyframes floating {
+                from { transform: translate(0,  0px); }
+                33%  { transform: translate(0, -30px);}
+                66%  { transform: translate(0, 30px);}
+                to   { transform: translate(0, 0px); }    
+            }            
+        </style>
+        <style>
+            input[type=search]{
+                width: 40px;
+                box-sizing: border-box;
+                border: 2px solid rgb(176, 202, 219);
+                font-size: 16px;
+                background-color: white;
+                background-image: url(replay/img/search.png);
+                background-position: 4px 5px; 
+                background-repeat: no-repeat;
+                padding: 6px 2px 4px 30px;
+                -webkit-transition: width 0.4s ease-in-out;
+                transition: width 0.4s ease-in-out;
+            }
+
+            input[type=search]:focus {
+                width:10em;
+            }
+        </style>
+        <style>
+            .preview-panel {
+                position: relative;
+                z-index: 0;
+                overflow-x: hidden;
+                overflow-y: hidden;
+            }
+            .preview-content {
+                background-color: rgba(255, 255, 255, 0.5);
+                border-radius: 5px;
+               -webkit-backdrop-filter: blur(5px) opacity(0.5);
+                backdrop-filter: blur(5px) opacity(0.5); 
+                margin: 15px; 
+                position: relative;
+                z-index: 2;
+            }
+            
+            .preview-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+                position: absolute;
+                left: 0;
+                right: 0;
+                z-index: 0;
+                -webkit-filter: blur(5px);
+                filter: blur(5px);
+                opacity: 0.5;
+            }
+            
+            .div-down-arrow {
+                width: 0;
+                height: 0;
+                margin-left: 10px;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-top: 8px solid rgba(0,0,0,0.125);
+                cursor: pointer;
+            }
+        </style>
+        
