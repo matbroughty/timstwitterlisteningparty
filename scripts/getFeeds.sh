@@ -132,11 +132,25 @@ fi
 if [ $index -eq 1 ]
 then
     echo ++++++++++ Generating Index Snippet
-    localfile=${LOCAL_PATH}/snippets/replay/feed_list${ids[0]}_snippet.html
-    curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile
+    localfile1=${LOCAL_PATH}/snippets/replay/feed_list${ids[0]}_snippet.html
+    localfile2=${LOCAL_PATH}/snippets/replay/replay_home${ids[0]}_snippet.html
+    localfile3=${LOCAL_PATH}/snippets/replay/replay_date${ids[0]}_snippet.html
+    localfile4=${LOCAL_PATH}/snippets/replay/replay_artist${ids[0]}_snippet.html
+    curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile1
+    curl "${REMOTE_PATH}/replaysnip.php?levels=1" -o $localfile2
     sed "s/\.\.\/snippets\/replay\/feed_.*_snippet.html/\.\.\/snippets\/replay\/feed_list${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
     mv tmp.txt ${LOCAL_PATH}/pages/replay.html
-    addtogit $localfile
+    sed "s/\.\.\/snippets\/replay\/replay_home.*_snippet.html/\.\.\/snippets\/replay\/replay_home${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
+    mv tmp.txt ${LOCAL_PATH}/pages/replay.html
+    curl "${REMOTE_PATH}/replaysort.php?levels=1&sort=date" -o $localfile3
+    curl "${REMOTE_PATH}/replaysort.php?levels=1&sort=artist" -o $localfile4
+    sed "s/XX_PARTY_ID_XX/${ids[0]}/" ${localfile2} >tmp.txt
+    mv tmp.txt ${localfile2}
+
+    addtogit $localfile1
+    addtogit $localfile2
+    addtogit $localfile3
+    addtogit $localfile4
     addtogit ${LOCAL_PATH}/pages/replay.html
 fi
 
