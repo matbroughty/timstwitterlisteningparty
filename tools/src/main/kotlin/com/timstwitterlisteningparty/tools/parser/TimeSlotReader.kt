@@ -7,7 +7,7 @@ import java.io.InputStreamReader
 
 /**
  * Reads in the time-slot-data.csv file - by default from data/time-slot-data.csv.  If the
- * inputStream is not null then will use that (main used when called with data from S3 bucket)
+ * inputStream is not null then will use that (mainly used when called with data from S3 bucket)
  */
 data class TimeSlotReader(val timeSlotFile: String = "data/time-slot-data.csv", val inputStream: InputStream? = null) {
 
@@ -15,10 +15,12 @@ data class TimeSlotReader(val timeSlotFile: String = "data/time-slot-data.csv", 
 
   init {
     val csvToBeanBuilder: CsvToBeanBuilder<TimeSlot> =
-      if (inputStream != null) CsvToBeanBuilder<TimeSlot>(InputStreamReader(inputStream)) else {
-        CsvToBeanBuilder<TimeSlot>(FileReader(timeSlotFile))
+      if (inputStream != null) CsvToBeanBuilder(InputStreamReader(inputStream)) else {
+        CsvToBeanBuilder(FileReader(timeSlotFile))
       }
     timeSlots = csvToBeanBuilder.withType(TimeSlot::class.java).withIgnoreEmptyLine(true).build().parse()
+
+
   }
 
 }
