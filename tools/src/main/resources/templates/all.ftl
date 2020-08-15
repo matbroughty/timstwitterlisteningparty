@@ -30,6 +30,8 @@
                 <a class="pure-button pure-button-active" data-toggle="tooltip" data-placement="top"
                    title="Tweet Link"
                    href="${slot.link}" target="_blank"><i class="fab fa-twitter-square"></i></a>
+                <br>
+                <small>ttlp ${slot.listeningPartyNumber}</small>
                 <hr>
                 <a
                         <#if slot.replayLink?has_content >

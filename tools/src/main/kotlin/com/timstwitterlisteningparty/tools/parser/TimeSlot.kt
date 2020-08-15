@@ -51,7 +51,10 @@ data class TimeSlot(val dateStr: String = "?",
                     var spotifyImgLinkSmall: String = "", // link to album artwork 60/60
                     @CsvBindByPosition(position = 10)
                     @CsvBindByName(column = "spotify-year")
-                    var spotifyYear: String = "" // year album released
+                    var spotifyYear: String = "", // year album released
+                    @CsvBindByPosition(position = 11)
+                    @CsvBindByName(column = "listening-party-number")
+                    var listeningPartyNumber: String = "" // twitter listening party number
 
 ) {
 
@@ -244,6 +247,10 @@ data class TimeSlot(val dateStr: String = "?",
 
   fun hasReplay() : Boolean{
     return replayLink.isNotBlank()
+  }
+
+  fun is1970(): Boolean {
+    return isoDate.year == 1970
   }
 
 }

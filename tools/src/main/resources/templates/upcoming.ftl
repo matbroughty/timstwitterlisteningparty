@@ -54,9 +54,10 @@
               </#if>
               <br><small>${slot.spotifyDateDisplay()}</small>
             </td>
-            <td style="width:15%"><a class="pure-button pure-button-active"
+            <td style="width:15%">
+              <a class="pure-button pure-button-active"
                                      href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
-                                     title="Twitter Listening Party Announcement">
+                                     title="Twitter Listening Party Announcement (ttlp ${slot.listeningPartyNumber})">
 
                 <#if slot.isToday() >
                   <i class="fab fa-twitter"></i>
@@ -64,6 +65,8 @@
                   <i class="fab fa-twitter-square"></i>
                 </#if>
               </a>
+              <br>
+              <small>ttlp ${slot.listeningPartyNumber}</small>
             </td>
           </tr>
         </table>

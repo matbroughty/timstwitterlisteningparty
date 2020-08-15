@@ -28,6 +28,8 @@
               <td style="width:15%">
                 <a class="pure-button pure-button-active" href="${slot.getCollectionLink()}" target="_blank"
                    data-toggle="tooltip" data-placement="bottom" title="Tweet Collection"><i class="fas fa-list-ol"></i></a>
+                <br>
+                <small>ttlp ${slot.listeningPartyNumber}</small>
               </td>
             </tr>
           </table>

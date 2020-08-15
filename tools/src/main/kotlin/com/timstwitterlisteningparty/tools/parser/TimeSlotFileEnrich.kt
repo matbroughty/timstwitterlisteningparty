@@ -12,6 +12,7 @@ import java.io.FileWriter
 import java.io.InputStream
 import java.io.StringReader
 import java.io.StringWriter
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.streams.toList
 
 
@@ -32,24 +33,24 @@ class TimeSlotFileEnrich {
     replayMap.forEach { logger.debug(it.toString()) }
     val existingList = TimeSlotReader(fileName, inputStream).timeSlots
     existingList.forEach {
-      if(it.spotifyImgLink.isEmpty()){
+      if (it.spotifyImgLink.isEmpty()) {
         val album = SpotifyUtils().findAlbum(it.band, it.album)
-        if(album != null){
+        if (album != null) {
           logger.info("found album $album")
           it.spotifyImgLink = album.imgLink
           it.spotifyImgLinkSmall = album.smallImgLink
           it.spotifyLink = album.spotifyLink.toString()
           it.spotifyYear = album.year
-        }else{
+        } else {
           logger.warn("Could not find album for $it")
         }
       }
       // update those without small image that do have a spotify large image
-      if(it.spotifyImgLinkSmall.isEmpty() && it.spotifyImgLink.contains("i.scdn.co")){
+      if (it.spotifyImgLinkSmall.isEmpty() && it.spotifyImgLink.contains("i.scdn.co")) {
         val album = SpotifyUtils().findAlbum(it.band, it.album)
-        if(album != null) {
+        if (album != null) {
           it.spotifyImgLinkSmall = album.smallImgLink
-        }else{
+        } else {
           logger.warn("Could not find album for $it so no small image")
         }
       }
@@ -74,25 +75,25 @@ class TimeSlotFileEnrich {
         }
 
         // spotify link from php if
-        if(it.spotifyLink.isEmpty()){
+        if (it.spotifyLink.isEmpty()) {
           it.spotifyLink = replayMap[it.hashBandAlbum()]?.spotifyLink ?: ""
         }
 
       }
 
 
-
     }
 
 
-    existingList.forEach { logger.debug(it.toString()) }
+    val counter = AtomicInteger(0)
+    existingList.sortedBy { it.isoDate }.forEach { addListeningPartyNumber(it, counter) }
 
     if (writeToFile) {
       val fileWriter = FileWriter(newFileName)
       val sbc = StatefulBeanToCsvBuilder<TimeSlot>(fileWriter)
         .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
         .build()
-      sbc.write(existingList.sortedBy{it.isoDate})
+      sbc.write(existingList.sortedBy { it.isoDate })
       fileWriter.close()
     }
 
@@ -101,17 +102,28 @@ class TimeSlotFileEnrich {
     val sbc = StatefulBeanToCsvBuilder<TimeSlot>(writer)
       .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
       .build()
-    sbc.write(existingList.sortedBy{it.isoDate})
+    sbc.write(existingList.sortedBy { it.isoDate })
     writer.close()
 
     // add any new replay id's to the collections.  Hardcoded collection-ids as the first-tweet.html uses them
-    if(addedReplayId.isNotEmpty()){
+    if (addedReplayId.isNotEmpty()) {
       TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "custom-1268856689010376706", replayIdStr = addedReplayId.min()!!.toString())
       // specify order but not used as we already have the collection
       TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "custom-1268856779288588289", replayIdStr = addedReplayId.min()!!.toString(), order = "tweet_reverse_chron")
     }
 
     return writer.toString()
+  }
+
+  private fun addListeningPartyNumber(it: TimeSlot, counter :AtomicInteger) {
+    // Not scheduled yet
+    if(it.is1970()){
+      it.listeningPartyNumber = "-1"
+    }else{
+      it.listeningPartyNumber = counter.incrementAndGet().toString()
+    }
+    logger.debug("Time Slot is $it")
+
   }
 
 }

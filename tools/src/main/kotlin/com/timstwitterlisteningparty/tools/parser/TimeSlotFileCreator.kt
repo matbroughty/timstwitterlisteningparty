@@ -29,13 +29,13 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val beans = TimeSlotReader(fileName, inputStream).timeSlots
     beans.forEach { logger.debug("Read in Bean {}", it) }
     val tbd = beans.stream()
-      .filter { it.isoDate.year == 1970 }.collect(Collectors.toList())
+      .filter { it.is1970() }.collect(Collectors.toList())
     val completed = beans.stream()
-      .filter { it.isoDate.year != 1970 && it.isoDate.toLocalDate().isBefore(LocalDate.now()) }
+      .filter { !it.is1970() && it.isoDate.toLocalDate().isBefore(LocalDate.now()) }
       .filter{it.replayLink.isNotBlank()}
       .collect(Collectors.toList())
     val upcoming = beans.stream()
-      .filter { it.isoDate.year != 1970 && it.isoDate.toLocalDate().isBefore(LocalDate.now()).not() }
+      .filter { !it.is1970() && it.isoDate.toLocalDate().isBefore(LocalDate.now()).not() }
       .collect(Collectors.toList())
     tbd.forEach { logger.debug("Dates to be confirmed {}", it) }
     completed.forEach { logger.debug("Completed listening {}", it) }
