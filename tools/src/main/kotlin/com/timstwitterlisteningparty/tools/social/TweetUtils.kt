@@ -85,7 +85,7 @@ class TweetUtils {
           if (it.replayLink.isEmpty()) {
             "${it.band} released ${it.album}. ${it.tweeterList().first()} will be hosting an upcoming listening party. ${it.link} #TimsTwitterListeningParty"
           } else {
-            "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty"
+            "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty (${it.listeningPartyNumber})"
           }
         if (logOnly) {
           logger.info(msg)

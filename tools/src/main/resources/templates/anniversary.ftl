@@ -38,7 +38,15 @@
                   <#else>
                     <i class="fab fa-twitter-square"></i>
                   </#if>
-                </a></td>
+                </a>
+
+
+                <#if slot.hasReplay()>
+                  <br>
+                  <small>ttlp ${slot.listeningPartyNumber}</small>
+                </#if>
+
+              </td>
             </tr>
           </table>
           <hr/>
