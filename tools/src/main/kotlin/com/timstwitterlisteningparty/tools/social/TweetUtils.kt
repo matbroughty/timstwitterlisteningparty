@@ -85,7 +85,7 @@ class TweetUtils {
           if (it.replayLink.isEmpty()) {
             "${it.band} released ${it.album}. ${it.tweeterList().first()} will be hosting an upcoming listening party. ${it.link} #TimsTwitterListeningParty"
           } else {
-            "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty (${it.listeningPartyNumber})"
+            "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
           }
         if (logOnly) {
           logger.info(msg)
@@ -103,7 +103,7 @@ class TweetUtils {
     if (!pageExists(replayLink)) {
       return "$replayLink page doesn't exist yet"
     }
-    return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty")
+    return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty #ttlp${timeSlot.listeningPartyNumber}")
   }
 
   /**
