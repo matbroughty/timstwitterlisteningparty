@@ -152,6 +152,8 @@ then
     addtogit $localfile3
     addtogit $localfile4
     addtogit ${LOCAL_PATH}/pages/replay.html
+
+    grep "<h1 class=\"content-subhead\">" ../snippets/replay/replay_home${ids[0]}_snippet.html
 fi
 
 for i in $(seq ${ids[@]})

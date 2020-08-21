@@ -1,0 +1,41 @@
+<h1 class="content-subhead">Make a Mixtape</h1>
+<div id="playlist-loading">
+    <br/>
+    <img src="../img/record-loading.gif" style="width:75px;height:75px;">&nbsp;Your mixtape is being created...
+</div>
+<br/>
+<div id="playlist-complete" style="align-content:center"></div>
+<div id="playlist-error"></div>
+<br/>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const state = urlParams.get('state');
+const code = urlParams.get('code');
+
+    // Call function to create playlist
+    $.ajax({
+        type: "GET",
+        url: "http://www.sk7software.co.uk/listeningparty/replay/live/scripts/spotify/playlist.php" +
+                "?state=" + state + "&code=" + code,
+        crossDomain: true,
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            var complete = document.getElementById('playlist-complete');
+            var loading = document.getElementById('playlist-loading');
+            $(complete).html(
+                    'Your mixtape is ready.  Here is a preview of it.  You can listen to it in full on Spotify<br/>' + 
+                    '<iframe src="https://open.spotify.com/embed/playlist/' + data.playlistId + '" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'
+                    );
+            loading.style.display = 'none';
+        },
+        error: function (data) {
+            console.log(data);
+            var error = document.getElementById('playlist-error');
+            var loading = document.getElementById('playlist-loading');
+            $(error).html('There was a problem creating your mixtape.  Please try again and if the problem persists contact the developer for help.<br/>[Error: ' + data + ']');
+            loading.style.display = 'none';
+        }
+    });                
+</script>
+
