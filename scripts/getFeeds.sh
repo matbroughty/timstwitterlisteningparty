@@ -136,12 +136,16 @@ then
     localfile2=${LOCAL_PATH}/snippets/replay/replay_home${ids[0]}_snippet.html
     localfile3=${LOCAL_PATH}/snippets/replay/replay_date${ids[0]}_snippet.html
     localfile4=${LOCAL_PATH}/snippets/replay/replay_artist${ids[0]}_snippet.html
+    localfile5=${LOCAL_PATH}/snippets/mixtape-snippet-${ids[0]}.html
     curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile1
     curl "${REMOTE_PATH}/replaysnip.php?levels=1" -o $localfile2
+    curl "${REMOTE_PATH}/mixtape.php" -o $localfile5
     sed "s/\.\.\/snippets\/replay\/feed_.*_snippet.html/\.\.\/snippets\/replay\/feed_list${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
     mv tmp.txt ${LOCAL_PATH}/pages/replay.html
     sed "s/\.\.\/snippets\/replay\/replay_home.*_snippet.html/\.\.\/snippets\/replay\/replay_home${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
     mv tmp.txt ${LOCAL_PATH}/pages/replay.html
+    sed "s/\.\.\/snippets\/mixtape-snippet-.*.html/\.\.\/snippets\/mixtape-snippet-${ids[0]}.html/" ${LOCAL_PATH}/pages/mixtape.html >tmp.txt
+    mv tmp.txt ${LOCAL_PATH}/pages/mixtape.html
     curl "${REMOTE_PATH}/replaysort.php?levels=1&sort=date" -o $localfile3
     curl "${REMOTE_PATH}/replaysort.php?levels=1&sort=artist" -o $localfile4
     sed "s/XX_PARTY_ID_XX/${ids[0]}/" ${localfile2} >tmp.txt
