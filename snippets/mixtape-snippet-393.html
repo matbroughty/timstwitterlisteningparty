@@ -87,9 +87,9 @@
     <label for="playlist" style="padding-top:10px;">Playlist Name:</label><br/>
     <input type="text" class="playlist-input" id="playlist" name="playlist" value="#TimsTwitterListeningParty Mixtape" style="width:20em"><br>
     <label for="count" style="padding-top:25px;padding-right:10px">Number of tracks (10-50):</label>
-    <i class="fas fa-minus-circle" onclick="changeCount(-1)">&nbsp;</i>
+    <i class="fas fa-minus-circle" onclick="changeCount(-5)">&nbsp;</i>
     <input type="text" class="playlist-input" id="count" name="count" style="width:4em;text-align:center;" value="20" disabled>&nbsp;
-    <i class="fas fa-plus-circle" onclick="changeCount(1)"></i>
+    <i class="fas fa-plus-circle" onclick="changeCount(5)"></i>
     <br/><br/>
     <h1 class="content-subhead">Artists to Include (Optional)</h1>
     <p>You can pick up to <b>5 artists</b> to include in the mixtape. They will have at least one track each,
@@ -329,6 +329,7 @@
             <a href="#artistChoice" onclick="pickArtist('The Murder Capital','105')">The Murder Capital</a>
             <a href="#artistChoice" onclick="pickArtist('The Music','267')">The Music</a>
             <a href="#artistChoice" onclick="pickArtist('The Orielles','4')">The Orielles</a>
+            <a href="#artistChoice" onclick="pickArtist('The Pains Of Being Pure At Heart','393')">The Pains Of Being Pure At Heart</a>
             <a href="#artistChoice" onclick="pickArtist('The Pastels','207')">The Pastels</a>
             <a href="#artistChoice" onclick="pickArtist('The Pogues','58;271;307')">The Pogues</a>
             <a href="#artistChoice" onclick="pickArtist('The Shins','171')">The Shins</a>
@@ -798,6 +799,7 @@
         <div class="data-div" id="party-390" data-id="390" data-tracks="0RgeH2P2ujXoHSjD8DT2ss;6L4fEE9awoUnSEy1bmQebb;63Rsi8eMUSu3cF04rgVJLj;7lJ9MeQgqHlBrE69omD4rN;2QwdAfvY7Lhiy0oPc7HzCV;0DrVgi8rW7gS2SRw9p62Kk;63G27PTar9LZQgKU2BKjx9;1dCVzt0xCWcR2wen0iaMAP;3mSN0Zw2oW6XmiXmQDiCjo;5rRFwd9u7iU1DQ8HwPM7iQ;2uBclNQkOhAO3ImHlZvT52;52Zhh0JG06RgwMGiLOhl7T;58QZKuGB6afgjrEjQCUW21;33sv807ONsR1p9UGz1RMQX"></div>
         <div class="data-div" id="party-391" data-id="391" data-tracks="3FzKPS0oVknVlCW3PhxIHl;1H93izDjXIF30mAMC7UagB;1yJiE307EBIzOB9kqH1deb;4azCKNOIuNsCB98BSRBR2B;0cs671lxX2eoDzr2KMuo3N;5fAUch0HNiHxqLEc6a1t68;1lFC3sMgOcDrVzNh8zXRnl;0QboItjXFMSeHpAIgvVnz3;1yuwn054ErrOWqjjk51ldD;3vY7cKuKNY1oAsyVVn7AQz;18PzY59cKHgu78CUYcUVAz;0VAD8GUGL68sQcOdiHIjTU;2Aqc48sn8He26hmTvQ2BMj;2ofiwvmGa6QHUV8X46vEd6;1YZDkJOFT8xlAXDi8lneb3"></div>
         <div class="data-div" id="party-392" data-id="392" data-tracks="2hJLM6iMtaUcRNxQkiQc72;2qlIPIfLN5l4iyQEWARteW;4sNLhv27nyArYC2KvM8PT6;2itmGx2ZNQF3Va64i7jYol;5l9NpV9yWUBGaAHbJ2aMPz;1YCs5eJsIFIqVizcrbJEcX;1BMxvxQp5oZ5ScDghAZr7u;2NF1iyEtq6b14yd6F694yP;76f1FnyzD77BsrJgJhYamJ;0tXYnogcpmTqVMBiTWmY3b;3zxH1oLeYdpMm7VeH944SW;3rbeJMQMa6zJXfV6WdDORD"></div>
+        <div class="data-div" id="party-393" data-id="393" data-tracks="06BEkmX2ZG32S43jmisFbV;3LiJkn24zLD0SUPbVNyDwh;1FsvfszJ09tqBcino2JfCb;2YypgnwH6XubtBSjElO60p;0t6eVbEv7eNPDdwdxtASQx;7xh9iFqDMOf9UpVHv4o5dT;0KKef2dQOs9xxBj5bOphFp;3JWCjGHIEXhPgIjTVk4dJT;3Kk1uq300Xoth8lRSiOiAt;3zC1JLZosh3vsDDMB8OA7U"></div>
         <br/>
     <hr>
     <br/>
@@ -892,7 +894,10 @@ function selectRandomTracks() {
            
            // Pick a random id from the list
            var id = ids[Math.floor(Math.random() * ids.length)];
-           idsToPick.push(id);
+           
+           if (!idsToPick.includes(id)) {
+               idsToPick.push(id);
+           }
        } 
     });
     
@@ -905,14 +910,17 @@ function selectRandomTracks() {
     
     while (idsToPick.length < numTracks) {
         var id = allPartyIds[Math.floor(Math.random() * allPartyIds.length)];
-        idsToPick.push(id);
+        if (!idsToPick.includes(id)) {
+            idsToPick.push(id);
+        }
     }
     
     // Pick a random track from each id in the list
+    // Each party id appears a max of once, so no risk of duplicate tracks
     const trackUrls = new Array();
     idsToPick.forEach(function(v, i) {
        var tracks = document.getElementById('party-' + v).getAttribute('data-tracks').split(';');
-       trackUrls.push(tracks[Math.floor(Math.random() * tracks.length)])
+       trackUrls.push(tracks[Math.floor(Math.random() * tracks.length)]);
     });
     
     // Find selected image
@@ -931,8 +939,13 @@ function selectRandomTracks() {
 function postData(name, tracks, imageNum) {
     const form = document.createElement('form');
     form.method = 'post';
-//    form.action = 'http://www.sk7software.co.uk/listeningparty/mixtape/createMixtape.php';
-    form.action = 'https://timstwitterlisteningparty.eu-gb.cf.appdomain.cloud/createMixtape.php';
+    
+    var action = 'https://timstwitterlisteningparty.eu-gb.cf.appdomain.cloud/createMixtape.php';
+    
+    if (window.location.hostname.includes('sk7software')) {
+        action = 'http://www.sk7software.co.uk/listeningparty/mixtape/createMixtape.php';
+    }
+    form.action = action;
 
     const hiddenField1 = document.createElement('input');
     hiddenField1.type = 'hidden';

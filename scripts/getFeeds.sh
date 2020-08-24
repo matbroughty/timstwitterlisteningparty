@@ -155,7 +155,9 @@ then
     addtogit $localfile2
     addtogit $localfile3
     addtogit $localfile4
+    addtogit $localfile5
     addtogit ${LOCAL_PATH}/pages/replay.html
+    addtogit ${LOCAL_PATH}/pages/mixtape.html
 
     grep "<h1 class=\"content-subhead\">" ../snippets/replay/replay_home${ids[0]}_snippet.html
 fi
