@@ -4,7 +4,7 @@
   })
 </script>
 <section class="post">
-   <div class="container-fluid">
+  <div class="container-fluid">
     <#assign hr = "">
     <#assign date = startDate>
     <div class="card d mb-3 border-dark rounded" style="width: 100%;">
@@ -56,8 +56,8 @@
             </td>
             <td style="width:15%">
               <a class="pure-button pure-button-active"
-                                     href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
-                                     title="Twitter Listening Party Announcement (ttlp ${slot.listeningPartyNumber})">
+                 href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
+                 title="Twitter Listening Party Announcement (ttlp ${slot.listeningPartyNumber})">
 
                 <#if slot.isToday() >
                   <i class="fab fa-twitter"></i>
@@ -66,7 +66,9 @@
                 </#if>
               </a>
               <br>
-              <small>ttlp ${slot.listeningPartyNumber}</small>
+              <#if slot.isToday() >
+                <small>ttlp ${slot.listeningPartyNumber}</small>
+              </#if>
             </td>
           </tr>
         </table>
