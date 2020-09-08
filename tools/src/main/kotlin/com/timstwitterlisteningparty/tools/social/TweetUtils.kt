@@ -177,7 +177,7 @@ class TweetUtils {
         if (tweetId.isNotBlank()) {
           tweetList.add(tweetId)
         }
-        logger.info("added tweetid $tweetId for adding to first tweet collection")
+        logger.info("added tweetid $tweetId  to first tweet collection")
         replayId++
         replayFeedHtml = try {
           Jsoup.connect("https://timstwitterlisteningparty.com/snippets/replay/feed_${replayId}_snippet.html").get()
