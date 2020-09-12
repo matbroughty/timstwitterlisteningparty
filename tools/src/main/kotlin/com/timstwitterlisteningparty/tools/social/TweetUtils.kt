@@ -70,9 +70,10 @@ class TweetUtils {
     var anniversaryToTweet = false
     val timeSlotList = if (timeSlots.isEmpty()) TimeSlotReader().timeSlots else timeSlots
     timeSlotList
-      .filter { it.spotifyYear.length == 10 }
-      .filter { !it.spotifyThisYear() }
-      .filter { it.tweeters.isNotEmpty() }
+      .filter { it.spotifyYear.length == 10 } // needs a full date format with month and days - i.e. 2019-05-28
+      .filter { !it.spotifyThisYear() } // not an anniversary until a year has passed
+      .filter { it.tweeters.isNotEmpty() } // not a silent party
+      .filter { !it.is1970() } // not scheduled
       .filter {
         val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
         now == MonthDay.of(releaseDate.month, releaseDate.dayOfMonth)
