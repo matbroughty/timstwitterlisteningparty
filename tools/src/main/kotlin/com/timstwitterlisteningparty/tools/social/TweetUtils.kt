@@ -6,7 +6,10 @@ import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import twitter4j.*
+import twitter4j.HttpParameter
+import twitter4j.JSONObject
+import twitter4j.Twitter
+import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
 import java.time.LocalDate
 import java.time.MonthDay
@@ -70,6 +73,7 @@ class TweetUtils {
     var anniversaryToTweet = false
     val timeSlotList = if (timeSlots.isEmpty()) TimeSlotReader().timeSlots else timeSlots
     timeSlotList
+      .asSequence()
       .filter { it.spotifyYear.length == 10 } // needs a full date format with month and days - i.e. 2019-05-28
       .filter { !it.spotifyThisYear() } // not an anniversary until a year has passed
       .filter { it.tweeters.isNotEmpty() } // not a silent party
@@ -78,6 +82,7 @@ class TweetUtils {
         val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
         now == MonthDay.of(releaseDate.month, releaseDate.dayOfMonth)
       }
+      .toList()
       .forEach {
         logger.info("found an anniversary for $it")
         anniversaryToTweet = true
