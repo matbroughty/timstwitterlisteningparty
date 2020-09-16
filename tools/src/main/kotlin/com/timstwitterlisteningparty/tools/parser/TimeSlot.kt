@@ -216,6 +216,10 @@ data class TimeSlot(val dateStr: String = "?",
   fun buildTweeterLinks(): String {
     var html = "<br/><small>"
     html = html.plus(tweeterLinkList().map { "<a class=\"text-muted\" target=\"_blank\" href=\"$it\">@${it.substringAfterLast("/")}</a>" }.toList())
+    if(tweeterLinkList().isNotEmpty()) {
+      // silent listening parties will have no tweeters so don't add listening party, otherwise do
+      html = html.plus(", <a class=\"text-muted\" target=\"_blank\" href=\"https://twitter.com/LlSTENlNG_PARTY\">@LlSTENlNG_PARTY</a>")
+    }
     return html.plus("</small>").replace("[", "").replace("]", "")
   }
 
