@@ -137,8 +137,10 @@ then
     localfile3=${LOCAL_PATH}/snippets/replay/replay_date${ids[0]}_snippet.html
     localfile4=${LOCAL_PATH}/snippets/replay/replay_artist${ids[0]}_snippet.html
     localfile5=${LOCAL_PATH}/snippets/mixtape-snippet-${ids[0]}.html
+    localfile6=${LOCAL_PATH}/snippets/stats.html
     curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile1
     curl "${REMOTE_PATH}/replaysnip.php?levels=1" -o $localfile2
+    curl "${REMOTE_PATH}/statssnip.php" -o $localfile6
     curl "${REMOTE_PATH}/mixtape.php" -o $localfile5
     sed "s/\.\.\/snippets\/replay\/feed_.*_snippet.html/\.\.\/snippets\/replay\/feed_list${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
     mv tmp.txt ${LOCAL_PATH}/pages/replay.html
@@ -156,6 +158,7 @@ then
     addtogit $localfile3
     addtogit $localfile4
     addtogit $localfile5
+    addtogit $localfile6
     addtogit ${LOCAL_PATH}/pages/replay.html
     addtogit ${LOCAL_PATH}/pages/mixtape.html
 
