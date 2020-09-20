@@ -49,9 +49,7 @@
             </td>
             <td style="width:50%;text-align:left;">
               <b>${slot.band}</b><br/>${slot.album}
-              <#if slot.isToday() >
                 ${slot.buildTweeterLinks()}
-              </#if>
               <br><small>${slot.spotifyDateDisplay()}</small>
             </td>
             <td style="width:15%">
