@@ -177,8 +177,13 @@ data class TimeSlot(val dateStr: String = "?",
     if (isoDate.year == 1970) {
       return "TBC"
     }
+    if(isNextYear()){
+      return isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d (yyyy)"))
+    }
     return isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
   }
+
+
 
   /**
    * formats in yyyy-MM-dd
@@ -255,6 +260,11 @@ data class TimeSlot(val dateStr: String = "?",
 
   fun is1970(): Boolean {
     return isoDate.year == 1970
+  }
+
+
+  private fun isNextYear(): Boolean {
+    return isoDate.year == LocalDateTime.now().year + 1
   }
 
 }
