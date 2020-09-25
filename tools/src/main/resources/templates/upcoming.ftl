@@ -64,9 +64,7 @@
                 </#if>
               </a>
               <br>
-              <#if slot.isToday() >
                 <small>ttlp ${slot.listeningPartyNumber}</small>
-              </#if>
             </td>
           </tr>
         </table>
