@@ -179,8 +179,11 @@ do
     then
         echo ++++++++++ Fetching snippet for feed $i
         localfile=${LOCAL_PATH}/snippets/replay/feed_${i}_snippet.html
+        localfile1=${LOCAL_PATH}/snippets/tours/tour_${i}_snippet.html
         curl "${REMOTE_PATH}/feedsnip.php?id=${i}&levels=2" -o $localfile
+        curl "${REMOTE_PATH}/songkick/songkick.php?id=${i}&levels=2" -o $localfile1
         addtogit $localfile
+        addtogit $localfile1
     fi
 
     if [ $pictures -eq 1 ]
