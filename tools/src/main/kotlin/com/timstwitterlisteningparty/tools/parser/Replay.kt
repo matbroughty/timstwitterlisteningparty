@@ -17,6 +17,8 @@ data class Replay(@CsvBindByPosition(position = 0)
                   @CsvBindByPosition(position = 4)
                   val spotifyLink: String = "",
                   @CsvBindByPosition(position = 5)
+                  val songKickId: String = "",
+                  @CsvBindByPosition(position = 6)
                   var twitterIds: String = "") {
 
 
