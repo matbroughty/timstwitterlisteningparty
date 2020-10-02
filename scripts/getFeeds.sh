@@ -5,6 +5,7 @@ function usage() {
     echo "-s : generate feed snippets (full sets of tweets)"
     echo "-t : generate feed templates (headers and twitter cards)"
     echo "-p : download album artwork"
+    echo "-u : update all pending tour dates"
     echo "-a : generate and download all of the above"
     echo "-g : perform github steps (up to but not including commit)"
     echo "id1, id2 : start and end party ids to generate files for"
@@ -45,6 +46,7 @@ index=0
 pictures=0
 snippet=0
 template=0
+tours=0
 github=0
 
 # Array for holding ids
@@ -71,6 +73,9 @@ do
         "-t" )
             template=1
             ;;
+        "-u" )
+            tours=1
+            ;;
         "-g" )
             github=1
             ;;
@@ -79,6 +84,7 @@ do
             snippet=1
             template=1
             pictures=1
+            tours=1
             ;;
         * )
             # Confirm not an invalid - arg
@@ -111,6 +117,7 @@ echo "Fetch Index: $(yesno $index)"
 echo "Fetch Pictures: $(yesno $pictures)"
 echo "Fetch Snippets: $(yesno $snippet)"
 echo "Fetch Templates: $(yesno $template)"
+echo "Fetch Updated tours: $(yesno $tours)"
 echo "Update github repo: $(yesno $github)"
 echo "Generating feeds between party ids ${ids[0]} and ${ids[1]}"
 echo
@@ -179,11 +186,13 @@ do
     then
         echo ++++++++++ Fetching snippet for feed $i
         localfile=${LOCAL_PATH}/snippets/replay/feed_${i}_snippet.html
-        localfile1=${LOCAL_PATH}/snippets/tours/tour_${i}_snippet.html
         curl "${REMOTE_PATH}/feedsnip.php?id=${i}&levels=2" -o $localfile
-        curl "${REMOTE_PATH}/songkick/songkick.php?id=${i}&levels=2" -o $localfile1
         addtogit $localfile
-        addtogit $localfile1
+    fi
+
+    if [ $tours -eq 1 ]
+    then
+        ./getUpdatedTours.sh $github
     fi
 
     if [ $pictures -eq 1 ]
