@@ -1,9 +1,37 @@
 <section class="post">
     <script>
         function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
             preview = document.getElementById('track-preview');
             $(preview).slideToggle("slow");
-        }        
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
     </script>
         <table>
         <tr>
@@ -13,13 +41,29 @@
         </tr>
     </table>
 
-        <div style="padding-right:7px;margin-top:5px;margin-bottom:5px">
-        <a class="pure-button" onclick="togglePreview()"><i class="fas fa-search-plus" style="color:#3d4f5d"></i> Preview Track Listing</a>
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(1050976)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
     </div>
-    <div id="track-preview" style="display:none;margin-bottom:5px">
+            <div id="track-preview" style="display:none;margin-bottom:5px">
     <iframe src="https://open.spotify.com/embed/album/0aroGGkehVjsg8QCNDGjTK" width="300" height="380" frameborder="0" 
                 allowtransparency="true" allow="encrypted-media"></iframe>
     </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_1050976_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
                 <!-- Show number of tweets and users -->
         <div id="users-panel" style="display:block">
             <span class="main-colour">Real-time replay of 67 tweets from Saturday 11th July 2020 by: </span><br/>            <table>
