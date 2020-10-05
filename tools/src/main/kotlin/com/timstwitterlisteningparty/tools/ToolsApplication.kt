@@ -9,3 +9,4 @@ class ToolsApplication
 fun main(args: Array<String>) {
   runApplication<ToolsApplication>(*args)
 }
+
