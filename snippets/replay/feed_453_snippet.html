@@ -1,0 +1,160 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3Yst0RYPLLwSFuw3XOYe9O" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e029ecd96cea808bb2247ca0bb2" alt="Paradise" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Peter Astor and the Holy Road</span><br/><span class="sub-colour">Paradise</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3Yst0RYPLLwSFuw3XOYe9O" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 32 tweets from Wednesday 7th October 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/AstorPete" target="_blank"><img src="https://pbs.twimg.com/profile_images/1280454126938329088/HcEAsNxF_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@AstorPete</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1305818491614892032/X3db_cyC_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@LlSTENlNG_PARTY</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+        </div>
+        <div id="tweet-feed-32" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313943350190526464"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="122000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313942920769265666"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="464000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313942408116174849"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313940461418147841"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313940273723060235"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="133000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313940186691260419"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="113000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313939625786978308"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Flearnandsing%2Fstatus%2F1313939154296864770"> 
+                learnandsing            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313939007076737025"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313938703417511936"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313938261518307328"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313938112830222337"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313938089174274048"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="166000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313938051278737410"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1313937351639474181"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="202000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313937256634347522"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="333000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313936411763060738"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="184000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313935011058454528"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fbaddogz%2Fstatus%2F1313934240518676481"> 
+                baddogz            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Festellecostanza%2Fstatus%2F1313934025522806784"> 
+                estellecostanza            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313933853216706560"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313933698992136192"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313933386906558467"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Festellecostanza%2Fstatus%2F1313933224498941952"> 
+                estellecostanza            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313933108815843335"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313933012778786817"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1313932936182411266"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313932648201564165"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FAstorPete%2Fstatus%2F1313932473588383746"> 
+                AstorPete            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313932316289499138"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1313932159665737728"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1313932135800152068"> 
+                Tim_Burgess            </div>
+            </section>
