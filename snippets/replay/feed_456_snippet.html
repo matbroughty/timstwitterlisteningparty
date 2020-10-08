@@ -1,0 +1,292 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5WpDQt6EbpzXbqo9g9P0L6" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02c4ae03ce107776b4456cf8da" alt="Róisín Machine" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Róisín Murphy</span><br/><span class="sub-colour">Róisín Machine</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(1168629)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5WpDQt6EbpzXbqo9g9P0L6" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_1168629_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 98 tweets from Thursday 8th October 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/roisinmurphy" target="_blank"><img src="https://pbs.twimg.com/profile_images/1289117666050023426/jZMnF606_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@roisinmurphy</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1305818491614892032/X3db_cyC_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@LlSTENlNG_PARTY</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+        </div>
+        <div id="tweet-feed-98" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314309537013403653"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1314309092383641602"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314308797750546433"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314308701617037328"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314308674081431566"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314308600085520403"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314308279196160000"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314307949100179473"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314307733919760386"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314307345573449728"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314307278456188930"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314307233837125632"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314307219328962560"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314307187745972224"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314307054383833110"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314306698287423499"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314306207004401664"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314306004285362176"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314305986056855565"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDenisc1962Denis%2Fstatus%2F1314305904616124416"> 
+                Denisc1962Denis            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314305854125023245"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FRedRumClub%2Fstatus%2F1314305760864673795"> 
+                RedRumClub            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314305587170156547"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314305357691396106"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314305069928591361"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314304949115908099"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314304864810393600"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="155000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314304756853153799"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314304107314847763"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314303786312179745"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314303714144985102"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314303674768859141"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314303584629067776"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314303271134208006"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="130000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314303182986776577"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314302637945257984"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314302561999032320"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314302497276792833"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314302379580424193"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314302335737360384"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314302287603474434"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314302256666349570"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314301987484246019"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314301791828348930"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fmarkemoon%2Fstatus%2F1314301755681841176"> 
+                markemoon            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314301442665127942"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314301379834454037"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314301377758273546"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314301285454225421"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314301020000919569"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314300752693792768"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314300340695638024"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314300265630179333"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314300258810241025"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314300198273929217"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314300082318200832"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314300032573747203"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314299937513971720"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314299877065621505"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314299853615304706"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314299652255162370"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314299632525209600"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="144000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314299364584587264"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314298761544376321"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314298515082928128"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fcjervis%2Fstatus%2F1314298510443937793"> 
+                cjervis            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314298407045955584"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314298340838985728"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314298234693615616"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="121000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314298133350842373"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="119000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314297628302114816"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314297128840241173"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314296758126641153"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314296735729098753"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDJWalshe%2Fstatus%2F1314296676987932682"> 
+                DJWalshe            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314296630787665920"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314296588521689089"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314296508100030467"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314296504379678724"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FBettieBound%2Fstatus%2F1314296382145077259"> 
+                BettieBound            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FTimGough9%2Fstatus%2F1314296316235784208"> 
+                TimGough9            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fwearepetulant%2Fstatus%2F1314296019891425280"> 
+                wearepetulant            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314295939205660674"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314295935720185856"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1314295862483451910"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FColletteDoreen%2Fstatus%2F1314295589052579840"> 
+                ColletteDoreen            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314295499101556736"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Flaetitia_mavrel%2Fstatus%2F1314295459280814082"> 
+                laetitia_mavrel            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314295188475596801"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314295187406041088"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314295149829251074"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314295097958301696"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314294975715258369"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314294824439291914"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314294804268937220"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314294590044811267"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1314294538001883137"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314294521665126400"> 
+                Tim_Burgess            </div>
+            </section>
