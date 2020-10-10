@@ -1,0 +1,390 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/0jthc9ezftxi0w1jyhZfgi" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e023180b0b472f47e86cec56d35" alt="So Tough" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Saint Etienne</span><br/><span class="sub-colour">So Tough</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(9753819)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/0jthc9ezftxi0w1jyhZfgi" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_9753819_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 124 tweets from Friday 9th October 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/rocking_bob" target="_blank"><img src="https://pbs.twimg.com/profile_images/1380689225/bob2_normal.JPG" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@rocking_bob</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/petepaphides" target="_blank"><img src="https://pbs.twimg.com/profile_images/583030202906873856/rTmMRwPE_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@petepaphides</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/simon_price01" target="_blank"><img src="https://pbs.twimg.com/profile_images/1205332105154244615/r3-4nIhH_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@simon_price01</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+        </div>
+        <div id="now-playing" style="padding-top:3px"></div>
+                    <div id="track-1" class="track-list"
+                 data-name="Mario's Café" data-start="0"
+                 data-duration="277" style="display:none"></div>
+                    <div id="track-2" class="track-list"
+                 data-name="Railway Jam" data-start="279"
+                 data-duration="254" style="display:none"></div>
+                    <div id="track-3" class="track-list"
+                 data-name="Date With Spelman" data-start="535"
+                 data-duration="17" style="display:none"></div>
+                    <div id="track-4" class="track-list"
+                 data-name="Calico" data-start="554"
+                 data-duration="312" style="display:none"></div>
+                    <div id="track-5" class="track-list"
+                 data-name="Avenue" data-start="868"
+                 data-duration="454" style="display:none"></div>
+                    <div id="track-6" class="track-list"
+                 data-name="You're in a Bad Way" data-start="1324"
+                 data-duration="168" style="display:none"></div>
+                    <div id="track-7" class="track-list"
+                 data-name="Memo to Pricey" data-start="1494"
+                 data-duration="23" style="display:none"></div>
+                    <div id="track-8" class="track-list"
+                 data-name="Hobart Paving" data-start="1519"
+                 data-duration="294" style="display:none"></div>
+                    <div id="track-9" class="track-list"
+                 data-name="Leafhound" data-start="1815"
+                 data-duration="252" style="display:none"></div>
+                    <div id="track-10" class="track-list"
+                 data-name="Clock Milk" data-start="2069"
+                 data-duration="14" style="display:none"></div>
+                    <div id="track-11" class="track-list"
+                 data-name="Conchita Martinez" data-start="2085"
+                 data-duration="238" style="display:none"></div>
+                    <div id="track-12" class="track-list"
+                 data-name="No Rainbows for Me" data-start="2325"
+                 data-duration="238" style="display:none"></div>
+                    <div id="track-13" class="track-list"
+                 data-name="Here Comes Clown Feet" data-start="2565"
+                 data-duration="25" style="display:none"></div>
+                    <div id="track-14" class="track-list"
+                 data-name="Junk the Morgue" data-start="2592"
+                 data-duration="311" style="display:none"></div>
+                    <div id="track-15" class="track-list"
+                 data-name="Chicken Soup" data-start="2905"
+                 data-duration="18" style="display:none"></div>
+                <div id="tweet-feed-124" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314685473391079426"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314685077591396355"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314685073581633539"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314684785118371840"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314684630155526146"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314684460215009281"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314684348117987329"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314684164755644417"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314684020555476994"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314683904058630144"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314683714639626240"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314683483449589763"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314683139743154176"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314683070935638017"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314683021832880128"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314682947333697539"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314682810460930050"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314682737404653568"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314682413482639361"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314682300890832896"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314682096137449472"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314681991141511168"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314681915639762946"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314681807946866695"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314681663172087821"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314681576291217416"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314681380798976000"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314681233952116737"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314681148912603136"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTB99037537%2Fstatus%2F1314681130021519362"> 
+                TB99037537            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314681127995674624"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314681122287214594"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314681114754154503"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314680953986519040"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314680943492431873"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314680920956375042"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314680778467487744"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fandylewisuk%2Fstatus%2F1314680562058223621"> 
+                andylewisuk            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314680558413373441"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314680468814602243"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314680304041447424"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314680286622494722"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314680195715158017"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314680130539794435"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314680021513056261"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1314679905800593415"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314679863152979968"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314679708177641475"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314679649058926592"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314679604402061314"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314679529890361346"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314679512173547523"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314679313858531332"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314679268719329286"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314679194618605573"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314679064817553408"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314679063366295552"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314679046689751042"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314678938145300485"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314678913516306433"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314678907338190849"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314678823183675394"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314678752325054464"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314678689494425600"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314678638965600256"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314678565149970432"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314678555616440320"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314678548704169984"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314678390021148673"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314678388578299905"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314678367774441472"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314678294831419393"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314678287331848192"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314678227126939648"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314678200702771200"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314678183179030528"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314678127289917442"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fsimon_price01%2Fstatus%2F1314678088006070273"> 
+                simon_price01            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314678048176959489"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314678019529859073"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314677835555131393"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314677832912601088"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fsmall_circle%2Fstatus%2F1314677727446867969"> 
+                small_circle            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314677713848983552"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314677706764713987"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314677331567489028"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314677028214517760"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1314677019523919872"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fiantracy79%2Fstatus%2F1314676709187350528"> 
+                iantracy79            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314676677226778624"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314676511157497856"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314676467507302400"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314676255036526592"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314676115483635713"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314676106147004417"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314676064757706753"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314675753846439936"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314675751082438656"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314675583318720513"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314675416586690565"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314675218384924672"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314674999945572352"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314674773805477894"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314674552958574592"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314674513884446722"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314674377078824961"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314674289090670593"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314674163609735168"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314674087030140931"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314673914921058306"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314673707718250496"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fpastels_the%2Fstatus%2F1314673693101035521"> 
+                pastels_the            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314673494152577027"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314673348597686277"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314673220612751360"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314673112156450819"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314673065729683457"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314673047799033856"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314672853502042114"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314672832354439169"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="109000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1314672765442588674"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Frocking_bob%2Fstatus%2F1314672307902836736"> 
+                rocking_bob            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314672272800649216"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1314672006592376841"> 
+                Tim_Burgess            </div>
+            </section>
