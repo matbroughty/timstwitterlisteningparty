@@ -1,0 +1,290 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3khQPGgmFLPQBPUHUDwPF2" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e024318f3794fd58543323b49b6" alt="Supervision" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">La Roux</span><br/><span class="sub-colour">Supervision</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(2360099)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3khQPGgmFLPQBPUHUDwPF2" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_2360099_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 46 tweets from Saturday 10th October 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/larouxofficial" target="_blank"><img src="https://pbs.twimg.com/profile_images/1250711400298708993/M0KSDQNa_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@larouxofficial</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/AlbumDayUK" target="_blank"><img src="https://pbs.twimg.com/profile_images/1311694608867487745/c6JV6B9J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@AlbumDayUK</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="21st Century" data-start="0"
+             data-duration="255" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Do You Feel" data-start="257"
+             data-duration="300" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Automatic Driver" data-start="559"
+             data-duration="305" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="International Woman of Leisure" data-start="866"
+             data-duration="258" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Everything I Live For" data-start="1126"
+             data-duration="335" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Otherside" data-start="1463"
+             data-duration="321" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="He Rides" data-start="1786"
+             data-duration="299" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Gullible Fool" data-start="2087"
+             data-duration="437" style="display:none"></div>
+                        <div id="track-9" class="track-list"
+                     data-name="Finished" data-start="2526"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048514318f3794fd58543323b49b6" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width=100%;">
+                        <div id="track-title" class="main-colour" style="line-height:0px;"></div><br/>
+                        <div id="track-time" style="line-height:0px;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width=1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-46" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315031068333015041"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315030817152872450"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315030556531478528"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315030499216314368"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315030449538961410"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315030393658257410"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315030174644264962"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315030120898482176"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315030041550610434"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315029954179014659"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315029811601997830"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315029729427304448"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315029308734398464"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315029052663750658"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315029016152342531"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315028661347680260"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315028301308743681"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315027920973377536"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="164000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315027806045298688"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="134000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315027115566342144"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315026556939632640"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315026277041143808"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="141000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315026100863602689"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="141000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315025510959927303"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315024920104099840"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315024605174812672"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315024348298858497"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315024163803987973"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315023987202809857"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315023907305521152"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="131000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315023755605929984"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315023205615185921"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315023181800001542"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315022915319013376"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315022682103128064"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315022458962030593"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315022130564792320"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315021815174049792"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2FMs_Gallimore%2Fstatus%2F1315021387095060480"> 
+                Ms_Gallimore            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315021032567308290"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315020550885060609"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315020159787073542"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FAlbumDayUK%2Fstatus%2F1315019928467116032"> 
+                AlbumDayUK            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315019657468874752"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Flarouxofficial%2Fstatus%2F1315019502036430849"> 
+                larouxofficial            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1315019395920547843"> 
+                Tim_Burgess            </div>
+            </section>
