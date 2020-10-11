@@ -1,4 +1,7 @@
 #!/bin/bash
+RED='\033[0;31m'
+NC='\033[0m'
+
 function usage() {
     echo Usage: getFeeds.sh [-i] [-s] [-t] [-p] [-a] id1 id2
     echo "-i : generate index"
@@ -18,6 +21,16 @@ function yesno() {
         echo "YES"
     else
         echo "NO"
+    fi
+}
+
+function verify() {
+    file=$1
+    line=$2
+    result=`tail -2 "$file" | grep "$line" | wc -l`
+    if [ $result -eq 0 ]
+    then
+        echo -e "${RED}********************** FILE $file ERROR *********************${NC}"
     fi
 }
 
@@ -146,9 +159,13 @@ then
     localfile5=${LOCAL_PATH}/snippets/mixtape-snippet-${ids[0]}.html
     localfile6=${LOCAL_PATH}/snippets/stats.html
     curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile1
+    verify "$localfile1" "section"
     curl "${REMOTE_PATH}/replaysnip.php?levels=1" -o $localfile2
+    verify "$localfile2" "script"
     curl "${REMOTE_PATH}/statssnip.php" -o $localfile6
+    verify "$localfile6" "script"
     curl "${REMOTE_PATH}/mixtape.php" -o $localfile5
+    verify "$localfile5" "script"
     sed "s/\.\.\/snippets\/replay\/feed_.*_snippet.html/\.\.\/snippets\/replay\/feed_list${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
     mv tmp.txt ${LOCAL_PATH}/pages/replay.html
     sed "s/\.\.\/snippets\/replay\/replay_home.*_snippet.html/\.\.\/snippets\/replay\/replay_home${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
@@ -156,7 +173,9 @@ then
     sed "s/\.\.\/snippets\/mixtape-snippet-.*.html/\.\.\/snippets\/mixtape-snippet-${ids[0]}.html/" ${LOCAL_PATH}/pages/mixtape.html >tmp.txt
     mv tmp.txt ${LOCAL_PATH}/pages/mixtape.html
     curl "${REMOTE_PATH}/replaysort.php?levels=1&sort=date" -o $localfile3
+    verify "$localfile3" "div"
     curl "${REMOTE_PATH}/replaysort.php?levels=1&sort=artist" -o $localfile4
+    verify "$localfile4" "div"
     sed "s/XX_PARTY_ID_XX/${ids[0]}/" ${localfile2} >tmp.txt
     mv tmp.txt ${localfile2}
 
@@ -179,6 +198,7 @@ do
         echo ++++++++++ Fetching template for feed $i
         localfile=${LOCAL_PATH}/pages/replay/feed_${i}.html
         curl "${REMOTE_PATH}/feedTemplate.php?id=${i}&levels=2" -o $localfile
+        verify "$localfile" "html"
         addtogit $localfile
     fi
 
@@ -187,6 +207,7 @@ do
         echo ++++++++++ Fetching snippet for feed $i
         localfile=${LOCAL_PATH}/snippets/replay/feed_${i}_snippet.html
         curl "${REMOTE_PATH}/feedsnip.php?id=${i}&levels=2" -o $localfile
+        verify "$localfile" "section"
         addtogit $localfile
     fi
 
