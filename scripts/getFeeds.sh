@@ -1,6 +1,7 @@
 #!/bin/bash
 RED='\033[0;31m'
 NC='\033[0m'
+ERROR=0
 
 function usage() {
     echo Usage: getFeeds.sh [-i] [-s] [-t] [-p] [-a] id1 id2
@@ -31,6 +32,7 @@ function verify() {
     if [ $result -eq 0 ]
     then
         echo -e "${RED}********************** FILE $file ERROR *********************${NC}"
+        ERROR=1
     fi
 }
 
@@ -231,4 +233,9 @@ done
 if [ $github -eq 1 ]
 then
     git status
+fi
+
+if [ $ERROR -ne 0 ]
+then
+    ehco -e "${RED}There have been errors${NC}"
 fi
