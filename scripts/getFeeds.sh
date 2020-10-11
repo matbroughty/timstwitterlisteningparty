@@ -208,7 +208,7 @@ do
     then
         echo ++++++++++ Fetching snippet for feed $i
         localfile=${LOCAL_PATH}/snippets/replay/feed_${i}_snippet.html
-        curl "${REMOTE_PATH}/feedsnip.php?id=${i}&levels=2" -o $localfile
+        curl "${REMOTE_PATH}/feedsnip.php?id=${i}&levels=2&notour=1" -o $localfile
         verify "$localfile" "section"
         addtogit $localfile
     fi
