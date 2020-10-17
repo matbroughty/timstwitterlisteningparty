@@ -81,13 +81,17 @@ class TimeSlotFileCreator : HtmlFileCreator {
 
   /**
    * All album artwork - but only if the [TimeSlot.spotifyImgLink] is populated and is a spotify album link.
-   * Otherwise larger artworks sends the wall out of synch
+   * Otherwise larger artworks sends the wall out of sync
    */
   private fun buildWallHtml(completed: List<TimeSlot>, upcoming: List<TimeSlot>, fullSize: Boolean = false): String {
     val template = FreeMarkerUtils().getFreeMarker(WALL_FTL)
-    val completedList: List<List<TimeSlot>> = completed.filter { it.tweeterLinkList().isNotEmpty() && it.spotifyImgLinkSmall.isNotEmpty() && it.spotifyImgLink.contains("https://i.scdn.co", ignoreCase = true)}.sortedBy { it.isoDate }.chunked(12).toList()
-    val upcomingList: List<List<TimeSlot>> = upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(12).toList()
-
+    val completedList: List<List<TimeSlot>> =
+      completed.filter { it.tweeterLinkList().isNotEmpty()
+        && it.spotifyImgLinkSmall.isNotEmpty()
+        && it.spotifyImgLink.contains("https://i.scdn.co", ignoreCase = true)}
+        .sortedBy { it.isoDate }.chunked(12).toList()
+    val upcomingList: List<List<TimeSlot>> =
+      upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(12).toList()
     val input: Map<String, Any> = mapOf(
       Pair("fullSize", fullSize),
       Pair("completed_list", completedList),

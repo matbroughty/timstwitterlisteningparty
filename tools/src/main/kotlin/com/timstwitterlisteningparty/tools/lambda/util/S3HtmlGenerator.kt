@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.GetObjectRequest
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.timstwitterlisteningparty.tools.parser.*
+import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.time.LocalDateTime
 
@@ -29,7 +30,9 @@ class S3HtmlGenerator {
     files.keys.forEach {
       println("Writing to: $bucketName/${it} with html ${files[it]}")
       try {
-        s3Client.putObject(bucketName, it, files[it])
+        val metadata = ObjectMetadata()
+        metadata.contentType = "text/html"
+        s3Client.putObject(bucketName, it, ByteArrayInputStream(files[it]?.toByteArray()), metadata)
       } catch (e: AmazonServiceException) {
         System.err.println("We have an error writing to  $bucketName/${it} with html ${files[it]} error is:  ${e.errorMessage}")
       }

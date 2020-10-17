@@ -1,6 +1,4 @@
-
-<#if fullSize >
-  <!doctype html>
+<#if fullSize ><!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
