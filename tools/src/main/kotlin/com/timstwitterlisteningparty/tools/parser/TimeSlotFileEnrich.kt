@@ -117,7 +117,7 @@ class TimeSlotFileEnrich {
 
   private fun addListeningPartyNumber(it: TimeSlot, counter :AtomicInteger) {
     // Not scheduled yet
-    if(it.is1970()){
+    if(it.is1970() || it.band.contains("Guerilla", ignoreCase = true)){
       it.listeningPartyNumber = "-1"
     }else{
       it.listeningPartyNumber = counter.incrementAndGet().toString()

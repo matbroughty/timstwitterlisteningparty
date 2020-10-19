@@ -49,7 +49,7 @@
             </td>
             <td style="width:50%;text-align:left;">
               <b>${slot.band}</b><br/>${slot.album}
-                ${slot.buildTweeterLinks()}
+              ${slot.buildTweeterLinks()}
               <br><small>${slot.spotifyDateDisplay()}</small>
             </td>
             <td style="width:15%">
@@ -64,7 +64,9 @@
                 </#if>
               </a>
               <br>
+              <#if slot.hasNumber() >
                 <small>ttlp ${slot.listeningPartyNumber}</small>
+              </#if>
             </td>
           </tr>
         </table>

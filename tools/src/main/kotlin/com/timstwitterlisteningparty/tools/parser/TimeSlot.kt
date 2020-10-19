@@ -267,4 +267,8 @@ data class TimeSlot(val dateStr: String = "?",
     return isoDate.year == LocalDateTime.now().year + 1
   }
 
+  fun hasNumber(): Boolean {
+    return listeningPartyNumber.isNotBlank() && listeningPartyNumber != "-1"
+  }
+
 }
