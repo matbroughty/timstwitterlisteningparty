@@ -82,7 +82,7 @@
   <meta name="twitter:card" content="summary"/>
   <meta name="twitter:site" content="@Tim_Burgess"/>
   <meta name="twitter:creator" content="@matbroughty"/>
-  <meta name="twitter:title" content="#TimsTwitterListeningParty - Album Wall Fuill Size"/>
+  <meta name="twitter:title" content="#TimsTwitterListeningParty - Album Wall Full Size"/>
   <meta name="twitter:description" content="Album Covers from all Listening parties"/>
   <meta name="twitter:image" content="https://timstwitterlisteningparty.com/img/wall_opt.jpg"/>
 
