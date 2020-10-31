@@ -41,7 +41,7 @@ class TweetCommand {
       "${TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "")} newest first collection = ${TweetUtils().ttlpFirstTweetCollection(collectionIdStr = "", order = "tweet_reverse_chron")}"
   }
 
-  @ShellMethod("Tweet any anniversaries based on spotify alum date in teh time-slot-data.csv")
+  @ShellMethod("Tweet any anniversaries based on spotify alum date in the time-slot-data.csv")
   fun tweetAnniversary(@ShellOption("-L", "--log") logOnly: String): String {
     return "tweet anniversary - anything to tweet = " +
       "${TweetUtils().tweetAnniversary(logOnly = logOnly.toBoolean())}"
