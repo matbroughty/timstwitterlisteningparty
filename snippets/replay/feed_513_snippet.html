@@ -1,0 +1,445 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/6yJvyCRgH7sjjm1hbCFOca" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02aeefb914bf49aed916126120" alt="Pocket Melodies" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Moons</span><br/><span class="sub-colour">Pocket Melodies</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(644682)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/6yJvyCRgH7sjjm1hbCFOca" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_644682_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 48 tweets from Monday 2nd November 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/MoonsOfficial" target="_blank"><img src="https://pbs.twimg.com/profile_images/1288543600121446402/UM5QQyyC_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@MoonsOfficial</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Today" data-start="0"
+             data-duration="208" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Riding Man" data-start="210"
+             data-duration="184" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="The Old Brigade" data-start="396"
+             data-duration="236" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Far Away" data-start="634"
+             data-duration="225" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Tunnel Of Time" data-start="861"
+             data-duration="258" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Where Are You Now?" data-start="1121"
+             data-duration="212" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Sleep" data-start="1335"
+             data-duration="170" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Maybe I'm The Perfect Man (For You)" data-start="1507"
+             data-duration="191" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="The Lone Wolf" data-start="1700"
+             data-duration="251" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Midnight" data-start="1953"
+             data-duration="194" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Rear Window" data-start="2149"
+             data-duration="263" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="An Ordinary Romance" data-start="2414"
+             data-duration="243" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="2659"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851aeefb914bf49aed916126120" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-48" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323381495646609411"
+                 data-text="HERE I AM
+
+I chose not to have this on the official album. Itâ€™s been around a While and I thought it was too samey to other tracks. Itâ€™s a nice song though - Andy
+
+#TimsTwitterListeningParty https://t.co/Rmrl5SBwh0" data-datetime="9:48 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323381129550929921"
+                 data-text="SUNDAY LOVE IN 
+
+Another one recorded 100% live with he string quartet and Tom Heel on second acoustic Most of my songs are about love. Itâ€™s the only thing we can hope for I guess - Andy 
+
+#TimsTwitterListeningParty" data-datetime="9:47 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1323380787253813248"
+                 data-text="Big thanks to @MoonsOfficial for tonightâ€™s @LlSTENlNG_PARTY https://t.co/CgNfXmrjKb" data-datetime="9:45 PM Nov 2, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323380483766497286"
+                 data-text="Ok thatâ€™s the official album done and if you are continuing to listen we have the bonus tracks now." data-datetime="9:44 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323380342389092355"
+                 data-text="I wrote this in York road Northampton while living  my with Ben G - Andy 
+
+#TimsTwitterListeningParty" data-datetime="9:43 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323380024075079681"
+                 data-text="Romance is 100% live and these strings sound beautiful" data-datetime="9:42 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="191000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323379845368369157"
+                 data-text="AN ORDINARY ROMANCE 
+
+This is simply my working class love song. I wrote this song at a time when there was damp on the walls and a leak in the roof. Yes very kinks! But itâ€™s true and all this didnâ€™t matter to me cause I was loved up - Andy
+
+#TimsTwitterListeningParty" data-datetime="9:41 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323379045522939904"
+                 data-text="Window continued 
+
+I think thereâ€™s a nice balance of light and darkness. The trumpet solo was done by our good friend Conor Oâ€™Brien from @wearevillagers 
+
+#TimsTwitterListeningParty" data-datetime="9:38 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fchrispaulwatson%2Fstatus%2F1323379031975362566"
+                 data-text="@brightonpilgrim @MoonsOfficial Originally an early Moons b side!" data-datetime="9:38 PM Nov 2, 2020"> 
+                chrispaulwatson            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323378718216196098"
+                 data-text="REAR WINDOW Continued 
+
+I was inspired by my favourite film Rear Window byHitchock and the circumstances I was living in at the time - Andy
+
+#TimsTwitterListeningParty" data-datetime="9:37 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FBENGORDELIER%2Fstatus%2F1323378660569743363"
+                 data-text="rear window is another one we demo\'d in our cellar studio all those years ago. precious memories  #TimsTwitterListeningParty" data-datetime="9:37 PM Nov 2, 2020"> 
+                BENGORDELIER            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323378449638133760"
+                 data-text="REAR WINDOW
+
+Iâ€™m not usually a fan of my lyrics but I love these. It has a very dark undertone" data-datetime="9:36 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323378266934267912"
+                 data-text="This song had to feel like a spaceship going to the moon and I think we got it" data-datetime="9:35 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="179000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323378144301223936"
+                 data-text="MIDNIGHT
+
+Another song about escape" data-datetime="9:35 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323377392409300994"
+                 data-text="Iâ€™ll be reading most of these messages after Iâ€™m bloody slow on here - Andy" data-datetime="9:32 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323377266051743745"
+                 data-text="I love this middle section to the song. So obvious but so sweet" data-datetime="9:31 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323377118600974336"
+                 data-text="THE LONE WOLF
+
+This is my current favourite song on the album. Same again, straight up pop about an outsider searching for love isolated from the world... and nothing to do with COVID ðŸ˜‚ - Andy 
+
+#TimsTwitterListeningParty https://t.co/ZKFEkk4UCl" data-datetime="9:31 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fchrispaulwatson%2Fstatus%2F1323376909514870784"
+                 data-text="The Lone Wolf opening guitar sound was me testing a pedal with a couple of bits and @BENGORDELIER happened to be recording and it worked @LlSTENlNG_PARTY @MoonsOfficial #TimsTwitterListeningParty" data-datetime="9:30 PM Nov 2, 2020"> 
+                chrispaulwatson            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FBENGORDELIER%2Fstatus%2F1323376878573527040"
+                 data-text="#TimsTwitterListeningParty its going too fast! only 3 songs left!!.. who\'s up for the bonus tracks?" data-datetime="9:30 PM Nov 2, 2020"> 
+                BENGORDELIER            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323376471130472448"
+                 data-text="Iâ€™m hoping the boys are talking more than I am as Iâ€™m a little slow on here - Andy ha ha" data-datetime="9:28 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323376352863670273"
+                 data-text="Maybe continued 
+
+One thing Iâ€™ve learned as a songwriter is to completely let yourself flow and donâ€™t fight it. If itâ€™s a sweet poo song then sod it. Thatâ€™s the way it is. - Andy
+
+#TimsTwitterListeningParty" data-datetime="9:28 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323376064417193984"
+                 data-text="Maybe continued.. 
+
+I didnâ€™t actually want this song on the album but the boys loved it and convinced me itâ€™s a good song - Andy 
+
+#TimsTwitterListeningParty" data-datetime="9:26 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323375873626656768"
+                 data-text="MAYBE Iâ€™M THE PERFECT MAN FOE YOU
+
+This is a straight up pop love song with me doubting myself as usual ðŸ˜‚ - Andy" data-datetime="9:26 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323375605312880641"
+                 data-text="Sleep continued 
+
+So I simply thought sleep is the thing we have in common and when we are all at peace. Well I hope - Andy 
+
+#TimsTwitterListeningParty" data-datetime="9:25 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323375362466787334"
+                 data-text="SLEEP
+
+I love this song. I was watching the newsâ€™s down there was this split of good and bad news and I was just thinking we must have something in common - Andy 
+
+#TimsTwitterListeningParty" data-datetime="9:24 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323374996786499584"
+                 data-text="Struggling to keep up ha ha" data-datetime="9:22 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323374857564889089"
+                 data-text="Where are you now continued..  
+
+I feel the verses of this song really capture the sound of abbey rd. this song is literally me shouting up to the sky" data-datetime="9:22 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1323374704925790215"
+                 data-text="Ace Monday evening soundtrack with @MoonsOfficial ðŸ¤˜#TimsTwitterListeningParty" data-datetime="9:21 PM Nov 2, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323374452277682176"
+                 data-text="WHERE ARE YOU NOW
+
+The lyrics to this song are kind of personal as I was reflecting on a father I never knew. Itâ€™s something Iâ€™ve always thought about but kept deep inside but I knew a song would come eventually- Andy
+
+#TimsTwitterListeningParty https://t.co/uhFJfdIFq9" data-datetime="9:20 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323373969685270528"
+                 data-text="I love the ending. I wanted it big!" data-datetime="9:18 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323373633138528258"
+                 data-text="TUNNEL OF TIME. continued 
+
+and I knew it had to start with this lovely opening to the song before dropping into the verse. I love the fact that the string section was recorded live with the band at Abbey Rd. it adds to the magic 
+#TimsTwitterListeningParty" data-datetime="9:17 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FBENGORDELIER%2Fstatus%2F1323373571436064773"
+                 data-text="@MoonsOfficial @paulwellerHQ @sailor_seasick i remember you two playing around with this on the tour bus and in dressing rooms #TimsTwitterListeningParty" data-datetime="9:17 PM Nov 2, 2020"> 
+                BENGORDELIER            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323373515341516800"
+                 data-text="TUNNEL OF TIME. continued 
+
+Parts out. I basically pieced it all together from the ideas Paul had. I also remember Paul and I sat on the tour bus when he just wrote the chorus lyrics really quick. For this song I could hear a string section... 
+
+#TimsTwitterListeningParty" data-datetime="9:16 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323373191717412865"
+                 data-text="TUNNEL OF TIME
+
+This song was written by myself and @paulwellerHQ . Paul originally sent me a rough phone recording of an idea he had and it slowly came together over time. I remember us sitting backstage with acoustic guitars and working .....
+
+#TimsTwitterListeningParty https://t.co/8sMhofKNUG" data-datetime="9:15 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323372955796197376"
+                 data-text="@BENGORDELIER what kinda mics did we use at abbey road?" data-datetime="9:14 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323372535971520512"
+                 data-text="Far away Continued... I guess I was recognising that feeling so much that I had to write about it. I love that film so ahead of itâ€™s time. So yeah Iâ€™d say Brief Encounter was a huge influence for they song and the general scars of life.  
+
+#TimsTwitterListeningParty" data-datetime="9:12 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="166000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323372372997611520"
+                 data-text="FAR AWAY
+
+When writing lyrics I never plan a subject in advance and I just let it happen so this song appeared probably towards the end of a break up or during a big row with a partner. I had just re-watched the film Brief Encounter and 
+
+#TimsTwitterListeningParty https://t.co/QqxxQooFAf" data-datetime="9:12 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323371678471229443"
+                 data-text="Brigade continued.. I had this song as a demo for some time and it was the rest of the band who insisted we did it. In Abbey Road it only took a couple of takes and you can really hear the room ambience spilling into the quartets microphones - Andy 
+
+#TimsTwitterListeningParty" data-datetime="9:09 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fchrispaulwatson%2Fstatus%2F1323371648502931456"
+                 data-text="The Old Brigade - think @andyjcrofts played us the demo on the way to a gig back in 2012, always stood out as a great tune with nostalgic lyrics we can all relate to @LlSTENlNG_PARTY @MoonsOfficial #TimsTwitterListeningParty" data-datetime="9:09 PM Nov 2, 2020"> 
+                chrispaulwatson            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fbenchampniss%2Fstatus%2F1323371507008086021"
+                 data-text="Iâ€™m so glad @Tim_Burgess is holding a #TimsTwitterListeningParty for @MoonsOfficial new LP, Pocket Melodies. Great album. Who else is involved? https://t.co/epdwcXrFfa" data-datetime="9:08 PM Nov 2, 2020"> 
+                benchampniss            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323371310869843968"
+                 data-text="THE OLD BRIGADE. 
+
+This song came to me from fond memories of childhood. The old brigade was a little military shop near where I grew up so I took the name and changed it into more of a gang/tribe idea. Me and by brigade type thing - Andy 
+
+#TimsTwitterListeningParty https://t.co/5FwXQp1rNZ" data-datetime="9:08 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323371063275905025"
+                 data-text="Riding man continued.. We recorded the new album at @AbbeyRoad and this was the first song we put down. Itâ€™s a very summery tune. I wanted a soulful chorus like T.Rex so I got a couple of gospel singers to sing on the chorus lines. - Andy
+
+#TimsTwitterListeningParty" data-datetime="9:07 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FBENGORDELIER%2Fstatus%2F1323370696232312836"
+                 data-text="@AlecFosterfozzy @MoonsOfficial @Tim_Burgess inspired by bradley wiggins" data-datetime="9:05 PM Nov 2, 2020"> 
+                BENGORDELIER            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1323370681346723840"
+                 data-text="@LlSTENlNG_PARTY @MoonsOfficial Back home near Norwich ðŸ¤˜" data-datetime="9:05 PM Nov 2, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323370447598211072"
+                 data-text="RIDING MAN 
+
+This song was inspired by @SirWiggo winning the #TourdeFrance. I had the melody but was stuck on lyrics. On TV there was this mod on a bike who was everywhere and also a fan of The Moons so I thought thereâ€™s my subject - Andy 
+
+#TimsTwitterListeningParty https://t.co/M3vfpVpO2d" data-datetime="9:04 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="184000" data-url="https%3A%2F%2Ftwitter.com%2Fchrispaulwatson%2Fstatus%2F1323370387133128704"
+                 data-text="Today first got an airing with The Songbook Collective although I believe it was originally intended as Moons track. We thought the song deserved a more permanent home on the album
+
+@LlSTENlNG_PARTY @MoonsOfficial #TimsTwitterListeningParty" data-datetime="9:04 PM Nov 2, 2020"> 
+                chrispaulwatson            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FMoonsOfficial%2Fstatus%2F1323369614164840450"
+                 data-text="TODAY
+
+I had the opening chords in my head for a long time. The lyrics came later after I had to force them a little to get a demo together. The song is about new love. True love, transparent love with nothing to hide. A soul partner - Andy
+
+#TimsTwitterListeningParty https://t.co/sp7TJxkP8Z" data-datetime="9:01 PM Nov 2, 2020"> 
+                MoonsOfficial            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1323369315895283712"
+                 data-text="Itâ€™s time for listening party number 524
+
+Over to you @MoonsOfficial ðŸ¤˜ https://t.co/1YMMn7osdc" data-datetime="9:00 PM Nov 2, 2020"> 
+                Tim_Burgess            </div>
+            </section>
