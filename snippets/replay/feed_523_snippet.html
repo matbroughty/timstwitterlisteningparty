@@ -1,0 +1,401 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1mz6AZJZanmgynkVQgflMK" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0277fb589d6b097775f1ce3dcd" alt="Parachute" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Pretty Things</span><br/><span class="sub-colour">Parachute</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(560702)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1mz6AZJZanmgynkVQgflMK" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_560702_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 56 tweets from Monday 9th November 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Madfishmusic" target="_blank"><img src="https://pbs.twimg.com/profile_images/1281542894688534528/MsCFZdhC_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Madfishmusic</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/PrettyThingsHQ" target="_blank"><img src="https://pbs.twimg.com/profile_images/1325845884542853120/RrSk5YdF_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@PrettyThingsHQ</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Scene One" data-start="0"
+             data-duration="110" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Good Mr. Square" data-start="112"
+             data-duration="86" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="She Was Tall, She Was High" data-start="200"
+             data-duration="95" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="In the Square" data-start="297"
+             data-duration="115" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Letter" data-start="414"
+             data-duration="98" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Rain" data-start="514"
+             data-duration="148" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Miss Fay Regrets" data-start="664"
+             data-duration="207" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Cries from the Midnight Circus" data-start="873"
+             data-duration="388" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Grass" data-start="1263"
+             data-duration="260" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Sickle Clowns" data-start="1525"
+             data-duration="396" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="She's a Lover" data-start="1923"
+             data-duration="212" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="What's the Use" data-start="2137"
+             data-duration="105" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Parachute" data-start="2244"
+             data-duration="232" style="display:none"></div>
+                        <div id="track-14" class="track-list"
+                     data-name="Finished" data-start="2478"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485177fb589d6b097775f1ce3dcd" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-56" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325886477805514752"
+                 data-text="So thatâ€™s it! Thank you so much for joining to celebrate Phil May and this incredible album! If youâ€™re listening on @Spotify youâ€™ll still have a few more bonus tracks to enjoyâ€¦ The 50th anniversary edition of â€˜Parachuteâ€™ is out this Friday
+#Timstwitterlisteningparty" data-datetime="7:42 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPrettyThingsHQ%2Fstatus%2F1325886385946054657"
+                 data-text="#TimsTwitterListeningParty  \"Parachute\" is the absolute perfect end to the album, and could almost have been written as memory to Phil, you can hear him in it, and all his humanity and art. A perfect track to hear on his birthday and in tribute to him. We miss him so....." data-datetime="7:42 PM Nov 9, 2020"> 
+                PrettyThingsHQ            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1325886277040939015"
+                 data-text="The Pretty Things were waaaaay ahead of their time #TimsTwitterListeningParty" data-datetime="7:41 PM Nov 9, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1325886031988727808"
+                 data-text="Parachute. My Fav. For this song alone. Thanks forever @PrettyThingsHQ" data-datetime="7:40 PM Nov 9, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325885928951394304"
+                 data-text="â€˜Rumour had it that Norman had written this for The Beatles when he was working with them as their engineer - but it was vetoed by John Lennon, as the story goes!\' Wally Waller #Timstwitterlisteningparty" data-datetime="7:40 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325885733475930113"
+                 data-text="â€˜Norman played a melody to us that we all liked, and Phil agreed to put some lyrics to it for the title track.\' Wally Waller 
+#Timstwitterlisteningparty" data-datetime="7:39 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1325885591322578944"
+                 data-text="@antonnewcombe @kylieminogue @LlSTENlNG_PARTY Iâ€™ve just about made it up to your level Anton. Years of persistence" data-datetime="7:38 PM Nov 9, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325885423181291520"
+                 data-text="â€˜Norman decided that Jonâ€™s voice was best suited to this song and suggested that Jon sang all the parts one by one. They were quite complicated harmony parts but Jon sang them all. So itâ€™s hats off and a round of applause for Jon Povey!\' Wally Waller 
+#Timstwitterlisteningparty" data-datetime="7:38 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325885211033407490"
+                 data-text="The Pretty Things touring \"Parachute\" - L to R: Wally Waller, Jon Povey, Phil May &amp; Skip Alan 
+#Timstwitterlisteningparty https://t.co/dX3AVtjDWo" data-datetime="7:37 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2F_SpecialBL%2Fstatus%2F1325885104066015232"
+                 data-text="Angelic harmonies at the end of She\'s a lover followed by a celestial piano ...  #TimsTwitterListeningParty" data-datetime="7:36 PM Nov 9, 2020"> 
+                _SpecialBL            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325884958074957824"
+                 data-text="â€˜Great poetry once again from Phil.\' Wally Waller #Timstwitterlisteningparty" data-datetime="7:36 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325884896385118210"
+                 data-text="â€˜I always felt this should have been developed into a more complete song, instead just being this brief yet thrilling vignette. I added the end stanza, but I felt that it was crying out to be developed further.\' Wally Waller
+#Timstwitterlisteningparty" data-datetime="7:36 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325884537906323458"
+                 data-text="Parachute was a big influence on the direction of \"Dark Side of the Moon\", as noted by @DavidGilmour who played with the band at their final electric performance in 2018 - HQ
+#Timstwitterlisteningparty" data-datetime="7:34 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstrangebrewpod%2Fstatus%2F1325884266887196679"
+                 data-text="Wally on writing with Phil May: We had no rules. Sometimes the seed of an idea would begin from a purely individual moment of inspiration and it would be brought into our shared domain #Timstwitterlisteningparty @LlSTENlNG_PARTY @Madfishmusic #prettythings https://t.co/Hekbf4yFqx" data-datetime="7:33 PM Nov 9, 2020"> 
+                strangebrewpod            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FPrettyThingsHQ%2Fstatus%2F1325884266421645314"
+                 data-text="#TimsTwitterListeningParty  It seems inconceivable now that any band could have this much sheer imagination and originality and yet fail to break big. Such a crime and such a loss to everyone who hasn\'t had the chance to hear them. Pretty much everything they did was magic" data-datetime="7:33 PM Nov 9, 2020"> 
+                PrettyThingsHQ            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325884100213927942"
+                 data-text="\'The lyrics here have echoes throughout the album.\' Wally Waller 
+#Timstwitterlisteningparty" data-datetime="7:32 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325883971713048582"
+                 data-text="â€˜The seed of the idea for this song came from Phil. We played around with it for a while - and as so often happened on quite a few songs, I wrote the bridge, and some ideas to use on it but basically this was Phil\'s song.\' Wally Waller 
+#Timstwitterlisteningparty" data-datetime="7:32 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fplacid_casual75%2Fstatus%2F1325883730158903296"
+                 data-text="Production very ahead of it\'s time to these ears #TimsTwitterListeningParty" data-datetime="7:31 PM Nov 9, 2020"> 
+                placid_casual75            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325883620196802560"
+                 data-text="â€˜Wallyâ€™s vocal on â€˜Sickle Clownsâ€™ is superb!â€™ Jon Povey #Timstwitterlisteningparty" data-datetime="7:31 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2F_SpecialBL%2Fstatus%2F1325883552408465409"
+                 data-text="A great groove on Sickle Clowns and guitar solos go from chilled to stinging. And then the percussion breakdown - wow!  #TimsTwitterListeningParty" data-datetime="7:30 PM Nov 9, 2020"> 
+                _SpecialBL            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325883501317677056"
+                 data-text="@graham_habben We\'re 5.40 mins into Sickle Clowns" data-datetime="7:30 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="163000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325883190452641794"
+                 data-text="\'Skip wanted to have his voice on a record so he made his count stretch right into the first bar.\' Wally Waller
+#Timstwitterlisteningparty" data-datetime="7:29 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325882504553902085"
+                 data-text="â€˜This song was our Ode to Easy Rider. \'Sickle\' being American slang for motor-cycle. \"Down by the river, 3 sickle mounted souls, Lay wined on the green-leaf, Digging their rock\'n\'roll\". Wally Waller 
+#Timstwitterlisteningparty" data-datetime="7:26 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnywilksbti1%2Fstatus%2F1325882228581216256"
+                 data-text="@LlSTENlNG_PARTY Norman Smithâ€™s production is superb.  Grass melts..#timstwitterlisteningparty" data-datetime="7:25 PM Nov 9, 2020"> 
+                johnnywilksbti1            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FPrettyThingsHQ%2Fstatus%2F1325882107583926273"
+                 data-text="#TimsTwitterListeningParty  This song is absolutely perfect. Phil &amp; Wally are  peerless and Vic Unit\'s guitar is so in the moment. I can\'t drive South into the sun without listening to this again and again. Maybe my favourite Pretties song. Thanks, guys....." data-datetime="7:25 PM Nov 9, 2020"> 
+                PrettyThingsHQ            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325882003548463106"
+                 data-text="\'Phil once described this song as our \'Pastoral Hymn\' and I wouldn\'t disagree with that!\' Wally Waller
+#Timstwitterlisteningparty" data-datetime="7:24 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325881562714529793"
+                 data-text="â€˜Phil could sing very sweetly when he wanted, but my voice usually had a more abrasive quality to it. Phil sang the verses, and I sang the choruses, and we were joined by Jon on the end refrain.\' Wally Waller
+#Timstwitterlisteningparty" data-datetime="7:22 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FPrettyThingsHQ%2Fstatus%2F1325881299144495104"
+                 data-text="#TimsTwitterListeningParty  The groove at the end of \"Cries...\" is so perfect. David Gilmour loved playing this song and nailed it at the band\'s farewell show at the O2 in December 2018. And Phil was on fire... God we miss him...." data-datetime="7:21 PM Nov 9, 2020"> 
+                PrettyThingsHQ            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325881231670730752"
+                 data-text="â€˜The verses so eloquently describe scenes of the English countryside - whereas the chorus tells of the more impersonal â€˜city grindâ€™. Phil and I decided to share the vocals to highlight the difference between the two environments.â€™ Wally Waller 
+#Timstwitterlisteningparty" data-datetime="7:21 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="112000" data-url="https%3A%2F%2Ftwitter.com%2F_SpecialBL%2Fstatus%2F1325881109125718023"
+                 data-text="Midnight Circus is great as it is, but that guitar solo at the end really shifts it up a gear #TimsTwitterListeningParty" data-datetime="7:21 PM Nov 9, 2020"> 
+                _SpecialBL            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FPrettyThingsHQ%2Fstatus%2F1325880636259901441"
+                 data-text="#TimsTwitterListeningParty  This whole record is so creative - and doesn\'t put a foot wrong. It flows from song to song without any disturbance and makes a a seamless piece of the album. VERY rare to hear that....." data-datetime="7:19 PM Nov 9, 2020"> 
+                PrettyThingsHQ            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="122000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325880565007077376"
+                 data-text="â€˜Philâ€™s vocal performance on â€˜Cries From The Midnight Circus\' amazing!â€™ Jon Povey
+#Timstwitterlisteningparty" data-datetime="7:18 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325880053872422913"
+                 data-text="â€˜The great thing about playing Midnight Circus live was that it gave both guitarists and the keyboard player (when Jon Povey was in the band) a chance to solo and the band to have a good groove.â€™ Dick Taylor
+#Timstwitterlisteningparty" data-datetime="7:16 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325879787412447232"
+                 data-text="â€˜Giving me a tour once of an area down by the docks in Hamburg, Phil turned to me and said \"We are just like these people, we sell ourselves every night too!â€™ Wally Waller 
+#Timstwitterlisteningparty" data-datetime="7:15 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="148000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325879610446385158"
+                 data-text="â€˜This is the darkest song on Parachute. People who inhabited these red light districts always held a fascination for Phil.\' Wally Waller
+#Timstwitterlisteningparty" data-datetime="7:15 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325878991262257153"
+                 data-text="Water flying everywhere in this Pretty Things publicity photo from 1970 - L to R: Vic Unitt, Phil May, Skip Alan, Jon Povey &amp; Wally Waller. 
+#Timstwitterlisteningparty https://t.co/SNYgdAOHSA" data-datetime="7:12 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="159000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325878834554671105"
+                 data-text="â€˜Over-night Phil &amp; I wrote this song about a faded Hollywood actress from a bygone era, for an Abbey Road session the following day - no time for second thoughts - we just whacked it straight down exactly as we had written it.â€™- Wally Waller #Timstwitterlisteningparty" data-datetime="7:12 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2F_SpecialBL%2Fstatus%2F1325878168151093254"
+                 data-text="@Madfishmusic The live version of Rain in Paris is so good #TimsTwitterListeningParty  https://t.co/C3ZE7GTpcE" data-datetime="7:09 PM Nov 9, 2020"> 
+                _SpecialBL            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FHanglands%2Fstatus%2F1325878101092540420"
+                 data-text="The intro to Rain is incredible #Timstwitterlisteningparty" data-datetime="7:09 PM Nov 9, 2020"> 
+                Hanglands            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325878094276808705"
+                 data-text="The album was demoed at Westbourne Terrace (where Phil and Wally lived) on a Revox machine gifted to the band by their agent/manager/publisher, the legendary Bryan Morrison (Wham, Pink Floyd, George Michael, The Jam) - HQ
+#Timstwitterlisteningparty" data-datetime="7:09 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325878016497606657"
+                 data-text="â€˜In The Square ,The Letter and Rain were of course inseparable, you couldn\'t have one without the others, a bit like a less acid tinged Defecting Grey.â€™ Dick Taylor #Timstwitterlisteningparty" data-datetime="7:08 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325877841129598976"
+                 data-text="Parachute was recorded at Abbey Road, engineered by Tony Clark and produced by the legendary Norman Smith who also produced S.F Sorrow and so many classic records - HQ
+#Timstwitterlisteningparty" data-datetime="7:08 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325877672304668676"
+                 data-text="We picked up the tempo a bit for â€˜The Letterâ€™ which came fairly quickly, and then we decided that we should â€˜rock outâ€™ a bit at the end - so after engineering a key change to A (all the rest being in D) thatâ€™s what we did with â€˜Rainâ€™. Wally Wallerâ€™ #Timstwitterlisteningparty" data-datetime="7:07 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325877634820153344"
+                 data-text="I just started playing a guitar figure and singing: â€œIn the square, she came running, I was lucky to be there In her hair, she wore flowers, the scent it filled the airâ€ I went next door and played it to Phil." data-datetime="7:07 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325877285157744643"
+                 data-text="\'In The Square\', \'The Letter\' &amp; \'Rain\' sometimes known as \'The Rain Trilogy\'- in many ways this suite is the essence of Parachute.\' Wally Waller #Timstwitterlisteningparty" data-datetime="7:05 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325877027744976901"
+                 data-text="The artwork for Parachute was created by Storm Thorgerson who has created countless iconic album artwork including Dark Side of the Moon and work for Peter Gabriel, Biffy Clyro, Black Sabbath and so many more - HQ #Timstwitterlisteningparty" data-datetime="7:04 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325876880692699139"
+                 data-text="The Pretties in action -1970. Skip gets off the kit for a loon round the stage &amp; Jon has taken over the drumming duties! L to R: Wally Waller, Jon Povey (hidden behind the kit), Skip Alan, Pete Tolson &amp; Phil May. #Timstwitterlisteningparty https://t.co/jzsZmLjU0Y" data-datetime="7:04 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FPrettyThingsHQ%2Fstatus%2F1325876794482978817"
+                 data-text="#TimsTwitterListeningParty  it\'s very much a band album for performances, although Phil &amp; Wally were at the core of the writing. Norman Smith, the producer, recorded The Beatles, The Floyd &amp; The Pretty Things in 1967, and went on to record this - incredible team......" data-datetime="7:03 PM Nov 9, 2020"> 
+                PrettyThingsHQ            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325876700098535426"
+                 data-text="The line up for Parachute featured Phil May, Wally Waller, Jon Povey, Skip Allen and Vic Unitt who replaced Dick Taylor following his departure from the band - HQ" data-datetime="7:03 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325876589788327936"
+                 data-text="\'Both Wally and I are getting to sing lead parts, thanks to Philâ€™s generosity, and producer Norman Smithâ€™s suggestions. Our vocal blend of Phil, Wally and I never better.\' Jon Povey #Timstwitterlisteningparty" data-datetime="7:03 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325876421005291525"
+                 data-text="\'We sat down with my guitar, and about ten minutes later we pretty much had this whole song!â€™ Wally Waller #Timstwitterlisteningparty" data-datetime="7:02 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325876318819536899"
+                 data-text="â€˜This is about a guy who spent his life making scrapbooks of the rich and famous. Because he spent all his time cutting squares out of papers &amp; mags - he became \'The Good Mr. Square\". Wally Waller #Timstwitterlisteningparty" data-datetime="7:02 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325876080000061448"
+                 data-text="â€˜I never did quite catch on to the lyrics of scene one, something about rising spires I think, it all sounded a bit Freudian to meâ€¦â€™ Dick Taylor #Timstwitterlisteningparty" data-datetime="7:01 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325876013054750720"
+                 data-text="â€˜I also used this guitar riff in \"Graves Of Grey\" on \"Rock St Trop\" the Philippe Debarge/PrettyThings album. It was also used more recently to great effect when in 2017, hip-hop duo \"Run The Jewels\" based their hit \"Talk To Me\" around it!â€™ Wally Waller #Timstwitterlisteningparty" data-datetime="7:00 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMadfishmusic%2Fstatus%2F1325875902845161473"
+                 data-text="â€˜This is our musical depiction of a city waking up and coming to life. It sets the scene for Side One which was predominantly themed on life in the city.\' Wally Waller  #Timstwitterlisteningparty" data-datetime="7:00 PM Nov 9, 2020"> 
+                Madfishmusic            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1325875835954458626"
+                 data-text="Over to @Madfishmusic for tonightâ€™s Pretty Things @LlSTENlNG_PARTY https://t.co/7Qm9J71o1t" data-datetime="7:00 PM Nov 9, 2020"> 
+                Tim_Burgess            </div>
+            </section>
