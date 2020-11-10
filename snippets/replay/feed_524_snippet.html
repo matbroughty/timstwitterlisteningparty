@@ -1,0 +1,440 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4HhwJ4in1kJ496d9h1n15q" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02ba3d40d8cb317a51fbf1f0ab" alt="Yerself Is Steam" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Mercury Rev</span><br/><span class="sub-colour">Yerself Is Steam</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(456238)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4HhwJ4in1kJ496d9h1n15q" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_456238_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 75 tweets from Tuesday 10th November 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/mercuryrevvd" target="_blank"><img src="https://pbs.twimg.com/profile_images/378800000426322871/8d6e96555aaca42175d28cc5ee6115bf_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@mercuryrevvd</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/varietylights" target="_blank"><img src="https://pbs.twimg.com/profile_images/730848815406710784/auNJLGiP_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@varietylights</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Chasing A Bee" data-start="0"
+             data-duration="431" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Syringe Mouth" data-start="433"
+             data-duration="244" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Coney Island Cyclone" data-start="679"
+             data-duration="157" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Blue And Black" data-start="838"
+             data-duration="360" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Sweet Oddysee Of A Cancer Cell T' Th' Center Of Yer Heart" data-start="1200"
+             data-duration="461" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Frittering" data-start="1663"
+             data-duration="528" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Continuous Trucks And Thunder Under A Mother's Smile" data-start="2193"
+             data-duration="43" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Very Sleepy Rivers" data-start="2238"
+             data-duration="735" style="display:none"></div>
+                        <div id="track-9" class="track-list"
+                     data-name="Finished" data-start="2975"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851ba3d40d8cb317a51fbf1f0ab" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-75" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326297332917407747"
+                 data-text="@Francis89360100 We have a bunch of outtakes and demos and live stuff!" data-datetime="10:55 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326297149689171978"
+                 data-text="Thanks once again to @Tim_Burgess &amp; #TimsTwitterListeningParty &amp; to David Baker, the genius @varietylights  Everybody please be safe, the virus lurks but will soon be passing. Then weâ€™ll see your beautiful faces again, in person!
+Thanks to @Tim_Burgess for bringing light!" data-datetime="10:54 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326297071473860608"
+                 data-text="@Tim_Burgess @mercuryrevvd Thank you Mr Burgess!" data-datetime="10:53 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326296828036460544"
+                 data-text="@fernandearg @LlSTENlNG_PARTY Backwards on tape" data-datetime="10:52 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1326296777163726849"
+                 data-text="ðŸ•ºðŸ’ƒ https://t.co/Ohkc7O6Hgv" data-datetime="10:52 PM Nov 10, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326296281673850887"
+                 data-text="@mercuryrevvd Yes! Grasshopper" data-datetime="10:50 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1326296186823782407"
+                 data-text="Thaaaanks @mercuryrevvd &amp; @varietylights #TimsTwitterListeningParty https://t.co/x4uhEMZEkH" data-datetime="10:50 PM Nov 10, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fosakalbion%2Fstatus%2F1326295925447413761"
+                 data-text="Thanks @mercuryrevvd @varietylights for making such amazing music. It has filled up my life with sublime soundtracks @Tim_Burgess @LlSTENlNG_PARTY #TimsListeningParty #TimsTwitterListeningParty https://t.co/MgvEApCQ3m" data-datetime="10:49 PM Nov 10, 2020"> 
+                osakalbion            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326295782832697344"
+                 data-text="I could write a book about this album.
+Maybe I will..." data-datetime="10:48 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326295621431664642"
+                 data-text="#TimsTwitterListeningParty https://t.co/g1l3i2RRq3" data-datetime="10:48 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326295516473331713"
+                 data-text="@ant_pooley @estcall @varietylights Yes" data-datetime="10:47 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326295444239097862"
+                 data-text="@anghenn @Tim_Burgess A bunch of little kiddies!" data-datetime="10:47 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326295346180485120"
+                 data-text="@roljui Yeah! We did it!" data-datetime="10:47 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326294861797085184"
+                 data-text="@AllyDickson74 @LlSTENlNG_PARTY @varietylights Superior and not easy!" data-datetime="10:45 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326294786140200962"
+                 data-text="Jimy Chambers and Suzanne Thorpe were vital to the band at that time (and especially on BOCES) adding energy and endless melodies!" data-datetime="10:44 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326294377749229568"
+                 data-text="Very Sleep River ---&gt; Forever Fields Strawberry  #TimsTwitterListeningParty https://t.co/qICYbxxHn4" data-datetime="10:43 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326294324536074245"
+                 data-text="@RogerMaybank @SJPufnstuf @varietylights @Tim_Burgess Got em on!" data-datetime="10:43 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1326294234660532224"
+                 data-text="Frittering. So sweet through the noise x" data-datetime="10:42 PM Nov 10, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326293934599966720"
+                 data-text="@DavidORiordan13 @tarboxrd Yes, I do" data-datetime="10:41 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326293830551932928"
+                 data-text="@Biancovic @LlSTENlNG_PARTY @varietylights True" data-datetime="10:41 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326293751535464448"
+                 data-text="There are some sad and alarming thoughts that we were thinking about during Very Sleep Rivers https://t.co/BNjQp4wB0D" data-datetime="10:40 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326293745873133569"
+                 data-text="@SJPufnstuf @Tim_Burgess @varietylights I thought I did too! But always hear a bunch of new stuff!" data-datetime="10:40 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326293557536305164"
+                 data-text="Very Sleepy Rivers! Great performance by @varietylights and guitars by Jonathan.
+I played the drums (and some guitar overdubs)!" data-datetime="10:40 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fcoreydu%2Fstatus%2F1326293323603009536"
+                 data-text="\"Frittering\" is by FAR favorite song on the album @mercuryrevvd. My @MAGNETMagazine tells the full story (at least, as only an outsider can) of the making of Yerself is Steam... #timstwitterlisteningparty @Tim_Burgess https://t.co/sYpmMnak3g https://t.co/8wqOhcfAq9" data-datetime="10:39 PM Nov 10, 2020"> 
+                coreydu            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326293316107968512"
+                 data-text="Very Sleepy Rivers. I use to put cassette tapes in my 4-track recorder and one song by the Beatles the singing sounded like Ve-ree Slipppy Reevers! Which One?   #TimsTwitterListeningParty" data-datetime="10:39 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="188000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326293155851988992"
+                 data-text="Continuous Trucks and Thunder was a tape loop I made of one of our rehearsals, then added, â€œSpace Patrol, itâ€™s out there....â€ #TimsListeningParty" data-datetime="10:38 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326292366647570438"
+                 data-text="#TimsListeningParty https://t.co/g1l3i2RRq3" data-datetime="10:35 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326292252029808640"
+                 data-text="I remember on Frittering I did my guitars first take, then I said, â€œOkay now Iâ€™m going to do it for real.â€ And Dave Fridmann @tarboxrd said, â€œNope, thatâ€™s it. You got itâ€
+But I did work the wah-wah during Jonathanâ€™s solo....." data-datetime="10:34 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326292143930036225"
+                 data-text="We all lived in different towns and did so many things via mail. Postcards...Letters...tapes and then road trips. Always road trips. Environment was always there on our recordings. And then later live.#TimsTwitterListeningParty https://t.co/YSU4gKtpfJ" data-datetime="10:34 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1326292098883203072"
+                 data-text="Mine was at The Troubadour ðŸ¤˜" data-datetime="10:34 PM Nov 10, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2Fantonnewcombe%2Fstatus%2F1326291778748764160"
+                 data-text="@Tim_Burgess @mercuryrevvd Liquid Room in Tokyo with BJM naturally" data-datetime="10:32 PM Nov 10, 2020"> 
+                antonnewcombe            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="171000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326291330872598534"
+                 data-text="Frittering was Jonathan, @tarboxrd and me messing around during a Flaming Lips session when the Lips took a break.
+Nathan Roberts played drums.
+Wayne Coyne and Mike Ivans are on there too, doing organ and guitars!" data-datetime="10:31 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326290616184164362"
+                 data-text="Some guitar feats there with Jonathan &amp; I! Wow!
+#TimsListeningParty" data-datetime="10:28 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326290505815248897"
+                 data-text="#TimsTwitterListeningParty These pictures were first concert @mercuryrevvd https://t.co/8DiOxyYTYT" data-datetime="10:27 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326290177673863168"
+                 data-text="@AllyDickson74 @varietylights @LlSTENlNG_PARTY NME said â€œSpoiled American Bratsâ€ because we smashed a Â£20 piano we found on the road on the way to the concert!" data-datetime="10:26 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326290061843984385"
+                 data-text="our first concert" data-datetime="10:26 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326289816925986816"
+                 data-text="@nutts2020 This is true!" data-datetime="10:25 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326289788111114247"
+                 data-text="#TimsTwitterListeningParty https://t.co/zQFioTx8op" data-datetime="10:25 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326289615628738567"
+                 data-text="@rjsandford @Tim_Burgess @varietylights @LlSTENlNG_PARTY We were just fucking around! Stoners" data-datetime="10:24 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326289431905660928"
+                 data-text="Sweet Odysee of A Cancer Cell WOW, we spent hours on those guitar sounds. Roland Jazz Chorus! Space Echo! Jonathan didnâ€™t really know how to write out a musical score, so heâ€™d draw a flow chart of the song in sections to let us know what was what. #TimsListeningParty" data-datetime="10:23 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1326289266163527681"
+                 data-text="When the charlatans were on @beggarsgroup our A &amp; R Roger gave me all The Fall, all The Pixies all Cocteaus and was very pleased to give me YrSelf is Steam - Such a brilliant noise record. Love this xx" data-datetime="10:22 PM Nov 10, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326289076618743823"
+                 data-text="@Beeestonia @Tim_Burgess @mercuryrevvd HA!" data-datetime="10:22 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2F_SPJ_%2Fstatus%2F1326289003407142912"
+                 data-text="@Tim_Burgess @mercuryrevvd And the shows at the Barbican in 2017 and at Oslo in 2018 were just magical. #TimsTwitterListeningParty https://t.co/u3Rscd6yHh" data-datetime="10:21 PM Nov 10, 2020"> 
+                _SPJ_            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326288918162051072"
+                 data-text="The Clapham grand PIANO Blue and Black !#TimsTwitterListeningParty @mercuryrevvd" data-datetime="10:21 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326288637957468160"
+                 data-text="@APassions Coffee pot percolating" data-datetime="10:20 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326288439441027073"
+                 data-text="@herelieshalf @varietylights Why thank you!" data-datetime="10:19 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326288357371097092"
+                 data-text="#TimsTwitterListeningParty Yes Buffalo was blue and black (and white as snow)  @mercuryrevvd" data-datetime="10:19 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326288188944621568"
+                 data-text="On blue and Black, we recorded a coffee pot percolating, thatâ€™s the weird breathing sound!
+#TimsListeningParty" data-datetime="10:18 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326287894840037383"
+                 data-text="#TimsListeningParty https://t.co/1OTPUi5yix" data-datetime="10:17 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2F_SPJ_%2Fstatus%2F1326287846081253380"
+                 data-text="@Tim_Burgess @mercuryrevvd It\'s too hard to choose. They\'re all such visceral experiences. Probably Shepherd\'s Bush Empire in 2001. This photo I took at their Oval Space show in 2015 captures them pretty well I think. #TimsTwitterListeningParty https://t.co/4vpI7q2SFx" data-datetime="10:17 PM Nov 10, 2020"> 
+                _SPJ_            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326287764183261188"
+                 data-text="Blue and Black! I played piano and guitar. Great @varietylights words. Reminds me of Buffalo. Soulâ€™s obscene! Ohhh, itâ€™s so cold outside. Some early orchestrationsâ€”violins." data-datetime="10:16 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326287356866031623"
+                 data-text="We recorded this album for ourselves to hear ...there was little hope of anyone hearing what we made. A friend hearing me describe the recordings we were making said to me â€œnice self esteem!â€ I said â€œmyself is what?â€™.  #TimsTwitterListeningParty #Ego #None" data-datetime="10:15 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326287148010627073"
+                 data-text="Coney Island Cyclone! One of my favorites. Jonathan said it was inspired by me! Ha!
+Bass line stolen by me from an old jazz tune. Suzanneâ€™s flute! Oh yeah! #TimsListeningParty" data-datetime="10:14 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326287005865664515"
+                 data-text="#TimsTwitterListeningParty https://t.co/y1dzLkP0yc" data-datetime="10:13 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326286514154860544"
+                 data-text="@davidboyd01 @Tim_Burgess @varietylights @OfficialRandL Yeah! We got kicked out and thrown down the steps to the street outside.
+Good times!" data-datetime="10:12 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326286424828760064"
+                 data-text="#TimsTwitterListeningParty Your souls obscene but I don\'t mind" data-datetime="10:11 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326286262798520325"
+                 data-text="You go insane, I go inside! About 20 tracks of guitar in Syringe mouth!  #TimsListeningParty" data-datetime="10:11 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1326286141838987265"
+                 data-text="Favourite ever @mercuryrevvd live show??? #TimsTwitterListeningParty" data-datetime="10:10 PM Nov 10, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326285922883821574"
+                 data-text="Dave calmly let us feel like we could do whatever. I said for Syringe Mouth â€œâ€¦ can I scream into a microphone through an ampâ€¦through guitar guitar pedals?â€ â€œOk sureâ€#TimsTwitterListeningParty" data-datetime="10:09 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326285839035412481"
+                 data-text="@APassions Dave Fridmann" data-datetime="10:09 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326285591781249028"
+                 data-text="@EDouglasWW @tarboxrd Yes. First record he did" data-datetime="10:08 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326285469127237632"
+                 data-text="Those guitar explosions were in part inspired by Dinosaur Jr, but we wanted to make them 20 times more extreme, so the needle would jump out of the groove! Ha!
+#TimsListeningParty" data-datetime="10:07 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326285131829686273"
+                 data-text="#TimsTwitterListeningParty Feel No Harm" data-datetime="10:06 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1326285037776592903"
+                 data-text="@LlSTENlNG_PARTY @mercuryrevvd Near Norwich, Norfolk" data-datetime="10:06 PM Nov 10, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326285033884225538"
+                 data-text="Jonathan and I did the 2 man guitar duties (heâ€™d play and Iâ€™d work the effects-wahwah etc, then weâ€™d switch and do another overdub.â€
+#TimsListeningParty" data-datetime="10:06 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1326284900316614669"
+                 data-text="Where in the world are you for our Yerself Is Steam @LlSTENlNG_PARTY - @mercuryrevvd is marking everyone on his map https://t.co/mXRDGTdCXG" data-datetime="10:05 PM Nov 10, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326284807014387736"
+                 data-text="Me Jon Sean (Grasshopper) Suzanne https://t.co/5OJgzEpTd6" data-datetime="10:05 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326284589371953153"
+                 data-text="#TimsListeningParty https://t.co/atMCIGQc5A" data-datetime="10:04 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326284470320836608"
+                 data-text="#TimsTwitterListeningParty https://t.co/K8sSIClq4g" data-datetime="10:03 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326284438741913601"
+                 data-text="We recorded this at SUNY Fredonia with @tarboxrd Fridmann. Crazy times" data-datetime="10:03 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326284069047562247"
+                 data-text="Bombed-out lovers, gallon red flocks of mellow seducersâ€¦find eager seekers. Beat these dumb beautiful lines from above and weâ€™re all aglow. #TimsTwitterListeningParty" data-datetime="10:02 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fmercuryrevvd%2Fstatus%2F1326284032783626240"
+                 data-text="Chasing a Bee and Syringe Mouth were the last 2 songs we recorded for Yerself Is Steam. But ended up starting the album...#TimsTwitterListeningParty" data-datetime="10:02 PM Nov 10, 2020"> 
+                mercuryrevvd            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1326283788863889413"
+                 data-text="Our #DISCO Twitter listening party kicks off Wednesday at 9pm GMT! Get your copy ready! @Tim_Burgess ðŸ˜ðŸ’œðŸ¥° @LlSTENlNG_PARTY https://t.co/DG7QnS1mmJ https://t.co/ElhpchqWU8" data-datetime="10:01 PM Nov 10, 2020"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fvarietylights%2Fstatus%2F1326283724464545799"
+                 data-text="â€œI was in a deep sleepâ€¦â€ I explained to my phone. â€œOhhhhâ€¦â€ Jonathan said on the other end.  #TimsTwitterListeningParty #answeringmachine #recording" data-datetime="10:00 PM Nov 10, 2020"> 
+                varietylights            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1326283512857636870"
+                 data-text="Going in
+
+Handing over to @mercuryrevvd &amp;
+@varietylights for the next 50 minutes 
+
+Yerself Is Steam @LlSTENlNG_PARTY staaaarts now https://t.co/NTpTVWhRzL" data-datetime="10:00 PM Nov 10, 2020"> 
+                Tim_Burgess            </div>
+            </section>
