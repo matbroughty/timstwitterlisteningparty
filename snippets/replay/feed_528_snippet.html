@@ -1,0 +1,448 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1ztAvks60RhdU7Alv7pfEh" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e028360bdd6034d376594874992" alt="Travelogue Volume 1" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Michael Giacchino &amp; His Nouvelle Modernica Orchestra</span><br/><span class="sub-colour">Travelogue Volume 1</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1ztAvks60RhdU7Alv7pfEh" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 74 tweets from Friday 13th November 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/m_giacchino" target="_blank"><img src="https://pbs.twimg.com/profile_images/1240371907838369792/knRrrDHY_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@m_giacchino</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/henabrms" target="_blank"><img src="https://pbs.twimg.com/profile_images/1275886231088295936/taXv6LMF_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@henabrms</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Exoplanet Data Archive" data-start="0"
+             data-duration="75" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Sidereal Day: 1" data-start="77"
+             data-duration="383" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Sidereal Day: 2" data-start="462"
+             data-duration="303" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Sidereal Day: 3" data-start="767"
+             data-duration="269" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Sidereal Day: 6" data-start="1038"
+             data-duration="244" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Sidereal Day: 8" data-start="1284"
+             data-duration="336" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Sidereal Day: 15" data-start="1622"
+             data-duration="362" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Sidereal Day: 23" data-start="1986"
+             data-duration="340" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Sidereal Day: 35" data-start="2328"
+             data-duration="341" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Sidereal Day: 39" data-start="2671"
+             data-duration="353" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Remembrance" data-start="3026"
+             data-duration="301" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="3329"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048518360bdd6034d376594874992" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-74" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1327370785053401095"
+                 data-text="âœŠ https://t.co/u3n5Mknvq8" data-datetime="10:00 PM Nov 13, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fdeathwaltzrecs%2Fstatus%2F1327370695089803267"
+                 data-text="Huge thanks to @m_giacchino @henabrms @littlejacket and everyone else involved. It\'s an honour to release this record. Myself and @moshafeek still pinch ourselves daily. Massive thanks #TimsTwitterListeningParty @LlSTENlNG_PARTY for having us" data-datetime="10:00 PM Nov 13, 2020"> 
+                deathwaltzrecs            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327370572767002624"
+                 data-text="Thank you so much! It was a true HONOR to be a part of it. https://t.co/lieicMaRc3" data-datetime="9:59 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327370441896259589"
+                 data-text="@Tim_Burgess @m_giacchino @LlSTENlNG_PARTY thank YOU!" data-datetime="9:59 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327370349357408258"
+                 data-text="@EDouglasWW You\'re very kind.  If you do in fact pick one up, I hope you enjoy it." data-datetime="9:58 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1327370169874780161"
+                 data-text="Biiig thanks to @m_giacchino &amp; @henabrms for such a brilliant @LlSTENlNG_PARTY https://t.co/dMIgMQgaTZ" data-datetime="9:58 PM Nov 13, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327370034348388353"
+                 data-text="Thank you to @LlSTENlNG_PARTY for having me!!! I hope I was able to shed some light and answer some questions. First time doing this so hope I didn\'t mess it up! Thanks again for joining us!" data-datetime="9:57 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1327369842991697920"
+                 data-text="Thaaaanks @m_giacchino #TimsTwitterListeningParty https://t.co/6I0DuRmMPg" data-datetime="9:56 PM Nov 13, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327369780207128577"
+                 data-text="And that final voice on the album is the son of Carl Sagan, Nick Sagan. Who\'s 6 year old voice is still traveling on Voyager out into the universe. #TimsTwitterListeningParty" data-datetime="9:56 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327369536543178752"
+                 data-text="If I had one hope, it would be that you all take a moment out of our troubled lives to sit for just one hour and listen to a story told through music and words. Perhaps this one? #TimsTwitterListeningParty" data-datetime="9:55 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327369460647219200"
+                 data-text="I feel so profoundly lucky to have been a part of this project.  To work with everyone involved is already a blessing, but to know the message of the music and story is so central to the anxieties we face everyday... what more can you ask for.
+
+#TimsTwitterListeningParty" data-datetime="9:55 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327369254736281600"
+                 data-text="Right? She has the soul of someone who has seen it all. #TimsTwitterListeningParty https://t.co/ryPbNcfW5L" data-datetime="9:54 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327369115590279168"
+                 data-text="Thank you!! #TimsTwitterListeningParty https://t.co/xCW5z9Cp2z" data-datetime="9:53 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327369031402233856"
+                 data-text="This track is a reflection of the journey of our narrator, The Traveler (@Janina ). A look back on a tough decision. When things get bad at home, do you run from the problem or do you stay to fight. #TimsTwitterListeningParty" data-datetime="9:53 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327368966575013888"
+                 data-text="@kate_grahn kate!!! i somehow seem to lose breath FOR you when I hear you on that track haha" data-datetime="9:53 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327368767907663872"
+                 data-text="And finally, a man who I have worked with for over 20 years,  George Doering, playing all the guitars on the final track. Along with him is Gayle Levant. They have played an so many recordings - you know their sound if you don\'t know them personally. #TimsTwitterListeningParty" data-datetime="9:52 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327368284803530753"
+                 data-text="@deathwaltzrecs Trying to do that in all my tweets - but as I said that was the great @kate_grahn in the climatic moment bringing us all home. #TimsTwitterListeningParty" data-datetime="9:50 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327368026421805056"
+                 data-text="And to bring it all home is the voice of @kate_grahn - the power and emotion she brings to the table kills me EVERY DAMN TIME. #TimsTwitterListeningParty" data-datetime="9:49 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327367914152890368"
+                 data-text="@kate_grahn DESTROYED this.  Oh my lord.  Insanity. #TimsTwitterListeningParty" data-datetime="9:49 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327367750268817408"
+                 data-text="The group of people who helped me create that large group of voices is made up of family and friends some you don\'t know but many many that you do. #TimsTwitterListeningParty" data-datetime="9:48 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327367542579425280"
+                 data-text="If only the entire world can experience the peace I hoped for as I wrote this. #TimsTwitterListeningParty" data-datetime="9:47 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327367209010642944"
+                 data-text="This track is one of my favorites - it encapsulates everything I wanted this album to say. The reading from @Janina and the meditation led by @AndreaDatzman is everything. #TimsTwitterListeningParty" data-datetime="9:46 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327367120720588800"
+                 data-text="\"Perhaps, in this instance, time will be generous.\" Love that. #TimsTwitterListeningParty" data-datetime="9:45 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327366866193420296"
+                 data-text="@ShannonJSoprano  #TimsTwitterListeningParty https://t.co/P5xt9Jz5Gd" data-datetime="9:44 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327366798870601728"
+                 data-text="C\'mon @ShannonJSoprano - you are channeling the spirits of all the divas from the era of lounge. Love it! #TimsTwitterListeningParty" data-datetime="9:44 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327366622684749824"
+                 data-text="I agree! #TimsTwitterListeningParty https://t.co/xOS67fMpAy" data-datetime="9:43 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327366524634447872"
+                 data-text="My friends at @cookiegoodla made a special Cookie Modernica just for the release 0- but check out their site - they have the BEST cookies anywhere." data-datetime="9:43 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327366240331911169"
+                 data-text="Some of the electrics you here are provided by Abe Jr\'s brother Mateo - who\'ve I\'ve known forever and is one of the nicest and talented people I know. #TimsTwitterListeningParty" data-datetime="9:42 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327365979484000256"
+                 data-text="Listen to those crazy sounds from Abe Jr and Danny Greco - the stuff they have in their arsenal is impressive! #TimsTwitterListeningParty" data-datetime="9:41 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327365762277801984"
+                 data-text="You are naming all my favorites! I still listen to them all (as if you couldn\'t tell!) #TimsTwitterListeningParty https://t.co/xwUtiJnSyr" data-datetime="9:40 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327365601547878401"
+                 data-text="The goal is to do this live one day WITH ALL OF YOU! #TimsTwitterListeningParty https://t.co/HNJ75kWXNt" data-datetime="9:39 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327365493792018433"
+                 data-text="@bobfusonmusic Yes - headphones are KEY! #TimsTwitterListeningParty" data-datetime="9:39 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327365272022310912"
+                 data-text="#TimsTwitterListeningParty https://t.co/MZBd4MS04v" data-datetime="9:38 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327365206415052801"
+                 data-text="There goes @ShannonJSoprano again - killing it as she always does. Love her voice.#TimsTwitterListeningParty" data-datetime="9:38 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327365091130425344"
+                 data-text="On to the guitars... which are 95% provided by the wonderful Andrew Synowiec!  #TimsTwitterListeningParty" data-datetime="9:37 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327364969441026048"
+                 data-text="#TimsTwitterListeningParty whoops!" data-datetime="9:37 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1327364878064111621"
+                 data-text="High five to everyone who has bought a @LlSTENlNG_PARTY key ring tonight. Youâ€™ve helped us raise Â£1,000 for @musicvenuetrust so farðŸ¤˜ðŸ¤˜ðŸ¤˜
+Still some more available here https://t.co/seQeTJ8noE https://t.co/cEY7d3W8a0" data-datetime="9:37 PM Nov 13, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327364814000201728"
+                 data-text="Did you hear those bass moves from Abe Sr? There is NO ONE on the planet like Abe. #TimsTwitterListeningParty" data-datetime="9:36 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327364623222284288"
+                 data-text="One of the themes of this record that @m_giacchino and I talked about was meditation -- especially with \"everything is going to be ok\" -- and so we had the idea to create an illusion of eyes when you see the front and back covers together!
+
+#TimsListeningParty https://t.co/xOGuBk2YfF" data-datetime="9:36 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327364531958366208"
+                 data-text="I must point out that the piano is played buy the incredible @MarkGasbarro - the same guy who\'s light touch helped make you cry on # UP and of course #LOST - #TimsTwitterListeningParty" data-datetime="9:35 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327364283525603328"
+                 data-text="You\'ll notice there are a lot of sound effects included as well. Theres are from my own library of effects I\'ve collected over the years. Again, to try and give that old radio play feel, I pulled from whatever I could find to help out. #TimsTwitterListeningParty" data-datetime="9:34 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327363900895989761"
+                 data-text="After all we have worked together for almost 20 years. So in some ways we were together if only in spirit. #TimsTwitterListeningParty" data-datetime="9:33 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="136000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327363900073865216"
+                 data-text="I would write everything at home, and then send the parts out to the players, who recorded them at home. We are so used to being TOGETHER when we make music, I was worried that this may not work, but it became clear as soon as the tracks started coming back that it would be okay." data-datetime="9:33 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327363328344162304"
+                 data-text="That is our dream as well! https://t.co/pMntB71Gp6" data-datetime="9:30 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327363235410952193"
+                 data-text="Yeah it wasn\'t easy but the goal was to make it feel like we were all in the same room together. https://t.co/fJnwNiKmiv" data-datetime="9:30 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="152000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327363036575793152"
+                 data-text="Even though this is a sci fi story, it really a relflection of our world. How I was feeling about the state of things like climate, Politics, the Pandemic... all of it. 
+
+#TimsTwitterListeningParty" data-datetime="9:29 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327362396940222464"
+                 data-text="In terms of the story - I was lucky to find myself working with the talented screenwriter Alison Eve Hammersly" data-datetime="9:27 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327362115334619139"
+                 data-text="@LiamBrigg It\'s the cover we went with!  Our Narrator stuck between two overlapping worlds, ours and hers." data-datetime="9:26 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327361836337938432"
+                 data-text="These Mallets you\'re hearing are all played by Danny Greco - recorded IN HIS LIVING ROOM, with me watching over @zoom_us . Again, just craziness. #TimsTwitterListeningParty" data-datetime="9:24 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327361725662859264"
+                 data-text="Sidereal Day: 8 is unreal. It\'s like I\'m doing hula hoops at an alien wedding. #TimsListeningParty" data-datetime="9:24 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327361600014012416"
+                 data-text="@JeffGCrawford @LlSTENlNG_PARTY @PaulMcCartney Agree!" data-datetime="9:24 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327361520452431873"
+                 data-text="I\'ve always loved old radio shows - especially sci fi ones like X-Minus One - I thought maybe that would be cool to try and blend the lounge music I love with the feel of one of the old radio plays. #TimsTwitterListeningParty" data-datetime="9:23 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327361151236071424"
+                 data-text="The strings were recorded in Australia, OVER @zoom_us , believe it or not. I\'ve never been involved in such a crazy process. #TimsTwitterListeningParty" data-datetime="9:22 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327360956427427840"
+                 data-text="These strings were orchestrated by my old friend @TSimonec along with a couple tracks done by my son @MickGiacchino" data-datetime="9:21 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327360774356955136"
+                 data-text="following the story, I looked to see what visuals for the cover could best represent the core of the story... these were some (very, VERY) rough thumbnails of possible covers
+
+#TimsListeningParty https://t.co/y2exr9p1DZ" data-datetime="9:20 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327360669239308288"
+                 data-text="And who\'s that narrator? Well that\'s the incomparable @Janina - you may know her from the world of Star Wars, but I know her as my friend and incredibly talented actress. #TimsTwitterListeningParty" data-datetime="9:20 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327360389080776704"
+                 data-text="If you listen carefully you may recognize that boys voice from the film @jojorabbitmovie - the amazing Roman Griffin Davis." data-datetime="9:19 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327360062076067840"
+                 data-text="Yes! Hew is the best - the joy that comes from him is indescribable! #TimsTwitterListeningParty https://t.co/HsHFysFbFH" data-datetime="9:17 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327359918609821697"
+                 data-text="It took a bit of organizing but I sent each of the players their parts at home - and everyone recorded separately and then delivered the tracks via @Dropbox #TimsTwitterListeningParty https://t.co/i0zNa8eZvK" data-datetime="9:17 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327359671334621184"
+                 data-text="That\'s the incredible Danny Greco on Vibes and Hand Perc - if you have a chance listen with headphones and you\'ll be treated to a TON of ear candy. #TimsTwitterListeningParty" data-datetime="9:16 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327359489230573568"
+                 data-text="My son said that this track reminded him of Mario Brothers... I\'ll take it. #TimsTwitterListeningParty" data-datetime="9:15 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327359334439784448"
+                 data-text="The wonderful vocals are the sounds of @ShannonJSoprano who I worked with on a project I did with @NASA . She\'s incredible. #TimsTwitterListeningParty" data-datetime="9:15 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="122000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327359307705303041"
+                 data-text="@moshafeek BEYOND.  I can\'t believe how well it printed.  Thanks again, Mo!" data-datetime="9:14 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327358793504616448"
+                 data-text="Thanks to @LlSTENlNG_PARTY for having me! Just want to give a shoutout to Abe Laboriel Jr who is playing drums! You know who else he plays for? The GREAT @PaulMcCartney .  Abe\'s father, Abe Laboriel Sr has been my bass player for almost 20 years now! #TimsTwitterListeningParty" data-datetime="9:12 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="255000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327358736764076032"
+                 data-text="We discussed what the visuals would be and how the 60s exotica and tiki covers of these older albums might be a possible direction... a joy of this process was having the excuse to listen to this genre and study the art of that period.
+
+#TimsListeningParty" data-datetime="9:12 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327357666696462339"
+                 data-text="@henabrms You are being generous. You created EXACTLY what I was hoping for and MORE." data-datetime="9:08 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327357291641724928"
+                 data-text="@RoffeyDave @Tim_Burgess @LlSTENlNG_PARTY @henabrms Sounds PERFECT." data-datetime="9:06 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327357068425105409"
+                 data-text="@m_giacchino @deathwaltzrecs @LiamBrigg Guys, guys... I\'m right here.  Blushing." data-datetime="9:06 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327356930575060992"
+                 data-text="@deathwaltzrecs @LiamBrigg @henabrms Yes! @henabrms killed it. And wait till you see the inner fold of the album as well." data-datetime="9:05 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327356840070377473"
+                 data-text="I remember when Michael told me about this album for the first time, his basic thoughts and pitch for what it could be, and whatever I thought of -- whatever I could imagine it would turn out to be -- didn\'t TOUCH the final product.  It\'s pretty remarkable.
+
+ #TimsListeningParty" data-datetime="9:05 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1327356707190710272"
+                 data-text="@deathwaltzrecs Its been a long time coming - a story I\'ve had in my head for many years.  My film work kept she away from my own personal projects but when Quarantine hit... well... there ya go. And I was hoping it could be a nice distraction for folks stuck at home." data-datetime="9:04 PM Nov 13, 2020"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="188000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1327356511681732615"
+                 data-text="Checking in where our @LlSTENlNG_PARTY people are for our @m_giacchino &amp; @henabrms Travelogue 
+
+Shout up https://t.co/tpFKxEW3iH" data-datetime="9:03 PM Nov 13, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fhenabrms%2Fstatus%2F1327355724905598976"
+                 data-text="...and we\'re off! #TimsListeningParty" data-datetime="9:00 PM Nov 13, 2020"> 
+                henabrms            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1327355570358202368"
+                 data-text="Time to start our Travelogue 
+
+Over to @m_giacchino &amp; @henabrms for the next hour 
+
+#TimsTwitterListeningParty https://t.co/2Ff2s6stRh" data-datetime="9:00 PM Nov 13, 2020"> 
+                Tim_Burgess            </div>
+            </section>
