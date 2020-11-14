@@ -127,6 +127,10 @@ do
     esac
 done
 
+if [ $idx -eq 1 ]
+then
+    ids[1]=${ids[0]}
+fi
 
 echo "Fetch Index: $(yesno $index)"
 echo "Fetch Pictures: $(yesno $pictures)"
@@ -208,7 +212,7 @@ do
     then
         echo ++++++++++ Fetching snippet for feed $i
         localfile=${LOCAL_PATH}/snippets/replay/feed_${i}_snippet.html
-        curl "${REMOTE_PATH}/feedsnip.php?id=${i}&levels=2&notour=1" -o $localfile
+        curl "${REMOTE_PATH}/feedsnip2.php?id=${i}&levels=2&notour=1" -o $localfile
         verify "$localfile" "section"
         addtogit $localfile
     fi
