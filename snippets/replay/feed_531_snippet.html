@@ -1,0 +1,594 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7B1bTtSUHg0MjM6xruipUS" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02ea0a93cab0e912011579e175" alt="Room To Roam" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Waterboys</span><br/><span class="sub-colour">Room To Roam</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(411375)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7B1bTtSUHg0MjM6xruipUS" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_411375_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 118 tweets from Sunday 15th November 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/MickPuck" target="_blank"><img src="https://pbs.twimg.com/profile_images/1256639316643778560/PJR6zENg_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@MickPuck</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/stevewickham" target="_blank"><img src="https://pbs.twimg.com/profile_images/88833051/01_Steve_sings_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@stevewickham</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="In Search of a Rose - 2008 Remaster" data-start="0"
+             data-duration="80" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Song from the End of the World - 2008 Remaster" data-start="82"
+             data-duration="119" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="A Man Is in Love - 2008 Remaster" data-start="203"
+             data-duration="198" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Bigger Picture - 2008 Remaster" data-start="403"
+             data-duration="146" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Natural Bridge Blues - 2008 Remaster" data-start="551"
+             data-duration="126" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Something That Is Gone - 2008 Remaster" data-start="679"
+             data-duration="196" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="The Star and the Sea - 2008 Remaster" data-start="877"
+             data-duration="26" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="A Life of Sundays - 2008 Remaster" data-start="905"
+             data-duration="373" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Islandman - 2008 Remaster" data-start="1280"
+             data-duration="126" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="The Raggle Taggle Gypsy - 2008 Remaster" data-start="1408"
+             data-duration="178" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="How Long Will I Love You - 2008 Remaster" data-start="1588"
+             data-duration="218" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Upon the Wind and Waves - 2008 Remaster" data-start="1808"
+             data-duration="44" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Spring Comes to Spiddal - 2008 Remaster" data-start="1854"
+             data-duration="84" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="The Trip to Broadford - 2008 Remaster" data-start="1940"
+             data-duration="74" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="Further Up, Further In - 2008 Remaster" data-start="2016"
+             data-duration="332" style="display:none"></div>
+                <div id="track-16" class="track-list"
+             data-name="Room to Roam - 2008 Remaster" data-start="2350"
+             data-duration="175" style="display:none"></div>
+                <div id="track-17" class="track-list"
+             data-name="The Kings of Kerry - 2008 Remaster" data-start="2527"
+             data-duration="58" style="display:none"></div>
+                        <div id="track-18" class="track-list"
+                     data-name="Finished" data-start="2587"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851ea0a93cab0e912011579e175" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-118" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328092288837410821"
+                 data-text="@imbeckyhappy @Tim_Burgess @stevewickham Blessings on your mum, Becky!" data-datetime="9:47 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328091972335185921"
+                 data-text="@stevewickham Thanks Steve" data-datetime="9:46 PM Nov 15, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328091813916372992"
+                 data-text="@MickPuck Sending love your way Mike x x" data-datetime="9:45 PM Nov 15, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328091496118177799"
+                 data-text="One of the greats! https://t.co/TwluZmyrm3" data-datetime="9:44 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328091387301130240"
+                 data-text="Thaaaaaanks @MickPuck ðŸ¤˜ðŸ¤˜" data-datetime="9:43 PM Nov 15, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328091329772085248"
+                 data-text="And it was made here #TimsTwitterListeningParty #TheWaterboys #RoomToRoam #SpiddalHouse https://t.co/6D7DSRFsGB" data-datetime="9:43 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fstevewickham%2Fstatus%2F1328091247333007365"
+                 data-text="T\'was great fun listening in to Room To Roam, thanks folks  brings back some sweet memories of a great band #TimsTwitterListeningParty  and thanks @Tim_Burgess" data-datetime="9:43 PM Nov 15, 2020"> 
+                stevewickham            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328091229704364034"
+                 data-text="#TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/UIEXC0h99z" data-datetime="9:43 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328091166634635268"
+                 data-text="Thanks everyone and thanks as always @Tim_Burgess https://t.co/CftNrOozdy" data-datetime="9:43 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328090966633406464"
+                 data-text="Our final tune is THE KINGS OF KERRY written backstage at a rock festival, and now, I\'m proud to say, part of the celtic folk tradition #TimsTwitterListeningParty #TheWaterboys #RoomToRoam Backwards mandolin by @colinblakey! https://t.co/kd856b915D" data-datetime="9:42 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fkentonlarsen%2Fstatus%2F1328090671803109377"
+                 data-text="Iâ€™m playing from the deluxe collectorsâ€™ edition, 2008. The second disc of â€œadditional recordingsâ€ is also fabulous. @Tim_Burgess @MickPuck #TimsTwitterListeningParty https://t.co/KjGrYywJFb" data-datetime="9:41 PM Nov 15, 2020"> 
+                kentonlarsen            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328090596246949888"
+                 data-text="#TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/c7eU45i2lc" data-datetime="9:40 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328090566551277569"
+                 data-text="Backing vocalists Seamus &amp; Eileen Begley and Diarmuid O\'Sullivan https://t.co/aTYXubCFg8" data-datetime="9:40 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328090443578531841"
+                 data-text="Steve Wickham plays the carousel sound, Colin plays the Viennese flute, Sharon on box, Anto on baritone sax, me on piano, Trev double bass, Noel the Bridgeman drums. #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:40 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328090279090532352"
+                 data-text="ROOM TO ROAM lyric by the great Scottish philosopher and author, George MacDonald #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:39 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fheadbuttthehook%2Fstatus%2F1328090239806607360"
+                 data-text="@Tim_Burgess @MickPuck @WaterboysMusic Close call on my fav @WaterboysMusic album, absolute masterpiece #RoomToRoam #TimsTwitterListeningParty" data-datetime="9:39 PM Nov 15, 2020"> 
+                headbuttthehook            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328090190972416007"
+                 data-text="This recording is the pub in Soiddal, Huighes\' Bar. The barman is Seaneen! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:39 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328090093341601792"
+                 data-text="Harmony by @colinblakey - so magical #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:38 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328090001226096640"
+                 data-text="Give us that beautiful instrumental again gang! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:38 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328089868665303042"
+                 data-text="Last verse describes first half = SS, second half = MS #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:37 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328089753300967427"
+                 data-text="Play us an instrumental verse, gang, go on! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:37 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328089677337948163"
+                 data-text="This verse set in Dingle and the dolphin = Fungie #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:37 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fkennomick1%2Fstatus%2F1328089571968552965"
+                 data-text="@MickPuck Noel is a brilliant Drummer, accordion player and a great singer ðŸ‘" data-datetime="9:36 PM Nov 15, 2020"> 
+                kennomick1            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328089515106463744"
+                 data-text="5th verse an evocation of Pan\'s flute as manifested by @colinblakey #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:36 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328089387977101313"
+                 data-text="High in a cliff...Mr Wickham #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:35 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328089320356515841"
+                 data-text="I first heard it played by @SharonShannon at dawn in the west of Ireland as a soft rain fell. It was the most enchanting sound I ever heard. #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:35 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328089208569868288"
+                 data-text="This tune, a mysterious Scottish strathspey, was the magical tune that ran through this band and its life like a vein of gold. We played it everywhere. #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:35 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328088984476659716"
+                 data-text="My favourite song on this album, one verse for each band member #TimsTwitterListeningParty #TheWaterboys #RoomToRoam and one for Seamus Begley" data-datetime="9:34 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1328088948166496261"
+                 data-text="ðŸŽ¶ â€˜We came to the end of the world one day
+A dolphin swam in a sheltered bayâ€™ - Further Up, Further In â­ï¸ @WaterboysMusic @MickPuck #TimsTwitterListeningParty https://t.co/huVoFPBvV0" data-datetime="9:34 PM Nov 15, 2020"> 
+                soozworld            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fguinness1968%2Fstatus%2F1328088871846948864"
+                 data-text="@MickPuck https://t.co/C5AtTcpqJB" data-datetime="9:33 PM Nov 15, 2020"> 
+                guinness1968            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328088805056913418"
+                 data-text="FURTHER UP, FURTHER IN, title of course from CS Lewis\' great book The Last Battle #TimsTwitterListeningParty #TheWaterboys #RoomToRoam and tune Roche\'s Favourite from the playing of @SharonShannon99" data-datetime="9:33 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328088605638733827"
+                 data-text="Piano accompaniment by @colinblakey #TheTripToBroadford #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:32 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328088498189053956"
+                 data-text="THE TRIP TO BROADFORD, and that\'s Broadford in County Clare. Written by Kieran Donnellan and brought to The Waterboys by @SharonShannon99 #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:32 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328088337257811968"
+                 data-text="I hope Elvis Costello heard my internal rhyming in this. I like to stick it up \'em. #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:31 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fstevewickham%2Fstatus%2F1328088232291131398"
+                 data-text="it\'s about a day out on the bay in san fran with the greenpeace crew..#TimsTwitterListeningParty" data-datetime="9:31 PM Nov 15, 2020"> 
+                stevewickham            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328088202536751106"
+                 data-text="Noel the Bridgeman plays Bodhran. Trevor\'s on double bass. #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:31 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328088141929046017"
+                 data-text="SPRING COMES TO SPIDDAL with dixieland brass suggested by @stevewickham with amazing clarinet by Ciaran Wilde #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:31 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fphilk282%2Fstatus%2F1328088039583838211"
+                 data-text="Oh Yes! #RoomToRoam #BoxSet ðŸ‘‡ðŸŽ¯ https://t.co/VxQ7DzLlXU" data-datetime="9:30 PM Nov 15, 2020"> 
+                philk282            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FHallawellJ%2Fstatus%2F1328088027055460352"
+                 data-text="@MickPuck Around the time she had a big hit with this WBs song I was in the cafe next to my studio in Richmond, and there was a Newspaper on the table with a headline saying â€œPrince closes Ronnie Scotts show with whole of the Moon by The Waterboysâ€" data-datetime="9:30 PM Nov 15, 2020"> 
+                HallawellJ            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087982411292674"
+                 data-text="@stevewickham sings Upon The Wind And Waves #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:30 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087911129100288"
+                 data-text="Sweet whistle by @colinblakey #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:30 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087843894419462"
+                 data-text="Whooops...forgot I stuck a vocal on it back in 1990 #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:29 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FIamtheDJ40%2Fstatus%2F1328087843688894465"
+                 data-text="Great song from the Waterboys, with a wee story with what the song means to me.
+
+#RoomToRoam
+#TimsTwitterListeningParty
+
+https://t.co/Z6nHr7xX9P https://t.co/EJdYM4Rjfl" data-datetime="9:29 PM Nov 15, 2020"> 
+                IamtheDJ40            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087751313547264"
+                 data-text="This instrumental interlude is called Three Ships. Full 11-minute version will be on next year\'s ROOM TO ROAM boxed set #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:29 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087624951721984"
+                 data-text="Anto on mandolin too #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:28 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087564574740481"
+                 data-text="Play it Anto! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:28 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087496580796424"
+                 data-text="Backing vocals by John \"Turps\" Burke #TimsTwitterListeningParty #TheWaterboys #RoomToRoam #HowLongWillILoveYou" data-datetime="9:28 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FJohnMcgranachan%2Fstatus%2F1328087439320231936"
+                 data-text="@LlSTENlNG_PARTY @WaterboysMusic @MickPuck Beautiful amazing Glasgow ðŸ’šðŸ´â€â˜ ï¸ðŸ¤ŽðŸ¥ƒ https://t.co/fNXS7IajAH" data-datetime="9:28 PM Nov 15, 2020"> 
+                JohnMcgranachan            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087361230688259"
+                 data-text="@colinblakey is playing organ #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:27 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087300715278336"
+                 data-text="Barry Beckett is on piano again. RIP big man. #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:27 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087213050105856"
+                 data-text="Note correct lyrics #TimsTwitterListeningParty #TheWaterboys #RoomToRoam #HowLongWillILoveYou" data-datetime="9:27 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087117780688896"
+                 data-text="That\'s me on wah-wah guitar #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:26 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328087042736205828"
+                 data-text="We don\'t often cover songs, but I always wanted to do this Ellie Goulding number #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:26 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328086916072402945"
+                 data-text="@colinblakey on whistle, @stevewickham on fiddle, @SharonShannon99 on box #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:26 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Ftherealstowaway%2Fstatus%2F1328086817145565184"
+                 data-text="@MickPuck Do you like my T-shirt?
+#TimsTwitterListeningParty #TheWaterboys #RoomToRoam #Islandman https://t.co/3rL6lqltD8" data-datetime="9:25 PM Nov 15, 2020"> 
+                therealstowaway            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328086735792836608"
+                 data-text="Killer drums by Noel the Bridgeman #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:25 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328086661025193985"
+                 data-text="I can always tell if anotther singer has learned it from our version if they use my lyric \"till he came to a wide open plain\" #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:25 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328086552380141570"
+                 data-text="The song was first a hit in 1627 #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:24 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328086495694106628"
+                 data-text="The classic version before ours was by PLANXTY with lead vocal by Christy Moore #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:24 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328086405566902272"
+                 data-text="Wickham taught me this song and was the first Waterboys to sing it onstage till I claimed it off him #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:24 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328086279196696577"
+                 data-text="THE RAGGLE TAGGLE GYPSY #TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/uBEWAJbgPK" data-datetime="9:23 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fstevewickham%2Fstatus%2F1328086208526880768"
+                 data-text="@Bunnymenfan it is #TimsTwitterListeningParty" data-datetime="9:23 PM Nov 15, 2020"> 
+                stevewickham            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328086128361164800"
+                 data-text="IRELAND IS MY HEART! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:23 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328086096262139906"
+                 data-text="SCOTLAND IS MY DREAMING HEAD! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:22 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085995577860097"
+                 data-text="Each line in \"interpreted\" by my lead guitar #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:22 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085925893709824"
+                 data-text="And now we hit the land! England is my spine! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:22 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085869924921344"
+                 data-text="First the wild waves #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:22 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fstevewickham%2Fstatus%2F1328085815839387649"
+                 data-text="#TimsTwitterListeningParty the island man what a great magical din" data-datetime="9:21 PM Nov 15, 2020"> 
+                stevewickham            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085812416831494"
+                 data-text="ISLANDMAN in which the British Isles and Ireland are anthropmorphised!@ #TimsTwitterListeningParty #TheWaterboys #RoomToRoam Wickham on the phone reading Dion Fortune https://t.co/v4F9q3UB81" data-datetime="9:21 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085651703672833"
+                 data-text="This little tune is The Bride\'s Rell, recorded during a jam in the band  at Spiddal House #TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/C35oKLOzRB" data-datetime="9:21 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085546665701376"
+                 data-text="Yellow Submarine! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:20 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085513878855681"
+                 data-text="Liam O\'Flaherty #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:20 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085395746197508"
+                 data-text="@tfigs121 That\'s him" data-datetime="9:20 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085358471507970"
+                 data-text="And the wild psychedelic sound you hear now is @colinblakey on distorted wah-wah flute! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:19 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085216246771712"
+                 data-text="I brought out my favourite fucking Johnny Thunders riff for the occasion! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam JOHNNY!" data-datetime="9:19 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085112064516096"
+                 data-text="LEAD GUITAR IS COMING...returning to The Waterboys sound after 5 years! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:19 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328085014588903429"
+                 data-text="Mary Custy #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:18 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328084918128304131"
+                 data-text="Can you hear Sharon Shannon say \"Mary Custy\" and John Dunford say \"Next on ya Noel!\"? #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:18 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328084833038438400"
+                 data-text="Something That Is Gone. Such a beauty @MickPuck great key changes and sax ðŸŽ· brilliant x" data-datetime="9:17 PM Nov 15, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328084737135685635"
+                 data-text="Anto\'s rocking the baritone sax and on the fourth verse at the word \"change\" in come Noel\'s congas and Colin\'s African finger piano #TimsTwitterListeningParty #TheWaterboys #RoomToRoam #ALifeOfSundays" data-datetime="9:17 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328084446915022848"
+                 data-text="@LlSTENlNG_PARTY @WaterboysMusic @MickPuck Monmouth" data-datetime="9:16 PM Nov 15, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328084335023583232"
+                 data-text="@stevewickham is playing organ on this one! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam #ALifeOfSundays" data-datetime="9:15 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1328084293365719041"
+                 data-text="Checking in where out @WaterboysMusic @LlSTENlNG_PARTY are around the world.
+Let us know and @MickPuck can put you on his map https://t.co/RY6ftLxEkD" data-datetime="9:15 PM Nov 15, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fstevewickham%2Fstatus%2F1328084279155363840"
+                 data-text="#TimsTwitterListeningParty oooh the great great Noel Bridgeman" data-datetime="9:15 PM Nov 15, 2020"> 
+                stevewickham            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328084239498285056"
+                 data-text="A LIFE OF SUNDAYS. Drums and soul-rasping backing vocals by the mighty Noel Bridgeman #TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/kTe2WJLNSO" data-datetime="9:15 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328084070140678149"
+                 data-text="THE STAR AND THE SEA. I better type this fast or it\'ll be finished! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam @colinblakey playing border horn or chanter. Which is it Colin?" data-datetime="9:14 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328083843363053570"
+                 data-text="#TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/rgDmJioJYo" data-datetime="9:13 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328083717386952704"
+                 data-text="Breezy and beautiful fiddles by @stevewickham https://t.co/TsfQLcNzzt" data-datetime="9:13 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328083547241017346"
+                 data-text="I turned Anto\'s sax solo backwards. He still hasn\'t forgiven me :-) #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:12 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328083495848202240"
+                 data-text="@MickPuck ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜" data-datetime="9:12 PM Nov 15, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328083424301748224"
+                 data-text="Something That Is Gone was written in the shower at the Riot On Sunset hotel, LA #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:12 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328083259239124992"
+                 data-text="SOMETHING THAT IS GONE..Barry Beckett plays piano on this #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:11 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328083187248062464"
+                 data-text="That\'s Colin on whistle #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:11 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328083090531639303"
+                 data-text="The voice in the middle is our producer BARRY BECKETT from Musc le Shoals, Alabama. He used to say these things before takes \"Y\'all have some fun now!\" \"F.U.N\" etc We sampled them and stuck \'em in! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/tx0azjQStw" data-datetime="9:10 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328082887489548289"
+                 data-text="Brought to The Waterboys by Sharon Shannon. She and Wickham are the sheetkicking fiddlers on this #TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/5Ry9bahZXm" data-datetime="9:10 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328082715770499075"
+                 data-text="NATURAL BRIDGE BLUES written by Tommy Magness of Tennessee! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:09 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328082616617201670"
+                 data-text="Short guitar solo at the end played through a Hammond Leslie cabinet, influenced by George Harrison of course #TimsTwitterListeningParty #TheWaterboys #RoomToRoam Colour it in! Colour it in!" data-datetime="9:09 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328082487080259586"
+                 data-text="RT @Tim_Burgess: Favourite Waterboys / @MickPuck gig?
+#TimsTwitterListeningParty" data-datetime="9:08 PM Nov 15, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328082368385740805"
+                 data-text="\"Scottish\" piano by me #TimsTwitterListeningParty #TheWaterboys #RoomToRoam Fiddles by Wickham and Shannon. Sped-up backing vocals by me and my County Galway pal John \"Turps\" Burke, ex- of The Sawdoctors. #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:08 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328082101640507392"
+                 data-text="BIGGER PICTURE with @AnthonyThistle3 on bass #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:07 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328081982383910916"
+                 data-text="Colin started playing the tune one day in rehearsal just as A Man Is In Love finished and we knew immediately that was IT #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:06 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328081842571010049"
+                 data-text="The tune at the end is CALIOPE HOUSE by Scottish folk group The Boys Of The Lough. Written by their bandmember Dave Richardson and brought to the Waterboys by @ColinBlakey #TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/g0EcyD26a6" data-datetime="9:06 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328081540363005957"
+                 data-text="Colin also plays the beautiful flute #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:04 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fstevewickham%2Fstatus%2F1328081474336268288"
+                 data-text="great bass from trev #TimsTwitterListeningParty 
+A man is in love" data-datetime="9:04 PM Nov 15, 2020"> 
+                stevewickham            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328081465742069764"
+                 data-text="Arranged by @colinblakey - masterfully! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:04 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328081379591073796"
+                 data-text="Yes @MickPuck! Loving this" data-datetime="9:04 PM Nov 15, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328081368857931777"
+                 data-text="Written about my old friend Frank Surgener who\'d just fallen in love #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:04 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328081268597288960"
+                 data-text="A Man Is In Love #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:03 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328081223705616391"
+                 data-text="Electric Guitar ya bass! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:03 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328081163882205187"
+                 data-text="The amazing accordion playing of SHARON SHANNON! #TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/y6C1a5rO22" data-datetime="9:03 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328081061281140737"
+                 data-text="The song is a description of our friend Seamus Begley\'s home and world #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:02 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328080943618412544"
+                 data-text="Speedy fiddle by Wickham, banjo-esque bouzouki by Trevor Hutchinson #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:02 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fstevewickham%2Fstatus%2F1328080884965191681"
+                 data-text="#TimsTwitterListeningParty yeah
+Rose" data-datetime="9:02 PM Nov 15, 2020"> 
+                stevewickham            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328080843403911168"
+                 data-text="#TimsTwitterListeningParty #TheWaterboys #RoomToRoam https://t.co/6pHOgW7Hhm" data-datetime="9:02 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328080803859980292"
+                 data-text="Song From The End Of The World, set in this landscape, Dingle, Co Kerry https://t.co/KIqOdaUTf9" data-datetime="9:01 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328080601178640389"
+                 data-text="In Search Of A Rose - me on mandolin and piano, Steve Wickham on fiddle #TimsTwitterListeningParty #TheWaterboys #RoomToRoam" data-datetime="9:01 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FMickPuck%2Fstatus%2F1328080443745464332"
+                 data-text="3-2-1 GO! #TimsTwitterListeningParty" data-datetime="9:00 PM Nov 15, 2020"> 
+                MickPuck            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328080357326000129"
+                 data-text="Say hello to @MickPuck 
+
+#TimsTwitterListeningParty 
+
+@WaterboysMusic https://t.co/48U7mE4xLS" data-datetime="9:00 PM Nov 15, 2020"> 
+                Tim_Burgess            </div>
+            </section>
