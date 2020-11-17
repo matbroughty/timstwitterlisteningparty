@@ -1,0 +1,373 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4UKkCTAvqBAWVBnakgxmo2" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02b9614c2a2d97ab504f3a75fd" alt="April/月音" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Emmy The Great</span><br/><span class="sub-colour">April/月音</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(317283)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4UKkCTAvqBAWVBnakgxmo2" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_317283_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 56 tweets from Tuesday 17th November 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/emmy_the_great" target="_blank"><img src="https://pbs.twimg.com/profile_images/1280513734474072064/uF4lnARA_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@emmy_the_great</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1305818491614892032/X3db_cyC_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@LlSTENlNG_PARTY</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Mid-Autumn/ ??" data-start="0"
+             data-duration="116" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Writer" data-start="118"
+             data-duration="261" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Dandelions/Liminal" data-start="381"
+             data-duration="200" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Chang-E" data-start="583"
+             data-duration="267" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="A Window/O'Keeffe" data-start="852"
+             data-duration="215" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Okinawa/Ubud" data-start="1069"
+             data-duration="343" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Your Hallucinations" data-start="1414"
+             data-duration="248" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Mary" data-start="1664"
+             data-duration="229" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Hollywood Road/April" data-start="1895"
+             data-duration="213" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Heart Sutra" data-start="2110"
+             data-duration="206" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2318"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851b9614c2a2d97ab504f3a75fd" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-56" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328801081086894080"
+                 data-text="Dandelions/Liminal: a film by LinnÃ©a Haviland &amp; Emmy the Great https://t.co/CAR5LZ0nja" data-datetime="8:44 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2FBonnieTOfficial%2Fstatus%2F1328800893416968192"
+                 data-text="15 minutes til tonight\'s @LlSTENlNG_PARTY. No total eclipses this time, but we will still be looking up at the stars âœ¨ https://t.co/YA8tKJtXvw" data-datetime="8:43 PM Nov 17, 2020"> 
+                BonnieTOfficial            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328800517515063297"
+                 data-text="Thank you for having me! What a great party the punch was delicious ðŸ§¡ https://t.co/KOHv5tUqLY" data-datetime="8:41 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328800296097755141"
+                 data-text="Here is a new video for Dandelions/Liminal made up of what we saw there https://t.co/ugXXCsPYC1 #TimsTwitterListeningParty" data-datetime="8:40 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328800090211889156"
+                 data-text="We saw HK through some huge and terrible transitions. We also saw it at its best. #TimsTwitterListeningParty" data-datetime="8:40 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328800058259755009"
+                 data-text="@emmy_the_great âœŠ" data-datetime="8:39 PM Nov 17, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328800020167090177"
+                 data-text="All my records have led me somewhere, and this one sent me on my life path, all the way home. Iâ€™m not in HK anymore, but I am so immensely proud of the life foundations I built there with my family. #TimsTwitterListeningParty" data-datetime="8:39 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328799927510687746"
+                 data-text="I have one last little thing! #TimsTwitterListeningParty" data-datetime="8:39 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328799813647921155"
+                 data-text="THANK YOU EVERYONE THAT WAS SO WONDERFUL #TimsTwitterListeningParty" data-datetime="8:38 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328799729518514176"
+                 data-text="Big thanks to @emmy_the_great ðŸ¤˜ðŸ¤˜#TimsTwitterListeningParty" data-datetime="8:38 PM Nov 17, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328799609146257410"
+                 data-text="Hereâ€™s the last photo I took when we finished #TimsTwitterListeningParty https://t.co/UXJW5XzVIq" data-datetime="8:38 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328799439759302667"
+                 data-text="Oh and here we are in the control rooooommm #TimsTwitterListeningParty https://t.co/R03rGkOwxo" data-datetime="8:37 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328799173769121793"
+                 data-text="Case in point @maevehiggins absolutely killing it on the gong #TimsTwitterListeningParty https://t.co/CbZK3Kech5" data-datetime="8:36 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328798971314245633"
+                 data-text="In the credits of the record Iâ€™ve thanked all the people I loved in NYC for putting their stories into the album. They were also very generous with their talent. #TimsTwitterListeningParty" data-datetime="8:35 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328798893207859202"
+                 data-text="This song is about letting everything go and having a clean heart. #TimsTwitterListeningParty" data-datetime="8:35 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328798653612429313"
+                 data-text="I am really grateful for that night and always will be  #TimsTwitterListeningParty" data-datetime="8:34 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328798451082125313"
+                 data-text="When the filming was finished, I remember skipping down Hollywood Road to my boyfriendâ€™s flat in Sheung Wan, and seeing flashes of light from signs and doorways, and the headlights of red taxis. I knew then that I was coming back here to live.Â #TimsTwitterListeningParty" data-datetime="8:33 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328798336166596614"
+                 data-text="It turned out he was filming an episode of Parts Unknown in Hong Kong. I got invited to sit in the background of the restaurant he was filming in, on Hollywood Road, and eat dumplings. All I had to do was eat.  #TimsTwitterListeningParty" data-datetime="8:33 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="172000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328798204582834178"
+                 data-text="January 2018. The four moons had gone by, and the album was almost written. Hong Kong was cold, and as wintery as it gets, and everyone was in a tailspin because Anthony Bourdain was filming around the city and kept being spotted in the street.  #TimsTwitterListeningParty" data-datetime="8:32 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328797481556193281"
+                 data-text="Jo Lampert is \'Mary\' on this. I met here when I was put in a group with her for a gig, we also met @marrymemargot, who plays violin on the record, through that. These women taught me so much about performance and collaboration, I love them so much. #TimsTwitterListeningParty" data-datetime="8:29 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="111000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328797264815550467"
+                 data-text="Here\'s the cover art for Mary.   #TimsTwitterListeningParty https://t.co/Bn28ZH0HGJ" data-datetime="8:28 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328796799784640514"
+                 data-text="A lot of these from me + my partner\'s film camera are in the album artwork #TimsTwitterListeningParty https://t.co/wOvtWzQKfM" data-datetime="8:26 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328796449174413312"
+                 data-text="#TimsTwitterListeningParty https://t.co/BUbrsfJGOv" data-datetime="8:25 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328796188632621057"
+                 data-text="*after the album was finished but while it was waiting to come out #TimsTwitterListeningParty" data-datetime="8:24 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328796090758549507"
+                 data-text="Who wants to see some photos from the life we made in Hong Kong ? ðŸ˜ƒðŸ˜ƒðŸ˜ƒ #TimsTwitterListeningParty" data-datetime="8:24 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328795891256463360"
+                 data-text="Haha that\'s @houseofstrange talking!  #TimsTwitterListeningParty" data-datetime="8:23 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="126000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328795780803604480"
+                 data-text="Also I am one of those people who will often profess to have an intuition about something, or â€˜knew weâ€™d miss the busâ€™. So I do insist that this album predicted the rest of my life #TimsTwitterListeningParty" data-datetime="8:22 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328795252820488201"
+                 data-text="I was thinking a lot about generations. My friend Sarah asked me if this album was the â€˜baby albumâ€™. Even though we didnâ€™t know we were having one when I wrote it, itâ€™s very much a record of inheriting the world from my parents. #TimsTwitterListeningParty" data-datetime="8:20 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328795129826709507"
+                 data-text="Mine and Ashâ€™s parents met in the 70â€™s hippy days of Bali and now we, their children, were the ones travelling through this (much changed) landscape, having inherited their friendship. #TimsTwitterListeningParty" data-datetime="8:20 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328795037732401156"
+                 data-text="Ash told me how the gamelan scale is the Okinawa scale, and I recorded snippets of our trip on my field recorder. #TimsTwitterListeningParty" data-datetime="8:19 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="217000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328794973647605762"
+                 data-text="This song features field recordings made in Bali, when @houseofstrange &amp; his wife Jackie drove me to Mt Agung in search of gamelan music. #TimsTwitterListeningParty" data-datetime="8:19 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328794063936610304"
+                 data-text="We couldnâ€™t avoid the truth of what was happening in America, but we could choose to be together, and to laugh, and to run across the corners of other peopleâ€™s videos, in our dusty orange summer clothes, like a prank. #TimsTwitterListeningParty" data-datetime="8:16 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328793998564204544"
+                 data-text="One day, @MonaChalabi  and I called an ambulance for a man who was unconscious, only for him to wake up and scream obscenities at us. #TimsTwitterListeningParty" data-datetime="8:15 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328793918767566849"
+                 data-text="Like Dandelions/Liminal, this song began its life in my last summer in Brooklyn. The world was changing. On the grass outside my apartment, people documented their lives on their phones. #TimsTwitterListeningParty" data-datetime="8:15 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328793820457218049"
+                 data-text="Jeff carried Cat up the stairs to the studio because sheâ€™d broken both her legs. #TimsTwitterListeningParty" data-datetime="8:15 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328793733706506240"
+                 data-text="This song makes me happy. When I listen to it, I can hear Bea being meticulous about the vocal take. I can see Jeff channeling his inner Carlos Santana. I can hear Dani counting us in; Grey, Cat and Maia staying up late to sing the choral harmonies...#TimsTwitterListeningParty" data-datetime="8:14 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328793562855694336"
+                 data-text="(The astronauts in the songâ€™s lyrics refer to the Apollo 11 astronauts, who were told by NASA to look for a Chinese queen when they landed on the moon. I liked how that story was another piece of Changâ€™eâ€™s legend) #TimsTwitterListeningParty" data-datetime="8:14 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328793381334560769"
+                 data-text="HONG KONG TRAFFIC LIGHTS FOREVER #TimsTwitterListeningParty" data-datetime="8:13 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328793305723887616"
+                 data-text="This erhu player is Rupert Wu, and I recorded him on SM7/ Zoom recorder in our empty industrial building after I\'d moved to Hong Kong #TimsTwitterListeningParty" data-datetime="8:13 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328793155047657474"
+                 data-text="It was as though Iâ€™d stepped into a portal that would soon transport me from NYC (Yang) to HK (Yin), a transition as profound and permanent as Changâ€™eâ€™s journey to the moon. #TimsTwitterListeningParty" data-datetime="8:12 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328793026693652482"
+                 data-text="I followed my intuition then like never before, and it led me to finish the songs, wrap up my life in New York, and enter the new life in Hong Kong. #TimsTwitterListeningParty" data-datetime="8:12 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="113000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328792936327344128"
+                 data-text="When I arrived in Hong Kong during in October 2017, I fell under the protection of the mid-autumn moon. I stayed in Hong Kong for a further three moons, which is why the album was original called â€˜Four Moonsâ€™ (this is synonymous with April in Chinese). #TimsTwitterListeningParty" data-datetime="8:11 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328792463046225925"
+                 data-text="That summer, I knew that I wanted to be rooted, but I could also see the beauty in the absolute freedom of that life, in that moment, in that city. #TimsTwitterListeningParty" data-datetime="8:09 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1328792438543151105"
+                 data-text="RT @WeirdoMusic4evr: JYLâœ¨ The legendary @1jyl , perfectly on point in 1984âœ¨ Revisit Jyl\'s eponymous 1984 masterpiece on November 24 (2 p.m.â€¦" data-datetime="8:09 PM Nov 17, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328792408029601794"
+                 data-text="When I was writing this song, I was thinking about that. I was thinking about the fragmented ways that my friends and I were living, touring, travelling, being between places. Texting always to say, â€œAre you back in town? Iâ€™ll be back soon.â€ #TimsTwitterListeningParty" data-datetime="8:09 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328792312839876611"
+                 data-text="It was late, but the air was still warm and it was kind of light. New York was so very itself in moments like this. #TimsTwitterListeningParty" data-datetime="8:09 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="119000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328792244346884097"
+                 data-text="In Summer 2017, I went for ice-cream in Greenpoint with Jeff &amp; his partner Dani. Weâ€™d been for a drink and then walked through Mccarren Park to a new vegan ice-cream shop. An old song came over the speakers, and everyone in the shop started dancing.#TimsTwitterListeningParty" data-datetime="8:08 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328791744796889091"
+                 data-text="Hereâ€™s Bea! #TimsTwitterListeningParty https://t.co/S1sNzO1z2j" data-datetime="8:06 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328791297113591808"
+                 data-text="When deciding the track-listing, Bea suggested I make sure it told a story I was happy with. I wanted Writer to head up the songs, as a sort of announcement that there was a bit of fiction in each story, though it was also my life.
+#TimsTwitterListeningParty" data-datetime="8:05 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisjallan%2Fstatus%2F1328790851783446528"
+                 data-text="Reviewed @emmy_the_great\'s latest in last month\'s issue of @narc_magazine. What a treat for tonight\'s @LlSTENlNG_PARTY - https://t.co/Y4xzkZzcdVâ€¦æœˆéŸ³/ #TimsTwitterListeningParty https://t.co/xikHsIFRzU" data-datetime="8:03 PM Nov 17, 2020"> 
+                chrisjallan            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328790728999391232"
+                 data-text="Btw did you know Jackie Collins\' actual sister is JOAN COLLINS? #TimsTwitterListeningParty" data-datetime="8:02 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328790634589728768"
+                 data-text="On Writer, I had in mind a Jackie-Collins-in-later-years narrator, who had spun so many yarns she couldnâ€™t remember which were real. #TimsTwitterListeningParty" data-datetime="8:02 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328790483787804672"
+                 data-text="A casual google search tells me that the language is spoken by approx 80 million people #TimsTwitterListeningParty" data-datetime="8:01 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328790393010458626"
+                 data-text="This song is supposed to set the scene. Itâ€™s about the night I woke up in a small apartment in Sheung Wan and saw the mid-autumn moon. I wrote this in Cantonese because it was entirely true, and felt so personal, I wanted to use my â€˜secretâ€™ language. #TimsTwitterListeningParty" data-datetime="8:01 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Femmy_the_great%2Fstatus%2F1328790053057945600"
+                 data-text="Ooh guys I have a little glossary to share as we start! #TimsTwitterListeningParty https://t.co/jKR10Q0OT3" data-datetime="8:00 PM Nov 17, 2020"> 
+                emmy_the_great            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1328790028701589504"
+                 data-text="Handing over to @emmy_the_great for our April/æœˆéŸ³ @LlSTENlNG_PARTY https://t.co/DBLfNwRPpI" data-datetime="8:00 PM Nov 17, 2020"> 
+                Tim_Burgess            </div>
+            </section>
