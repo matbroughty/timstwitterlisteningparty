@@ -1,0 +1,725 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1Ow8exCwrgZjMEyKo53sKV" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e022372945236923cd5aae87b14" alt="Songs From The Kitchen Disco: Sophie Ellis-Bextor's Greatest Hits " style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Sophie Ellis-Bextor</span><br/><span class="sub-colour">Songs From The Kitchen Disco: Sophie Ellis-Bextor's Greatest Hits </span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(461391)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1Ow8exCwrgZjMEyKo53sKV" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_461391_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 162 tweets from Thursday 19th November 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/SophieEB" target="_blank"><img src="https://pbs.twimg.com/profile_images/1280062243988811776/ULGx3Rru_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@SophieEB</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Groovejet (If This Ain't Love) - 2020" data-start="0"
+             data-duration="226" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Take Me Home (A Girl Like Me)" data-start="228"
+             data-duration="246" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Murder On The Dancefloor" data-start="476"
+             data-duration="230" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Get Over You" data-start="708"
+             data-duration="195" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Music Gets The Best Of Me" data-start="905"
+             data-duration="218" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Mixed Up World" data-start="1125"
+             data-duration="223" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Catch You" data-start="1350"
+             data-duration="198" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Me And My Imagination" data-start="1550"
+             data-duration="205" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Today The Sun's On Us" data-start="1757"
+             data-duration="256" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Bittersweet" data-start="2015"
+             data-duration="208" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Starlight" data-start="2225"
+             data-duration="259" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Not Giving up on Love" data-start="2486"
+             data-duration="175" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Heartbreak (Make Me a Dancer)" data-start="2663"
+             data-duration="206" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="Young Blood" data-start="2871"
+             data-duration="268" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="True Faith - BBC Session" data-start="3141"
+             data-duration="302" style="display:none"></div>
+                <div id="track-16" class="track-list"
+             data-name="Do You Remember the First Time? - Live" data-start="3445"
+             data-duration="253" style="display:none"></div>
+                <div id="track-17" class="track-list"
+             data-name="Come with Us" data-start="3700"
+             data-duration="236" style="display:none"></div>
+                <div id="track-18" class="track-list"
+             data-name="Wild Forever" data-start="3938"
+             data-duration="264" style="display:none"></div>
+                <div id="track-19" class="track-list"
+             data-name="Crying at the Discotheque" data-start="4204"
+             data-duration="231" style="display:none"></div>
+                        <div id="track-20" class="track-list"
+                     data-name="Finished" data-start="4437"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048512372945236923cd5aae87b14" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-162" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-161" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329534798864510976"
+                 data-text="WOW!! Look at you. Amazing. https://t.co/zwkXTbAKOV" data-datetime="9:19 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-160" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329534503262560257"
+                 data-text="Thank you xxx https://t.co/uWievgj0Ha" data-datetime="9:18 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-159" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329534401986883584"
+                 data-text="Also thanks for missing Iâ€™m A Celebrity for me. THAT is devotion. #TimsTwitterListeningParty" data-datetime="9:17 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-158" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329534394831396864"
+                 data-text="@SophieEB A total pleasure! See you at @CampBestival ðŸ¤˜" data-datetime="9:17 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-157" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329534093734924289"
+                 data-text="Thank you and good night! Hahah #TimsTwitterListeningParty" data-datetime="9:16 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-156" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329533993109377031"
+                 data-text="Exactly x https://t.co/t7EOKx63Z5" data-datetime="9:16 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-155" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329533916554911748"
+                 data-text="Thank you so much @Tim_Burgess for letting me do the listening party. So much fun. #TimsTwitterListeningParty" data-datetime="9:16 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329533878407729152"
+                 data-text="Last song. Itâ€™s been an honour to have the queen of the kitchen disco, stop by the @LlSTENlNG_PARTY - hereâ€™s to us all getting through the next couple of weeks &amp; making sure we make the most of 2021 - hoping we can start playing live &amp; going to festivals again. Thanks @SophieEB https://t.co/MdosVG9L3M" data-datetime="9:15 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329533787512954880"
+                 data-text="I feel like now youâ€™ve all seen the inside of my head (as well as my house) #SongsFromTheKitchenDisco #TimsTwitterListeningParty" data-datetime="9:15 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329533664640823296"
+                 data-text="my absolute happy place.. Julie Andrews! This song is from sound of music. In a year like this one gone back to songs that bring me a pure joy.. this is that. Heaven. Good old Rodgers and Hammerstein! #TimsTwitterListeningParty #SongsFromTheKitchenDisco" data-datetime="9:15 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329533497514602496"
+                 data-text="And like all good greatest hits, finished with the singer going mad #TimsTwitterListeningParty A few of my Favourite things" data-datetime="9:14 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329533376836100099"
+                 data-text="It IS 2020 ðŸ˜” https://t.co/txKBWM7ypC" data-datetime="9:13 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329533272032997377"
+                 data-text="Photo from that time I headlined the O2 #cryingatthediscotheque #TimsTwitterListeningParty https://t.co/Y5g7bJiNSJ" data-datetime="9:13 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329533042503913473"
+                 data-text="Loved making this video to highlight whatâ€™s going on in the live music world at the mo @WeMakeEventsoff #TimsTwitterListeningParty" data-datetime="9:12 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329532649237524489"
+                 data-text="Its the perfect song to be the single for this album.. disco roots (the sample comes from a nile Rodgers produced song for Shiela B), and then its next incarnation was the 2000 alcazar version ive covered. Love the poetry of the lyric for now, too. #TimsTwitterListeningParty" data-datetime="9:10 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329532565561204739"
+                 data-text="What a great song crying at the discotheque is. I didnâ€™t write it so I can say that! Iâ€™ve sung it so many times in clubs that itâ€™s been a pleasure to turn it into a single. #TimsTwitterListeningParty #SongsFromTheKitchenDisco" data-datetime="9:10 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329532250225041408"
+                 data-text="I recorded this record when Jesse (my 4th) was 13 weeks old. I was feeding him, cooking for the band and trying to hire a new nanny while recording this record (familia) in 10 days. #TimsTwitterListeningParty" data-datetime="9:09 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329532031789830149"
+                 data-text="I usually start my festival gigs with this one. Itâ€™s a call to arms. #TimsTwitterListeningParty #SongsFromTheKitchenDisco" data-datetime="9:08 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329531866676867073"
+                 data-text="Ooh Iâ€™m not there yet! Still on wild forever https://t.co/KOQTNNObM3" data-datetime="9:07 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329531642076160000"
+                 data-text="And keeping the freedom of new romance no matter what https://t.co/Y9yP37XDgH" data-datetime="9:06 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329531567451082752"
+                 data-text="Exactly https://t.co/Y9yP37XDgH" data-datetime="9:06 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329531396088623104"
+                 data-text="Wild forever is one of my favourite songs ive done. I love the sentiment - that getting older shouldnt stop you having adventures. Especially when you have kids and all that, itâ€™s important to still be a bit unpredictable everyone once in a while.  #TimsTwitterListeningParty" data-datetime="9:06 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329531256128888832"
+                 data-text="Love me a BV" data-datetime="9:05 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329531067120934913"
+                 data-text="No.. is there one? https://t.co/Eesjxl2Rk4" data-datetime="9:04 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329530983129997312"
+                 data-text="Itâ€™s gone a lot quicker than I thought it would tbh! https://t.co/HS5rmEbNBF" data-datetime="9:04 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329530817287163909"
+                 data-text="I have a lovely relationship with that record. Gorgeous to write and make. https://t.co/7pIhI18gFy" data-datetime="9:03 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329530688408875012"
+                 data-text="Iâ€™m so happy working with @EdHarcourt . Heâ€™s a great and generous collaborator and has made me more confident and experimental, too. @CptRJones has been amazingly supportive all the while too. Heâ€™s the one I turn to for all advice. #TimsTwitterListeningParty" data-datetime="9:03 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329530478676860928"
+                 data-text="Come with us was literally written about cults and how they attempt to seduce you and play on your weaknesses.. its so fun to write to a conceit like that. its another song with ed, this time from familia - my 6th album. #TimsTwitterListeningParty #SongsFromTheKitchenDisco" data-datetime="9:02 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329530165756620802"
+                 data-text="Also Iâ€™ve worked with some amazing people over the years. This album is 20 years in the making. Lucky lucky me. Xxx #ginandtonicskickedin #TimsTwitterListeningParty" data-datetime="9:01 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="119000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329529984243863559"
+                 data-text="Iâ€™m so lucky to have such a great band #TimsTwitterListeningParty #SongsFromTheKitchenDisco" data-datetime="9:00 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329529487739015169"
+                 data-text="Phew https://t.co/AbgRQrhcdC" data-datetime="8:58 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329529389713940482"
+                 data-text="Haha. https://t.co/GtlKBQ7NdQ" data-datetime="8:58 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329529351679975427"
+                 data-text="Do you remember the first time takes me right back ti my teenage years. Captures the uncertainty and the downbeat emotion of remembering the love affairs that never lived up to expectation. I hope pulp are happy with my cover. so many good songs. #TimsTwitterListeningParty" data-datetime="8:57 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329529241009090560"
+                 data-text="ðŸ˜‚ https://t.co/pxdPsWTKON" data-datetime="8:57 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329529206758379521"
+                 data-text="More listening party gold https://t.co/DKsUrwC638" data-datetime="8:57 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329529167344447492"
+                 data-text="Maybe donâ€™t shy away from familia https://t.co/Vu1cNZ9oaY" data-datetime="8:57 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329529042819813380"
+                 data-text="Ah thatâ€™s a brilliant pop record! I adore the original https://t.co/wz4AVQUkwR" data-datetime="8:56 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329528904147738626"
+                 data-text="Itâ€™s tricky to remember the words live, I confess. #TimsTwitterListeningParty" data-datetime="8:56 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329528757397430275"
+                 data-text="I wouldnâ€™t have done it. Itâ€™s entirely in tribute to this year and our little discos x https://t.co/uXSJo5iMkQ" data-datetime="8:55 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329528580615917569"
+                 data-text="Bernard sumner once threw up on my ex boyfriends shoes #fact #TimsTwitterListeningParty" data-datetime="8:54 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329528458788167682"
+                 data-text="What a song https://t.co/2F0TknOlju" data-datetime="8:54 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329528444846272515"
+                 data-text="#TimsTwitterListeningParty https://t.co/sX7yQnaxqE" data-datetime="8:54 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329528383944974340"
+                 data-text="That video! https://t.co/zKnoKAXYNA" data-datetime="8:54 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329528359907446787"
+                 data-text="@SophieEB Sounds fantastic ðŸ¤˜" data-datetime="8:53 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329528344631762947"
+                 data-text="Im surprised by how happy itâ€™s making me to listen back to this album, but then if you canâ€™t be happy with a best of, whatâ€™s the point? #TimsTwitterListeningParty #songsfromthekitchendisco" data-datetime="8:53 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="143000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329528134123859969"
+                 data-text="True faith is such a brilliant record and I hope ive done it justice. such a brilliant atmosphere - melancholic relentless and exciting. Playing it live makes me whirl around. It was one of my favourite covers from out kitchen discos, too. #TimsTwitterListeningParty" data-datetime="8:53 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329527535605080072"
+                 data-text="Itâ€™s the first time Iâ€™ve been able to listen to it for a while. #TimsTwitterListeningParty" data-datetime="8:50 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329527427106738180"
+                 data-text="@Tim_Burgess Thank you x" data-datetime="8:50 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329527339504574467"
+                 data-text="Young Blood by @SophieEB  - what a beautiful song â¤ï¸" data-datetime="8:49 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329527297674764293"
+                 data-text="When I recorded this, I was singing it about richard too.. I could see him in the kitchen of the studio wandering around in his socks and eating houmous. ðŸ˜‚ #TimsTwitterListeningParty" data-datetime="8:49 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329527102467616769"
+                 data-text="Welcome! https://t.co/7DwioWuPwy" data-datetime="8:48 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329527059819995139"
+                 data-text="This one makes me weepy as I miss my stepdad so much #TimsTwitterListeningParty" data-datetime="8:48 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329527016379572236"
+                 data-text="@LlSTENlNG_PARTY @SophieEB https://t.co/oudIV3ZSv3" data-datetime="8:48 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329526992048451586"
+                 data-text="Ooh young blood. Written with ed Harcourt and inspired by my mum and step dad Johnâ€™s relationship (and my own too). I do believe in the sentiment - when you fall in love with someone part of you stays the same age no matter how long passes.. #TimsTwitterListeningParty" data-datetime="8:48 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329526848791916547"
+                 data-text="Nah I didnâ€™t invent a disco at home or the healing powers of music. #TimsTwitterListeningParty https://t.co/rxrVjB4S4J" data-datetime="8:47 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329526665391857664"
+                 data-text="I basically channel that vibe on stage https://t.co/m3atOuZ761" data-datetime="8:47 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329526616033284100"
+                 data-text="Yes! #TimsTwitterListeningParty https://t.co/m3atOuZ761" data-datetime="8:47 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329526557413617664"
+                 data-text="Itâ€™s so great with the bass line. Clever Freemasons and Biff (who I wrote it with) https://t.co/560cZ9CyMV" data-datetime="8:46 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1329526488534831110"
+                 data-text="Songs from the Kitchen Disco by @SophieEB as a gif please. Go! https://t.co/ICoi4e8hEc" data-datetime="8:46 PM Nov 19, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329526343399321608"
+                 data-text="Heartbreak TOON! what a song this is. Arguably my favourite live as its such a powerhouse of a song. It makes me feel indestructible. #TimsTwitterListeningParty" data-datetime="8:45 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329525998560419843"
+                 data-text="Aw thank you (even though you say it to every listening party haha) https://t.co/Js89EIzWzR" data-datetime="8:44 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329525903068717057"
+                 data-text="I went full on dance for that one! https://t.co/ZrP6yxKp39" data-datetime="8:44 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329525798232072205"
+                 data-text="I once sang this in front of about 30,000 trance fans with Armin on his tour. I sang during the night in beruit and as I landed at night and left first flight home, it was like Iâ€™d dreamt the whole thing. #TimsTwitterListeningParty" data-datetime="8:43 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329525508405665967"
+                 data-text="Love that! X https://t.co/SvvPcZqESL" data-datetime="8:42 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329525403329892357"
+                 data-text="Not giving up is my journey into trance. itâ€™s written with DJ admin van buuren who was so clever as oringally the Nervo sisters and I wrote the topline over a different set of chords entirely then armin completely changed it and itâ€™s even better. #TimsTwitterListeningParty" data-datetime="8:42 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329525200409534464"
+                 data-text="Ah thatâ€™s so cute! Someone up there likes me x https://t.co/G5atQaoWfA" data-datetime="8:41 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329525070759415808"
+                 data-text="Favourite @SophieEB song??#TimsTwitterListeningParty" data-datetime="8:40 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329525051960532998"
+                 data-text="Thank you @Tim_Burgess https://t.co/obLgZKsfMK" data-datetime="8:40 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329524950693273602"
+                 data-text="I just asked him.. he says Young Blood or Wild Forever https://t.co/1bbTdfct6j" data-datetime="8:40 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329524845927931904"
+                 data-text="Yes thatâ€™s true! Can you see the big disco ball overhead? https://t.co/wT7EzkZHl4" data-datetime="8:39 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329524764491325442"
+                 data-text="Haha ðŸ˜‚ https://t.co/8zyK3XBE8O" data-datetime="8:39 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329524625181712385"
+                 data-text="Me too https://t.co/1f9y5gzgx2" data-datetime="8:39 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329524443337601025"
+                 data-text="I listen through to all my music like this every night, of course, but itâ€™s so nice to have company. #TimsTwitterListeningParty" data-datetime="8:38 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329524286189674513"
+                 data-text="Starlight is my eighties slow dance disco moment. Written with Hannah again and Richard x, I love itâ€™s landscape. Itâ€™s very romantic. #TimsTwitterListeningParty" data-datetime="8:37 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329524168245846040"
+                 data-text="@SophieEB Yep!" data-datetime="8:37 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329524125379989509"
+                 data-text="Are you dancing? Itâ€™s not working if youâ€™re not. ðŸ’ƒ https://t.co/P3Hjxzif1z" data-datetime="8:37 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329523998137479176"
+                 data-text="Total pop amazingness from @SophieEB ðŸ’¥ðŸ’¥ðŸ’¥ðŸ’¥" data-datetime="8:36 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329523927811563524"
+                 data-text="Is it not?? https://t.co/z4dZPEQuFD" data-datetime="8:36 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329523831162216487"
+                 data-text="Yes please! https://t.co/9ToS7Ux8kB" data-datetime="8:35 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329523786320896001"
+                 data-text="Haha https://t.co/L1LQxZ4ue0" data-datetime="8:35 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329523557525823499"
+                 data-text="Annoyingly itâ€™s in the wrong chronological place on the record. A stupid mistake. I donâ€™t think Iâ€™ve made any album without mistakes on the artwork but I am kicking myself over this one! Heartbreak should be first in this little run of songs.. #TimsTwitterListeningParty" data-datetime="8:34 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329523433936465921"
+                 data-text="Bittersweet is one of those songs I thought was going to be a smash - then it wasnâ€™t as big as I thought but I still love it. #TimsTwitterListeningParty" data-datetime="8:34 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329523297344696322"
+                 data-text="Anyone else wearing these right now? #TimsTwitterListeningParty https://t.co/LqgL57QOw4" data-datetime="8:33 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329523059292839951"
+                 data-text="LOVE fleetwood Mac. Probably used them as reference for the bvâ€™s https://t.co/hAiLBEi6Z9" data-datetime="8:32 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522927012864000"
+                 data-text="Cheers! https://t.co/ANMsaPA4S3" data-datetime="8:32 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522883845099520"
+                 data-text="Agreed. Never let the truth in the way of a good story. https://t.co/ApY62T68dZ" data-datetime="8:32 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522770905018374"
+                 data-text="I worked so hard to make this album the best I could. I felt album 3 was make or break for the day job. https://t.co/hnrg38u5bI" data-datetime="8:31 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522680907915264"
+                 data-text="Thank you Iâ€™m proud of it x https://t.co/sK2dEwOC8h" data-datetime="8:31 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522568919982081"
+                 data-text="Iâ€™m having a g&amp;t https://t.co/VCEqTVLYUQ" data-datetime="8:30 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522457552822288"
+                 data-text="Am I tweeting more or less than kylie? #TimsTwitterListeningParty ðŸ˜‚" data-datetime="8:30 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522355471851520"
+                 data-text="Today the sunâ€™s on us is all about giving yourself permission to enjoy the moment, not worry about if it all goes wrong. I think it was inspired in no small part by my relationship with Richard and not being suspicious of the happiness we had found. #TimsTwitterListeningParty" data-datetime="8:30 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522168376545283"
+                 data-text="Woo! A festival! https://t.co/JQPh1pHPTR" data-datetime="8:29 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329522163586650112"
+                 data-text="Everyone having fun? Want a drink from the bar @SophieEB? https://t.co/IuwsoYQ4zs" data-datetime="8:29 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522111380123649"
+                 data-text="Occasionally lyric (with young blood) https://t.co/PAk3FKPrMF" data-datetime="8:29 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522064093536258"
+                 data-text="Melody for me https://t.co/PAk3FKPrMF" data-datetime="8:28 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329522022825795584"
+                 data-text="Amazing https://t.co/STVYUuzNOX" data-datetime="8:28 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329522020170805249"
+                 data-text="Me and @SophieEB will be at @CampBestival 2021 
+Maybe see you there â›ºï¸ ðŸ¤˜ https://t.co/gEGRQvCu0g" data-datetime="8:28 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329521981876809728"
+                 data-text="Yep itâ€™s there x https://t.co/fZPfzructr" data-datetime="8:28 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329521909352984576"
+                 data-text="And now itâ€™s our song! https://t.co/UO0BocrU0z" data-datetime="8:28 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329521769565319169"
+                 data-text="Not too often but yes sometimes - even with songs I sing all the time! Muscle memory normally kicks in x https://t.co/8rMmW18s50" data-datetime="8:27 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329521658240114690"
+                 data-text="Thanks. Had my mumâ€™s dog Nancy in it too x https://t.co/gHLUIj6vtp" data-datetime="8:27 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329521562018607109"
+                 data-text="Sorry about your phone but all else, lovely! X https://t.co/Ru2eCKVX9b" data-datetime="8:26 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329521483907993601"
+                 data-text="Me and my imagination was written with Hannah robinson who I wrote very happily with. We share similar sensibilities when it comes to pop, and also laughed a lot together as we went along. Thats the best kind of working. #TimsTwitterListeningParty" data-datetime="8:26 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329521401775132675"
+                 data-text="I have done many times but it makes no difference ðŸ˜‚ https://t.co/hOQAPfLLPt" data-datetime="8:26 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329521214017114113"
+                 data-text="Sure! Am open to anything if I like it. Had fun with armin. https://t.co/C7sbgM2181" data-datetime="8:25 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329521082894864384"
+                 data-text="Yes! Love doing this one. Did it last year with orchestra. Have to be very careful not to sing â€˜cashewâ€™ https://t.co/wwbYlPKJQU" data-datetime="8:25 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329520883568947201"
+                 data-text="Me too! https://t.co/Wx2WddTb3z" data-datetime="8:24 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329520624834912266"
+                 data-text="Catch you was my first single from my third album. Its a Cathy Dennis song (who also wrote canâ€™t get you out of my head which everyone thinks I turned down, but I didnâ€™t. I actually didnâ€™t hear it until it was on the radio) #TimsTwitterListeningParty" data-datetime="8:23 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329520467129085952"
+                 data-text="He is x https://t.co/DkFuJIoKfi" data-datetime="8:22 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329520284932714499"
+                 data-text="Thank you x https://t.co/4yCMZ07dqf" data-datetime="8:21 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329520222374666254"
+                 data-text="Hmm I thought the same thing today https://t.co/mdtOkaw5ti" data-datetime="8:21 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329520167022456838"
+                 data-text="They have and once complained but it was pretty loud that week tbf https://t.co/pXCZSJRCl5" data-datetime="8:21 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329520108784537601"
+                 data-text="Lyrics to Mixed Up World are great @SophieEB" data-datetime="8:21 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329520060025761794"
+                 data-text="Ah thank you #TimsTwitterListeningParty https://t.co/toKI2sEEhn" data-datetime="8:20 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329520003247378432"
+                 data-text="I didnâ€™t do that one until Halloween... itâ€™s all the singles and some of the covers #TimsTwitterListeningParty https://t.co/9Zw41N3rXN" data-datetime="8:20 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329519892391931907"
+                 data-text="Yes I was half way through when the lockdown started. Itâ€™s prog pop with @EdHarcourt x itâ€™s coming along nicely! https://t.co/Cwnx3rfNJR" data-datetime="8:20 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fvictor_calazans%2Fstatus%2F1329519828856692737"
+                 data-text="@SophieEB @Tim_Burgess, @LlSTENlNG_PARTY #TimsTwitterListeningPartyÂ  
+Iâ€™m ready for Mixed Up World with my vinyl, one of the best single cover https://t.co/9Pw9Jo1Hbx" data-datetime="8:20 PM Nov 19, 2020"> 
+                victor_calazans            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329519698690629634"
+                 data-text="Mixed up world was written when the Iraq war started and I felt powerless. itâ€™s obviously still a lighthearted song but itâ€™s core was in real emotion.. I suppose itâ€™s also about feeling like life is a bit heavy and cynical and wanting to find the joy. #TimsTwitterListeningParty" data-datetime="8:19 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329519640108797958"
+                 data-text="@salhoughton @SophieEB Me neither" data-datetime="8:19 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329519562992349184"
+                 data-text="Xxx https://t.co/EtqlTLHEYe" data-datetime="8:18 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329519422252474371"
+                 data-text="Good for you! XX https://t.co/0jDcsitcQE" data-datetime="8:18 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329519407094247429"
+                 data-text="RT @Tim_Burgess: Brilliant use of handclaps. So simple #TimsTwitterListeningParty" data-datetime="8:18 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329519368355672069"
+                 data-text="Thank you and thanks for coming. Helped us all enormously too. What a year! Xxx https://t.co/7WcVeAJrWT" data-datetime="8:18 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329519286679986178"
+                 data-text="A huge high five for @SophieEB for her kitchen discos - our second fave lockdown thang (after the listening parties of course) ðŸ•ºðŸ’ƒ" data-datetime="8:17 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329519141879943170"
+                 data-text="It is! X https://t.co/9qbNYoVIwm" data-datetime="8:17 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329519105557360640"
+                 data-text="Hmm not that I know of. Sorry - thatâ€™s annoying x https://t.co/jpDMLZZhLb" data-datetime="8:17 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329518833288220673"
+                 data-text="Had such fun doing the (second) video in Spain #TimsTwitterListeningParty" data-datetime="8:16 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329518779852877828"
+                 data-text="RT @Tim_Burgess: Checking in where everyone is for our @SophieEB Kitchen Disco @LlSTENlNG_PARTY 
+
+Bonus points of pics of actual kitchen diâ€¦" data-datetime="8:15 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329518749842542596"
+                 data-text="Music gets the best of me is quite a sweet little love song really. Music was my first love, after all. Another one written with greg Alexander (who wrote murder, too) #TimsTwitterListeningParty" data-datetime="8:15 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329518660348768256"
+                 data-text="Thanks for all the support with the album this week, by the way #songsfromthekitchendisco" data-datetime="8:15 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329518492467535875"
+                 data-text="Maybe.. nice idea x https://t.co/vXavlMlIYu" data-datetime="8:14 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329518425388052486"
+                 data-text="Ooh LOVED that tour https://t.co/oxdCa9KvH7" data-datetime="8:14 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329518353807978497"
+                 data-text="ðŸ˜˜ https://t.co/23wgmF15fP" data-datetime="8:14 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329518233163063299"
+                 data-text="I remember locking myself in the loo just for a break #TimsTwitterListeningParty" data-datetime="8:13 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329518118608248832"
+                 data-text="I didnâ€™t actually enjoy recording this song very much (v intense production company) but I do like the song #TimsTwitterListeningParty" data-datetime="8:13 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329517923015254016"
+                 data-text="Get over you. Originally called â€˜donâ€™t step on my grooveâ€™ when I met it but I changed the lyrics as I thought after groovejet and murder (better not kill the groove) people might think I was groove obsessed. #TimsTwitterListeningParty #songsfromthekitchendisco" data-datetime="8:12 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329517778018201605"
+                 data-text="I havenâ€™t actually acted on this threat yet.. but you never know https://t.co/cyHeQ4HfgV" data-datetime="8:11 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329517681419161603"
+                 data-text="Murder on the Dancefloor - ðŸ¤¸â€â™€ï¸ðŸ™Œâ¤ï¸ @SophieEB gonna burn this god damn house right down" data-datetime="8:11 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329517626196975617"
+                 data-text="Fingers crossed https://t.co/vWzbBzNj87" data-datetime="8:11 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329517540574441472"
+                 data-text="Aw thanks xx https://t.co/8zklSWzRTM" data-datetime="8:10 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329517507984683017"
+                 data-text="I still do the dance from the video when I sing it live - including the foot stomp 
+#TimsTwitterListeningParty" data-datetime="8:10 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329517372470915073"
+                 data-text="Itâ€™s Murder On The Dance Floor
+@SophieEB #TimsTwitterListeningParty https://t.co/t3nA6xTv3w" data-datetime="8:10 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329517337893072897"
+                 data-text="ðŸ¥³ https://t.co/XvCHKYrzDu" data-datetime="8:10 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329517285858553857"
+                 data-text="Itâ€™s the song that gave birth to this joke: Sophie Ellis-Bextor has been found dead in the hotel room of a top French footballer. Police have confirmed they\'re treating it as murder on Zidane\'s floor. Boom boom! #TimsTwitterListeningParty" data-datetime="8:09 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="145000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329517165146492949"
+                 data-text="This is a new one of mine called Murder on the Dancefloor. Hope you like it! #TimsTwitterListeningParty" data-datetime="8:09 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329516558331342848"
+                 data-text="Me too! It was a dare by my band (including my now-husband richard) https://t.co/WgKwCdAgEh" data-datetime="8:07 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329516425652940800"
+                 data-text="Iâ€™d love to https://t.co/4QgCsRUCDc" data-datetime="8:06 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329516330014429193"
+                 data-text="Aw my little 21 year old voice #TimsTwitterListeningParty #baby" data-datetime="8:06 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329516184228802560"
+                 data-text="@jensparkinson @abifrqnklin Thank you #TimsTwitterListeningParty" data-datetime="8:05 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329515984462503938"
+                 data-text="How to dress for this song #TimsTwitterListeningParty https://t.co/mNJbbzh2C6" data-datetime="8:04 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329515925398310916"
+                 data-text="Take me home is such a great tune. If you donâ€™t know the original Cher version, check it out (but not now as we are at the listening party) #TimsTwitterListeningParty" data-datetime="8:04 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329515838748188675"
+                 data-text="Stupid ending gone from the original haha #TimsTwitterListeningParty" data-datetime="8:04 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329515751414378496"
+                 data-text="I now own a tuk tuk. My postman asked me if it was the same one ðŸ˜‚ #TimsTwitterListeningParty https://t.co/NlOAsoxIrI" data-datetime="8:03 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329515714567413762"
+                 data-text="Why does it feel so good. Groovejet (if this aint love) such a banger x @SophieEB" data-datetime="8:03 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329515606538924032"
+                 data-text="Has been on the last two ðŸ˜‚ https://t.co/LE5MjdwAJy" data-datetime="8:03 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329515543410462722"
+                 data-text="Iâ€™m ready!! https://t.co/5tkbyDy7Xi" data-datetime="8:03 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329515490876805134"
+                 data-text="We are going in running order.. xx https://t.co/Rxpgf7mast" data-datetime="8:02 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329515413261197312"
+                 data-text="I love that so many folk have happy memories for this song. X https://t.co/Obme2UTA7s" data-datetime="8:02 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329515363697123329"
+                 data-text="ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜Groovejet ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜" data-datetime="8:02 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329515169328881665"
+                 data-text="Ah, groovejet. The song that changed my life. Up until this song I thought I hated dance music. This is the 2020 version which James from the freemasons did with me as Iâ€™ve never had permission to use the original on any of my albums. #timstwitterlisteningparty" data-datetime="8:01 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FSophieEB%2Fstatus%2F1329514970917318660"
+                 data-text="Woo this is fun! #TimsTwitterListeningParty" data-datetime="8:00 PM Nov 19, 2020"> 
+                SophieEB            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1329514810418016258"
+                 data-text="Time to take to the kitchen disco dance floor
+
+Over to you @SophieEB https://t.co/ljZvCqboq4" data-datetime="8:00 PM Nov 19, 2020"> 
+                Tim_Burgess            </div>
+            </section>
