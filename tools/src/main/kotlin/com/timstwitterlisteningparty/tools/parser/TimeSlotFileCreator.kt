@@ -89,9 +89,9 @@ class TimeSlotFileCreator : HtmlFileCreator {
       completed.filter { it.tweeterLinkList().isNotEmpty()
         && it.spotifyImgLinkSmall.isNotEmpty()
         && it.spotifyImgLink.contains("https://i.scdn.co", ignoreCase = true)}
-        .sortedBy { it.isoDate }.chunked(24).toList()
+        .sortedBy { it.isoDate }.chunked(12).toList()
     val upcomingList: List<List<TimeSlot>> =
-      upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(24).toList()
+      upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(12).toList()
     val input: Map<String, Any> = mapOf(
       Pair("fullSize", fullSize),
       Pair("completed_list", completedList),

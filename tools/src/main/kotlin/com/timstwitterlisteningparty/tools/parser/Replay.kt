@@ -30,7 +30,7 @@ data class Replay(@CsvBindByPosition(position = 0)
    * Create a hash of the band and album
    */
   fun hashBandAlbum(): Int {
-    return band.trim().toLowerCase().plus(album.trim().toLowerCase()).hashCode()
+    return band.trim().toLowerCase().plus(album.trim().toLowerCase()).replace("&amp;", "&").hashCode()
   }
 
   fun isEmpty(): Boolean {
