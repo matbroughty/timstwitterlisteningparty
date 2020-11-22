@@ -55,7 +55,9 @@
             <td style="width:15%">
               <a class="pure-button pure-button-active"
                  href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
-                 title="Twitter Listening Party Announcement (ttlp ${slot.listeningPartyNumber})">
+                 title="Twitter Listening Party Announcement <#if slot.hasNumber() >
+                 (ttlp ${slot.listeningPartyNumber})
+              </#if>">
 
                 <#if slot.isToday() >
                   <i class="fab fa-twitter"></i>
