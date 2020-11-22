@@ -53,7 +53,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val allOneTableFile = File("snippets/all-time-slots.html")
     val wallHtml = buildWallHtml(completed, upcoming)
     val wallFile = File("snippets/wall.html")
-    val wallFullSizeHtml = buildWallHtml(completed, upcoming, true)
+    val wallFullSizeHtml = buildWallHtml(completed, upcoming, true, 25)
     val wallFullSize = File("pages/timswall.html")
 
     // if called from Lambda we can't write to the file
@@ -83,15 +83,15 @@ class TimeSlotFileCreator : HtmlFileCreator {
    * All album artwork - but only if the [TimeSlot.spotifyImgLink] is populated and is a spotify album link.
    * Otherwise larger artworks sends the wall out of sync
    */
-  private fun buildWallHtml(completed: List<TimeSlot>, upcoming: List<TimeSlot>, fullSize: Boolean = false): String {
+  private fun buildWallHtml(completed: List<TimeSlot>, upcoming: List<TimeSlot>, fullSize: Boolean = false, split : Int = 12): String {
     val template = FreeMarkerUtils().getFreeMarker(WALL_FTL)
     val completedList: List<List<TimeSlot>> =
       completed.filter { it.tweeterLinkList().isNotEmpty()
         && it.spotifyImgLinkSmall.isNotEmpty()
         && it.spotifyImgLink.contains("https://i.scdn.co", ignoreCase = true)}
-        .sortedBy { it.isoDate }.chunked(12).toList()
+        .sortedBy { it.isoDate }.chunked(split).toList()
     val upcomingList: List<List<TimeSlot>> =
-      upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(12).toList()
+      upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(split).toList()
     val input: Map<String, Any> = mapOf(
       Pair("fullSize", fullSize),
       Pair("completed_list", completedList),
