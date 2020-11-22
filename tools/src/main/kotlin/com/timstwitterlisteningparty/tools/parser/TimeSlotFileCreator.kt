@@ -53,7 +53,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val allOneTableFile = File("snippets/all-time-slots.html")
     val wallHtml = buildWallHtml(completed, upcoming)
     val wallFile = File("snippets/wall.html")
-    val wallFullSizeHtml = buildWallHtml(completed, upcoming, true, 25)
+    val wallFullSizeHtml = buildWallHtml(completed, upcoming, true, 20)
     val wallFullSize = File("pages/timswall.html")
 
     // if called from Lambda we can't write to the file
@@ -84,12 +84,14 @@ class TimeSlotFileCreator : HtmlFileCreator {
    * Otherwise larger artworks sends the wall out of sync
    */
   private fun buildWallHtml(completed: List<TimeSlot>, upcoming: List<TimeSlot>, fullSize: Boolean = false, split : Int = 12): String {
+
     val template = FreeMarkerUtils().getFreeMarker(WALL_FTL)
     val completedList: List<List<TimeSlot>> =
       completed.filter { it.tweeterLinkList().isNotEmpty()
         && it.spotifyImgLinkSmall.isNotEmpty()
         && it.spotifyImgLink.contains("https://i.scdn.co", ignoreCase = true)}
         .sortedBy { it.isoDate }.chunked(split).toList()
+    logger.info("wall album fullSize:$fullSize artwork number ${completed.size} with ${completedList.size} rows at $split length and ${completed.size % completedList.size} on final row")
     val upcomingList: List<List<TimeSlot>> =
       upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(split).toList()
     val input: Map<String, Any> = mapOf(
