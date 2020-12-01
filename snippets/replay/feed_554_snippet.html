@@ -1,0 +1,684 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5HeMzB3lNUuYJGjfHYYlml" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02f755a81a6699fb509fbb7451" alt="Effloresce " style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Oceansize</span><br/><span class="sub-colour">Effloresce </span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(149726)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5HeMzB3lNUuYJGjfHYYlml" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_149726_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 136 tweets from Tuesday 1st December 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Vennart" target="_blank"><img src="https://pbs.twimg.com/profile_images/1324283219156631552/F6Ud7iKI_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Vennart</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/stevesize" target="_blank"><img src="https://pbs.twimg.com/profile_images/3731345437/a8520495075591860e83790ded6d743d_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@stevesize</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="I am the Morning - Remastered" data-start="0"
+             data-duration="258" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Catalyst - Remastered" data-start="260"
+             data-duration="400" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="One Day All This Could be Yours - Remastered" data-start="662"
+             data-duration="260" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Massive Bereavement - Remastered" data-start="924"
+             data-duration="600" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Rinsed - Remastered" data-start="1526"
+             data-duration="239" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="You Wish - Remastered" data-start="1767"
+             data-duration="360" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Remember Where You Are - Remastered" data-start="2129"
+             data-duration="322" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Amputee - Remastered" data-start="2453"
+             data-duration="333" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Unravel - Remastered" data-start="2788"
+             data-duration="170" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Women Who Love Men Who Love Drugs - Remastered" data-start="2960"
+             data-duration="512" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Saturday Morning Breakfast Show - Remastered" data-start="3474"
+             data-duration="545" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="4021"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851f755a81a6699fb509fbb7451" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-136" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1333913475119255552"
+                 data-text="@Vennart Thanks coming right back atcha Mike x x" data-datetime="11:18 PM Dec 1, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333913272203038722"
+                 data-text="PHEW! That\'s all folks.
+
+Thank YOU for being here. 
+
+Thank you @Tim_Burgess for bringing this magical plan into our otherwise depleted lives.
+
+All love.
+
+x
+
+#timstwitterlisteningparty" data-datetime="11:18 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333912958188068868"
+                 data-text="Hats off to Chris for making our dreams come true on this record. He pulled out every fucking trick he had to make this record sound the way it does. 
+#timstwitterlisteningparty" data-datetime="11:16 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333912900029861888"
+                 data-text="The strings section are meant to sound like a bit in Rocky II, which I also reference in my new song Elemental. I fucking love Rocky." data-datetime="11:16 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="123000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333912735512399874"
+                 data-text="#timstwitterlisteningparty Aww thanks everyone! x" data-datetime="11:15 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333912219457900555"
+                 data-text="Trying to be Talk Talk here, obviously" data-datetime="11:13 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1333912210289127431"
+                 data-text="Such a brilliant @LlSTENlNG_PARTY - thanks @Vennart ðŸ¤˜ðŸ¤˜" data-datetime="11:13 PM Dec 1, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333912131507544064"
+                 data-text="@steveandthesea nah,we would never think such things ðŸ˜†" data-datetime="11:13 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333911837772025856"
+                 data-text="To this day, heâ€™ll probably tell you the beat on the record isnâ€™t as good as the OG version that no-one can remember." data-datetime="11:12 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333911766997331974"
+                 data-text="Secondly, Mark had forgotten the beat, and had lost the cassette with it on. He outright refused to even try to play the song until he found the tape. He never did." data-datetime="11:12 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333911709858324482"
+                 data-text="I doubled my guitar with my acoustic #timstwitterlisteningparty" data-datetime="11:11 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333911656259342337"
+                 data-text="This one sat on the shelf for around 2 years before we recorded it, for 2 reasons - Firstly, we were petrified about playing it live cos it was 10 minutes with no ROCK section." data-datetime="11:11 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333911533966024704"
+                 data-text="@ian_wd ha!" data-datetime="11:11 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333911228960436224"
+                 data-text="Can only have been @stevesize https://t.co/ugEHIpOf9U" data-datetime="11:09 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333911224803790850"
+                 data-text="Im so glad we recorded strings for this - Martin and Kimberlee McCarrick #timstwitterlisteningparty" data-datetime="11:09 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333911044381618179"
+                 data-text="LONG FORGOTTEN! Wow. This one was written while I was at home getting ditched by my girlfriend. 
+
+I believe itâ€™s mainly Steveâ€™s baby, all finger-picky/weird tuning goodness. 
+#timstwitterlisteningparty" data-datetime="11:09 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333910953742700545"
+                 data-text="strange tuning on my guitar here - CGCEAD #timstwitterlisteningparty" data-datetime="11:08 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333910741213188102"
+                 data-text="@ClaireYelmorb ðŸ¤£" data-datetime="11:07 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333910692974497793"
+                 data-text="Long Forgotten - working title Tippy Tappy #timstwitterlisteningparty" data-datetime="11:07 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333910410144194561"
+                 data-text="@cjssheldon I think we did yes mate. I remember trying to beat the red line in auto tune ðŸ˜€" data-datetime="11:06 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333910400300175362"
+                 data-text="@ClaireYelmorb Fuck OFF xxxxxxx" data-datetime="11:06 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="132000" data-url="https%3A%2F%2Ftwitter.com%2Frichardaingram%2Fstatus%2F1333910317965996035"
+                 data-text="#timstwitterlisteningparty https://t.co/KNFJlzMegv" data-datetime="11:06 PM Dec 1, 2020"> 
+                richardaingram            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333909765802631172"
+                 data-text="ðŸ˜Ž https://t.co/n0XFsLf9kg" data-datetime="11:04 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333909691987079178"
+                 data-text="And YES it sounds like a Pearl Jam song. I\'d not heard that song in a decade at this time, but I can\'t deny I knew it. Genuine subconscious mistake, I swear!" data-datetime="11:03 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333909603734728708"
+                 data-text="Fun fact - I didnt always sing the aahs in the second breakdown. It was invented by Mike and I think the first time we ever recorded it he was singing it. Thanks for handing it to me Mike! x #timstwitterlisteningparty" data-datetime="11:03 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333909495135744000"
+                 data-text="Even if itâ€™s a total Mogwai rip off." data-datetime="11:03 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333909177413087237"
+                 data-text="The song sounded just sounded like a miserable hangover to me. I imagined what a shit job it must be, to work on Saturday morning kids TV, being as we were off our heads most of the time Nothing much has changed, really. https://t.co/YTLtgNYhJ8" data-datetime="11:01 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333908949607837701"
+                 data-text="More Claire Lemmon#timstwitterlisteningparty ðŸ˜€" data-datetime="11:00 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333908799690858502"
+                 data-text="Itâ€™s basically 4 songs all glued together. Badly. But it was a lot of fun to play." data-datetime="11:00 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333908579850522630"
+                 data-text="SMBS! This one of our oldest songs, and had been in the set since day one. All based on ideas Jon had written whilst at Uni, as I recall. 
+#timstwitterlisteningparty" data-datetime="10:59 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="113000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333908445813235712"
+                 data-text="Saturday Morning - I loved to sing this one #timstwitterlisteningparty" data-datetime="10:58 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333907968224604161"
+                 data-text="The end was an homage to Steve Reich. The end vocals are loops I made on an Akai Headrush pedal. My guitar part is the same as the end of Fairies Wear Boots by Sabbath, but I never told anyone that cos it wouldâ€™ve gotten vetoed." data-datetime="10:56 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333907739429527555"
+                 data-text="I love these chimey guitars. all the same notes but in different places #timstwitterlisteningparty" data-datetime="10:56 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333907566297042947"
+                 data-text="Gambler had a wee toy that he talked into then put it against his pickups https://t.co/QHvUOBqLD1" data-datetime="10:55 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333907413435604997"
+                 data-text="still raging https://t.co/CTxP49v09y" data-datetime="10:54 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FBenIllustrator%2Fstatus%2F1333907381235970048"
+                 data-text="@Handsome_Frank What a thread!
+
+Mine would have to be this set of scenes I illustrated for @Tim_Burgess of people (deep in lockdown) connecting thanks to music and the internet. âœŒï¸ https://t.co/hmYJP5fbsG" data-datetime="10:54 PM Dec 1, 2020"> 
+                BenIllustrator            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333907260045725701"
+                 data-text="Octaver on the bass. Was some old zoom effects thing we picked up from somewhere I think #timstwitterlisteningparty" data-datetime="10:54 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333907208711643139"
+                 data-text="I fucking love this song with all my heart 
+
+#timstwitterlisteningparty" data-datetime="10:53 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333907082907693056"
+                 data-text="It was an SHE, remember? She threatened legal action cos we didn\'t get full permission https://t.co/XCQPQdMAkl" data-datetime="10:53 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333907051689414658"
+                 data-text="@cjssheldon I think so yeh!" data-datetime="10:53 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333906816145747968"
+                 data-text="The title came from Jon, who saw it on the front of Cosmopolitan magazine
+
+Again, another real moment of â€˜THIS is who were areâ€™ in a way. This song stayed around, to the point where it was the final song we ever played together." data-datetime="10:52 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333906737108226057"
+                 data-text="\'Lifus Exitus\' cheers Shamefaced" data-datetime="10:52 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333906699669934085"
+                 data-text="The three amp trick Mike #timstwitterlisteningparty" data-datetime="10:51 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333906656170811395"
+                 data-text="The lyrics are total phonetic nonsense. I figured if Sigur Ros can get away with only having 5 syllables then I can talk random shit and itâ€™ll be fine
+
+#timstwitterlisteningparty" data-datetime="10:51 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333906436259241985"
+                 data-text="WWMWLD! Wow. This fucker. This song was originally called â€˜Can Jamâ€™, and was barely written the time we decided to OPEN a set with it at a mad party on Anglesey." data-datetime="10:50 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333906355393077250"
+                 data-text="HOME RUN MOTHERFUCKERS!!
+
+Only 3 tracks left! But that\'s half an hour so...
+
+#timstwitterlisteningparty" data-datetime="10:50 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333906327949762560"
+                 data-text="Women who....- Can I hear a rain stick? #timstwitterlisteningparty" data-datetime="10:50 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333906161519747073"
+                 data-text="Anyway. I had fun playing with an e-bow for the first time ever on this track." data-datetime="10:49 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333905966274924546"
+                 data-text="â€¦which was hard cos they way the sample is cut itâ€™s actually impossible to play." data-datetime="10:48 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333905901489623041"
+                 data-text="Based around a sample of a piece by Ravel (hence the shit pun), we spent quite a while working out how to re-sample Gambler actually playing it." data-datetime="10:48 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333905730815012868"
+                 data-text="UNRAVEL - Another one from Jon Ellisâ€™ fruit machine days. I fucking love this one. 
+
+#timstwitterlisteningparty" data-datetime="10:48 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333905646761222153"
+                 data-text="The songs are nearly all about escape." data-datetime="10:47 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333905630978072581"
+                 data-text="Unravel - Sample taken from Mourice Ravel - Gaspard De La Nuit - Le Gibet" data-datetime="10:47 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333905476954845184"
+                 data-text="All of these songs remind me of Salford. Ordsall. Literally Coronation Street, where the Lad\'s Club is. Like another planet." data-datetime="10:47 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333905067527852034"
+                 data-text="More wah Steve? Hold my pint...#timstwitterlisteningparty" data-datetime="10:45 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333904862438973440"
+                 data-text="Amputee was the opening song of our set for our first few years. Our first single too. 
+
+The words are about my girlfriend at the time, who wanted to know if Iâ€™d still love her if she only had one arm. In hindsight, the lyrics are fucking terrible." data-datetime="10:44 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333904551171252230"
+                 data-text="We were creating this tune the first time I ever played with Gambler. We left him outside in the middle of salford cus we couldnt hear him banging to get in #timstwitterlisteningparty" data-datetime="10:43 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333904322577502210"
+                 data-text="AMPUTEE! This would be the 3rd recording of Amputee, and easily the best. This is one of the first songs we ever wrote together, and I can still remember that feeling of super-sonic power playing at battle volume with our shitty little combo amps.
+#timstwitterlisteningparty" data-datetime="10:42 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333904238234247175"
+                 data-text="@steveandthesea Chris was my teacher" data-datetime="10:42 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333904108303097856"
+                 data-text="ðŸ˜ https://t.co/ssTn223V0S" data-datetime="10:41 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333904089613209606"
+                 data-text="Amputee - A \'first rehearsal\' song #timstwitterlisteningparty" data-datetime="10:41 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333903680958042112"
+                 data-text="@cjssheldon THE MASTER https://t.co/Xs5mpFzw4a" data-datetime="10:39 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333903623122804737"
+                 data-text="yep https://t.co/bzsXBOpv5t" data-datetime="10:39 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333903574271746048"
+                 data-text="Lyrics are about where Iâ€™m from, and where I was living in Salford at the time. It was very insular and dark. People didnâ€™t dig on us arty twats." data-datetime="10:39 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333903508014297088"
+                 data-text="The beats, the way the music wraps around itself, the way it takes off in the most unusual fashionâ€¦ I fucking love it." data-datetime="10:39 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333903457514889217"
+                 data-text="The middle 8 vox. Me and Mike on the control room sofa singing ideas into an SM58 while Chris tracked them. We were really excited cus it sounded like Rocky #timstwitterlisteningparty" data-datetime="10:39 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333903253583572998"
+                 data-text="Only when I worked on the melody and lyrics did I realise it was fucking genius." data-datetime="10:38 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333903180690808832"
+                 data-text="I remember being utterly perplexed as we were writing this. I was mostly a bystander, leaving them to it, feeling like I had nothing to contribute. So musically, I sat this one out." data-datetime="10:37 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333902999824035844"
+                 data-text="There\'s a lick in this tune that I screwed up a few times live and it scared me so much I had to take a mental picture of where my fingers were supposed to be. i still remember the picture perfectly #timstwitterlisteningparty" data-datetime="10:37 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="163000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333902976738529282"
+                 data-text="RWYA! This was the last song to be written for the album, and we all loved it so much, we insisted it was a single. Fucking IDIOTS.
+#timstwitterlisteningparty" data-datetime="10:37 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Frichardaingram%2Fstatus%2F1333902295315124225"
+                 data-text="@Vennart Awww my first ever riff, bless." data-datetime="10:34 PM Dec 1, 2020"> 
+                richardaingram            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1333902245382025216"
+                 data-text="RT @Tim_Burgess: Last call yâ€™all" data-datetime="10:34 PM Dec 1, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333902146971054080"
+                 data-text="That texture in the middle, all backwards-y and creepy, was an attempt to recreate a version we did with Tim Smith on the â€˜Relapseâ€™ EP." data-datetime="10:33 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333901925272735744"
+                 data-text="@frekuck @rob5d4 I\'m confused too" data-datetime="10:32 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333901837678809089"
+                 data-text="The rest of the song is written by myself. Middle bit is really Tool-y. Meeeehhhhhh" data-datetime="10:32 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333901591599050753"
+                 data-text="This gargantuan riff was written by Gambler, and in any other band would appear several more times in this song. But not this one. Enjoy it cos it doesnâ€™t return." data-datetime="10:31 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333901288191438857"
+                 data-text="YOU WISH! A lot of stuff in here. This opening beat, Mark would delight in telling you, was stolen wholesale from Thingy. Or was it Heavy Vegetable? @rob5d4 
+
+#TimsListeningParty" data-datetime="10:30 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333900902093246465"
+                 data-text="@cjssheldon @LlSTENlNG_PARTY Nah, I still can\'t stand that tune. Remember how shit I was doing the Vox?" data-datetime="10:28 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333900644617510915"
+                 data-text="(Donâ€™t look for it, itâ€™s been fucking bulldozed)
+
+God we were sooooooo highhhhhh" data-datetime="10:27 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1333900515994988546"
+                 data-text="Ace #TimsAdventCalendar2020 good stuff tomorrow ; ) https://t.co/9Rbs2kBuWA" data-datetime="10:27 PM Dec 1, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333900363997523970"
+                 data-text="RINSED! This is a jam, pure and simple. Itâ€™s probably my favourite moment on the record. Itâ€™s absolutely pure. Completely improvised. Late at night, stoned, in the dimly lit ballroom of Jacobâ€™s Studio.
+
+#TimsListeningParty" data-datetime="10:26 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333900212335734785"
+                 data-text="Rinsed - This one\'s a full live take #timstwitterlisteningparty" data-datetime="10:26 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333900101262192643"
+                 data-text="It\'s all a bit fuckin\' Hawkwind innit #TimsListeningParty" data-datetime="10:25 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333899901466505219"
+                 data-text="enter the big muffs #timstwitterlisteningparty" data-datetime="10:24 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333899813490995203"
+                 data-text="Full marks if you can guess which member of the band abstained from wanking until heâ€™d finished all his parts for this album." data-datetime="10:24 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FRavie_27%2Fstatus%2F1333899451430277124"
+                 data-text="@LlSTENlNG_PARTY @Vennart King Tuts, sometime around \'Frames\' coming out - first time I saw \'Unfamiliar\' live and it fucking destroyed me.   Also very fond memories of Sonisphere 2009 (pictured) even though I was off my tits (which I won tickets to because of you!) https://t.co/Suj9wtBG7r" data-datetime="10:23 PM Dec 1, 2020"> 
+                Ravie_27            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333899443360436229"
+                 data-text="tickling guitar strings, forgot about them #timstwitterlisteningparty" data-datetime="10:23 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fcjssheldon%2Fstatus%2F1333899418601467905"
+                 data-text="@Vennart I would literally still be doing this album" data-datetime="10:22 PM Dec 1, 2020"> 
+                cjssheldon            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333899303534944258"
+                 data-text="My voice is soooo fucking green man #TimsListeningParty" data-datetime="10:22 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333899265115107336"
+                 data-text="One of my fav parts of a show is this running for a bus section #timstwitterlisteningparty" data-datetime="10:22 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333898848893333506"
+                 data-text="The screaming was recorded on a stereo mic, which Mark spun around overhead, creating the effect that weâ€™re circling you. We did something similar, this time with a roomful of guitar loops, for Legal Teens." data-datetime="10:20 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333898779133612032"
+                 data-text="This mid-section is trippy and contains one of Mark Heronâ€™s mad tricks. Embedded in the layers, thereâ€™s a recording of us super-loaded at the beach in Formby, speeding our heads of, and screaming at the top of our lungs." data-datetime="10:20 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333898533934608386"
+                 data-text="Claire Lemmon joins Mike on vocals here. Amazing! #timstwitterlisteningparty" data-datetime="10:19 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333898466284752897"
+                 data-text="Beautiful Claire Lemmon singing here xxx" data-datetime="10:19 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fryn_prc%2Fstatus%2F1333898420306780167"
+                 data-text="Massive Bereavement. I once saw them have to extend the feedback section before The Riff in the middle of this so that @Vennart could change a battery in a pedal #timstwitterlisteningparty" data-datetime="10:19 PM Dec 1, 2020"> 
+                ryn_prc            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333898283387940865"
+                 data-text="The lyrics are about Bill Hicks, who we were all into at the time. Dead heroes. Posthumous glory.
+
+#TimsListeningParty" data-datetime="10:18 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333898132879454209"
+                 data-text="@Vennart ew no" data-datetime="10:17 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333898121521360901"
+                 data-text="#TimsListeningParty" data-datetime="10:17 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333898040386662401"
+                 data-text="Two drum kits left and right. One beat split between the two. Must have taken some working out!#timstwitterlisteningparty" data-datetime="10:17 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333898033659080706"
+                 data-text="That whole 1st section was pretty dull until Mark Heron put the Can beat over it. Ta-da! Another new vibe for us. 
+
+Also - 2 drum kits! This is so cool. Jon wrote out the individual parts for Mark to play, and we used a piece of shit kit from the studio. Panned left and right." data-datetime="10:17 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333897948258848769"
+                 data-text="Anyone wanna reveal the awful working title of this song?
+
+I remember Jon coming in with most of the bits, right down to the 3 guitar parts in the opening section. All of which is based on the whole tone scale, blues lawyers." data-datetime="10:17 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333897755803127812"
+                 data-text="Mark - Look ma no sticks #timstwitterlisteningparty" data-datetime="10:16 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333897747695591438"
+                 data-text="MASSIVE BEREAVEMENT! - Holy shit, where did this come from?
+
+That sound is Mark hitting a metal chair backstage at a gig" data-datetime="10:16 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333897659619401734"
+                 data-text="FLIP IT!
+
+#timstwitterlisteningparty" data-datetime="10:15 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1333897644763131907"
+                 data-text="Favourite ever Oceansize gig?? Let @Vennart know, heâ€™s compiling a list 
+
+Bonus points for merch, ticket stubs &amp; photos 
+
+#TimsTwitterListeningParty" data-datetime="10:15 PM Dec 1, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333897513850597376"
+                 data-text="This end section weâ€™d often get our mates up to play with us. I think our record was 6 guitars, with Sel Balamir and Jon Lee Martin." data-datetime="10:15 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333897351870767111"
+                 data-text="Indeed. Wrote the words to MassiveBereavement and Long Forgotten at that very desk. https://t.co/29yMWR1OED" data-datetime="10:14 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333897218403819520"
+                 data-text="remember the sub kick Chris? Thwack! #timstwitterlisteningparty" data-datetime="10:14 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333897001604419584"
+                 data-text="At the time I was obsessed with Any Day Now by @Elbow , and this is kind of Oceansizeâ€™s evil answer to that song." data-datetime="10:13 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333896973703925761"
+                 data-text="You will hear a lot of my small stone pedal on this record #timstwitterlisteningparty" data-datetime="10:13 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333896915457597443"
+                 data-text="This is the first song we did with @cjssheldon and it was love at first.... rock?
+
+We proceeded to smoke ALL the weed." data-datetime="10:13 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333896707663405057"
+                 data-text="One day all this could be yours - Nice snare @cjssheldon !#timstwitterlisteningparty" data-datetime="10:12 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333896668002050054"
+                 data-text="ODATCBY! Another of Jon Ellisâ€™ fruit machine-era demos. Bringing this one to life was a real revelation, and felt like a consolidation of who I thought we were. 
+#timstwitterlisteningparty" data-datetime="10:12 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Falexgadsby%2Fstatus%2F1333896545037660162"
+                 data-text="Hundreds of listens and never gets old ðŸ˜ #TimsTwitterListeningParty https://t.co/0NrR7qipMc" data-datetime="10:11 PM Dec 1, 2020"> 
+                alexgadsby            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333896205877866506"
+                 data-text="This was quite the eureka moment for us. The dual time signature thing was something so alien, but so compelling, we used it a few more times as we went along.
+
+I remember performing it in front of Tim Smith for the first time, and he visibly couldnâ€™t fathom it." data-datetime="10:10 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333895850100215811"
+                 data-text="So glad we put that piano in! #timstwitterlisteningparty" data-datetime="10:08 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FExpressEurope%2Fstatus%2F1333895795830120449"
+                 data-text="Tim Burgess (@tim_burgess) no para.
+
+EntÃ©rese de mÃ¡s aquÃ­: https://t.co/UuBhR0tE4A. https://t.co/ICRwCKtFVA" data-datetime="10:08 PM Dec 1, 2020"> 
+                ExpressEurope            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1333895736023453699"
+                 data-text="ðŸ¤˜@vennart #TimsTwitterListeningParty https://t.co/wCIGfczCpN" data-datetime="10:08 PM Dec 1, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333895641366491137"
+                 data-text="Not my favourite lyrics, all whinge-y â€˜I hate my jobâ€™ emo shit. 
+#timstwitterlisteningparty" data-datetime="10:07 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333895476719083530"
+                 data-text="@cjssheldon @Vennart Chris!!! ðŸ˜€" data-datetime="10:07 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333895380736634882"
+                 data-text="We nicked that off Cardiacs #timstwitterlisteningparty https://t.co/VN9WgsIwDY" data-datetime="10:06 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333895162016247810"
+                 data-text="listening back I guess its unusual to have a totaly clean part playing over all this racket, but it seems to work #timstwitterlisteningparty" data-datetime="10:06 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1333895032059867136"
+                 data-text="Off to a flying start https://t.co/QDItT6ZHVt" data-datetime="10:05 PM Dec 1, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333894960542867456"
+                 data-text="CATALYST! This one was born of lots of jams. I remember Mark Heron playing the 7/8 beat and I joined in with the main riff. The end riff was actually from my old band, but somehow Mark and Jon decided to play in the wrong time signature." data-datetime="10:05 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333894905748459521"
+                 data-text="chop chop chop chop #timstwitterlisteningparty" data-datetime="10:05 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333894722205724673"
+                 data-text="This is fucking nuts!!!
+
+#timstwitterlisteningparty" data-datetime="10:04 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333894497781096448"
+                 data-text="Because The Beatles https://t.co/yjsb8zAdhI" data-datetime="10:03 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333894411873292288"
+                 data-text="I was always confused about what kind of band Oceansize was, and IATM really confused me. It had a definite Super Furry Animals vibe to it, was in a major key, and those 2 things alone were very different for us." data-datetime="10:03 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1333894347885072393"
+                 data-text="Righto. Time to check in with @Vennart whereabouts you are in the world for our Oceansize / Effloresce @LlSTENlNG_PARTY https://t.co/7W3Th3tLIV" data-datetime="10:02 PM Dec 1, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333894313399476225"
+                 data-text="So Jon seemed to be really productive during this time, pumping out loads of little sketches using Reason. IATM was originally called â€˜Dreamy Introâ€™." data-datetime="10:02 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333894168071041026"
+                 data-text="IATM was written entirely by Jon Ellis. At the time, Jon was working for a company who made music for fruit machines. In fact, if you ever chance upon a puggy called â€˜Rock Starsâ€™, then all the metal licks and dialogue is yours truly. 
+
+#timstwitterlisteningparty" data-datetime="10:02 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333894063200886785"
+                 data-text="Anyone else\'s eyes so fuckedthey can\'t read the labels and started on the wrong side? Just me aye..." data-datetime="10:01 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333894028845326337"
+                 data-text="I am the morning - Working title \'dreamy intro\' #timstwitterlisteningparty" data-datetime="10:01 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FVennart%2Fstatus%2F1333893825232777220"
+                 data-text="AND WE\'RE OFF!!
+
+#timstwitterlisteningparty" data-datetime="10:00 PM Dec 1, 2020"> 
+                Vennart            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fstevesize%2Fstatus%2F1333893767041085444"
+                 data-text="Go! #timstwitterlisteningparty" data-datetime="10:00 PM Dec 1, 2020"> 
+                stevesize            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1333893666067374080"
+                 data-text="Handing over to @Vennart for our Oceansize @LlSTENlNG_PARTY 
+
+ðŸ¤˜ðŸ¤˜ðŸ¤˜ðŸ¤˜ðŸ¤˜ðŸ¤˜ðŸ¤˜ðŸ¤˜ðŸ¤˜ðŸ¤˜ https://t.co/FEFobwl0S0" data-datetime="10:00 PM Dec 1, 2020"> 
+                Tim_Burgess            </div>
+            </section>
