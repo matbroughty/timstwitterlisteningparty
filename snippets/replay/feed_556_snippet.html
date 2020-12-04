@@ -1,0 +1,536 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+    <style>
+        #timer-div {
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 100%;
+          max-width: 550px;
+        }        
+    </style>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1nHvdbQib53cyp88wzSwTB" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e023fb6da440ad7420b9fe8cf80" alt="Ascent Of The Ascended" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Tim Burgess</span><br/><span class="sub-colour">Ascent Of The Ascended</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(317045)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1nHvdbQib53cyp88wzSwTB" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_317045_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 100 tweets from Thursday 3rd December 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Configa" target="_blank"><img src="https://pbs.twimg.com/profile_images/1251501077494718465/XZDkH66L_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Configa</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="The Ascent Of The Ascended" data-start="0"
+             data-duration="415" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Yours. To Be" data-start="417"
+             data-duration="164" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Laurie - Live at Paste Studios" data-start="583"
+             data-duration="308" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="The Mall - Live at Paste Studios" data-start="893"
+             data-duration="276" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Only One I Know - Live at Paste Studios" data-start="1171"
+             data-duration="321" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Undertow - Live at Paste Studios" data-start="1494"
+             data-duration="283" style="display:none"></div>
+                        <div id="track-7" class="track-list"
+                     data-name="Finished" data-start="1779"
+                     data-duration="0" style="display:none"></div>
+        <style>
+            .ui-tooltip {
+                background: #666;
+                color: white;
+                border: none;
+                padding: 5px;
+                opacity: 0.8;
+                width: 80%;
+                max-width: 380px;
+            }
+            .ui-tooltip-content {
+                position: relative;
+                padding: 1em;
+            }
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+                bottom: -12px;
+                right: 12px;
+                border-color: #666 transparent;
+                border-width: 10px 10px 0;    
+            }
+
+        </style>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048513fb6da440ad7420b9fe8cf80" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-100" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FdollyblueMC%2Fstatus%2F1334612332505423875"
+                 data-text="@Configa @Tim_Burgess @ADtheBand @enemy_radio Arrived this morning, cheers! https://t.co/CafO9lzxnG" data-datetime="9:35 PM Dec 3, 2020"> 
+                dollyblueMC            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fdbrewis53%2Fstatus%2F1334612293338992644"
+                 data-text="@Tim_Burgess @Configa @LlSTENlNG_PARTY thanks, loved it, the EP and the remix. top tweets as ever, tunes sound amazing. another joyous 35mins in #timstwitterlisteningparty world. nice one" data-datetime="9:35 PM Dec 3, 2020"> 
+                dbrewis53            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334612266671632384"
+                 data-text="@Muxley14 Thank you!!! ðŸ˜ŽðŸ™#timstwitterlisteningparty" data-datetime="9:35 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334612237575708672"
+                 data-text="@intiniki @LlSTENlNG_PARTY What a day that was!" data-datetime="9:35 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fnecoconut%2Fstatus%2F1334612231565217792"
+                 data-text="@Tim_Burgess @Configa Uhhh what a feeling to listen to thisðŸŽ¶(à¹‘âƒ™âƒ˜â™¥â€¿â™¥à¹‘)" data-datetime="9:35 PM Dec 3, 2020"> 
+                necoconut            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334612199722119169"
+                 data-text="@osakalbion @LlSTENlNG_PARTY @Tim_Burgess @DOSullivann @Tim_Burgessâ€™s vocals were a joy to work with #timstwitterlisteningparty" data-datetime="9:35 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1334612129492688896"
+                 data-text="@Configa @Tim_Burgess Such a great mix! Iâ€™m listening again." data-datetime="9:35 PM Dec 3, 2020"> 
+                soozworld            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FShenggyS%2Fstatus%2F1334612058910961664"
+                 data-text="ðŸ‘ðŸ‘ðŸ‘ðŸ™ƒ https://t.co/JeVtiwKUnj" data-datetime="9:34 PM Dec 3, 2020"> 
+                ShenggyS            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334611992355672067"
+                 data-text="@osakalbion @LlSTENlNG_PARTY @Tim_Burgess @DOSullivann Yes indeed!!! ALL about the guitar ðŸ˜Žâ¤ï¸ðŸ’¯ðŸ’¯ðŸ”¥ðŸ”¥ðŸ”¥ 
+
+#timstwitterlisteningparty" data-datetime="9:34 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334611833811062789"
+                 data-text="@Configa Iâ€™ll send you a copy ðŸ™ŒðŸ™ŒðŸ™Œ" data-datetime="9:33 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334611683843710977"
+                 data-text="@AlecFosterfozzy Thanks so much, Alec!!!
+
+#timstwitterlisteningparty" data-datetime="9:33 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334611629716148224"
+                 data-text="Big thanks to @configa and to everyone who stopped by to spend time at the @LlSTENlNG_PARTY tonight. As ever, it was a pleasure. Good to have you hear.
+
+Thanks,
+Tim x x" data-datetime="9:33 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334611614327332864"
+                 data-text="P.S. Donâ€™t forget to check out my album with @ADtheBand #DontFightYourDemons 
+
+https://t.co/M3zxPlbFM9
+
+and my album with Jahi (from @enemy_radio) #ForwardFuture
+
+https://t.co/wZchJqJ7N8
+
+Thank you!!! Much luv to the #timstwitterlisteningparty crew and Mr @Tim_Burgess!! ðŸ’œðŸ™ðŸ’¯ðŸ’¯" data-datetime="9:32 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334611526246916096"
+                 data-text="I love the little echo effect I put on @Tim_Burgessâ€™s vocals, if I do say so ðŸ˜Ž It was a pleasure to work with his original stems. The original is amazing too, as is Timâ€™s brand new EP!! That red vinyl is a MUST HAVE!! â­•ï¸ Cheers for having me again!! #timstwitterlisteningparty" data-datetime="9:32 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fosakalbion%2Fstatus%2F1334611487755821064"
+                 data-text="@Configa Its the guitar chords and vocals that make it so addictive #TimsTwitterListeningParty @LlSTENlNG_PARTY  @Tim_Burgess @DOSullivann" data-datetime="9:32 PM Dec 3, 2020"> 
+                osakalbion            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334611457888153613"
+                 data-text="@osakalbion @Tim_Burgess @LlSTENlNG_PARTY @DOSullivann Thank you SO much!!! ðŸ™â¤ï¸ðŸ’¯ðŸ’¯ðŸ’¯
+
+#timstwitterlisteningparty" data-datetime="9:32 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FAlecFosterfozzy%2Fstatus%2F1334611453706448897"
+                 data-text="This is a great version @Configa ðŸ™ðŸ»ðŸ–¤ #timstwitterlisteningparty" data-datetime="9:32 PM Dec 3, 2020"> 
+                AlecFosterfozzy            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334611220289249286"
+                 data-text="The beat was build around the guitar chords ðŸŽ¸ I wanted the chorus to really resonate so I added claps, more guitar and an extra little break beat. I wanted it to be smooth, feel good and just overall uplifting - which we have all needed!! #timstwitterlisteningparty" data-datetime="9:31 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334611199397404673"
+                 data-text="*Yes he did" data-datetime="9:31 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334611156397400075"
+                 data-text="I met @Configa (virtually) at the @ADtheBand @LlSTENlNG_PARTY and we got chatting. I loved his production and I asked if heâ€™d do a remix. Oh wow, did he do a remix???*" data-datetime="9:31 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334611094095147015"
+                 data-text="I wanted to strip back the original - which I LOVE - and go for a back drop where the emphasis was on @Tim_Burgessâ€™s AMAZING vocals. I wanted to keep it hip-hop influenced, which is what Iâ€™m known for, but to make it melodic also. #timstwitterlisteningparty" data-datetime="9:30 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334611007122124805"
+                 data-text="This was such an amazing link-up!! @Tim_Burgess contacted me to tell me he loved what I was doing with @ADtheBand and to organise #timstwitterlisteningparty - one convo led to another and the idea of a remix got floated!! Needless to say I jumped at the chance to do my thing ðŸ™â¤ï¸" data-datetime="9:30 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fosakalbion%2Fstatus%2F1334611005154996225"
+                 data-text="@Tim_Burgess @Configa I love this track and cannot believe it has been even made better by @Configa #TimsTwitterListeningParty @LlSTENlNG_PARTY  @Tim_Burgess @DOSullivann 2.5 minutes of joy. To repeat I really need an extended 12 inch version. https://t.co/5USnPmYgLh" data-datetime="9:30 PM Dec 3, 2020"> 
+                osakalbion            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FStefanKrix%2Fstatus%2F1334610812539969536"
+                 data-text="And now the Encore. Well done @Configa! #TimsTwitterListeningParty https://t.co/RmZeJXRuFe" data-datetime="9:29 PM Dec 3, 2020"> 
+                StefanKrix            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334610728985235463"
+                 data-text="And now this.... the Yours. To Be remix by @Configa https://t.co/BuLXa34eZO" data-datetime="9:29 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334610670973825024"
+                 data-text="@Tim_Burgess @DOSullivann Multi-talented crew right there @Tim_Burgess ðŸ™ŒðŸ™Œ#timstwitterlisteningparty" data-datetime="9:29 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334610502098575366"
+                 data-text="THIS is music ladies and gents #timstwitterlisteningparty" data-datetime="9:28 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334610453239107586"
+                 data-text="Its fine by me it\'s what I expected. Anyway i\'ll see you in the Undertow" data-datetime="9:28 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334610447006306311"
+                 data-text="Me and Rose. A member of my all star New Skies Band https://t.co/08b3ZhxeJ7" data-datetime="9:28 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334610291599007745"
+                 data-text="This one featured @DOSullivann on piano (heâ€™s on drums on the rest. Plus singing too) and Peter Broderick, who was on piano before. Is now drums. Did everybody get that?? #TimsTwitterListeningParty" data-datetime="9:27 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334610109377425410"
+                 data-text="@EDouglasWW @Tim_Burgess Oh wow, thanks Edward!!! #timstwitterlisteningparty" data-datetime="9:27 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334609921145524235"
+                 data-text="@Tim_Burgess Yes indeed, bro!! My Remix following this beauty!! #timstwitterlisteningparty" data-datetime="9:26 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FEDouglasWW%2Fstatus%2F1334609889444966401"
+                 data-text="@Tim_Burgess @Configa I\'ve been holding off on listening to the remix when I knew Configa would be here for the #timstwitterlisteningparty" data-datetime="9:26 PM Dec 3, 2020"> 
+                EDouglasWW            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334609849762639873"
+                 data-text="This fallen constellation #TimsTwitterListeningParty https://t.co/TOhOg2NO0D" data-datetime="9:25 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334609730938019848"
+                 data-text="This is beautiful â¤ï¸ #timstwitterlisteningparty" data-datetime="9:25 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334609651304947712"
+                 data-text="Undertow - a hidden gem on I Love The New Sky (if you ask me) - it builds and it gets right in your ears. A nice way to end an EP (donâ€™t forget we are doing an encore with @Configa though) #TimsTwitterListeningParty" data-datetime="9:25 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334609420882481153"
+                 data-text="@Tim_Burgess ðŸ‘ðŸ‘ðŸ‘ #timstwitterlisteningparty" data-datetime="9:24 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334609138756841473"
+                 data-text="@soozworld Me too" data-datetime="9:23 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Falucoland%2Fstatus%2F1334609105319841794"
+                 data-text="@Tim_Burgess https://t.co/Oe3tXu5lpE" data-datetime="9:23 PM Dec 3, 2020"> 
+                alucoland            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334609050877751303"
+                 data-text="@dollyblueMC @Tim_Burgess Couldnâ€™t agree more!! Yes, spacey!! 
+
+#timstwitterlisteningparty" data-datetime="9:22 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334608970594603017"
+                 data-text="Join in on the ahhhhhh ahhhhhhs" data-datetime="9:22 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fobiwakka%2Fstatus%2F1334608805875888129"
+                 data-text="This is so good! ðŸ‘ðŸ‘Œ https://t.co/ziBvX6ED2C https://t.co/Awtj96rc4P" data-datetime="9:21 PM Dec 3, 2020"> 
+                obiwakka            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334608739014483969"
+                 data-text="@StefanKrix @Tim_Burgess Its beautifully melodic!!! #timstwitterlisteningparty" data-datetime="9:21 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334608724661559297"
+                 data-text="@StefanKrix Thatâ€™s good enough for me!" data-datetime="9:21 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334608594021605376"
+                 data-text="WHAT A VERSION!!!! ðŸ”¥ðŸ”¥ðŸ”¥ #timstwitterlisteningparty" data-datetime="9:20 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334608572676788238"
+                 data-text="The Only One I Know has been good to us. It withstands a bit of makeover and a few twisty turns. Keeps it fresh #TimsTwitterListeningParty" data-datetime="9:20 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334608340928909318"
+                 data-text="@Tim_Burgess ðŸ™ŒðŸ™ŒðŸ™ŒðŸ™Œ #timstwitterlisteningparty" data-datetime="9:19 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334608260859629569"
+                 data-text="Recognise this one??? #TimsTwitterListeningParty" data-datetime="9:19 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334608249191075842"
+                 data-text="@Muxley14 I said the same ðŸ˜Ž
+
+#timstwitterlisteningparty" data-datetime="9:19 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334608168048074759"
+                 data-text="Us playing what you are hearing now #TimsTwitterListeningParty https://t.co/KfHVAX65pb" data-datetime="9:19 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334608150964695043"
+                 data-text="@osakalbion @EDouglasWW @Tim_Burgess @LlSTENlNG_PARTY @DOSullivann Thatâ€™s an awesome story!!!
+
+#timstwitterlisteningparty" data-datetime="9:19 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334608001727139846"
+                 data-text="This EP makes me think of good times with @AllyDawkins 
+
+Some of those times at Whole Foods https://t.co/hqYcN7fd4T" data-datetime="9:18 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334607974875205633"
+                 data-text="@Tim_Burgess Woahhhhh!!!! Killed it - I was bigging it up!!! #timstwitterlisteningparty" data-datetime="9:18 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334607848567951365"
+                 data-text="That guitar ðŸŽ¸ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥#timstwitterlisteningparty" data-datetime="9:18 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334607752287674372"
+                 data-text="Me on guitar #TimsTwitterListeningParty" data-datetime="9:17 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334607659912278016"
+                 data-text="I miss playing live" data-datetime="9:17 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334607641293844481"
+                 data-text="@osakalbion @LlSTENlNG_PARTY @Tim_Burgess @DOSullivann â­•ï¸â­•ï¸â­•ï¸ðŸ’¯ðŸ’¯ðŸ’¯ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="9:17 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334607574797344772"
+                 data-text="Sometimes itâ€™s hard to tweet when you are just FEELING the music ðŸ”¥ðŸ™ #timstwitterlisteningparty" data-datetime="9:16 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fosakalbion%2Fstatus%2F1334607438272729088"
+                 data-text="@Configa #TimsTwitterListeningParty @LlSTENlNG_PARTY  @Tim_Burgess @DOSullivann https://t.co/mQohk1ytzi" data-datetime="9:16 PM Dec 3, 2020"> 
+                osakalbion            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334607418983124993"
+                 data-text="Big love going out to our @bellaunion family." data-datetime="9:16 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334607399198535688"
+                 data-text="@EDouglasWW &lt; No, as it was x" data-datetime="9:16 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334607250997047300"
+                 data-text="Thyps &amp; Susan at The Mall video shoot https://t.co/8CK4MJM61I" data-datetime="9:15 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334607191588925440"
+                 data-text="Who is rocking the red vinyl right now??
+
+#timstwitterlisteningparty" data-datetime="9:15 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334607132260519938"
+                 data-text="The Mall
+This is the live session but reminds me of the video we filmed. With another amazing director, Susan Lynch https://t.co/zR48dgExUe" data-datetime="9:15 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334606958989627392"
+                 data-text="Join in! This bit is a singalong" data-datetime="9:14 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334606817276686337"
+                 data-text="@Tim_Burgess You delivered it perfectly, brother 
+
+#timstwitterlisteningparty" data-datetime="9:13 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334606679175012355"
+                 data-text="@dollyblueMC @Tim_Burgess What was it buddy? :) 
+
+#timstwitterlisteningparty" data-datetime="9:13 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334606620844826627"
+                 data-text="paste session was recorded here - such a positive feeling. New York was closing by the hour https://t.co/Pdo7uQuTUK" data-datetime="9:13 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334606544139395074"
+                 data-text="We have friends in other dimensions #TimsTwitterListeningParty" data-datetime="9:12 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334606393974853635"
+                 data-text="Laurie is one of the most emotional songs Iâ€™ve ever written. Hearing it now brings it all back #TimsTwitterListeningParty" data-datetime="9:12 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334606371103383562"
+                 data-text="ðŸ’œ #timstwitterlisteningparty https://t.co/swyn3QiUQI" data-datetime="9:12 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FdollyblueMC%2Fstatus%2F1334606278606336004"
+                 data-text="@Configa @Tim_Burgess Hey @Configa look what arrived this morning all the way from the US of A. Cheers!
+
+#TimsTwitterListeningParty" data-datetime="9:11 PM Dec 3, 2020"> 
+                dollyblueMC            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334606263842443268"
+                 data-text="Awesome live track!!! I miss LIVE music so much!!!  #timstwitterlisteningparty" data-datetime="9:11 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334606091011977218"
+                 data-text="@formbymax @Tim_Burgess Thanks, brother!! #timstwitterlisteningparty" data-datetime="9:11 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334606051262468097"
+                 data-text="Our @PasteMagazine turned out to be the third to last session the NYC Studio ever produced, the studio permanently closed a few days later.Â 
+The Manhattan Center 311 W 34th St, New York, NY 10001" data-datetime="9:10 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Ftimpopedirector%2Fstatus%2F1334606029947097089"
+                 data-text="Yeah, itâ€™s a cracker https://t.co/ZRYyJz07tM" data-datetime="9:10 PM Dec 3, 2020"> 
+                timpopedirector            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fformbymax%2Fstatus%2F1334605989811810307"
+                 data-text="@Configa @Tim_Burgess And a top remix it is too! #timstwitterlisteningparty" data-datetime="9:10 PM Dec 3, 2020"> 
+                formbymax            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334605977392439299"
+                 data-text="*how #timstwitterlisteningparty" data-datetime="9:10 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334605900187832326"
+                 data-text="Laurie (live at our @PasteMagazine session in NYC #TimsTwitterListeningParty" data-datetime="9:10 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334605833305534465"
+                 data-text="The lyrics and vibe are just first class. Lovely mellow, feel good track - itâ€™s uplifting quite honestly. Awesome instrumentation too - I love short and sweet it is  #timstwitterlisteningparty" data-datetime="9:10 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334605354324422657"
+                 data-text="I was blessed enough to remix THIS gem!! Thank you @Tim_Burgess!!!  #timstwitterlisteningparty" data-datetime="9:08 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334605337710764033"
+                 data-text="Recorded as soon as I had written it with @DOSullivann and Thighpaulsandra at AerielÂ 
+A beautiful magical spot in the hills of Carmarthen #TimsTwitterListeningParty" data-datetime="9:08 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334605211785158656"
+                 data-text="@paulbanks202 Because itâ€™s ALWAYS good music!!! #timstwitterlisteningparty" data-datetime="9:07 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334605067987673090"
+                 data-text="Yours. To BeÂ 
+a love song, a kinda hazy morning after the night before kinda love song. Blissed out and smiley. Full of love. Enjoy #TimsTwitterListeningParty" data-datetime="9:06 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334605033237786630"
+                 data-text="That instrumental break-down is everything  ðŸ”¥ðŸ”¥ðŸ”¥#timstwitterlisteningparty" data-datetime="9:06 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334604908482400257"
+                 data-text="@necoconut No Tim Koh but Iâ€™m stealing your gif" data-datetime="9:06 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334604769357402116"
+                 data-text="Ascent of the Ascended  https://t.co/TWApfIvom6" data-datetime="9:05 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334604748645945344"
+                 data-text="I love how much progression @Tim_Burgess has made since the 90s. All of these extra and awesome new dimensions to his writing and singing #timstwitterlisteningparty" data-datetime="9:05 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334604600909946880"
+                 data-text="How are we all doing in @LlSTENlNG_PARTY land??? https://t.co/dHZoLir7M0" data-datetime="9:05 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334604442054877189"
+                 data-text="Oh yes!!!! We sound like angels #TimsTwitterListeningParty" data-datetime="9:04 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fobiwakka%2Fstatus%2F1334604362337939457"
+                 data-text="A festive #timstwitterlisteningparty for @Tim_Burgess excellent new EP! ðŸ“€ðŸ‘ŒðŸ‘
+
+#Vinyl https://t.co/s1WUcOhTmq" data-datetime="9:04 PM Dec 3, 2020"> 
+                obiwakka            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334604089330642944"
+                 data-text="This is a magnificent opener @Tim_Burgess and a worthy title track!! ðŸ”¥ðŸ”¥ðŸ”¥
+
+#timstwitterlisteningparty" data-datetime="9:03 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Falucoland%2Fstatus%2F1334604033668112386"
+                 data-text="Vinyl arrived to Norway just in time! Couldnâ€™t resist showcasing my limited edition: Ascent of the Cookie! #timstwitterlisteningparty @Tim_Burgess https://t.co/YTsMXuVh6m" data-datetime="9:02 PM Dec 3, 2020"> 
+                alucoland            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334603850620219395"
+                 data-text="I have to say it took me a while to understand this song but now itâ€™s my favouriteÂ 
+The song is about someone needing to get somewhere and the process needed to do that" data-datetime="9:02 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334603718352916485"
+                 data-text="@Tim_Burgess @thecharlatans Canâ€™t wait to hear what you guys are doing!!! #timstwitterlisteningparty" data-datetime="9:01 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334603703928680448"
+                 data-text="... overdubs by Richard Youngs at Eve Studios and Mark Collins, Nik Void and the Littlest B at @Rockfieldstudio. 
+Mixed and additional overdubs by Thighpaulsandra at Aerial studios in Wales" data-datetime="9:01 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FConfiga%2Fstatus%2F1334603632587792384"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY Berkshire!! But Iâ€™m a Geordie!!! ðŸ˜‰ðŸ˜Ž#timstwitterlisteningparty" data-datetime="9:01 PM Dec 3, 2020"> 
+                Configa            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334603541810442241"
+                 data-text="Ascent of the Ascended
+Recorded at @snorkelstudio with @DOSullivann and Charles Hayward with Frank Byng engineeringÂ #TimsTwitterListeningParty" data-datetime="9:00 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FStefanKrix%2Fstatus%2F1334603407106174979"
+                 data-text="And off we go! #TimsTwitterListeningParty https://t.co/oqpa6gFbw8" data-datetime="9:00 PM Dec 3, 2020"> 
+                StefanKrix            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1334603381554491402"
+                 data-text="Going in! #TimsTwitterListeningParty https://t.co/ajRZuoEQDi" data-datetime="9:00 PM Dec 3, 2020"> 
+                Tim_Burgess            </div>
+            </section>
