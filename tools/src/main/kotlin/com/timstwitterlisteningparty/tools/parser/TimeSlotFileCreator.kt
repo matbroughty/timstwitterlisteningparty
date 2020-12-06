@@ -53,7 +53,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val allOneTableFile = File("snippets/all-time-slots.html")
     val wallHtml = buildWallHtml(completed, upcoming)
     val wallFile = File("snippets/wall.html")
-    val wallFullSizeHtml = buildWallHtml(completed, upcoming, true, 20)
+    val wallFullSizeHtml = buildWallHtml(completed, upcoming, true, 23)
     val wallFullSize = File("pages/timswall.html")
 
     // if called from Lambda we can't write to the file
@@ -91,7 +91,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
         && it.spotifyImgLinkSmall.isNotEmpty()
         && it.spotifyImgLink.contains("https://i.scdn.co", ignoreCase = true)}
         .sortedBy { it.isoDate }.chunked(split).toList()
-    logger.info("wall album fullSize:$fullSize artwork number ${completed.size} with ${completedList.size} rows at $split length and ${completed.size % split} on final row")
+    logger.info("wall album fullSize:$fullSize artwork number ${completed.size + 1} with ${completedList.size + 1} rows at $split length and ${(completed.size + 1) % split} on final row")
     val upcomingList: List<List<TimeSlot>> =
       upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(split).toList()
     val input: Map<String, Any> = mapOf(
