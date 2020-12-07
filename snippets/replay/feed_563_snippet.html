@@ -1,0 +1,746 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/playlist/3Ia2aqhdfqOKgCfIyPffBJ" target="_blank">                <img src="img/feed_563.png" alt="Broken Greek Playlist" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Pete Paphides</span><br/><span class="sub-colour">Broken Greek Playlist</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(5113033)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/playlist/3Ia2aqhdfqOKgCfIyPffBJ" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_5113033_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 155 tweets from Sunday 6th December 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/petepaphides" target="_blank"><img src="https://pbs.twimg.com/profile_images/583030202906873856/rTmMRwPE_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@petepaphides</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/needlemythology" target="_blank"><img src="https://pbs.twimg.com/profile_images/1059443201474469889/L-yToNqY_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@needlemythology</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Sugar Baby Love" data-start="0"
+             data-duration="208" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Wombling Song - TV Version" data-start="210"
+             data-duration="107" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="A Taste Of Aggro" data-start="319"
+             data-duration="232" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Roxanne" data-start="553"
+             data-duration="191" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Every Day Hurts" data-start="746"
+             data-duration="245" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Silly Games" data-start="993"
+             data-duration="237" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Are 'Friends' Electric?" data-start="1232"
+             data-duration="323" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Echo Beach" data-start="1557"
+             data-duration="219" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Late in the Evening" data-start="1778"
+             data-duration="242" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="The Winner Takes It All" data-start="2022"
+             data-duration="294" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Oh Yeah!" data-start="2318"
+             data-duration="290" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Ashes to Ashes - 2017 Remaster" data-start="2610"
+             data-duration="266" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="That's Entertainment" data-start="2878"
+             data-duration="212" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="(Just Like) Starting Over - Remastered 2010" data-start="3092"
+             data-duration="236" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="New Life" data-start="3330"
+             data-duration="224" style="display:none"></div>
+                <div id="track-16" class="track-list"
+             data-name="Dog Eat Dog - Remastered" data-start="3556"
+             data-duration="190" style="display:none"></div>
+                <div id="track-17" class="track-list"
+             data-name="Intuition" data-start="3748"
+             data-duration="201" style="display:none"></div>
+                <div id="track-18" class="track-list"
+             data-name="Ghost Town" data-start="3951"
+             data-duration="219" style="display:none"></div>
+                <div id="track-19" class="track-list"
+             data-name="Passionate Friend" data-start="4172"
+             data-duration="209" style="display:none"></div>
+                <div id="track-20" class="track-list"
+             data-name="Back of Love" data-start="4383"
+             data-duration="193" style="display:none"></div>
+                <div id="track-21" class="track-list"
+             data-name="Somebody to Love" data-start="4578"
+             data-duration="318" style="display:none"></div>
+                <div id="track-22" class="track-list"
+             data-name="There There My Dear" data-start="4898"
+             data-duration="322" style="display:none"></div>
+                <div id="track-23" class="track-list"
+             data-name="Our House" data-start="5222"
+             data-duration="203" style="display:none"></div>
+                <div id="track-24" class="track-list"
+             data-name="Rip It Up" data-start="5427"
+             data-duration="320" style="display:none"></div>
+                <div id="track-25" class="track-list"
+             data-name="Save Your Kisses For Me" data-start="5749"
+             data-duration="197" style="display:none"></div>
+                        <div id="track-26" class="track-list"
+                     data-name="Finished" data-start="5948"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="img/feed_563_small.png" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-155" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1335731431050448897"
+                 data-text="Wow. Anyone whoâ€™s read Broken Greek will be moved by this. What a night itâ€™s been https://t.co/RTYj1FdGup" data-datetime="11:42 PM Dec 6, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="138000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335731006373048320"
+                 data-text="Thank you so much for all your tweets. I should go to bed now, but will endeavour to reply to them all tomorrow. Lots of love. Sweet dreams. xxx" data-datetime="11:41 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335730429622689798"
+                 data-text="@petepaphides @tanita_tikaram @TheLilacTime @IanZBroudie Oh Pete. What a beautiful thing to say. Likewise as youâ€™re one of my heroes x x" data-datetime="11:38 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fged_hughes%2Fstatus%2F1335730355983278086"
+                 data-text="Great to share some memories and top tunes with #TimsTwitterListeningParty and @petepaphides - we can take some real positives from this pandemic. #BrokenGreek" data-datetime="11:38 PM Dec 6, 2020"> 
+                ged_hughes            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335729974616133639"
+                 data-text="A huge thanks to @petepaphides, @needlemythology, @tanita_tikaram, @IanZBroudie &amp; @TheLilacTime 
+
+A perfect Sunday evening x x" data-datetime="11:36 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335729881880080389"
+                 data-text="Thank you so to EVERYONE who has joined in with any of this eveningâ€™s listening parties: including @tanita_tikaram ,, @TheLilacTime , @IanZBroudie &amp; especially to @Tim_Burgess â€“ an absolute diamond human being, &amp; proof that you should definitely meet your heroes. xxx #brokengreek" data-datetime="11:36 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335729432913457153"
+                 data-text="And if you donâ€™t have Spotify, you can still watch the film here:  https://t.co/VtDdEdehSb #brokengreek #timslisteningparty" data-datetime="11:34 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335729362621050880"
+                 data-text="RT @petepaphides: Hereâ€™s a little film that @jdaukes and I made (with the help of Noah and his mum) both as a thank you to those of you whoâ€¦" data-datetime="11:34 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335729338801655811"
+                 data-text="If youâ€™re listening on Spotify, Iâ€™ll leave you with one final song. Itâ€™s the full version of the Dylanised Save Your Kisses For Me that the brilliant @johnnydaukes recorded for the little film we made for the book, with sterling harmonica work from @MitchBenn. #timslisteningparty" data-datetime="11:34 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335729008898617346"
+                 data-text="@KevinAdams Oh man, it means so much to me that you even popped up on here tonight. Thank you Kev. xxx" data-datetime="11:33 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335728780627881986"
+                 data-text="@Jimbobfagan Thank you lovely man! Hope we cross paths soon! xx" data-datetime="11:32 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335728678777614336"
+                 data-text="@DanKing_1974 I remember that! The best new yearâ€™s eve programming ever! xx" data-datetime="11:31 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335728277701398533"
+                 data-text="The militantly shambolic way in which Orange Juice went about their business was heroic. It was as though they were goading the local hardknocks into beating them up. That was truly inspirational (and comforting) at the beginning of 1983. https://t.co/2yRt0mcOs2 #TimsTwitterParty" data-datetime="11:30 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1335728225360764930"
+                 data-text="Rip It Up! #TimsTwitterListeningParty  #BrokenGreek @petepaphides @Tim_Burgess Here are Orange Juice at The Imperial Cinema in Birmingham in Feb 82 https://t.co/t81jcOytII" data-datetime="11:30 PM Dec 6, 2020"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335728120511524865"
+                 data-text="At one point, it was only the fact that Simon Reynolds had called a book Rip It Up &amp; Start Again that stopped me from using that name for my book (although in the end, that drove me on to think of Broken Greek, which I prefer). #TimsTwitterParty #brokengreek" data-datetime="11:29 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335727998310506499"
+                 data-text="RIP IT UP â€“ About halfway through the process of writing Broken Greek, I knew that Rip It Up was going to be the final song mentioned in the book.  #TimsTwitterParty #BrokenGreek" data-datetime="11:29 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335727880383442945"
+                 data-text="@DanKing_1974 No, but I interviewed them for it at the time. Great idea. Perfect band for it. Go figure!?" data-datetime="11:28 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fneedlemythology%2Fstatus%2F1335727480045506561"
+                 data-text="Thanks again everyone for getting involved. Especially @TheLilacTime @IanZBroudie and @tanita_tikaram plus @Tim_Burgess for hosting.
+
+All the catalogue is still available for 20% off! 
+
+Go to https://t.co/UN9EOHWrdv enter code NM-XMAS at checkout. #TimsTwitterListeningParty https://t.co/GUuLePHAuj" data-datetime="11:27 PM Dec 6, 2020"> 
+                needlemythology            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335727171571224577"
+                 data-text="â€œAlso â€“ and this was my guiltiest secret â€“ they were British. I knew what to do in a British family. I knew the beats. I knew the jokes. I knew the cultural references. Iâ€™d be good at thatâ€¦ But Greek? I was the worst Greek I knew.â€  #TimsListeningParty #BrokenGreek" data-datetime="11:25 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335726994550640640"
+                 data-text="OUR HOUSE â€“ â€œThe family in â€˜Our Houseâ€™ â€“ well . . . in a family like that, everyone seemed to be just getting on with their life, free of expectations.â€ https://t.co/4m4tmQs4BS     #TimsTwitterParty #BrokenGreek" data-datetime="11:25 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335726699166752773"
+                 data-text="Ladies and gentlemen. Kevin â€œBillyâ€ Adams of Dexys Midnight Runners. Participant in the greatest live TV music performance of all time. And a lovely man to boot! https://t.co/uCoJVFHs1n" data-datetime="11:23 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335726278733942791"
+                 data-text="â€œMaybe parents are right to worry about this stuff. Popular culture can have a corrupting influence on the young. But if it can do that, then it can also save lives. It can educate them. It can parent them when parents have no parenting left in them.â€ #TimsListeningParty" data-datetime="11:22 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335725906250395650"
+                 data-text="Alas, the version described in Broken Greek â€“ the one Dexys performed on The Tube â€“ isnâ€™t on Spotify. But after this is done, you can watch it here:  https://t.co/xFaAHrxqz0 #TimsListeningParty" data-datetime="11:20 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335725856975622147"
+                 data-text="THERE THERE MY DEAR â€“  â€œAt this moment, there was a vacancy in my life for someone who meant it. Who dealt in castÂ­-iron certainties. Who walked the talk without heed for the consequences.â€ #TimsListeningParty" data-datetime="11:20 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335725767901253634"
+                 data-text="â€œHere was a singer in a band who had so totally detached his identity from his background that even most Queen fans didnâ€™t seem to know or care that their favourite rock star was a homosexual Parsi Indian whose birth certificate had him down as Farrokh Bulsara\"" data-datetime="11:20 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335725583196696577"
+                 data-text="â€œAll these years later, it isnâ€™t difficult to see what the young George Michael might have seen in Freddie Mercury. Even if George had yet to untangle his own sexuality, he would have seen in Freddie plenty to help him map his own route to pop stardom.â€  #TimsListeningParty" data-datetime="11:19 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335725406780076032"
+                 data-text="â€œThe irony was that the same song â€“ Queenâ€™s Somebody to Lovâ€™ â€“ had once made such an impression on George himself that, in 1992, he delivered a fearlessly perfect rendition of it, locating pockets of melody in it that had even eluded its creator.â€  https://t.co/4NVpSFoqKS" data-datetime="11:18 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335725245924257799"
+                 data-text="â€œWhile George Michael had yet to articulate that disconnection either to himself or to anyone else, Iâ€™d just discovered a song that managed to distil it perfectlyâ€¦â€ #TimsListeningParty #BrokenGreek" data-datetime="11:18 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335725149149147137"
+                 data-text="\"This was a vision of male adult friendship I had never seen before; a version of manliness in which, alone in my front room on a Sunday morning, I had become a vicarious participant.\" #TimsTwitterParty #brokengreek" data-datetime="11:17 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335725037421277185"
+                 data-text="â€œ[Queenâ€™s videos] seemed to authenticate the sentiments of songs that hymned the glories of tenderness &amp; companionship. Here were 4 grown men being soft around each other, closeÂ­-huddling around overhead mics, separated only by the cotton of their shirts.â€ https://t.co/8D6VsHlkfr" data-datetime="11:17 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335724780968939526"
+                 data-text="â€œHearing the rest of Queen swoop in to fill the space around their singer was an early form of augmented reality, as startling in its way as seeing cartoon birds fly out of a tree or waking up to see two animated feet poking out of the duvet.â€ #TimsListeningParty #brokengreek" data-datetime="11:16 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335724664371474434"
+                 data-text="Watch the somewhat awed faces of David Bowie and Seal gazing on as George runs through Somebody To Love in rehearsal for the Freddie Mercury tribute concert. https://t.co/XMFEX4MsrZ #TimsTwitterListeningParty" data-datetime="11:15 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335724535992250380"
+                 data-text="SOMEBODY TO LOVE â€“ Iâ€™ve gone for the George Michael version. This way we get to feature both a Queen and George song in the playlist. #TimsTwitterParty #brokengreek" data-datetime="11:15 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fged_hughes%2Fstatus%2F1335724216394649601"
+                 data-text="#TimsTwitterListeningParty So love Echo and the Bunnymen - sure it was partly down to Aki\'s influence." data-datetime="11:14 PM Dec 6, 2020"> 
+                ged_hughes            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335724197058899969"
+                 data-text="â€¦the Bunnymenâ€™s manager Bill Drummond hated it, although apparently he swiftly changed his mind when the song bagged them their Top Of The Pops debut. #TimsListeningParty #brokengreek" data-datetime="11:13 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335724078422962180"
+                 data-text="BACK OF LOVE â€“ Just as The Teardrop Explodesâ€™ star was dimming, the Bunnymen were in the ascendant. Ian Broudie produced Back Of Love. Originally intended to be played at half its eventual speed, Ian persuaded them to ramp up the tempo and go for it. #TimsTwitterListeningParty" data-datetime="11:13 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335723876664438787"
+                 data-text="I also roped in @ged_hughes to write the odd piece for Pop Scene. Hereâ€™s her review of Joe Jacksonâ€™s Jumpnâ€™ Jiveâ€¦. #timslisteningparty #brokengreek https://t.co/n3mzpSy6F1" data-datetime="11:12 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335723507922178051"
+                 data-text="Hereâ€™s a page from one of my teenage scrapbooks featuring a Julian Cope article from NME in 1981, entitled â€˜Do Duran Duran Sleep At Night?â€™ #brokengreek #timslisteningparty https://t.co/VxQgR036k6" data-datetime="11:11 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335723215088480262"
+                 data-text="Julian recalled the episode in his memoir Head On: \"We were to follow them.  I watched fascinated. Then as time moved slowly on I felt sucked into their scene. God, they were brilliant.â€ #TimsTwitterListeningParty" data-datetime="11:10 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335723144896798720"
+                 data-text="When The Teardrop Explodes performed Passionate Friend on Top Of The Pops, Julian Cope had also decided to drop a tab of acid. He was just coming up as he stood on a grand piano, waiting for Bucks Fizz to finish their turn before launching into his song. #TimsListeningParty" data-datetime="11:09 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335723083295035401"
+                 data-text="PASSIONATE FRIEND â€“ â€œIf Ghost Town could get to number 1, it seemed certain to me that The Teardrop Explodes â€“ scaling new heights of accessibility  â€“ would float to the same position as effortlessly as a lost balloon.â€ Um, actually it stalled at 25. #TimsTwitterListeningParty" data-datetime="11:09 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335722773029801985"
+                 data-text=". . . You could see that frustration and anger in the audience. In Glasgow, there were these little old ladies on the streets selling all their household goods, their cups and saucers.â€ #TimsTwitterListeningParty" data-datetime="11:08 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335722736233164804"
+                 data-text="Jerry Dammers speaking in 2002, â€˜Margaret Thatcher had apparÂ­ently gone mad, she was closing down all the industries, throwing millions of people on the doleâ€¦â€ #TimsTwitterListeningParty" data-datetime="11:08 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335722660987330564"
+                 data-text="GHOST TOWN â€“  Not that itâ€™s all that audible, but the sound that  Jerry Dammers wanted for Ghost Town was inspired by his adoration of this lovers rock gem by Victor Romero Evans, At The Club.  https://t.co/u2oWJmJMzY #TimsTwitterListeningParty" data-datetime="11:07 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335722573343158272"
+                 data-text="GHOST TOWN #TimsListeningParty #BrokenGreek https://t.co/Z8K74SaYZU" data-datetime="11:07 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fged_hughes%2Fstatus%2F1335722510286016518"
+                 data-text="#TimsTwitterListeningParty.. Happy memories! My brother Tim taking lead outside our house. https://t.co/tQm433rJr8" data-datetime="11:07 PM Dec 6, 2020"> 
+                ged_hughes            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335722428232712192"
+                 data-text="#TimsListeningParty #BrokenGreek https://t.co/jHc9XGXbeU" data-datetime="11:06 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fgmikro%2Fstatus%2F1335722321814953991"
+                 data-text="@petepaphides Vivi, sister of my friend Kostas was my Ged. She introduced me to Beatles and ABBA. I still remember the reaction to listening to the Red album and Arrival for the first time." data-datetime="11:06 PM Dec 6, 2020"> 
+                gmikro            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335722316953751555"
+                 data-text="#TimsListeningParty #BrokenGreek https://t.co/uT5iGRBSMx" data-datetime="11:06 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="112000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335722224741982209"
+                 data-text="This was the summer I put together my chip paper music magazine Pop Scene. Some choice highlights to follow. #BrokenGreek #timslisteningparty https://t.co/c9hBlDYhAV" data-datetime="11:06 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335721754484936711"
+                 data-text="Here are Jonzaibâ€™s Tactics in action on the day of the royal wedding. #TimsListeningParty https://t.co/OQWrIAaFe6" data-datetime="11:04 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335721602105880578"
+                 data-text="Intuition came out around the same time as the royal wedding between Prince Charles and Lady Diana Spencer. We had a street party to celebrate the event. With live music and everything, provided by my next-door neighbour Gedâ€™s brotherâ€™s band. #timstwitterparty #brokengreek https://t.co/g40jKUCkbk" data-datetime="11:03 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335721481226039297"
+                 data-text="Linx were also the first band whose autographs I managed to get. Unfortunately, when they asked me my name, I had to tell them I was called Aki (my brotherâ€™s name) as it was on his behalf I turned up to get my record signed at HMV. They were lovely, by the way #TimsListeningParty" data-datetime="11:03 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335721345615876102"
+                 data-text="Linxâ€™s influence is hugely underacknowledged in pop history. George Michael enlisted the services of most of the musicians who played on Intuition when the time came to record Whamâ€™s first album. #TimsListeningParty" data-datetime="11:02 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335721279895252993"
+                 data-text="INTUITION â€“ The sound of vintage Stevie Wonder refracted through a London secondary modern education.  #TimsTwitterParty #BrokenGreek" data-datetime="11:02 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FKevinAdams%2Fstatus%2F1335720985778122759"
+                 data-text="@petepaphides It was a hell of a statement, both visually and sonically with the two drum kits #TimsListeningParty #TimsListeningParty #brokengreek" data-datetime="11:01 PM Dec 6, 2020"> 
+                KevinAdams            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335720973388181506"
+                 data-text="â€œFor anyone who knew Adam Ant but had lost track of his recent moveÂ­ments, his Top of the Pops debut will have been as startling as turning on the news, seeing live footage of a hijack and realising that you knew the gunman. It was that unlikely.  #TimsListeningParty" data-datetime="11:01 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335720862817902594"
+                 data-text="Marco Pirroni â€œIâ€™d seen Bowie doing â€œStarmanâ€ . . . on Top of the Pops and in the back of my mind thatâ€™s exactly what I wanted to achieve. You wanted to cause that argument in the playground the next day.â€ 
+#TimsListeningParty #BrokenGreek" data-datetime="11:00 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335720786343161863"
+                 data-text="â€œHis trousers are leather, and when he moves his arm in time with Pirroniâ€™s powerchords, the neckÂ­erchief on his wrist flies up. Adamâ€™s eyes follow the camera constantly. His hips are the sixth member of the band, thrusting to the stampede behind him.â€ #TimsListeningParty https://t.co/vhHvSjxoFj" data-datetime="11:00 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335720689593159681"
+                 data-text="Broken Greek is a fantastic book, you can order a copy here... https://t.co/c09sUT9KEd" data-datetime="11:00 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335720467408310272"
+                 data-text="DOG EAT DOG â€“ Adam &amp; The Antsâ€™ Top of the Pops debut. â€œThereâ€™s a white stripe painted across his nose, and heâ€™s wearing a replica of the gold Hussars military jacket made famous by Jimi Hendrixâ€¦.â€ #TimsTwitterListeningParty" data-datetime="10:59 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335720297299931138"
+                 data-text="Hereâ€™s a playlist I made replicating that very compilation! #TimsListeningParty #BrokenGreek
+https://t.co/xkmzkoGiHD" data-datetime="10:58 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335720068580306948"
+                 data-text="\"Depeche Mode appeared to have harnessed the excited noise you can imagine synthesisers making when they hear their ownerâ€™s keys in the door.â€ #TimsListeningParty #BrokenGreek" data-datetime="10:57 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335719967141007363"
+                 data-text="NEW LIFE â€“ Included in honour of our journey around the mythical number 11 bus route â€“ the one where we listened to the entirety of K-Telâ€™s Modern Dance compilation on tape. #timslisteningparty #brokengreek" data-datetime="10:57 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1335719574801707008"
+                 data-text="New Life! Here are some of my photos of Depeche Mode taken at Birminghamâ€™s Locarno in Nov 81 #timstwitterlisteningparty #BrokenGreek @petepaphides @Tim_Burgess https://t.co/ZiDZEnh1NU" data-datetime="10:55 PM Dec 6, 2020"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335719175734456326"
+                 data-text="@VanFanCarole That was Aki all over!" data-datetime="10:54 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335719095359168512"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess Thank you Tim. What an unbelievably lovely thing to hear, especially from your good self. xxxx" data-datetime="10:53 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335718835391959046"
+                 data-text="John Lennon was *so* great at POP. He learned from Motown and rock and roll and Phil Spector and doo wop. Itâ€™s kind of sad he spent the last decade of his life in denial of that. #TimsTwitterListeningParty #BrokenGreek" data-datetime="10:52 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1335718560186986496"
+                 data-text="The joy of Broken Greek is that @petepaphidesâ€™ musical journey through life is described so well, that it could be any of us. From any time and place. Music has a universal power like that. And, of course, Pete is a brilliant writer" data-datetime="10:51 PM Dec 6, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335718548736516101"
+                 data-text="Charles Shaar Murray didnâ€™t agree. Reviewing for NME, he said, â€œI wish Lennon had kept his big happy trap shut until he had something to say that was even vaguely relevant to those of us not married to Yoko.â€ #TimsTwitterListeningParty" data-datetime="10:51 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335718491014434816"
+                 data-text="@Tom_Rawlings Everyoneâ€™s dad was Rodney Bewes in the 70s." data-datetime="10:51 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1335718447376986114"
+                 data-text="The Jam at Bingley Hall in Birmingham in March 82 #timstwitterlisteningparty https://t.co/H0odgaeB2n" data-datetime="10:51 PM Dec 6, 2020"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335718416443990018"
+                 data-text="(JUST LIKE) STARTING OVER â€“ \"At home &amp; on the radio, one message was being transmitted from the lofty crag of middle age: look what the weather of life does to your teenage dreams. Only one record chose to stand up and say it doesnâ€™t have to be like this.\" #TimsListeningParty" data-datetime="10:51 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fscottmccready%2Fstatus%2F1335718195148238849"
+                 data-text="@petepaphides Thomas Taft, couple of years older than me, which was an gulf in age difference then, a \'leader\' at our Youth Club. It had a record room and big speakers. The early Creation polythene 7s, and more." data-datetime="10:50 PM Dec 6, 2020"> 
+                scottmccready            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FTheLilacTime%2Fstatus%2F1335717978780954626"
+                 data-text="@petepaphides A punk wave sister record to Paul Simons The Boxer in its studio sophistication." data-datetime="10:49 PM Dec 6, 2020"> 
+                TheLilacTime            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335717807934332928"
+                 data-text="\"Every moment of joy described on Sound Affects was a sweet steal from a world in which romance &amp; wonder were busted currencies.â€  #TimsTwitterListeningParty https://t.co/RGi0bkfq1z" data-datetime="10:48 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335717628556480512"
+                 data-text="â€œâ€˜Slashed seat affairsâ€™, a perfect threeÂ­-word encapsulaÂ­tion of the topÂ­-deck trysts forged by fumbling teens on every night bus between town and terminus.â€ #TimsTwitterListeningParty" data-datetime="10:47 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335717548877377540"
+                 data-text="\"THATâ€™S ENTERTAINMENT â€“ \"Its muted arrangement â€“ barely four chords on an acoustic guitar, bass, drums just about audible â€“ glistened like a wet Cortina under a street lamp, a precise sonic simulation of eventless days in unloved conurbations.\"  #TimsTwitterListeningParty" data-datetime="10:47 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335717401669857284"
+                 data-text="Sigh. They really did pave paradise&amp; to put up a parking lot.
+
+*a fish and chip shop so same thing basically https://t.co/K8Qs0Jww4P" data-datetime="10:46 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FAllyDickson74%2Fstatus%2F1335716975486660608"
+                 data-text="@petepaphides Will Trevelyan, editor of the Acland Burghley School magazine made me my first cassettes of Smiths records. Last I heard, he was reviewing music for the Ham &amp; High (or maybe it was the Islington Gazette)." data-datetime="10:45 PM Dec 6, 2020"> 
+                AllyDickson74            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FJeremymortimer%2Fstatus%2F1335716901960486912"
+                 data-text="These next two tracks Bowie/The Jam absolutely nail the exact point in time where I started *really* thinking about music. It all felt *different* and there were tribes... and you *had* to choose. 
+@petepaphides @Tim_Burgess @LlSTENlNG_PARTY #TimsTwitterListeningParty" data-datetime="10:45 PM Dec 6, 2020"> 
+                Jeremymortimer            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335716729599750149"
+                 data-text="@_Helen_Lewis Thatâ€™s what all the locals called it! As did we!" data-datetime="10:44 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335716628458299394"
+                 data-text="Bowie on Ashes To Ashes: â€œThereâ€™s a childâ€™s nursery rhyme element in it, and thereâ€™s something so sad and mournful and poignant about it. It kept bringing me back to the feelings of those pure thoughts of sadness that you have as a child...â€ #TimsTwitterListeningParty" data-datetime="10:43 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335716478096707591"
+                 data-text="ASHES TO ASHES â€“ Bowie described it as a nurseryÂ­-rhyme requiem to the 1970s &amp; to childhood itself â€“ a song that made children &amp; adults in 1980 feel the way he had done when he first heard Danny Kaye sing Inchworm.  #TimsTwitterListeningParty #BrokenGreek  https://t.co/APFRlmS0zd" data-datetime="10:43 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fjdaukes%2Fstatus%2F1335716383154384899"
+                 data-text="@petepaphides Mike Taylor (co-Saturday worker at Habitat in Wallingford) played me Magazine and The Monochrome Set." data-datetime="10:42 PM Dec 6, 2020"> 
+                jdaukes            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335716064332800005"
+                 data-text="@IanDavies100 Yes!" data-datetime="10:41 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335715703417155589"
+                 data-text="Who was your Ged? https://t.co/ajrwZpgMpv" data-datetime="10:40 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335715645741273090"
+                 data-text="â€œYears later, music journalists would be praising Scritti Politti &amp; Prefab Sprout for releasing singles that tried to forge new ground by being the thing to which they were simultaneously paying tribute. But with Oh Yeah, Roxy Music got there first.â€  #TimsTwitterListeningParty" data-datetime="10:40 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335715556998123524"
+                 data-text="Oh Yeah is not just the name of the song â€“ itâ€™s the name of the song that the song is *about*. It was the very thing it was describing.â€  #TimsTwitterListeningParty #BrokenGreek" data-datetime="10:39 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335715503134945282"
+                 data-text="OH YEAH â€“ â€œ[Roxy Music] were the first band I heard that depicted sadness as a space you could lovingly furnish and luxuriate in. The genius of Oh Yeah was that it explained this to me in almost literal termsâ€¦â€ #TimsTwitterListeningParty #BrokenGreek" data-datetime="10:39 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="186000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335715345357807622"
+                 data-text="When I started work on the book, I met up with my lovely infant school teacher Miss Haylor â€“ or Chris Waters as sheâ€™s known these days. Here we are together. It had been 40 years since weâ€™d last seen each other.  #TimsTwitterListeningParty https://t.co/Oxd2GWyxOc" data-datetime="10:38 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335714567167614984"
+                 data-text="@Birmingham_81 It really is." data-datetime="10:35 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335714410170638342"
+                 data-text="@Roddy_Campbell Barron Anthony!" data-datetime="10:35 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335714323013005315"
+                 data-text="â€œIn the video, art blurred into life as messily as Agnethaâ€™s tear-Â­stained eye shadow blurred into her mascara.. It was a look I knew straight away. It was the same look as the one on my mumâ€™s face whenever sheâ€™d had a row with my dad.â€  #timstwitterlisteningparty #BrokenGreek" data-datetime="10:34 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335714207640264707"
+                 data-text="22 years later, I got ask BjÃ¶rn: â€œAs a matter of fact, I was quite drunkâ€¦ [Usually] whenever you write drunkâ€¦ you look at it the next day &amp; itâ€™s bullshit. But that was a good one. I remember presenting it to the girls and there were tears, you know?â€  #TimsTwitterListeningParty" data-datetime="10:34 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335714145518448642"
+                 data-text="â€œOnce you get the idea in your head, it seems almost unimaginable that The Winner Takes It All could have been written while sober. Spillage on this scale almost never happens without the aid of a corkscrew.â€ #TimsTwitterListeningParty" data-datetime="10:34 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335714065268813826"
+                 data-text="THE WINNER TAKES IT ALL â€“ â€œI donâ€™t wanna talkâ€¦â€ When someone utters these words, you know theyâ€™re about to do a lot of talkingâ€¦ Even aged 11, listening to the song for the first time, I can dimly recall a sense that things were about to get messy.â€ #TimsTwitterListeningParty" data-datetime="10:33 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335713955172544513"
+                 data-text="Hereâ€™s our second chippy. The one in West Bromwich that LOOKED LIKE A SPACESHIP. #TimsTwitterListeningParty
+#BrokenGreek https://t.co/LduJP5dcAV" data-datetime="10:33 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2F01510mski%2Fstatus%2F1335713634551525376"
+                 data-text="@ged_hughes @petepaphides I saw him at the Odeon on his first farewell tour wearing my mac and my jumble sale grey trilby" data-datetime="10:32 PM Dec 6, 2020"> 
+                01510mski            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335713574040297482"
+                 data-text="Hi Ged https://t.co/p8cr01zF2q" data-datetime="10:31 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335713383094640640"
+                 data-text="â€œNext month [in school] we had to write a few lines about a favourite poem. I chose Late in the Evening [explaining] that Paul Simon doesnâ€™t like to repeat himself &amp; the way everything heâ€™s saying sounds like something he overheard in a conversation.â€ #TimsListeningParty" data-datetime="10:31 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335712953212014592"
+                 data-text="LATE IN THE EVENING \"â€™Donâ€™t you think itâ€™s great?â€ said Ged, \"The way everything sounds like something he overheard in conversation? Paul doesnâ€™t like to repeat himself. His records are always different. Heâ€™s not interested in reliving past gloriesâ€™â€ #TimsTwitterParty @ged_hughes" data-datetime="10:29 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fged_hughes%2Fstatus%2F1335712625519423497"
+                 data-text="#TimsTwitterListeningParty This was me around the time @petepaphides was my next door neighbour - taken at the Toad of Toad Hall in Hall Green https://t.co/QF9pZlO9f2" data-datetime="10:28 PM Dec 6, 2020"> 
+                ged_hughes            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335712242768162821"
+                 data-text="â€œThis was closer to the graphite vistas of beaches used to represent alien landscapes in Doctor Who than anything celebrated on, say, a Beach Boys record. Echo Beach was a consolation song. Its message impossible to missâ€¦ Adulthood was disappointing.  #TimsTwitterParty" data-datetime="10:26 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335712172299661317"
+                 data-text="ECHO BEACH â€“ \"Each note of Mark Ganeâ€™s guitar intro sounded like a raindrop bouncing onto cold corrugated iron â€“ a phrase he repeated seven times, each building anticipation of the real action, a fullÂ­-throttle acceleration into the instrumental hook.\"  #TimsListeningParty" data-datetime="10:26 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335712055618396165"
+                 data-text="Shall we go back in time for a moment? Me and my mum. #TimsListeningParty #BrokenGreek https://t.co/Sm84ahfacH" data-datetime="10:25 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335711573516673025"
+                 data-text="@richardbrowne80 YES!" data-datetime="10:23 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335711533482078211"
+                 data-text="Official invitation for @petepaphides to come back and DJ at Tim Peaks when festivals start back up again #TimsTwitterListeningParty" data-datetime="10:23 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fged_hughes%2Fstatus%2F1335711508790177794"
+                 data-text="#TimsTwitterListeningParty I can remember the Numanoids queuing outside the Odeon New Street, Bham to see their hero with their white make up and sulky looks!" data-datetime="10:23 PM Dec 6, 2020"> 
+                ged_hughes            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335711486996598784"
+                 data-text="â€œâ€¦in which the stillness of an empty park at night could, at any minute, be obliterated by the blinding lights of an alien spacecraft\". #TimsListeningParty #BrokenGreek" data-datetime="10:23 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335711382294106116"
+                 data-text="â€œNot only did Numan complete Williamâ€™s interior world; he perfectly described the exterior world in a way that merged with Williamâ€™s perception of it â€“ a reality long augmented by years of Doctor Who programmes and booksâ€¦â€ #TimsListeningParty #BrokenGreek https://t.co/PQmaoExXDR" data-datetime="10:23 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FJeremymortimer%2Fstatus%2F1335711294649929729"
+                 data-text="@petepaphides Anyone else getting a Proustian rush from the feel of pushing the buttons on that TV?" data-datetime="10:22 PM Dec 6, 2020"> 
+                Jeremymortimer            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335711262009864193"
+                 data-text="â€œ[Numanâ€™s epiphany] was passed on to William Osborne the first time he heard the song. Just as Numanâ€™s life would never be the same again on hearing that alien *whoossh*, William knew upon seeing that TOTP performance that he had a new favourite singerâ€ 
+#TimsListeningParty" data-datetime="10:22 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FDanKing_1974%2Fstatus%2F1335711161015263235"
+                 data-text="@petepaphides Timeless, this song. Proper menace." data-datetime="10:22 PM Dec 6, 2020"> 
+                DanKing_1974            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335711038554169344"
+                 data-text="â€œThe resulting sound, vast and otherworldly, virtually floored himâ€ â€˜In that moment, I knew exactly what I wanted to do.â€™â€ #TimsListeningParty #BrokenGreek" data-datetime="10:21 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335710940290048002"
+                 data-text="ARE â€˜FRIENDSâ€™ ELECTRIC â€“Â â€œIn 1979, Tubeway Army turned up at Spaceward Studios. Left behind in their studio by the previous occupants was a Minimoog synthesiser. Curious to see what sort of a noise it made, their singer Gary Numanâ€¦ pressed on one of the keysâ€¦â€ #TimsTwitterParty" data-datetime="10:21 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Festellecostanza%2Fstatus%2F1335710798564499459"
+                 data-text="@petepaphides â€˜Faggots and peasâ€™ sign poss alarming for American readers." data-datetime="10:20 PM Dec 6, 2020"> 
+                estellecostanza            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="124000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335710795456540673"
+                 data-text="Here I am reading Magic comic when Iâ€™m really too old to be reading Magic comic. And also heedless of the fact that it was a girlsâ€™ comic. #BrokenGreek #timslisteningparty https://t.co/6NiAHJma6E" data-datetime="10:20 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335710273945145347"
+                 data-text="â€œIn Silly Games, Janet Kayâ€™s vulnerability echoed the uncertainty of  A Little More Love and The Name of the Game, songs whose loveÂ­struck narrators edge by tiny increments towards emotional disclosure, wary that their feelings might not be recipÂ­rocated.â€ #TimsTwitterParty" data-datetime="10:18 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335709979685351437"
+                 data-text="SILLY GAMES â€“ Dennis Bovell: â€œ[Silly Games] was a song constructed with a verse and a chorus and a bridge and a â€˜tickling pieceâ€™ at the end, and an intro to catch you so you would have to sit up and listen to what was coming next.â€™â€ #TimsTwitterParty #BrokenGreek" data-datetime="10:17 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335709968566251520"
+                 data-text="@petepaphides We recorded in the same studio as Sad CafÃ© (among others) https://t.co/y13ARCkd7h" data-datetime="10:17 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335709886798237701"
+                 data-text="Hereâ€™s the house we moved into which had the terrifying tall building at the back, next door to Bert the racist. #TimsTwitterParty #BrokenGreek https://t.co/yGOo6Lmo3E" data-datetime="10:17 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FAllyDickson74%2Fstatus%2F1335709393900498945"
+                 data-text="@petepaphides Iâ€™ve always loved the laugh right at the beginning of Roxanne. I always imagined it was Andy Summers. Sting quite often uttered this weird â€œOop!â€ noise during Police songs, most notably on I Canâ€™t Stand Losing You. He sounds a bit like Scooby-Doo." data-datetime="10:15 PM Dec 6, 2020"> 
+                AllyDickson74            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335709318486904840"
+                 data-text="Both Mancunians, Sad Cafeâ€™s Paul Young and 10cc Eric Stewart knew each other back in the early 60s. Eric found early success with The Mindbenders. Paul fared less well with The Toggery Five, but they did put out this wonderful single in 1964. https://t.co/eUEztDxKlv #BrokenGreek" data-datetime="10:14 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335709173972144137"
+                 data-text="â€œIn doing so, Eric Stewart and Sad CafÃ© created a song which reversed the Commercial Union insurance adsâ€™ famous claim. It absolutely made a drama out of a crisis.â€ #TimsTwitterParty #BrokenGreek" data-datetime="10:14 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335709052140183554"
+                 data-text="â€œFor EVERY DAY HURTS, Sad CafÃ© enlisted 10ccâ€™s Eric Stewart, who, having written &amp; produced â€˜Iâ€™m Not in Loveâ€™, knew how to construct subÂ­-zero sonic landscapes vast enough to convey the scale of the universeâ€™s indifference to human heartbreak.â€ #TimsTwitterParty #BrokenGreek" data-datetime="10:13 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335708902713942022"
+                 data-text="Here are my mum and dad in The Great Western chippy (with the pinball machines out of shot). #brokengreek #timslisteningparty https://t.co/l0ScMFb4Vb" data-datetime="10:13 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335708609792110597"
+                 data-text="â€œHe was like a special sort of policeman who, instead of arresting prostitutes, gently tried to take them by the hand and make them change into a different dress, preferably one not worn by a prostitute.\" #TimsTwitterParty #BrokenGreek" data-datetime="10:12 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335708529462833158"
+                 data-text="â€œI imagined the prostitute next to the Digbeth flyover getting a knock on the door and thinking it was another person after some sex, but instead it was Sting, persuading her to do a different job. I could see why he called his band the Policeâ€¦â€ #TimsTwitterParty  #BrokenGreek" data-datetime="10:11 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335708444276510720"
+                 data-text="ROXANNE â€“ â€œWhy did Roxanne have a red light? Why didnâ€™t Sting want her to turn it on? Why didnâ€™t he want her to wear that dress? Why was she walking the streets for money? These were all questions I directed at my brother Aki one June evening.â€  #TimsListeningParty #BrokenGreek" data-datetime="10:11 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="138000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335708252949147649"
+                 data-text="Hereâ€™s a photo of the birthday party depicted in Broken Greek. The one with the pinball machines and the free chips. You can tell itâ€™s 1977 because we all default to a Brucie pose. #timslisteningparty #brokengreek https://t.co/uJ5hquwpTv" data-datetime="10:10 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FGilliebooks%2Fstatus%2F1335707672851701762"
+                 data-text="@petepaphides OMG! My parents were OBSESSED by the Barron Knights! They took me to see them. And they played this non-stop! This brings back such happy memories." data-datetime="10:08 PM Dec 6, 2020"> 
+                Gilliebooks            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335707563413925890"
+                 data-text="We went to see The Barron Knights at the New Cresta cabaret venue in Solihull. Hereâ€™s a leaflet of upcoming attractions from the time. Note the menu, which features Chicken A La Creme and Gammon Steak with Pineapple. #TimsTwitterListeningParty https://t.co/qiRjIKRohS" data-datetime="10:07 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335707395406913541"
+                 data-text="Those of you who have read the book will know that it all ended rather abruptly between me and The Barron Knights when I persuaded my parents to take me to see them in cabaret.  #TimsTwitterListeningParty #BrokenGreek" data-datetime="10:07 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335707313504722945"
+                 data-text="â€œComedy records rarely get funnier with repeated plays, but by dint of my unshakeable fidelity to the moment the Barron Knightsâ€™ star crossed with mine, I laughed more dementedly at the exploits of that dentist in Birmingham than I did the first time.â€ #TimsTwitterListeningParty" data-datetime="10:06 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335707264473296896"
+                 data-text="â€œWatching [The Barron Knights] sing about the Smurfs breaking out of prison to the tune of â€˜The Smurf Songâ€™ was, to this nine Â­year-Â­old, as thrilling as the Sex Pistols being goaded into swearing by Bill Grundy on the Today show two years previously.â€ #TimsTwitterListeningParty" data-datetime="10:06 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335707168838995968"
+                 data-text="A TASTE OF AGGRO â€“ Thatâ€™s actually a great intro isnâ€™t it? You want to hear the song it would have turned into had they not gone into the tune to â€˜Rivers Of Babylonâ€™. #TimsTwitterListeningParty https://t.co/DGUJHfi2q1" data-datetime="10:06 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335707152011448328"
+                 data-text="RT @Tim_Burgess: News of a Charlatans live show....meet me here at 6pm tomorrow ; )" data-datetime="10:06 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335707109762232320"
+                 data-text="Look everyone! ITâ€™S GED OUT OF THE BOOK! https://t.co/X6hZRqI217" data-datetime="10:06 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335706917981876227"
+                 data-text="\"The notes and chords [on Wombling Songs] seemed to correspond to the morning light of wet parks in October, empty playgrounds through rainÂ­-flecked classroom windows and the overgrown verges which concealed the towpath at the bottom of Malvern Road. â€œ #TimsTwitterListeningParty" data-datetime="10:05 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335706869193707523"
+                 data-text="\"Why would I know there was a Wimbledon Common? Why would I even know what a common was? In Birmingham, we only had parks. And so, on the Sundays my dad took us to Cannon Hill Park, Iâ€™d keep an eye out for Wombles, common as they were.â€ #TimsTwitterListeningParty" data-datetime="10:05 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335706825220624390"
+                 data-text="Itâ€™s a Soho speakeasy shuffle with lyrics about a family of fantastical creatures. And come to think of it, it wouldnâ€™t sound at all out of place on Kevin Ayersâ€™ first album. #TimsTwitterListeningParty https://t.co/eu6sd3eArg" data-datetime="10:04 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335706780979113985"
+                 data-text="THE WOMBLING SONG â€“ I didnâ€™t know about genres when I first heard this. So it was only well into adulthood that I realised the theme to The Wombles was more in the tradition of British jazz of the 50s and 60s than a pop song.  #TimsTwitterListeningParty https://t.co/ayXx2CXOeh" data-datetime="10:04 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1335706668492075009"
+                 data-text="Hereâ€™s @Mike_Batt performing Remember Youâ€™re a Womble at the launch party for #BrokenGreek at @thesociallondon in March #TimsTwitterListeningParty @petepaphides @Tim_Burgess My video of the joyous song starring @oharaviolin @FamousTimes @andylewisuk is at
+https://t.co/bY653xnrHW https://t.co/Gst1NwkDyi" data-datetime="10:04 PM Dec 6, 2020"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335706611218833413"
+                 data-text="Me &amp; @petepaphides https://t.co/US6BVubOmQ" data-datetime="10:04 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335706584392077315"
+                 data-text="And â€œYour heart has been broken again/Itâ€™s broken/Broken.â€ #TimsTwitterListeningParty https://t.co/fKSxHEEYO1" data-datetime="10:04 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335706550539853824"
+                 data-text="Other brilliantly reductive pencil-sketches of lyrical devastation in pop history include: â€œIt must have been love/But itâ€™s over now.â€ #TimsTwitterListeningParty https://t.co/qUhwZwW6Qd https://t.co/ihiWKfYbzg" data-datetime="10:03 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335706411767050242"
+                 data-text="â€œSugar baby love, Sugar baby love/I didnâ€™t mean to make you blue/Sugar baby love, sugar baby love I didnâ€™t mean to hurt you.â€ Sometimes I think these are the most devastating lyrics of all time. #TimsTwitterListeningParty" data-datetime="10:03 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335706394838831107"
+                 data-text="DJ @petepaphides taking all the way through to the end of the night #TimsTwitterListeningParty" data-datetime="10:03 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335706354795900934"
+                 data-text="FUN GAME. Try explaining the concept of Dial-A-Disc to anyone under the age of 30 and tell me how you get on. #TimsTwitterParty https://t.co/1f09kVC54p" data-datetime="10:03 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335706157554479105"
+                 data-text="â€œThis was my introduction to British Telecomâ€™s Dial-Â­a-Â­Disc service. And, now that I think about it, it was also my introduction to the howling anguish of irreversible regret and guilty selfÂ­-recrimination.â€ #TimsTwitterParty" data-datetime="10:02 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335705985772556289"
+                 data-text="Hereâ€™s another great Bickerton/Waddington song btw: https://t.co/XJReLo2voU #TimsTwitterListeningParty" data-datetime="10:01 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335705923340394500"
+                 data-text="SUGAR BABY LOVE â€“ So this was written as a Eurovision entry before its writers Wayne Bickerton and Tony Waddington offered it to Showaddywaddy and Carl Wayne, both of whom turned it downâ€¦ #TimsListeningParty" data-datetime="10:01 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335705685519179783"
+                 data-text="ARE WE READY? G-GER-GGG-G-GO!!!! #timstwitterparty #brokengreek https://t.co/nEHjD6Q8Mi https://t.co/axtAigYDmv" data-datetime="10:00 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335705585514393600"
+                 data-text="OK
+
+Handing over to @petepaphides 
+
+ðŸ¤˜ðŸ¤˜#TimsTwitterListeningParty https://t.co/d1HqcHfVtp" data-datetime="10:00 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

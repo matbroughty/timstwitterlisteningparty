@@ -1,0 +1,528 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3XctqeaFPPce7z4SyylnC6" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02fe1f95fb8e96ad8e7babac46" alt="Tales Told" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Ian Broudie</span><br/><span class="sub-colour">Tales Told</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(479836)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3XctqeaFPPce7z4SyylnC6" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_479836_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 96 tweets from Sunday 6th December 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/IanZBroudie" target="_blank"><img src="https://pbs.twimg.com/profile_images/2241456025/423684_342039555816647_215977975089473_1124646_1678861547_n_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@IanZBroudie</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/petepaphides" target="_blank"><img src="https://pbs.twimg.com/profile_images/583030202906873856/rTmMRwPE_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@petepaphides</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Song for No One" data-start="0"
+             data-duration="157" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Whenever I Do" data-start="159"
+             data-duration="189" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="He Sails Tonight" data-start="350"
+             data-duration="183" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Smoke Rings" data-start="535"
+             data-duration="220" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Got No Plans" data-start="757"
+             data-duration="139" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Always Knocking" data-start="898"
+             data-duration="242" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Tales Told" data-start="1142"
+             data-duration="109" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Lipstick" data-start="1253"
+             data-duration="197" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Super Cinema" data-start="1452"
+             data-duration="106" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Home from Home" data-start="1560"
+             data-duration="101" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Something Street" data-start="1663"
+             data-duration="193" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Broudie's Blues" data-start="1858"
+             data-duration="140" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Home from Home - Band Version" data-start="2000"
+             data-duration="140" style="display:none"></div>
+                        <div id="track-14" class="track-list"
+                     data-name="Finished" data-start="2142"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851fe1f95fb8e96ad8e7babac46" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-96" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="177000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335670792026271752"
+                 data-text="Sounds like you timed it perfectly ; ) https://t.co/vMb2VgSVdB" data-datetime="7:41 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335670053300285445"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY Cheers Tim ..thank and see you soon i hope" data-datetime="7:38 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335669647316836353"
+                 data-text="@IanZBroudie @LlSTENlNG_PARTY Thanks Ian. Looking forward to a catch up somewhere on that rock n roll road ; )" data-datetime="7:37 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335669578240843776"
+                 data-text="Now time to watch @LFC !" data-datetime="7:36 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335669563296452610"
+                 data-text="@IanZBroudie It was a joy to work with you Ian. Big cheers to you and to Riley for his invaluable assistance tonight!" data-datetime="7:36 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335669464701030401"
+                 data-text="Thank you @Tim_Burgess for having us. Always such a pleasure to be part of a @LlSTENlNG_PARTY" data-datetime="7:36 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335669453489627136"
+                 data-text="Huge thanks to @IanZBroudie &amp; @petepaphides
+
+Head back here for 9pm (U.K. time) for @tanita_tikaramâ€™s album @LlSTENlNG_PARTY and @petepaphides Broken Greek @LlSTENlNG_PARTY ; ) ðŸ¤˜" data-datetime="7:36 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fthecoralband%2Fstatus%2F1335669377551773710"
+                 data-text="@IanZBroudie @petepaphides Loved that Ian. What a great album." data-datetime="7:36 PM Dec 6, 2020"> 
+                thecoralband            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335669202456375296"
+                 data-text="Thank you so much to @ianzbroudie and his Mersey co-travellers for the beautiful Tales Told, and once again to @tim_burgess for facilitating this sonic love-in! Back at 9pm for @tanita_tikaramâ€™s To Drink The Rainbow. Then a special Broken Greek listening party at 10pm. xx" data-datetime="7:35 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335668858326306817"
+                 data-text="Thanks everyone for listening along and especially a massive thank you to @petepaphides for resurrecting this album, releasing it on vinyl for the first time and doing it with such affection and grace." data-datetime="7:34 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335668728776847363"
+                 data-text="@IanSkelly1 such a brilliant unique drummer !!ðŸŽ¶ðŸŽ¶" data-datetime="7:33 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335668615488692225"
+                 data-text="@petepaphides @IanZBroudie And I would too" data-datetime="7:33 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335668604520591360"
+                 data-text="@IanZBroudie @thecoralband @RileyBroudie Every musician should have their signature blues. Kind of like a calling card." data-datetime="7:33 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335668390606868496"
+                 data-text="BROUDIE\'S BLUES - This was an early live instrumental version of Something Street. A Wilson-esque version recorded live with @thecoralband as backing band. First recording for a 12 year old @RileyBroudie  on this playing the end guitar solo ðŸŽ¸ðŸŽ¸" data-datetime="7:32 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FJamesSkellyBand%2Fstatus%2F1335668308603973635"
+                 data-text="Great song ðŸ‘Œ https://t.co/4JU85yMlfF" data-datetime="7:31 PM Dec 6, 2020"> 
+                JamesSkellyBand            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fmattyjl9%2Fstatus%2F1335668104295297025"
+                 data-text="Quite the coming together of brilliant minds there, then. Nick\'s album, \'Caravan\' from 2017 is one of the best albums I\'ve heard in years too.
+#TimsListeningParty https://t.co/qKzjl48qzw" data-datetime="7:31 PM Dec 6, 2020"> 
+                mattyjl9            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335667959851847680"
+                 data-text="@IanZBroudie Very much up for that..." data-datetime="7:30 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335667834861592577"
+                 data-text="Iâ€™d particularly love to play this song live in a concert of this album." data-datetime="7:30 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335667739697041415"
+                 data-text="I may have been listening to a lot of John Barry listening to the guitarsðŸ˜‰ðŸŽ¸ðŸŽ¶ðŸŽ¶" data-datetime="7:29 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335667683627511811"
+                 data-text="This was done in the spare room except for the pedal steel played beautifully by Scott Marmion https://t.co/ue10EX6nOv" data-datetime="7:29 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335667567831216128"
+                 data-text="HOME FROM HOME â€“  
+â€œOh father/It seems like a long way home/Oh further/Than I was meaning to go.â€  For me, the key line. In that moment, you remember that youâ€™re listening to someone who\'d never planned to step into the spotlight. Weâ€™re not in Kansas anymore.. #TimsListeningParty" data-datetime="7:28 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FMrMatRead%2Fstatus%2F1335667525326172164"
+                 data-text="@IanZBroudie @Nickpower82 No wait maybe this is my favourite on the album. Itâ€™s so hard to choose." data-datetime="7:28 PM Dec 6, 2020"> 
+                MrMatRead            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335667441788194823"
+                 data-text="SOMETHING STREET - I wrote the lyrics for this with the great @Nickpower82. I love his words and poetry, and his book \"Small Town Chase\" which he published some years later." data-datetime="7:28 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335667070999138306"
+                 data-text="Recorded after a long smokey @thecoralband session and i think i was pretty passively stoned!!" data-datetime="7:26 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335666907706515460"
+                 data-text="For the acoustic one l like how relaxed it sounds...croaky voice, must have been late at night and I think I was still smoking then..." data-datetime="7:26 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335666846247350272"
+                 data-text="HOME FROM HOME - I recorded two versions of this" data-datetime="7:26 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335666520328970243"
+                 data-text="Iâ€™d like to see the film this would be the music to ðŸŽ¶" data-datetime="7:24 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335666441320886278"
+                 data-text="Hereâ€™s Ian from an interview we did last year: â€œIf Pure is one bookend, Lipstick is the other. This is the moment where you say, â€˜Iâ€™ve tried everything, and yet, here we are.â€ #TimsListeningParty" data-datetime="7:24 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335666422085808131"
+                 data-text="Psycho string arrangement by ðŸŽ»ðŸŽ» Prabjote Osahn ðŸŽ»ðŸŽ»" data-datetime="7:24 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335666371745746947"
+                 data-text="SUPER CINEMA - This was really good fun to record ... I donâ€™t often write instrumentals" data-datetime="7:24 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335666294717358080"
+                 data-text="@IanZBroudie I love Lipstick to bits. I remember listening to the album for the first time around and when this came on, I realised that it was going to be with me for the rest of my life." data-datetime="7:23 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335666134318772224"
+                 data-text="@lornypop @LlSTENlNG_PARTY Thanks Lorna" data-datetime="7:23 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335666086721839104"
+                 data-text="â€¦..â€œSo the story always ends in vain/Oh that loveâ€™s a mad thing/And though some might say not to think that way/Iâ€™d say that love was a bad thing.â€ It slays me a little bit every time. n#TimsListeningParty" data-datetime="7:23 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335665948930551809"
+                 data-text="LIPSTICK â€“ To me, this sounds like an emotional inversion of Pure, even down to the drum machine... Itâ€™s a dispatch from the outcome Pure tried to defy... #TimsListeningParty." data-datetime="7:22 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335665871843434501"
+                 data-text="Anyone at the @LlSTENlNG_PARTY hearing Tales Told by @IanZBroudie for the very first time?
+
+I am (thanks for sending me a vinyl copy @petepaphides - I saved it for now)" data-datetime="7:22 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDeanEvison%2Fstatus%2F1335665779782676485"
+                 data-text="@IanZBroudie @Lightning_Seeds Would be interesting to put the two songs back to back live." data-datetime="7:21 PM Dec 6, 2020"> 
+                DeanEvison            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FMrMatRead%2Fstatus%2F1335665776561360898"
+                 data-text="@IanZBroudie Lyrically this album is probably my favourite of all LS/Broudie albums as a whole." data-datetime="7:21 PM Dec 6, 2020"> 
+                MrMatRead            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335665725118230530"
+                 data-text="Just me and the drum machine on this one!!" data-datetime="7:21 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335665647351685120"
+                 data-text="Probably the most unique song on the album?" data-datetime="7:21 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335665574060445699"
+                 data-text="LIPSTICK - \"Bridges burned and lost are never, ever far behind...\"" data-datetime="7:21 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335665398998585347"
+                 data-text="TALES TOLD â€“ In my ideal rainy Tuesday heartbreak playlist, Iâ€™d place this between Saint Etienneâ€™s Hobart Paving and Spring Came, Rain Fell by Swedish indie-synth duo Club 8. If you donâ€™t know the latter, here you go: https://t.co/1L99B1nGwc 
+
+#TimsListeningParty" data-datetime="7:20 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335665289510481921"
+                 data-text="I suddenly felt grown up and a bit lost and this was how it felt." data-datetime="7:19 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335665244723687431"
+                 data-text="I recorded this at home one evening." data-datetime="7:19 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335665199689371648"
+                 data-text="TALES TOLD - kind of a part two to an earlier @Lightning_Seeds song on Jollification called Telling Tales" data-datetime="7:19 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fthecoralband%2Fstatus%2F1335665080072081411"
+                 data-text="#TimsListeningParty for @IanZBroudieâ€™s brilliant Tales Told album, an album we played on around the time of Magic &amp; Medicine... in some ways they bleed into each other... good times x https://t.co/MfUiS6s2My" data-datetime="7:19 PM Dec 6, 2020"> 
+                thecoralband            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335664766883344384"
+                 data-text="It\'s a solo album but listening back to it now, I realise I was so lucky to have the encouragement and support of all the people who contributed to it." data-datetime="7:17 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335664684234584064"
+                 data-text="...A few years after it appeared, I asked Ian if I could have â€œfirst dibsâ€ on releasing it as a vinyl record. Ian\'s nothing if not honourable. In spite of other people approaching him to do the same, he held out because heâ€™d remembered our chat.  #TimsListeningParty #IanBroudie" data-datetime="7:17 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335664595747430401"
+                 data-text="@cornishcarspots @ElevatorStudios The amazing mr Sean Payne setting the groove" data-datetime="7:17 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335664526918889474"
+                 data-text="Tales Told was another record that was a key incentive in starting a record label. It never appeared on vinyl when it was first released in 2004â€¦ #TimsListeningParty #IanBroudie #TalesTold" data-datetime="7:16 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FMrMatRead%2Fstatus%2F1335664450913906688"
+                 data-text="@IanZBroudie I remember two gigs above a pub in London for this album, bass was a double bass rather than a guitar, tiny, intimate, quiet  little gigs but SO good." data-datetime="7:16 PM Dec 6, 2020"> 
+                MrMatRead            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335664267379560448"
+                 data-text="Another song written with Mr @JamesSkellyBand !" data-datetime="7:15 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335664177084571648"
+                 data-text="Haunting and spectacular velvets Violin played by Samy Bishai" data-datetime="7:15 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335664079772545024"
+                 data-text="GOT NO PLANS â€“Â You can hear thatâ€™s The Coral, canâ€™t you? Hereâ€™s Ian casting himself as as the recipient of his own advices â€“ a reminder that even sadness has a sweet spot, &amp; Ianâ€™s ability to locate it on record after record is the finest of all his tricks.  #TimsListeningParty" data-datetime="7:15 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335663988579962881"
+                 data-text="ALWAYS KNOCKING - vocals @ElevatorStudios https://t.co/2NRcj49czk" data-datetime="7:14 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335663917125742593"
+                 data-text="If youâ€™re enjoying the listening party for @ianzbroudieâ€™s Tales Told &amp; want to carry the actual album around with you in a fashionably faded canvas shoulder bag, I canâ€™t help you with the shoulder bag, but there are vinyl and CD copies of the record HERE. https://t.co/dfYEOgcOpM" data-datetime="7:14 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335663842442022929"
+                 data-text="@SPGEE2020 @LlSTENlNG_PARTY @thecoralband @ZutonsThe I was lucky to have friends like that and iâ€™m forever grateful !! ðŸŽ¸ðŸŽ¸" data-datetime="7:14 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335663782006304770"
+                 data-text="I really think @BRyderJones \'s guitar here at the end is brilliant" data-datetime="7:13 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335663639660015620"
+                 data-text="The great @RussBassRuss , @goldensymbols and @BRyderJones on this... we recorded it live in the studio the same night we did the rhythm section for Smoke Rings" data-datetime="7:13 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335663397170458632"
+                 data-text="GOT NO PLANS - written in the morning and recorded that night...only time I ever did that https://t.co/Sntr8Ba2P0" data-datetime="7:12 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335663347761463297"
+                 data-text="@Tim_Burgess Thanks Tim and thanks for having me back for another Listening Party." data-datetime="7:12 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335663179595198467"
+                 data-text="@indieimmy @Tim_Burgess Thanks Imran" data-datetime="7:11 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335663137924767744"
+                 data-text="Such beautiful songs. Thanks @IanZBroudie #TimsTwitterListeningParty" data-datetime="7:11 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335663128886042627"
+                 data-text="Thank you so much Mat. Theyâ€™re soaked into my bones! x" data-datetime="7:11 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Findieimmy%2Fstatus%2F1335663097378385923"
+                 data-text="The thing about this album ðŸ’¿ is thereâ€™s no studio trickery, just a warm organic blanket of sounds. So fresh yet so heartbreaking and beautifully sung by @IanZBroudie #timstwitterlisteningparty @Tim_Burgess #TalesTold" data-datetime="7:11 PM Dec 6, 2020"> 
+                indieimmy            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335662948694441985"
+                 data-text="SMOKE RINGS â€“ Words by Terry Hall, and yet Smoke Rings is at one with Ianâ€™s lyrics on the rest of the record. A strolling, sighing rumination which exists to bear witness to the unvoiced regrets of its protagonist. #TimsListeningParty #IanBroudie #TalesTold" data-datetime="7:10 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fjamesmckz%2Fstatus%2F1335662848865923072"
+                 data-text="@petepaphides Oh ðŸ˜ this is one of my favourite albums of all time" data-datetime="7:10 PM Dec 6, 2020"> 
+                jamesmckz            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335662740925452290"
+                 data-text="@Birmingham_81 @LlSTENlNG_PARTY @needlemythology @Tim_Burgess @IanZBroudie Thank you Andy. x" data-datetime="7:09 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335662707899568129"
+                 data-text="Apart from the bass &amp; drums, this was all recorded in my spare bedroom" data-datetime="7:09 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335662562789232640"
+                 data-text="SMOKE RINGS - This song was written with my good friend Terry Hall. I\'m not sure if it\'s about me or him..." data-datetime="7:09 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1335662462578921474"
+                 data-text="I have to confess that Tales Told by Ian Brodie passed me by when it was first released, so extra grateful to @petepaphides &amp; @needlemythology for bringing this really special record into my life #TimsTwitterListeningParty @Tim_Burgess @IanZBroudie https://t.co/P9VLCvcvF2" data-datetime="7:08 PM Dec 6, 2020"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335662368160886791"
+                 data-text="â€œWhen northern lights parade the air/Like carousels at summer fairs/Beware the stare of ghost house eyes/Of wicked whispers in the night.â€ I love those lines. Could be late 60s Scott Walker  or perhaps Julian Cope towards the end of his time in the Teardrops.  #TimsListeningParty" data-datetime="7:08 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FMrMatRead%2Fstatus%2F1335662047577694209"
+                 data-text="@IanZBroudie @JamesSkellyBand Absolutely beautiful song this. So smooth and heartfelt." data-datetime="7:07 PM Dec 6, 2020"> 
+                MrMatRead            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335662025620512769"
+                 data-text="HE SAILS TONIGHT â€“ In its own unassuming way, this might be the most startling song on Tales Told. A slide show of feverish, flickering visions, seemingly the only thing standing between its protagonist and his own expiry.  #TimsListeningParty #IanBroudie #TalesTold" data-datetime="7:06 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335662010286084096"
+                 data-text="Prabjote Osahn composed the beautiful string arrangement for this song." data-datetime="7:06 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335661916119834624"
+                 data-text="HE SAILS TONIGHT - This was a hard song for me to write, but the brilliant @JamesSkellyBand helped me to focus my emotions and we wrote it together #TimsListeningParty" data-datetime="7:06 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335661602360750088"
+                 data-text="Love this electric guitar by @BRyderJones" data-datetime="7:05 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335661485821992964"
+                 data-text="If I remember correctly, this is @IanSkelly1 and @Pdthecoral on drums and bass but I could be wrong." data-datetime="7:04 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335661479396323330"
+                 data-text="@LlSTENlNG_PARTY @IanZBroudie Upstairs at The Charlatans studio" data-datetime="7:04 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335661368754786309"
+                 data-text="WHENEVER I DO â€“Â A waltz in search of a partner, listing the comforts of companionship against a backdrop of loss. #TimsListeningParty #TalesTold #IanBroudie" data-datetime="7:04 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1335661321686224897"
+                 data-text="Checking in where our @LlSTENlNG_PARTY fam are tuned in from, for this amazing @IanZBroudie album https://t.co/eJXty944ok" data-datetime="7:04 PM Dec 6, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335661269932707847"
+                 data-text="The instruments were already all set up as Iâ€™d been recording all that day with @thecoralband" data-datetime="7:03 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335661211577421827"
+                 data-text="@TheMarinersBand Thanks" data-datetime="7:03 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335661190563979267"
+                 data-text="WHENEVER I DO - We recorded this live late on a summer night @ElevatorStudios in Liverpool" data-datetime="7:03 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335661120636522496"
+                 data-text="The other Mersey classic strongly evoked from the first few bars of Song For No-One is Michael Head &amp; The Strandsâ€™  1997 set The Magical World of The Strands. If you donâ€™t know it, please do yourself a favour. 
+https://t.co/Y88D0N6Rw9 #TimsListeningParty" data-datetime="7:03 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335660935705456653"
+                 data-text="@indieimmy Ta" data-datetime="7:02 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335660872904138753"
+                 data-text="Recording the drums for Song for No One. Photo by Kev Power https://t.co/EBsEx4A7AS" data-datetime="7:02 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335660857267720199"
+                 data-text="SONG FOR NO-ONE â€“ These are songs written in a fresh vacuum. Song For No-One is so called because suddenly thereâ€™s no-one nearby to whom its creator can play it. A simple but beautiful idea. #TimsListeningParty" data-datetime="7:02 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335660842793263106"
+                 data-text="@MrMatRead Lot of roundabouts ðŸ˜‰" data-datetime="7:02 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335660709246537730"
+                 data-text="@cornishcarspots Thank you" data-datetime="7:01 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335660589620850692"
+                 data-text="It began as a kind of riff or picking on the guitar... It felt like a good start and I think it\'s probably my favourite track on the album." data-datetime="7:01 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1335660586428981255"
+                 data-text="If you asked yourself what might happen if you had attained a state of bliss like the one captured in Pure only to see it unravel before you, you just need to follow Ian Broudieâ€™s discography all the way to Tales Told. A sad story, but the music is exquisite. #TimsListeningParty" data-datetime="7:01 PM Dec 6, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335660530137182209"
+                 data-text="SONG FOR NO ONE - This song was the first song since my first single Pure which had no one else playing on it." data-datetime="7:01 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335660450424512513"
+                 data-text="I had returned to Liverpool to work with two (then) unsigned bands @thecoralband  &amp; @ZutonsThe and while in the midst of that, I became re-inspired and decided to quickly record these songs in between their sessions." data-datetime="7:00 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335660335236337667"
+                 data-text="This album was a moment for me when I was suddenly no longer in a band. I was in a tough place with my family and I felt a little jaded." data-datetime="7:00 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FIanZBroudie%2Fstatus%2F1335660295994421248"
+                 data-text="3...2...1... PLAY #TimsListeningParty #TalesTold https://t.co/eTD65WL0OX" data-datetime="7:00 PM Dec 6, 2020"> 
+                IanZBroudie            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1335660286884405248"
+                 data-text="Handing over to @IanZBroudie for our second @needlemythology @LlSTENlNG_PARTY this evening
+
+Team coach @petepaphides is here too 
+
+Press play / drop the needle on the record... https://t.co/K3BtMEdGHl" data-datetime="7:00 PM Dec 6, 2020"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
