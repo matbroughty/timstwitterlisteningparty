@@ -177,12 +177,12 @@ data class TimeSlot(val dateStr: String = "?",
     if (isoDate.year == 1970) {
       return "TBC"
     }
-    if(isNextYear()){
-      return isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d (yyyy)"))
-    }
+    // Tim asked to remove year
+//    if(isNextYear()){
+//      return isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d (yyyy)"))
+//    }
     return isoDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
   }
-
 
 
   /**
@@ -221,7 +221,7 @@ data class TimeSlot(val dateStr: String = "?",
   fun buildTweeterLinks(): String {
     var html = "<br/><small>"
     html = html.plus(tweeterLinkList().map { "<a class=\"text-muted\" target=\"_blank\" href=\"$it\">@${it.substringAfterLast("/")}</a>" }.toList())
-    if(tweeterLinkList().isNotEmpty()) {
+    if (tweeterLinkList().isNotEmpty()) {
       // silent listening parties will have no tweeters so don't add listening party, otherwise do
       html = html.plus(", <a class=\"text-muted\" target=\"_blank\" href=\"https://twitter.com/LlSTENlNG_PARTY\">@LlSTENlNG_PARTY</a>")
     }
@@ -230,14 +230,13 @@ data class TimeSlot(val dateStr: String = "?",
 
 
   fun spotifyDateDisplay(): String {
-    return if(spotifyYear.isEmpty()) "" else spotifyYear.substring(0, 4)
+    return if (spotifyYear.isEmpty()) "" else spotifyYear.substring(0, 4)
   }
 
   fun spotifyDateDisplayFull(): String {
-    return if(spotifyYear.isEmpty() || spotifyYear.length < 10) ""
+    return if (spotifyYear.isEmpty() || spotifyYear.length < 10) ""
     else LocalDate.parse(spotifyYear, DateTimeFormatter.ISO_DATE).format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
   }
-
 
 
   fun spotifyMonthDay(): MonthDay {
@@ -247,14 +246,14 @@ data class TimeSlot(val dateStr: String = "?",
 
 
   fun spotifyThisYear(): Boolean {
-    if(spotifyYear.isNotBlank() && spotifyYear.length < 10){
+    if (spotifyYear.isNotBlank() && spotifyYear.length < 10) {
       return false
     }
     val releaseDate = LocalDate.parse(spotifyYear, DateTimeFormatter.ISO_DATE)
     return releaseDate.year == LocalDate.now().year
   }
 
-  fun hasReplay() : Boolean{
+  fun hasReplay(): Boolean {
     return replayLink.isNotBlank()
   }
 
