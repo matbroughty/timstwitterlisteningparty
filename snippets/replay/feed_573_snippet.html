@@ -1,0 +1,621 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1ACWApd6Nkv6ygVOkKQoFq" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02c21a5b9464c04f142c82491f" alt="Raintown" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Deacon Blue</span><br/><span class="sub-colour">Raintown</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(286029)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1ACWApd6Nkv6ygVOkKQoFq" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_286029_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 119 tweets from Saturday 12th December 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/deaconbluemusic" target="_blank"><img src="https://pbs.twimg.com/profile_images/1191339906976628736/ZRnYGriB_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@deaconbluemusic</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/rickyaross" target="_blank"><img src="https://pbs.twimg.com/profile_images/1227294983725731840/RFILFJQ7_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@rickyaross</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/DougieVipond" target="_blank"><img src="https://pbs.twimg.com/profile_images/778525798621974528/2vIVp44m_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@DougieVipond</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Born in a Storm" data-start="0"
+             data-duration="93" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Raintown" data-start="95"
+             data-duration="229" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Ragman" data-start="326"
+             data-duration="187" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="He Looks Like Spencer Tracy Now" data-start="515"
+             data-duration="230" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Loaded" data-start="747"
+             data-duration="270" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="When Will You (Make My Telephone Ring)?" data-start="1019"
+             data-duration="302" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Chocolate Girl" data-start="1323"
+             data-duration="197" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Dignity" data-start="1522"
+             data-duration="239" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="The Very Thing" data-start="1763"
+             data-duration="213" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Love's Great Fears" data-start="1978"
+             data-duration="220" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Town to Be Blamed" data-start="2200"
+             data-duration="321" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Which Side Are You On?" data-start="2523"
+             data-duration="177" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Kings Of The Western World" data-start="2702"
+             data-duration="158" style="display:none"></div>
+                        <div id="track-14" class="track-list"
+                     data-name="Finished" data-start="2862"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851c21a5b9464c04f142c82491f" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-119" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337862742829658112"
+                 data-text="@Tim_Burgess @deaconbluemusic @m_intosh @DougieVipond Thanks for hosting Tim, we had a blast. Lovely idea." data-datetime="8:51 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1337862456752869380"
+                 data-text="Yeah. A @deaconbluemusic song trending... https://t.co/BPOXf4KmC9" data-datetime="8:50 PM Dec 12, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Flongers_74%2Fstatus%2F1337862314138230791"
+                 data-text="@deaconbluemusic @Tim_Burgess Was wonderful. Ticket from my first DB gig....and thereâ€™s been around 35 more. DB will always have my music heart x https://t.co/fvP2eY6IP5" data-datetime="8:50 PM Dec 12, 2020"> 
+                longers_74            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337862134705905667"
+                 data-text="Thanks for having us, Tim! That was wonderful https://t.co/v9I2CJ5pgc" data-datetime="8:49 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337862097426853890"
+                 data-text="@DaveHod54 @deaconbluemusic @Dougie @m_intosh @gregorphilp Lovely idea. x" data-datetime="8:49 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337861939444244480"
+                 data-text="@chubby_charlton @deaconbluemusic So sad" data-datetime="8:48 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1337861787597885449"
+                 data-text="Brilliant! Thanks so much @deaconbluemusic @rickyaross @m_intosh &amp; @DougieVipond https://t.co/HSJUGDtDHw" data-datetime="8:48 PM Dec 12, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337861631108378625"
+                 data-text="From #Raintown to #RidingontheTideofLove. Our new 8 track mini-album, the companion album to #CityofLove, is out on February 5th. 
+
+Pre-order it here: https://t.co/sYSZo00drM
+
+#timstwitterlisteningparty" data-datetime="8:47 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337861557934383104"
+                 data-text="That was so much fun! ðŸ’™ Thanks again to @LlSTENlNG_PARTY and @Tim_Burgess.
+
+Was so nice reading all your comments and memories. #Raintown #timstwitterlisteningparty" data-datetime="8:47 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1337861458269528066"
+                 data-text="@deaconbluemusic @LlSTENlNG_PARTY A total pleasure! Hope to catch up with you in the real world some time x x" data-datetime="8:46 PM Dec 12, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337861396466429954"
+                 data-text="@alcjames Where we going?" data-datetime="8:46 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337861217650675714"
+                 data-text="Wow! Where did the time go?! Thank you @Tim_Burgess for having us and featuring #Raintown. Itâ€™s great to see that our debut album still means so much to so many people. Itâ€™s been wonderful sharing it again with you all. Thanks 2 everyone that joined in. #TimsTwitterListeningParty" data-datetime="8:45 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337860936275800068"
+                 data-text="My thumbs have RSI #TimsTwitterListeningParty" data-datetime="8:44 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337860697246593030"
+                 data-text="Loveâ€™s Great Fears and Born in a Storm paint the picture perfectly." data-datetime="8:43 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337860695694696449"
+                 data-text="Jim: What I remember most about the album was the feeling of musically growing up and overall the dark, damp smoky smell of London at Christmas time and looking down out the studio windows at Oxford Circus. #timstwitterlisteningparty #Raintown" data-datetime="8:43 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337860481403523079"
+                 data-text="@chubby_charlton @deaconbluemusic Didnâ€™t know this." data-datetime="8:42 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337860458674442240"
+                 data-text=".@DougieVipond: For years I personally struggled to capture â€˜liveâ€™ what we had done in the studio. It was so â€˜in the momentâ€™, I couldnâ€™t figure out how to recreate it. After hundreds of gigs, I worked it out #TimsTwitterListeningParty #Raintown" data-datetime="8:42 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337860360339152896"
+                 data-text="Jim: \"Ready, Jim? Relaxed?\" came Jon Kelly, our producer\'s soft, smooth voice. 
+\"Yeah, I\'m good to go to Jon.\"
+\"OK\", says he, \"Stevie Wonder wrote Superstition on that piano. Tense up. Tape\'s rolling.\"
+
+Several takes later, my hands were still shaking. 
+#timstwitterlisteningparty" data-datetime="8:42 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337860301841178624"
+                 data-text="Jon was not happy. The session had to stop and the unit from the desk had to be taken out and dried. The mixing session was cancelled that night!" data-datetime="8:42 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337860300255670276"
+                 data-text=".@m_intosh: I remember Ewen &amp; Graeme getting absolutely hammered when the album was being mixed. 
+
+Ewen spilt a lot of tequila and it went straight into the desk.I remember Ewen and Graeme getting absolutely hammered when the album was being mixed. #timstwitterlisteningparty" data-datetime="8:42 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337860236254867456"
+                 data-text="This was what got this album made. We are grateful Gordon. â™¥ï¸ https://t.co/KBAh9NcZrd" data-datetime="8:41 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337860184501346307"
+                 data-text="Listening to him as he went through this extraordinary improvised performance, was amazing. We followed and ended up with something special." data-datetime="8:41 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337860182966218752"
+                 data-text=".@DougieVipond: Something really magical happened when we recording this. Encouraged by producer Jon Kelly, Ricky took us to places we\'d never been before as a band. 
+#TimsTwitterListeningParty" data-datetime="8:41 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337859930557198336"
+                 data-text="@Hay_NW @LlSTENlNG_PARTY @Tim_Burgess @deaconbluemusic @m_intosh @DougieVipond Thank you x" data-datetime="8:40 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337859861611245569"
+                 data-text=".@rickyaross When we recorded Town To Be Blamed, it had almost no arrangement and we just played what we could remember until it fizzled out. #timstwitterlisteningparty #Raintown" data-datetime="8:40 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337859472585347072"
+                 data-text="@BelfastHead So much. We shared a room at The Columbia when we mixed it." data-datetime="8:38 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337859269622951939"
+                 data-text="Jim: We recorded the piano part for #LovesGreatFears at night in Studio 2 at AIR studios in Oxford Circus. Light were all dimmed, I was sat at the Bosendorfer, headphones on.
+
+#timstwitterlisteningparty #Raintown" data-datetime="8:38 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337859143466692608"
+                 data-text="This song is @rickyaross and Jim in perfect harmony and try playing this without joining in when @m_intosh sings â€œSlipping awayâ€, itâ€™s impossible!" data-datetime="8:37 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337859141973446657"
+                 data-text=".@DougieVipond - One of my favourite songs on the album. Listening back to this today, I realised I played marimba at the beginning, doing an arpeggio basslineâ€¦couldnâ€™t do that now! #TimsTwitterListeningParty #Raintown" data-datetime="8:37 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1337859029427777536"
+                 data-text="@LlSTENlNG_PARTY @deaconbluemusic Iâ€™m going to say yes, I know a lot of the songs but canâ€™t say I have heard it from start to finish. Itâ€™s sounding great" data-datetime="8:37 PM Dec 12, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337858930458898432"
+                 data-text=".@rickyaross - Loveâ€™s Great Fears was the last song I wrote for the album and was written while we were recording the demos, around the September before we started recording the album. (We started recording #Raintown in December â€™86) #timstwitterlisteningparty" data-datetime="8:36 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337858866340646913"
+                 data-text="Ok Iâ€™m listening to Loveâ€™s Great Fears and it IS the best song. Glory glory James Miller Prime @dougie @m_intosh @gregorphilp" data-datetime="8:36 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337858858040127491"
+                 data-text="@nickbb7 @deaconbluemusic Itâ€™s does sound like an electronic drum, so no biggy. I didnâ€™t  use anything other than natural instruments on Raintown." data-datetime="8:36 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="113000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1337858735423811584"
+                 data-text="Anyone at #TimsTwitterListeningParty hearing Raintown by @deaconbluemusic all the way through for the first time ever??" data-datetime="8:35 PM Dec 12, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337858263719817222"
+                 data-text="RR: The album artwork is a photograph by Oscar Marzaroli. Iâ€™d been given a book of his photographs by a friend &amp; brought it into the demo studio one day &amp; everyone related to his pictures. So it quickly became important to find Oscar and use his photographs! #Raintown https://t.co/yWKvHduA8x" data-datetime="8:34 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fgingerbeardman%2Fstatus%2F1337858104101310469"
+                 data-text="@rickyaross @LlSTENlNG_PARTY @Tim_Burgess @deaconbluemusic @m_intosh @DougieVipond The Maynard Keynes line in Dignity reminds me of my Economics teacher Mr Chris McNally. I was useless at Economics but he was by far the best teacher I ever had. His lessons were more about Life than Economics. Loved every minute of them. RIP Mr Mac. #TimsTwitterListeningParty" data-datetime="8:33 PM Dec 12, 2020"> 
+                gingerbeardman            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337858100267773958"
+                 data-text="... the final section just happened by each of us listening to each other and choosing to play or keep quiet, to respond or not. Something that also happened in Town To Be Blamed. #Raintown" data-datetime="8:33 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337858098774597637"
+                 data-text=".@DougieVipond: The Very Thing - â€œOne day, all of us will workâ€, a bold prediction. This is one of the songs that really developed in the studio. When we finished, I think it was Ricky who signalled to keep going and... 
+#TimsTwitterListeningParty" data-datetime="8:33 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337858026838106114"
+                 data-text="@chubby_charlton Ha ha. I agree. But we were young and daft" data-datetime="8:33 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857888107327488"
+                 data-text="ðŸ’™ https://t.co/e4t5T38tE7" data-datetime="8:32 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857736529342472"
+                 data-text="The best moment was Steve Jackson (who we later recorded with) taking us along to Studio 3 to hear the Beatles Revolver outtakes which was being remastered for CDâ€¦a thrill." data-datetime="8:31 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857735099027459"
+                 data-text="RR: We saw loads in that studio: George Martinâ€™s visit was a big day. Mark Knopfler was along the corridor leaving every night in his motorbike gear.  #timstwitterlisteningparty #Raintown" data-datetime="8:31 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857590194302983"
+                 data-text="I went into the studio &amp; it was like entering another world. 
+The whole band was there with Jon Kelly the producer. They were all totally at home. An hour after arriving I was shown into the huge live room where I was in a corner near Ricky singing. #timstwitterlisteningparty" data-datetime="8:31 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857588768202753"
+                 data-text=".@m_intosh: I remember arriving in London for the first time in my life. I arrived at Oxford Circus tube station and was told to look straight up and that was Air Studios where I was headed. #timstwitterlisteningparty #Raintown" data-datetime="8:31 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857391497531393"
+                 data-text="I was last to go home one weekend. The plane tickets were in the safe behind reception and Michael Rose, the owner refused to give me my tickets as Graham et al had run a Â£200 bill up and kindly put it on my room. All in the daily life of a band recording their first album." data-datetime="8:30 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857389916205062"
+                 data-text="Jim: You have to picture this. A bunch of guys (@m_intosh wasn\'t full time in the band then) in London all fairly broke living in the legendary hotel The Columbia in Bayswater but still only able to afford the most rank Carlsberg Lager on a daily basis. #timstwitterlisteningparty" data-datetime="8:30 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857102153469956"
+                 data-text="...I knew that everyone if they screwed up or made a little mistake, could overdub their parts afterwards, so I really felt the pressure to get the drums right every time" data-datetime="8:29 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857100710555648"
+                 data-text="We wanted to capture a â€˜liveâ€™ energy in the studio, so we set up to record everything as we had played in gigs. Even though we wanted to recreate our live, concert sound...
+
+#TimsTwitterListeningParty" data-datetime="8:29 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857099162939394"
+                 data-text="Pretty intimidating for me, who wasnâ€™t truly confident of being able the perform on tape. I liked to give the impression that I was totally cool but the reality was, I was bricking it every time we pressed the record button. #TimsTwitterListeningParty" data-datetime="8:29 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337857097690722304"
+                 data-text="Dougie: The studio was on the top floor of the Top Shop building right above Oxford Circus in London. It was an amazing if slightly terrifying place. Air was owned by Beatles producer #GeorgeMartin and everywhere you went there were photographs of the Fab Four." data-datetime="8:29 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337857028358803469"
+                 data-text="@RareBooks37996 @deaconbluemusic @DougieVipond @m_intosh @LlSTENlNG_PARTY Squeezeâ€™s East Side Story for one" data-datetime="8:29 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337856863627583490"
+                 data-text="@LlSTENlNG_PARTY @deaconbluemusic @rickyaross @m_intosh Loveâ€™s Great Fears or Spencer Tracy #TimsTwitterListeningParty" data-datetime="8:28 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337856809474920450"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess @deaconbluemusic @m_intosh @DougieVipond Maybe The Very Thing or Loveâ€™s Great Fears. Right now Iâ€™m liking Dignity more than I thought!" data-datetime="8:28 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337856591262064641"
+                 data-text="We grew up during those weeks, lots of escapades at The Columbia Hotel late on and a memory of everyone being hungover one day when Matt, the engineer, declared the lounge the â€˜sick bay.â€™" data-datetime="8:27 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337856589806571523"
+                 data-text="RR: My favourite moment was when we had settled into the groove and moved to Air Studio 2 after Christmas. They built a little tin vocal booth for @m_intosh and I to sing within the same space and suddenly it all became our sound. I loved the studio. #timstwitterlisteningparty" data-datetime="8:27 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337856416137310208"
+                 data-text="The first test pressing of the first 12inch https://t.co/gMlYf1NMM3" data-datetime="8:26 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337856356091637760"
+                 data-text="@kdcreative08 @rickyaross At a gig...his" data-datetime="8:26 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337856272264212486"
+                 data-text="RR: When it came to the choice of singles, Iâ€™d honestly given it no thought. Jon said 1 day that singles were bought by teenage girls between 12-14 &amp; at that point I sort of gave up hope. Iâ€™m glad about that now as it was important just to make a record.#timstwitterlisteningparty" data-datetime="8:26 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1337856168111333376"
+                 data-text="Fave track on Raintown???@
+
+@deaconbluemusic - this question for @rickyaross @m_intosh &amp; @DougieVipond too #TimsTwitterListeningParty" data-datetime="8:25 PM Dec 12, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337856084715982848"
+                 data-text="The space between what @rickyaross &amp; @m_intosh are doing and the rest of the band works really well. Oh yeah, then B J Cole came along and put some crazy obbligato slide guitar over the topâ€¦ 
+
+#TimsTwitterListeningParty" data-datetime="8:25 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337856083252178944"
+                 data-text="Dougie: Chocolate Girl - This has become one of our strongest live songs. We wanted to create a cool country vibe on this and Graemeâ€™s guitar sounds so in the groove. 
+
+He was such a brilliant percussive player, creating all these little â€™stabsâ€™ that we could all riff off." data-datetime="8:25 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337855917988192259"
+                 data-text="@adsbn1 Yes!" data-datetime="8:24 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337855591105110016"
+                 data-text="@chubby_charlton @yvieburnett We should have put that in the brackets!!" data-datetime="8:23 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337855484683034625"
+                 data-text="@Tim_Burgess @deaconbluemusic When do we start side 2?" data-datetime="8:22 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1337855376461602819"
+                 data-text="Think this is my favourite @deaconbluemusic song #TimsTwitterListeningParty" data-datetime="8:22 PM Dec 12, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337855349248942082"
+                 data-text="I think Ewen and Dougie knew it already so it just fell into place and Jon saidâ€¦   â€˜Just do it like that.â€™" data-datetime="8:22 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337855347768381442"
+                 data-text=".@rickyaross - When Will You for example was really me explaining to Jon how the song went. Jim had gone home from rehearsal &amp; I said that thereâ€™s this other song and so I played the piano and everyone just joined in. #timstwitterlisteningparty" data-datetime="8:22 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337855205011034118"
+                 data-text="This song â€˜When will youâ€™ was on very first DB demo. Only @DougieVipond and I survived that lineup. At one point @janicelongdj â€˜s brother Jeff loved it so much he nearly signed us." data-datetime="8:21 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337855170814889984"
+                 data-text="Their backing vocals just made the song soar. I remember Ewen standing crying with my head on Ewenâ€™s shoulder listening to them. Who would want to leave?" data-datetime="8:21 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337855169455853568"
+                 data-text=".@m_intosh: The day I left the studio they were recording When Will You.  I was very emotional. I so wanted to be singing it but what the guys from London Beat had done was amazing.  #timstwitterlisteningparty" data-datetime="8:21 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337855116112777219"
+                 data-text="@healy1877 @LlSTENlNG_PARTY @deaconbluemusic @rickyaross @m_intosh The Bish Bash!" data-datetime="8:21 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337855014560215053"
+                 data-text="Dougie: When my mum heard this she said, â€œThis song will be number 1 all over the world!â€" data-datetime="8:21 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337854919961960448"
+                 data-text="I just remember the hairs on the back of my neck tingling in awe and everyone\'s jaw hit the ground. I still listen to that track like - something changed that day - this is serious. This is going to happen." data-datetime="8:20 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337854918535868419"
+                 data-text="I don\'t even know if they had heard the track (When Will You). Two of them go into the studio and start warming up and the other one arrives and what seemed like 5 minutes it was done." data-datetime="8:20 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337854917084639232"
+                 data-text="These guys were heavyweights and had done Live Aid in 1985, so they were booked for a Saturday and Ricky, Jon Kelly and I plus the engineer waited on their arrival. 
+One of the guys was late and I thought here we go...long session." data-datetime="8:20 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337854915151093771"
+                 data-text="Jim: We don\'t use many guests on our album though it\'s always refreshing to hear great musicians doing their thang. There was a suggestion that we use Paul Young\'s backing singers (Jimmy Helms, George Chandler, Jimmy Chambers). #timstwitterlisteningparty" data-datetime="8:20 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337854473251794945"
+                 data-text="@nickbb7 @deaconbluemusic Not a syndrum, a Chinese cymbal #TimsTwitterListeningParty" data-datetime="8:18 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1337854072351825920"
+                 data-text="@bigjaff91 @LlSTENlNG_PARTY @deaconbluemusic What a line up" data-datetime="8:17 PM Dec 12, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337854021407809537"
+                 data-text="RR: Jon Kelly made us believe we could play the songs as if we were just doing a gig. That was the most refreshing thing about working with him. Even in the middle of recording the album, we went out to play a few college shows and that always informed how we played the songs." data-datetime="8:17 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337853973445926913"
+                 data-text="@TheAdmiralBar @LlSTENlNG_PARTY @deaconbluemusic @m_intosh @DougieVipond Oh shit" data-datetime="8:16 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337853889119465474"
+                 data-text="Dougie: Loaded - I seem to remember that we knew this was good but when we recorded it initially but it didnâ€™t soar away at the end. A decision was made to add a key change and it gave us the freedom to take it somewhere else. #TimsTwitterListeningParty" data-datetime="8:16 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337853855674085379"
+                 data-text="@Smithyfive @m_intosh Just behind? ðŸ˜‚" data-datetime="8:16 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337853773243412480"
+                 data-text="His line was it was good for me as I was singing on so much of it so I might be in a stronger position for future work with them." data-datetime="8:16 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337853771636989952"
+                 data-text=".@m_intosh: I came home from London the week before Christmas leaving @rickyaross and the band. I had a tape of two songs, #Raintown and Loaded which I played my brother." data-datetime="8:16 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337853658705301507"
+                 data-text="@RichardWaldron2 @deaconbluemusic @m_intosh At the airport! ðŸ˜Š" data-datetime="8:15 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337853428660396033"
+                 data-text="Hereâ€™s a thing #TimsTwitterListeningParty https://t.co/u6TcBDuRiW" data-datetime="8:14 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337853252981973003"
+                 data-text="...but we were used to Gordon and he was our champion, he talked the record up and if it had not been for him a there would have been no #Raintown" data-datetime="8:14 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337853251568406530"
+                 data-text="RR: Our label A&amp;R Gordon Charlton introduced us to producer Jon Kelly. Gordon was there or thereabouts constantly, which was a huge pain for Jon who kept asking why we put up with himâ€¦ 
+#timstwitterlisteningparty" data-datetime="8:14 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337853241623797760"
+                 data-text="@warbeckuk See .... he knows" data-datetime="8:14 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337853040477560833"
+                 data-text="@IainSherry5 @rickyaross @deaconbluemusic Itâ€™s true. We only had one key, so have many memories of waiting in the rain, down that back lane, to get in #TimsTwitterListeningParty" data-datetime="8:13 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337852948303450112"
+                 data-text="@pollyschool Not up yet." data-datetime="8:12 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337852826500927488"
+                 data-text="Dougie: He Looks Like Spencer Tracy Now - thereâ€™s a real beauty to this song, even though the subject matter is pretty harrowing. @rickyaross sings this really well and @m_intosh ad-lib lines in the middle 8 are spellbinding. #TimsTwitterListeningParty" data-datetime="8:12 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1337852785212141573"
+                 data-text="@LlSTENlNG_PARTY @deaconbluemusic @rickyaross @m_intosh @DougieVipond Enjoying this @deaconbluemusic album in Norfolk ðŸ¤˜" data-datetime="8:12 PM Dec 12, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337852726328389632"
+                 data-text="@IainSherry5 @DougieVipond @deaconbluemusic Yes." data-datetime="8:12 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337852557004316673"
+                 data-text="@gregorphilp @rickyaross Congas ya erse" data-datetime="8:11 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1337852503313014792"
+                 data-text="Everyone doing OK? #TimsTwitterListeningParty" data-datetime="8:11 PM Dec 12, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337852303093739522"
+                 data-text="In the Sept 86 after weâ€™d signed our record deal we spent about 3 wks in Park Lane, Glasgow recording demos. Loaded, Ragman, #Raintown &amp; maybe Loveâ€™s Great Fears were all recorded for those sessions then obviously re-cut with producer Jon Kelly later." data-datetime="8:10 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337852301743181826"
+                 data-text="RR: We started recording the album in Dec 1986. Prior to that we had two main demo session: the 1st demo we cut led to our record deal around late spring/early summer â€˜86 &amp; included Dignity and The Very Thing." data-datetime="8:10 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337852184936009738"
+                 data-text="@kdcreative08 Oct 85 .. when everyone else was unemployed!" data-datetime="8:09 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337852164589449217"
+                 data-text="@DougieVipond : #Ragman - I\'ve always loved Graemeâ€™s guitar lines that he plays in the space between piano the chords of the intro &amp; verse. Wed demoed this in Pk Lane Studio in Glasgow before heading to London so we felt fairly confident about recording this one." data-datetime="8:09 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1337852146126032902"
+                 data-text="We are here for details like this https://t.co/cKVzYvSQga" data-datetime="8:09 PM Dec 12, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337852042182844417"
+                 data-text="OK PERKIN  @warbeckuk hereâ€™s your moment." data-datetime="8:09 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337851900729888769"
+                 data-text="@jasonmohammad @deaconbluemusic Thanks Jason" data-datetime="8:08 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337851707741646856"
+                 data-text="â™¥ï¸ https://t.co/j5NeSsj0sS" data-datetime="8:07 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337851695083171841"
+                 data-text="I think thatâ€™s when Jon Kelly (producer) asked Ricky why I wasnâ€™t a proper member of the band." data-datetime="8:07 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337851693552332803"
+                 data-text="Lorraine: The first song I sang on was #Raintown, I was blown away when the sound the band were making came through my headphones. That low rumble like thunder at the beginning. It was thrilling. I gave it everything I had. #timstwitterlisteningparty" data-datetime="8:07 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337851611151020034"
+                 data-text="@DougieVipond ðŸ˜‚" data-datetime="8:07 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337851550014779393"
+                 data-text="...and while Jim plays his little repeated descending scale at the start, I overdubbed a crescendo on the huge drum and also on a Chinese cymbal, then off we goâ€¦ I really enjoyed playing this in the studio and playing it live has been a joy ever since." data-datetime="8:07 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337851548634910721"
+                 data-text="Dougie: I always thought it was brave of Ricky to start our debut album with such a quiet, intimate song, so I was keen to get #Raintown off to a huge start. I hired a 48-inch orchestral bass drum... #TimsTwitterListeningParty" data-datetime="8:07 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FDougieVipond%2Fstatus%2F1337851351209041925"
+                 data-text="@rickyaross With age we mellow" data-datetime="8:06 PM Dec 12, 2020"> 
+                DougieVipond            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337851217649799171"
+                 data-text="That was faster than I remember @DougieVipond #TimsTwitterListeningParty #Raintown" data-datetime="8:06 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="164000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337851126759223301"
+                 data-text="RR: This is the earliest song I can remember writing the bones of which started around 1983 and as I recall from an old school jotter (from my teaching days) which had the idea in it. #timstwitterlisteningparty" data-datetime="8:05 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1337850440206180352"
+                 data-text="Favourite ever @deaconbluemusic live show?
+
+Bonus points for pics, merch, ticket stubs etc 
+
+#TimsTwitterListeningParty" data-datetime="8:02 PM Dec 12, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Frickyaross%2Fstatus%2F1337850372497547265"
+                 data-text="This version tonight #TimsTwitterListeningParty https://t.co/vteq0QMkFG" data-datetime="8:02 PM Dec 12, 2020"> 
+                rickyaross            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337850330516758531"
+                 data-text="He won the argument and he was right.
+#TimsTwitterListeningParty #Raintown" data-datetime="8:02 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337850329011019776"
+                 data-text="RR: Born in a Storm isn\'t an obvious choice for an album opener but Iâ€™ll never forget the speech our A&amp;R made on why we should open with it. It was along the lines of: \'Everyone starts with an up track. You won\'tâ€¦that\'s what will make this album make an impact\'." data-datetime="8:02 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337850016350736386"
+                 data-text="RR: The songs on #Raintown were the songs from all of my life and the lyrics are songs which had gathered for a number of years.
+
+#TimsTwitterListeningParty" data-datetime="8:01 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fdeaconbluemusic%2Fstatus%2F1337849928178151429"
+                 data-text="Thanks Tim! https://t.co/4mQZmn0tyB" data-datetime="8:00 PM Dec 12, 2020"> 
+                deaconbluemusic            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1337849731259772928"
+                 data-text="Press play / drop the needle on the record
+
+Over to @deaconbluemusic @rickyaross  @m_intosh &amp; @dougievipond https://t.co/9KYjAfGeBX" data-datetime="8:00 PM Dec 12, 2020"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
