@@ -53,7 +53,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val allOneTableFile = File("snippets/all-time-slots.html")
     val wallHtml = buildWallHtml(completed, upcoming)
     val wallFile = File("snippets/wall.html")
-    val wallFullSizeHtml = buildWallHtml(completed, upcoming, true, 19)
+    val wallFullSizeHtml = buildWallHtml(completed, upcoming, true)
     val wallFullSize = File("pages/timswall.html")
 
     // if called from Lambda we can't write to the file
