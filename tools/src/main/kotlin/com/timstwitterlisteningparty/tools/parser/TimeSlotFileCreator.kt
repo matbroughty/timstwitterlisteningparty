@@ -34,6 +34,13 @@ class TimeSlotFileCreator : HtmlFileCreator {
       .filter { !it.is1970() && it.isoDate.toLocalDate().isBefore(LocalDate.now()) }
       .filter{it.replayLink.isNotBlank()}
       .collect(Collectors.toList())
+
+
+    val completedFullSizeWall = beans.stream()
+      .filter { !it.is1970()  }
+      .filter{it.replayLink.isNotBlank()}
+      .collect(Collectors.toList())
+
     val upcoming = beans.stream()
       .filter { !it.is1970() && it.isoDate.toLocalDate().isBefore(LocalDate.now()).not() }
       .collect(Collectors.toList())
@@ -53,7 +60,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val allOneTableFile = File("snippets/all-time-slots.html")
     val wallHtml = buildWallHtml(completed, upcoming)
     val wallFile = File("snippets/wall.html")
-    val wallFullSizeHtml = buildWallHtml(completed, upcoming, true)
+    val wallFullSizeHtml = buildWallHtml(completedFullSizeWall, upcoming, true)
     val wallFullSize = File("pages/timswall.html")
 
     // if called from Lambda we can't write to the file
