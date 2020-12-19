@@ -1,0 +1,530 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1t2FJ1q8mMaO51pawMzt31" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0252fb546cd0ed4f8e0c0acc74" alt="Mixmag Live Volume 20" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Mixmag presents Richie Hawtin</span><br/><span class="sub-colour">Mixmag Live Volume 20</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1t2FJ1q8mMaO51pawMzt31" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 69 tweets from Friday 18th December 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/richiehawtin" target="_blank"><img src="https://pbs.twimg.com/profile_images/1331991404495728647/K8GVCN_j_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@richiehawtin</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Mixmag" target="_blank"><img src="https://pbs.twimg.com/profile_images/1335932573336350720/Hftk8Ro__normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Mixmag</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Dry Ray - Mixed" data-start="0"
+             data-duration="288" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Quo Vadis - Mixed" data-start="290"
+             data-duration="213" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Empower - Mixed" data-start="505"
+             data-duration="110" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Jump - Mixed" data-start="617"
+             data-duration="126" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Wipe - Mixed" data-start="745"
+             data-duration="158" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="5 Mouths - Mixed" data-start="905"
+             data-duration="87" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Basic Needs - Mixed" data-start="994"
+             data-duration="172" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Substance Abuse - Mixed" data-start="1168"
+             data-duration="153" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Spaz - Mixed" data-start="1323"
+             data-duration="79" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Helikopter - Mixed" data-start="1404"
+             data-duration="59" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Percussion Electrique - Mixed" data-start="1465"
+             data-duration="29" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Spastik - Mixed" data-start="1496"
+             data-duration="28" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Eye Trip - Mixed" data-start="1526"
+             data-duration="38" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="Boiling_Point - Mixed" data-start="1566"
+             data-duration="118" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="Electricity - Mixed" data-start="1686"
+             data-duration="74" style="display:none"></div>
+                <div id="track-16" class="track-list"
+             data-name="Dollar - Mixed" data-start="1762"
+             data-duration="66" style="display:none"></div>
+                <div id="track-17" class="track-list"
+             data-name="Live Wire - Mixed" data-start="1830"
+             data-duration="69" style="display:none"></div>
+                <div id="track-18" class="track-list"
+             data-name="Venus Fly Trap - Mixed" data-start="1901"
+             data-duration="132" style="display:none"></div>
+                <div id="track-19" class="track-list"
+             data-name="Cash Machines - Mixed" data-start="2035"
+             data-duration="341" style="display:none"></div>
+                <div id="track-20" class="track-list"
+             data-name="Key Follow - Mixed" data-start="2378"
+             data-duration="131" style="display:none"></div>
+                <div id="track-21" class="track-list"
+             data-name="Harz - Mixed" data-start="2511"
+             data-duration="311" style="display:none"></div>
+                <div id="track-22" class="track-list"
+             data-name="Altes Testament - Mixed" data-start="2824"
+             data-duration="550" style="display:none"></div>
+                        <div id="track-23" class="track-list"
+                     data-name="Finished" data-start="3376"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485152fb546cd0ed4f8e0c0acc74" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-69" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1340025116554489856"
+                 data-text="Big thanks to @richiehawtin ðŸ¤˜ðŸ”¥" data-datetime="8:04 PM Dec 18, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="315000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340024998417862657"
+                 data-text="THANKS EVERYONE!
+#TimsTwitterListeningParty" data-datetime="8:03 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340023677245657088"
+                 data-text="@AJTurf Stay safe too!  Everyone!
+Music will help us through this mess!
+#TimsTwitterListeningParty" data-datetime="7:58 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340023399477878786"
+                 data-text="@plastikua @placid_casual75 @LlSTENlNG_PARTY Which one, where?
+#TimsTwitterListeningParty" data-datetime="7:57 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340023195546611714"
+                 data-text="This track would mix perfectly with Robotman DO DA DO Acid House remix!
+#TimsTwitterListeningParty" data-datetime="7:56 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340022924410040321"
+                 data-text="@MacaronPurpl Maybe Iâ€™m ahead of youâ€¦..
+#TimsTwitterListeningParty" data-datetime="7:55 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="120000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340022846735740931"
+                 data-text="@erwblo Tribal Gathering were amazing events.  Some of the first real large scale outside parties that were really Techno focused.  
+#TimsTwitterListeningParty" data-datetime="7:55 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340022344153243650"
+                 data-text="@domdwight @Mixmag Would love that.  Was going to make a pack of emoji stickers, but never got around to it.  Maybe someone here and help!
+#TimsTwitterListeningParty" data-datetime="7:53 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMixmag%2Fstatus%2F1340022224032575495"
+                 data-text="Let\'s goooooo
+
+https://t.co/Z9hbPo27Qd https://t.co/uCRpadD1wc" data-datetime="7:52 PM Dec 18, 2020"> 
+                Mixmag            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="165000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340022150846099456"
+                 data-text="Roman IV coming inâ€¦ last track of the mix.  So killer, gotta just let it play and be free to take you on itâ€™s journey. 
+#TimsTwitterListeningParty" data-datetime="7:52 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Fplacid_casual75%2Fstatus%2F1340021457229914113"
+                 data-text="If this evening is your first exposure to @richiehawtin or indeed Techno as the art it can be and are really going with it, then I kind of envy you as you have A LOT you can explore after. A LOT @LlSTENlNG_PARTY #TimsTwitterListeningParty" data-datetime="7:49 PM Dec 18, 2020"> 
+                placid_casual75            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340021070125010944"
+                 data-text="Finished or closed out so many sets with thisâ€¦ SENSORAMA." data-datetime="7:48 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340020673008332807"
+                 data-text="@soozworld Looks like me every weekend in 1993.
+#TimsTwitterListeningParty" data-datetime="7:46 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340020591177437185"
+                 data-text="@AJTurf Man, nice work!
+#TimsTwitterListeningParty" data-datetime="7:46 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340020228139474957"
+                 data-text="@Mixmag Well, at least the ones I can remember.
+#TimsTwitterListeningParty" data-datetime="7:44 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340020016377438209"
+                 data-text="@domdwight @Tim_Burgess @Mixmag haha, as blurry as my tattoo!
+LOL
+#TimsTwitterListeningParty" data-datetime="7:44 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMixmag%2Fstatus%2F1340019931535060992"
+                 data-text="We\'re halfway through #TimsTwitterListeningParty featuring @richiehawtin\'s classic Mixmag covermount mix CD
+
+Get locked and join the conversation. Richie is sharing some mad memories â¤ï¸
+
+https://t.co/Z9hbPo27Qd" data-datetime="7:43 PM Dec 18, 2020"> 
+                Mixmag            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fdomdwight%2Fstatus%2F1340019861796380676"
+                 data-text="@Tim_Burgess @richiehawtin @Mixmag God I loved this. So much I got this! The edges have blurred a bit 25 years later #TimsTwitterListeningParty https://t.co/PqeYmQ6TUx" data-datetime="7:43 PM Dec 18, 2020"> 
+                domdwight            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340019856427638785"
+                 data-text="@bcolinp Driving around the D and listening to Techno.  Not much better than that.
+#TimsTwitterListeningParty" data-datetime="7:43 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340019623702478849"
+                 data-text="@AJTurf 100%
+#TimsTwitterListeningParty" data-datetime="7:42 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="161000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340019465195577345"
+                 data-text="This track is a total Detroit rave party stomper.  Everyone there had a special way of dancing to a track like this!
+#TimsTwitterListeningParty" data-datetime="7:41 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340018790713741318"
+                 data-text="A bassline and a TR909, doesnâ€™t take much to take us all away!
+
+#TimsTwitterListeningParty" data-datetime="7:39 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FMixmag%2Fstatus%2F1340018667527020545"
+                 data-text="We should have put a box set on the cover ðŸ˜ #TimsTwitterListeningParty https://t.co/yT8VotGqT8" data-datetime="7:38 PM Dec 18, 2020"> 
+                Mixmag            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340018493660557313"
+                 data-text="@AJTurf Any of these tracks could be played out now, all still resonating nicely!
+Any of these tracks could be played out now, all" data-datetime="7:37 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2FMixmag%2Fstatus%2F1340018444402614273"
+                 data-text="Hard agree #TimsTwitterListeningParty https://t.co/ZQSsl454aA" data-datetime="7:37 PM Dec 18, 2020"> 
+                Mixmag            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340017994597097472"
+                 data-text="Think we ALL NEED A GOOD NIGHT OUT!  
+#TimsTwitterListeningParty" data-datetime="7:36 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340017845846106123"
+                 data-text="Later half of the mix got into some weird early minimal house type tracks.  Usually at the end of my long Detroit sets Iâ€™d bring some basslines back to bring people down and make a good smooth landingâ€¦. (for all of us)
+#TimsTwitterListeningParty" data-datetime="7:35 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340017362695761923"
+                 data-text="@DJfflyffilyfbbl @CatSinge @LlSTENlNG_PARTY ORBIT!
+#TimsTwitterListeningParty" data-datetime="7:33 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1340017194776846338"
+                 data-text="ðŸ™Œ @richiehawtin #TimsTwitterListeningParty https://t.co/m3wH3a7wDa" data-datetime="7:32 PM Dec 18, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340017033501683714"
+                 data-text="This is where the CD format FAILED us.  60/70 mins trying to grasp this type of set doesnâ€™t really work.  Could be much longer, deeper and weirder imo.
+#TimsTwitterListeningParty" data-datetime="7:32 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fcallmecarlitox%2Fstatus%2F1340016995102765058"
+                 data-text="ðŸ’ŠðŸ¤¯ðŸ’¥ #TimsTwitterListeningParty 
+https://t.co/I9xJZMzAsB" data-datetime="7:32 PM Dec 18, 2020"> 
+                callmecarlitox            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340016853993852929"
+                 data-text="@JoshuaGlazer I communicate Telepathically about hour 8 of a long set :)
+#TimsTwitterListeningParty" data-datetime="7:31 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340016631725088773"
+                 data-text="Think thereâ€™s a bunch of ENSONIQ DP-4 effects on this mixâ€¦ for those wondering :) â€¦ pre DE9 type experiments.  
+#TimsTwitterListeningParty" data-datetime="7:30 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340016440687079425"
+                 data-text="This track is highly underrated, was on Dan Bellâ€™s Accelerate records DWARF!  KILLER.
+#TimsTwitterListeningParty" data-datetime="7:29 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340016256875962370"
+                 data-text="@plastikua Freeze the Childen! 
+HEY, I was just packing T-shirts over here, and someone else mentioned that in their email order :) What a crazy memory.
+#TimsTwitterListeningParty" data-datetime="7:29 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340016056706936834"
+                 data-text="@JoshuaGlazer Also used to hear one of the great Detroit DJâ€™s do crazy FLANGE effects, but then in the end realized it was me tripping and not them making the sound.  It was all in my head.  Helpe me with a few track ideas though. 
+#TimsTwitterListeningParty" data-datetime="7:28 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FMixmag%2Fstatus%2F1340016036049989636"
+                 data-text="Absolute belter memories coming through ðŸ˜ˆ #TimsTwitterListeningParty https://t.co/z4Ryy8WsQY" data-datetime="7:28 PM Dec 18, 2020"> 
+                Mixmag            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340015850481455104"
+                 data-text="@JoshuaGlazer LOVE FLANGE
+#TimsTwitterListeningParty" data-datetime="7:27 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340015741425356802"
+                 data-text="@chubfire @robevs Weâ€™re more on an Acid trip right nowâ€¦ Coffee is a bit the wrong buzz.
+#TimsTwitterListeningParty" data-datetime="7:27 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340015644780191745"
+                 data-text="@CatSinge @LlSTENlNG_PARTY LOVE IT!  CLUB UK and Atomic Jam were serious eventsâ€¦ still resonate with me deep in my memories. UK TECHNO at itâ€™s best.
+#TimsTwitterListeningParty" data-datetime="7:26 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340015478136332291"
+                 data-text="@jhbenn73 FUSE Substance Above
+#TimsTwitterListeningParty" data-datetime="7:26 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340015280978845698"
+                 data-text="Ah this part is like me hitting everyone over the head with an ACID SLEDGEHAMMER.
+#TimsTwitterListeningParty" data-datetime="7:25 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340015187110338560"
+                 data-text="@AJTurf Yup, I feel ya.
+Needs to get WEIRD again." data-datetime="7:24 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FMixmag%2Fstatus%2F1340014960257224704"
+                 data-text="Lock in for Richie on #TimsTwitterListeningParty https://t.co/gvKcojyaeJ" data-datetime="7:23 PM Dec 18, 2020"> 
+                Mixmag            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340014956251639810"
+                 data-text="Getting VERY MIDWEST ACID right now.  We used to do a lot of partying back and forth all around the midwest, and often up with our DROP BASS NETWORK friends in Wisconsin!  They were seriouslly into their ACID.
+#TimsTwitterListeningParty" data-datetime="7:23 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FMixmag%2Fstatus%2F1340014770641117187"
+                 data-text="RT @MarkBroom: #TimsTwitterListeningParty  tonight, my track â€˜Jumpâ€™ features on @richiehawtinâ€™s @Mixmag Live Volume 20... canâ€™t believe itâ€™â€¦" data-datetime="7:23 PM Dec 18, 2020"> 
+                Mixmag            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Frobevs%2Fstatus%2F1340014563010469893"
+                 data-text="Friday night bounce #TimsTwitterListeningParty https://t.co/CzxZSKOIg0" data-datetime="7:22 PM Dec 18, 2020"> 
+                robevs            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340014464054255616"
+                 data-text="If you could imagine being in a dirty Detroit warehouse at 6am when only the hardcore people were left, this is how it would have sounded.
+#TimsTwitterListeningParty" data-datetime="7:21 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fnotjohnneptune%2Fstatus%2F1340014359830007808"
+                 data-text="This is bringing back some sweet sweet memories that I can hardly remember having #TimsTwitterListeningParty @richiehawtin @sn00ksta" data-datetime="7:21 PM Dec 18, 2020"> 
+                notjohnneptune            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340014100353572865"
+                 data-text="@Birmingham_81 @LlSTENlNG_PARTY Thanks for pointing that out.  Many people scratch their heads trying to understand if Iâ€™m from Windsor (Canada) or if Iâ€™m from or why Iâ€™m connected to the Detroit scene so muchâ€¦. from my house in Windsor it was about 15 mins to downtown Detroit.
+#TimsTwitterListeningParty" data-datetime="7:20 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340013848280129536"
+                 data-text="Haha, maybe too much.  But it was a point of really trying to twist music inside out, and therefore peopleâ€™s heads inside out.
+#TimsTwitterListeningParty" data-datetime="7:19 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340013729761652736"
+                 data-text="This whole mix was meant to give everyone a headfuck.  Most of the DJâ€™s I was watching then internationally were not using the EQ as much as we were in the Detroit areaâ€¦ so on this mix I pushed that type of idea to the limit.  
+#TimsTwitterListeningParty" data-datetime="7:19 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340013359773704192"
+                 data-text="@Agnesthecat13 Teste stopped us ALL IN OUR TRACKS.  I remember listening to the demo for the first time in the car driving back from Toronto after 2 days of Raving and it REALLY MADE AN IMPRESSION.
+#TimsTwitterListeningParty" data-datetime="7:17 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="127000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340013131846828033"
+                 data-text="@placid_casual75 @LlSTENlNG_PARTY @Alan Yes, but he wasnâ€™t as influential to me as many of the other Detroit area musicians.  Maybe because I was a little youngerâ€¦ not sure.  I was listening much more to Jeff Mills THE WIZARD and Duane â€œin the mixâ€ Bradley over WJLB
+#TimsTwitterListeningParty" data-datetime="7:16 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1340012597324750859"
+                 data-text="#TimsTwitterListeningParty In case anyone is wondering where Windsor, Ontario is, here\'s a pic I took last year. That\'s Detroit at the bottom, and that\'s Windsor just across the river from Techno City. Confusingly, Canada is actually south of the USA at this point https://t.co/cWcEgBGhgA" data-datetime="7:14 PM Dec 18, 2020"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340012564701458432"
+                 data-text="Love this @octaveone track.  So loopy and hypnotic.  I guess thatâ€™s why this mix was sort of in-between Hawtin and Plastikman â€¦ you can feel the acidic days â€¦." data-datetime="7:14 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="123000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340012178112450560"
+                 data-text="@JoshuaGlazer they were on purpose - but definitely me experimenting with new techniques
+#TimsTwitterListeningParty" data-datetime="7:12 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340011662242422791"
+                 data-text="Ok, hereâ€™s some early DE9 style effects that I was cutting in.  This early effects were inspired by hearing a lot of crazy (GREAT) Detroit radio mix shows when I was a teenager.
+#TimsTwitterListeningParty" data-datetime="7:10 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FJoshuaGlazer%2Fstatus%2F1340011578024894464"
+                 data-text="I used to think the silences in the G-Man track were a mistake when I first heard it. ðŸ˜ 
+
+#TimsTwitterListeningParty" data-datetime="7:10 PM Dec 18, 2020"> 
+                JoshuaGlazer            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340011442003697674"
+                 data-text="This G-Man track still rocks today, really a time less classic that really needs to be played as long as possibleâ€¦ so that you get lost inside of it!
+#TimsTwitterListeningParty" data-datetime="7:09 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FRoffeyDave%2Fstatus%2F1340011168241487873"
+                 data-text="@richiehawtin 25 years ago! Where did that time go.
+Would love to be in a club enjoying this now.
+#RichieHawtin
+#Plastikman
+#Mixmag
+#TimsTwitterListeningParty" data-datetime="7:08 PM Dec 18, 2020"> 
+                RoffeyDave            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340010973617336321"
+                 data-text="Ok, this is G-Man coming inâ€¦.
+#TimsTwitterListeningParty" data-datetime="7:08 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340010935453401091"
+                 data-text="Yup, I figured someone would remember X-mix.. I guess that WAS the first mix CD, but I wasnâ€™t sure on the date!  
+#TimsTwitterListeningParty" data-datetime="7:07 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340010620612128772"
+                 data-text="G-man didnâ€™t even start yet.
+#TimsTwitterListeningParty" data-datetime="7:06 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340010534826094595"
+                 data-text="Ah, nice back-edit.  Those come in and out of this mix as it was a big thing for me in the 1990s.  Back-edits using a reel-to-reel tape machine.
+#TimsTwitterListeningParty" data-datetime="7:06 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340010254608846855"
+                 data-text="Hey everyone.  This is a blast from the past thatâ€™s for sureâ€¦. 1995, my first (or second?) mix cd.  Definitely my first sexy Mixmag cover
+
+#TimsTwitterListeningParty" data-datetime="7:05 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="157000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340009952958660608"
+                 data-text="Ok, Iâ€™m late for the party as usual." data-datetime="7:04 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Frichiehawtin%2Fstatus%2F1340009292213202944"
+                 data-text="Should I press play NOW?
+#TimsTwitterListeningParty" data-datetime="7:01 PM Dec 18, 2020"> 
+                richiehawtin            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1340008975484526592"
+                 data-text="#TimsTwitterListeningParty 
+
+Handing over to @richiehawtin and @Mixmag https://t.co/jdryVDgJaX" data-datetime="7:00 PM Dec 18, 2020"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
