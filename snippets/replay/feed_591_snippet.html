@@ -1,0 +1,496 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/6vdkCTvmlrdtT7i9nhv3Jd" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0253244c4841984b3558ee07fd" alt="Twelve Of Hearts" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Daniel O'Sullivan &amp; Richard Youngs</span><br/><span class="sub-colour">Twelve Of Hearts</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/6vdkCTvmlrdtT7i9nhv3Jd" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 88 tweets from Tuesday 22nd December 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/DOSullivann" target="_blank"><img src="https://pbs.twimg.com/profile_images/1279176596243570695/b1o5bY6f_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@DOSullivann</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/nofansrecords" target="_blank"><img src="https://pbs.twimg.com/profile_images/1299717931484446722/T14s9hly_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@nofansrecords</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="First Throw Of The Ocean" data-start="0"
+             data-duration="179" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Big Old Star" data-start="180"
+             data-duration="164" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Fear Catches The Sky" data-start="345"
+             data-duration="175" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Long Joyful Dream" data-start="521"
+             data-duration="184" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Gate" data-start="706"
+             data-duration="190" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Touch Of The Sun" data-start="897"
+             data-duration="223" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Don’t Hang With Angels" data-start="1121"
+             data-duration="175" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Oblivion Riviera" data-start="1297"
+             data-duration="174" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="In The August Dream" data-start="1472"
+             data-duration="202" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Like I Need To Be Amazed" data-start="1675"
+             data-duration="193" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Remain The Fool" data-start="1869"
+             data-duration="197" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Twelve Of Hearts" data-start="2067"
+             data-duration="212" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="2280"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485153244c4841984b3558ee07fd" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-88" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FShenggyS%2Fstatus%2F1341484358893498370"
+                 data-text="I really love this album !!! Such a great work you have done !! Will play it again AND again â¤ï¸ðŸ™â¤ï¸ https://t.co/hRR2Ynid9F" data-datetime="8:42 PM Dec 22, 2020"> 
+                ShenggyS            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341484119956606977"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY Sedated Tarka. https://t.co/SXZWluLIj7" data-datetime="8:41 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341483923885477902"
+                 data-text="A big thank you to @Tim_Burgess and cohorts at @ogenesisrecords for giving us shelter. #TimsTwitterListeningParty" data-datetime="8:41 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341483868734582785"
+                 data-text="And as the record ended, the dog fell off the sofa. @DOSullivann @LlSTENlNG_PARTY" data-datetime="8:40 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341483493214306307"
+                 data-text="Thank you for listening!" data-datetime="8:39 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341483372275707908"
+                 data-text="@nofansrecords It was. Title was just knocking around I seem to remember." data-datetime="8:38 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341483315459743744"
+                 data-text="Fades to thunder..." data-datetime="8:38 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341483100321267713"
+                 data-text="@nofansrecords Viva megalomania." data-datetime="8:37 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341482999259537410"
+                 data-text="Title came late, and this probably was recorded last." data-datetime="8:37 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341482975842742272"
+                 data-text="Such a beautiful album by @DOSullivann &amp; @nofansrecords - thinking it might have found some new friends at the @LlSTENlNG_PARTY ðŸ™ŒðŸŽ„Theyâ€™ve got good taste over there at @ogenesisrecords" data-datetime="8:37 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341482889297457154"
+                 data-text="Ooo-ma. Pale footsteps. An estranged eulogy. A reversed firework. Such a pleasure writing with my friend @nofansrecords #TimsTwitterListeningParty" data-datetime="8:36 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341482867952631810"
+                 data-text="I HAVE TO SAY. If you like this beautiful togetherness of @nofansrecords and @DOSullivann check out their solo\'s on OGenesis. https://t.co/tuNbHMyibv and https://t.co/fUtiwp3Rf9 there wont be disappointment in fact there will be much enjoyment xxx" data-datetime="8:36 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341482837657210882"
+                 data-text="Title track!" data-datetime="8:36 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341482512120426497"
+                 data-text="@nofansrecords @Tim_Burgess Letâ€™s save it for the book." data-datetime="8:35 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341482479450992645"
+                 data-text="@DOSullivann Guitar solo is insanely gratuitous." data-datetime="8:35 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341482282599759874"
+                 data-text="@Tim_Burgess @DOSullivann It\'s hectic. Never listen to my own music, but doing this is weird and there\'s loads more I just haven\'t time to type." data-datetime="8:34 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341482228325478404"
+                 data-text="Harry made a video for this too. Pierrot, birdsong, a white rose. Now is the time of the fool. Less judgement, less derision, more singing, more jouissance. #TimsTwitterListeningParty" data-datetime="8:34 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341482082309189632"
+                 data-text="@nofansrecords Yes, this beautiful arpeggiated part. Seemed a good opportunity to write a tarot themed synth pop tune. #TimsTwitterListeningParty" data-datetime="8:33 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341482044774342659"
+                 data-text="Love seeing @nofansrecords and @DOSullivann go through this album and tweeting each other about the elements involved in each song" data-datetime="8:33 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341481989493415936"
+                 data-text="Remain the Fool started out as the most ridiculous arpeggio midi pre-set I could find." data-datetime="8:33 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341481839739990017"
+                 data-text="Remain The Fool. A card has only two sides. Any fool knows this. #TimsTwitterListeningParty" data-datetime="8:32 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341481628430962695"
+                 data-text="@DOSullivann Less = more here." data-datetime="8:31 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341481534411468803"
+                 data-text="@nofansrecords I remember sending Richard a fairly elaborate arrangement for this. He responded by using only the beat and singing the words to Like I Need To Be Amazed. #TimsTwitterListeningParty" data-datetime="8:31 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341481459740241928"
+                 data-text="@nofansrecords Like your crazy faith like silent land. #TimsTwitterListeningParty" data-datetime="8:31 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341481385635287041"
+                 data-text="The klang sound is an extractor hood that we removed from the kitchen when decorating." data-datetime="8:31 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341481145205190660"
+                 data-text="Like I Need To Be Amazed. I think this is more Christmas 2020 than any other song on the album. when i said its an xmas album i meant a really uneasy / easy listening xmas album. cymbals crashing like bin lids when you have a hangover. in a good way of course xxx #XMAS2020" data-datetime="8:30 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341481044877447168"
+                 data-text="Richardâ€™s â€œyeah, yeahâ€ at the end is the eye of the duck moment on this album for me." data-datetime="8:29 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341481042734161920"
+                 data-text="Like I Need to be Amazed. There\'s a Steve Martin film in which his boss asks Steve to \"dazzle him\". This struck with me. What kind of person needs to be dazzled or amazed?" data-datetime="8:29 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341480737288167429"
+                 data-text="#TimsTwitterListeningParty 
+
+Chilled https://t.co/oIwxgBCCXW" data-datetime="8:28 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341480732380848128"
+                 data-text="We tended to keep arrangements quite spartan throughout. This song is perhaps the exception. A garland of reeds and strings hung on the door. #TimsTwitterListeningParty" data-datetime="8:28 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341480529393291264"
+                 data-text="Yes recorder, viola, clarinet..," data-datetime="8:27 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FdollyblueMC%2Fstatus%2F1341480410396696578"
+                 data-text="@DOSullivann @nofansrecords @Tim_Burgess @LlSTENlNG_PARTY this is such a beautifully chilled album, ideal for lazy Sunday mornings. Looking forward to the vinyl arriving.
+
+#TimsTwitterListeningParty https://t.co/U7cOsa6kY6" data-datetime="8:27 PM Dec 22, 2020"> 
+                dollyblueMC            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341480368323571717"
+                 data-text="@DOSullivann Another spoken middle, followed by some lovely recorder (?) from Daniel." data-datetime="8:26 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341480155420749830"
+                 data-text="In The August Dream. Another letter. Written in water. Summertime. Donâ€™t forget to water our plants. Donâ€™t forget to return those books. #TimsTwitterListeningParty" data-datetime="8:26 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341479993923256322"
+                 data-text="@DOSullivann Guitar is a bit Eric Chenaux in my ears." data-datetime="8:25 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341479836041302017"
+                 data-text="@Tim_Burgess We found it on the Oblivion Riviera." data-datetime="8:24 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341479821445087233"
+                 data-text="@nofansrecords Ooo-rama-confettitaround
+
+Elka organ came in handy here. A single note drone on the Indian harmonium. Richardâ€™s guitar always reminds me of Stacey Sutherland here. #TimsTwitterListeningParty" data-datetime="8:24 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341479685813903361"
+                 data-text="Oblivion Riviera. Get some sleep. #TimsTwitterListeningParty" data-datetime="8:24 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341479660710998020"
+                 data-text="The noodling guitar is, again, a nylon strung acoustic, this time through loads of cheap/free plug-ins." data-datetime="8:24 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341479617505443843"
+                 data-text="THE GLITTERING FORMULA" data-datetime="8:23 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341479427830673417"
+                 data-text="@ShenggyS Donâ€™t chill with angels basically." data-datetime="8:23 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341479355130793987"
+                 data-text="Oblivion Riviera. Those 4 chords are there...just. A song about the power of sleep." data-datetime="8:22 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341479336365465600"
+                 data-text="Both @DOSullivann and @nofansrecords were huge parts of Ascent Of the Ascended. Vocally and Aesthetically." data-datetime="8:22 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341479280392495105"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY Fans of Bressonâ€™s Lancelot Du Lac take note. The blind, lumbering swordplay. The ponderous, protracted myth realm. #TimsTwitterListeningParty" data-datetime="8:22 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341479222414618625"
+                 data-text="@DOSullivann The guitar comes in at quite a tangent." data-datetime="8:22 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341479173769080833"
+                 data-text="@DOSullivann @nofansrecords @LlSTENlNG_PARTY Please make exceptions though https://t.co/lYdCQcOWcU" data-datetime="8:22 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341479122795687937"
+                 data-text="@nofansrecords @Tim_Burgess Young talented family friend Harry Miller directed a video for this song. Spent the entire budget on the rental of a medieval suit of armour." data-datetime="8:22 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341479067858644995"
+                 data-text="@DOSullivann @LlSTENlNG_PARTY Also don\'t look in mirrors, you don\'t know what you\'ll see." data-datetime="8:21 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341478934714695682"
+                 data-text="@Tim_Burgess @DOSullivann The \'hook\' is the backing vocals." data-datetime="8:21 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341478912082276364"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY Bohran, 808 snare, reversed bells, Richard underpinning the real rule of four on this." data-datetime="8:21 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341478775586996225"
+                 data-text="@nofansrecords You go next?" data-datetime="8:20 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341478765168369665"
+                 data-text="@DOSullivann @LlSTENlNG_PARTY I remember mixing out quite a few layers. It\'s super stripped. back." data-datetime="8:20 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341478731517472771"
+                 data-text="Donâ€™t hang with angels [the hit single] I knew it was going to be a smash when Richard performed it with Dan at @DOSullivannâ€™s Folly release party @nofansrecords joined the folly band mid way through the set and belted it out. Such a classic" data-datetime="8:20 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341478723581833217"
+                 data-text="@nofansrecords Yes, this is bonkers." data-datetime="8:20 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341478619642793984"
+                 data-text="The plan was that @DOSullivann would start alternate songs, but that\'s kind of got lost in the tweet frenzy here." data-datetime="8:20 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341478572398174216"
+                 data-text="Donâ€™t Hang With Angels. Howâ€™s that for advice? @nofansrecords #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="8:19 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341478296895320065"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY We have the early slot, just as well." data-datetime="8:18 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341478161461235712"
+                 data-text="@DOSullivann The most relaxing track, for sure." data-datetime="8:18 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341478001008128000"
+                 data-text="@DOSullivann @LlSTENlNG_PARTY Being pretty literal here." data-datetime="8:17 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341477993584222208"
+                 data-text="Richard (@nofansrecords) told me that these were songs to make you sleep ðŸ’¤ or something like that - but they  a beautiful all the same. Hoping nobody is doing the @LlSTENlNG_PARTY while driving. Very relaxing" data-datetime="8:17 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341477935858003968"
+                 data-text="@nofansrecords The lyrics are a remembrance of unencumbered bliss. Eye slow lid. New pink lungs. #TimsTwitterListeningParty" data-datetime="8:17 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341477821483536390"
+                 data-text="@nofansrecords She-doowop-he-doowop. #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="8:16 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341477714193166339"
+                 data-text="Touch of the Sun. Bringing it down for the end of side one - classic sequencing move, yes?" data-datetime="8:16 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341477573818261505"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY The record is generally quite dry but this one instance where a very saturated reverb makes an appearance. #TimsTwitterListeningParty" data-datetime="8:15 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341477495988772865"
+                 data-text="@DOSullivann @LlSTENlNG_PARTY I started with an echoed drum machine - Yamaha RY9, bought for the initials." data-datetime="8:15 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341477333602103296"
+                 data-text="The Gate. Recorded viola first. Words came while recording viola. Had to put viola down to write words. Recorded vocal then went back to viola. #TimsTwitterListeningParty @LlSTENlNG_PARTY @nofansrecords" data-datetime="8:14 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341477220989190148"
+                 data-text="The Gate. I love the spoken word middle \"Should you ever want to come and talk to me about ideas\" - cracks me up." data-datetime="8:14 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341477195521376257"
+                 data-text="Me and @nofansrecords are Crass fans #TimsTwitterListeningParty" data-datetime="8:14 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341476886053052416"
+                 data-text="@nofansrecords Beat conjured from Elka Concorde Electric Organ. Paper thin. Hard and soft simultaneously. Was surprised by Richardâ€™s response to this one. Realised the songs were like correspondences. Subtle letters. Socratic almost. #TimsTwitterListeningParty" data-datetime="8:13 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341476832424673280"
+                 data-text="@Tim_Burgess @DOSullivann And, hey, it\'s Christmas." data-datetime="8:12 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341476611410055171"
+                 data-text="#TimsTwitterListeningParty 
+@DOSullivann gave me this record just after we released @nofansrecordsâ€™ album Belief and before Folly by @DOSullivann came out. I always thought of it as a kind of Christmas record" data-datetime="8:12 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341476516539019272"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY Oooo-a-shimina. #TimsTwitterListeningParty" data-datetime="8:11 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341476440341159936"
+                 data-text="Tracks coming thick and fast. Everything made total sense when we were making the record. Four tracks in and the absurdity is beginning to hit me." data-datetime="8:11 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341476247893925897"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY Could never quite make out the words until a journalist requested them. Love Richardâ€™s second verse here. With eyes carry, So imaginary, Oh the clamour, Of blind glory #TimsTwitterListeningParty" data-datetime="8:10 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341475969274621954"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY My favourite of Richardâ€™s vocal performances. I sent over quite a hefty arrangement. But we ended up just using piano and electronic percussion. #TimsTwitterListeningParty" data-datetime="8:09 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1341475893382967299"
+                 data-text="DOS t-shirt on for @DOSullivann @nofansrecords @Tim_Burgess ðŸ™Œ  #TimsTwitterListeningParty https://t.co/q5iX2xB05T" data-datetime="8:09 PM Dec 22, 2020"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341475697731264515"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY Oooo-a-shimina. #TimsTwitterListeningParty" data-datetime="8:08 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341475577593802753"
+                 data-text="@DOSullivann @LlSTENlNG_PARTY After the first two tracks, though, it sounds quite straight, even with that pitching." data-datetime="8:07 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341475399323312129"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY Enjoyed singing this. Listening to Smokey Robinson, Jackie Wilson, The Capris, Sanford Clark. The 50â€™s was a good time for bottled starlight.
+#TimsTwitterListeningParty" data-datetime="8:07 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341475343455150082"
+                 data-text="Fear Catches the Sky. When I got the test pressing through I was struck how strange the pitch-shifted vocal on the second verse sounded. In a good way." data-datetime="8:06 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341474937014530048"
+                 data-text="@DOSullivann @LlSTENlNG_PARTY Big Old Star...the first track we recorded, based on a sprawling 20 minute improvisation by Daniel. Just cried out for the 4 chords that run throughout the LP." data-datetime="8:05 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="111000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341474847071870979"
+                 data-text="Big Old Star. First one @nofansrecords and wrote. A song about longing for connection. And also the dawning realisation of the glittering four chord formula. #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="8:05 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341474379918692354"
+                 data-text="The electric guitar is a nylon-strung acoustic with a contact mic overloading a pre-amp." data-datetime="8:03 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341474299073486852"
+                 data-text="Total love for this album - from the moment I first heard it #TimsTwitterListeningParty" data-datetime="8:02 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FDOSullivann%2Fstatus%2F1341474175286972416"
+                 data-text="@nofansrecords @LlSTENlNG_PARTY Recorded the group harmony on my Uher reel to reel, bounced them down again to cassette; used both sources. Played the bamboo flute while hopping on one leg. #TimsTwitterListeningParty" data-datetime="8:02 PM Dec 22, 2020"> 
+                DOSullivann            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341473925692309508"
+                 data-text="@Tim_Burgess @DOSullivann @LlSTENlNG_PARTY Hello Tim, thanks. Just hit the needle on the groove." data-datetime="8:01 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fnofansrecords%2Fstatus%2F1341473678660386816"
+                 data-text="First Throw of the Ocean. @DOSullivann suggested it start the album Twelve of Hearts. @LlSTENlNG_PARTY" data-datetime="8:00 PM Dec 22, 2020"> 
+                nofansrecords            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1341473600948330503"
+                 data-text="Handing over to Richard @nofansrecords Youngs and @DOSullivann for their Twelve of Hearts @LlSTENlNG_PARTY https://t.co/wXTDCTZ3lQ" data-datetime="8:00 PM Dec 22, 2020"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
