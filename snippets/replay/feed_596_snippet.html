@@ -1,0 +1,447 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4EaqsyQk5014ZLaxiUObWa" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02d1604de8fbf9e05c1ea850f7" alt="Superwombling" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Mike Batt - The Wombles</span><br/><span class="sub-colour">Superwombling</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4EaqsyQk5014ZLaxiUObWa" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 67 tweets from Thursday 24th December 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Mike_Batt" target="_blank"><img src="https://pbs.twimg.com/profile_images/1270126389740568576/kxtBvMdH_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Mike_Batt</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/petepaphides" target="_blank"><img src="https://pbs.twimg.com/profile_images/583030202906873856/rTmMRwPE_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@petepaphides</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="The Womble Shuffle" data-start="0"
+             data-duration="161" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Myths And Legends Of King King Merton Womble And His Journey To The Centre Of The Earth" data-start="162"
+             data-duration="328" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Down At The Barber Shop" data-start="491"
+             data-duration="130" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="The Empty Tidy-Bag Blues" data-start="622"
+             data-duration="238" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Wombling White Tie And Tails" data-start="861"
+             data-duration="213" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Superwomble" data-start="1075"
+             data-duration="206" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Miss Adelaide [She's Got A Lot Of Knowledge]" data-start="1282"
+             data-duration="238" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Wombles On Parade" data-start="1521"
+             data-duration="221" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="To Wimbledon With Love" data-start="1743"
+             data-duration="228" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Nashville Wombles" data-start="1972"
+             data-duration="294" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2267"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851d1604de8fbf9e05c1ea850f7" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-67" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342180371597766660"
+                 data-text="RT @Tim_Burgess: #TimsAdventCalendar2020
+ðŸŽ„ Christmas Eve ðŸŽ„ 
+
+Retweet for a chance to win 
+
+A nightâ€™s stay and dinner at @Albion_Rooms_ - thâ€¦" data-datetime="6:48 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342180369647415297"
+                 data-text="Thanks - I got a bit stressed at end when I realised you lot were on a different song! Lotsa love back - Happy Christmas everyone. M:) #timstwitterlisteningparty #superwombling @petepaphides @LlSTENlNG_PARTY https://t.co/mCJfECJEh6" data-datetime="6:48 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342180089228877825"
+                 data-text="RT @Tim_Burgess: Thanks so much for all your Christmas messages. Itâ€™s been a tough year but itâ€™s been good to spend time listening to albumâ€¦" data-datetime="6:47 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342179947465601024"
+                 data-text="It was fantastic ðŸ˜ðŸ˜ https://t.co/wRu8LL2hAV" data-datetime="6:46 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342179718376923136"
+                 data-text="tHanks @Tim_Burgess  - I got outta sync with you guys at the end but I hope it was OK!!  ðŸ¥´ðŸ¤£" data-datetime="6:45 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342179586344439809"
+                 data-text="Wow! @Mike_Batt that was fantastic. Sending lots of Christmas love x x
+
+Big thanks to @petepaphides for the intro to King Womble ðŸ¤˜ðŸŽ„ðŸ”¥" data-datetime="6:45 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342179220756246531"
+                 data-text="So! Thanks so much @Tim_Burgess @LISTENING_PARTY, @Petepahides for the idea - all you guys for listening and contributing. Try to have a cool Yule. And do gimme a \"follow\" for Christmas! Lotsa love, Mike ðŸ™‚ðŸŽ„ #Superwombling
+ #TimsTwitterListeningParty" data-datetime="6:43 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342179116423012355"
+                 data-text="It got to number two, - Mud kept us off the top with â€œLonely This Christmas. Bastards! . Would have been nice to be number one, but it was still thrilling. Still is, to me. #Timstwitterlisteningparty #Superwombling" data-datetime="6:43 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342179018150469635"
+                 data-text="Got a bit outa sync there! We put the track down all at the same time (orchestra and rhythm section) and I added all the vocals later. Again, at Wessex studios. #Timslisteningparty #Superwombling" data-datetime="6:43 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342178901972430849"
+                 data-text="A fun record, made very quickly. Of the 8 hits (11 if you count re-entries) â€“ this is the one that I like the most. I think itâ€™s a kind of joyful melancholy that comes through somehow. #Timstwitterlisteningparty #Superwombling" data-datetime="6:42 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342178691242205192"
+                 data-text="All the crowd shouts in the chorus were the CBS office staff and their families #Timstwitterlisteningparty #Superwombling" data-datetime="6:41 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342178553790681089"
+                 data-text="We were lucky to get to be the interval act for Eurovision to launch this. This is the record that took \"us\" (ðŸ¤£) from â€œone hit wondersâ€ to having a string of hits. Nice to meet ABBA when they were there, before they went on and won â€œWaterlooâ€ #Timslisteningparty #Superwombling" data-datetime="6:41 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1342178529597927430"
+                 data-text="Aaaaaaand finally 
+
+https://t.co/YnApIXCHUl" data-datetime="6:41 PM Dec 24, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342178425746948097"
+                 data-text="The lead fiddle at the front is played by my favourite violin leader, the late Jack Rothstein. He was a great player and a brilliant bloke. He started out as a jazz trumpeter! #Timslisteningparty #Superwombling https://t.co/FeMHp4jhPV" data-datetime="6:40 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342178198373720064"
+                 data-text="Then Tony Blackburn started playing, not knowing what a Womble was, he just thought it was a â€œsilly soundingâ€ bit fun. But I was unconsciously inventing words like â€œUnderground Overgroundâ€ and â€œWombling, that never existed in the books. #Timstwitterlisteningparty #Superwombling" data-datetime="6:39 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342178069948346368"
+                 data-text="#tinstwitterlisteningparty https://t.co/H3plKGvRaB" data-datetime="6:39 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342177903539314693"
+                 data-text="The first hit! It was a â€œbeefierâ€ version of the TV version, which had a clarinet intro. This had 4 french horns, giving it a more â€œrompyâ€ quality. Nobody at CBS expected it to be a hit. Thatâ€™s when I had my mum make my first Womble costume. #Timslisteningparty #Superwombling https://t.co/ALDwrEECSv" data-datetime="6:38 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1342177664631771138"
+                 data-text="OK @LlSTENlNG_PARTY folks. Over to this one now 
+
+@mike_batt
+
+https://t.co/fuOG8KQZaS" data-datetime="6:37 PM Dec 24, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="181000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342177560038432768"
+                 data-text="So thatâ€™s the nearly end of what would be the last studio album â€œweâ€ Wombles made! Thanks for listening. But now we are apparently doing a â€œencore of three other tracksâ€: - starting with â€œThe Wombling Songâ€. So off we go with thatâ€¦
+  #Timstwitterlisteningparty #Superwombling" data-datetime="6:37 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="159000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342176799212625921"
+                 data-text="Admittedly inspired by The Lovinâ€™ Spoonfulâ€™s â€œNashville Catsâ€ itâ€™s unlike it melodically and was a chance to do some â€œcountryâ€. The steel guitar is by the mighty B J Cole. I never did manage to get a play on â€œBob Harris Countryâ€ (Yet!!!) #Timstwitterlisteningparty #Superwombling" data-datetime="6:34 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342176132351860736"
+                 data-text="I think this was the other track we did at Olympic with the LSO â€“ along with â€œKing Mertonâ€. Yes, it was. Bloody good fun, it was like actually being commissioned to do a Bond film, but different! ðŸ¥´  #Timstwitterlisteningparty #Superwombling" data-datetime="6:31 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342175865564770305"
+                 data-text="Me trying out my arranging styles! This time Bond!
+â€œAlthough I carried no weapon, I was safer than you might think, with a false moustache and a magnifying glass and a bottle of invisible inkâ€. Johnny Mercer, eat your heart out! 
+#Timstwitterlisteningparty #Superwombling https://t.co/K5UtDpEApD" data-datetime="6:30 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342175459153469440"
+                 data-text="Iâ€™d like to have done mor work with military bands. Well the night is yet youngâ€¦. #Timstwitterlisteningparty #Superwombling" data-datetime="6:29 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342175351489900544"
+                 data-text="Sorry - I screwed up and some of my #Timstwitterlisteningparty  went to #Timslisteningparty" data-datetime="6:28 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1342175181373104130"
+                 data-text="@MikkiFL @petepaphides This song makes me cry. I don\'t know why. Real tears. It\'s ridiculous. This song is too much. @Mike_Batt #timslisteningparty" data-datetime="6:27 PM Dec 24, 2020"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342175173458460672"
+                 data-text="Iâ€™d like to have done more work with military bands. Well the night is yet youngâ€¦. #Timslisteningparty #Superwombling" data-datetime="6:27 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342175065165733888"
+                 data-text="We did the video by poking the camera through the railings of Buckingham Palace and then green-screening the shots in behind the Wombles. Another triumph in costume-making for my mum! #Timstwitterlisteningparty #Superwombling https://t.co/F3I7Mzi6ph" data-datetime="6:27 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342174871258853376"
+                 data-text="Driven by my wish to have a go at military band arranging, which I love! I also got to write a piece for the Queenâ€™s 50th anniversary years later, for the massed bands of the guards. I gave her a copy of this track when I first met her! #Timstwitterlisteningparty #Superwombling" data-datetime="6:26 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342174563812175875"
+                 data-text="Driven by my wish to have a go at military band arranging, which I love! I also got to write a piece for the Queenâ€™s 50th anniversary years later, for the massed bands of the guards. I gave her a copy of this track when I first met her! #Timslisteningparty #Superwombling https://t.co/uJJ13OuB73" data-datetime="6:25 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342174212048506881"
+                 data-text="But it ainâ€™t me playing the trombone! #Timslisteningparty #Superwombling" data-datetime="6:24 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FMikkiFL%2Fstatus%2F1342174164644491264"
+                 data-text="Miss Adelaide - I seem to recall that this is @darrenhayman â€˜s favourite Wombles tune and that he was a bit sad that I couldnâ€™t produce it for @petepaphides book #brokengreek event having only brought THREE Wombles albums with me. #timstwitterlisteningparty #thewombles" data-datetime="6:23 PM Dec 24, 2020"> 
+                MikkiFL            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="99000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1342174161783951360"
+                 data-text="Late to the @Listening_Party, but just catching up on @Mike_Battâ€™s tweets for #TheWomblesâ€™ #Superwombling album. Genuinely fascinating. Given the songwriting and musicians on these songs, itâ€™s no surprise how brilliantly theyâ€™ve dated." data-datetime="6:23 PM Dec 24, 2020"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDuglasTStewart%2Fstatus%2F1342173748972187648"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess @Mike_Batt We are wombling in West Kilbride, across from the Isle of Arran. #TimsTwitterListeningParty ðŸ˜€ https://t.co/O1uP4dHiQf" data-datetime="6:22 PM Dec 24, 2020"> 
+                DuglasTStewart            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="139000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342173684602179584"
+                 data-text="No particular reason why this has a reggae feel.Just a random writing decision. Miss Adelaide is the Womblesâ€™ schoolteacher. The clavinet is my Hohner Clavinet. And yes that is me doing the high falsetto note in the â€˜singing lessonâ€ section. #Timslisteningparty #Superwombling" data-datetime="6:21 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342173101656842240"
+                 data-text="Listening party gold https://t.co/BqRj3ow3cn" data-datetime="6:19 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342172897721413632"
+                 data-text="This is the one for which Steeleye Span secretly  joined me in the costumes for Top Of The Pops! . #Timslisteningparty #Superwombling" data-datetime="6:18 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342172673137405953"
+                 data-text="And now to Superwomble himself. Again my mum excelled herself with the costume. Brilliant, driving guitar solo from Spedding. Drums of course as always by the great Clem Cattini
+It has a sort of Chuck Berry feel. Piano is me of course. #Timslisteningparty #Superwombling https://t.co/H04KWnTeGO" data-datetime="6:17 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342172426428436480"
+                 data-text="Madame Cholet doing Mae West was me, slowed down! â€œWomble up and see me some time!â€ #Timslisteningparty #Superwombling" data-datetime="6:16 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342172381155123202"
+                 data-text="We got actual tap-dancer in and recorded the foot-taps in the middle section . #Timslisteningparty #Superwombling" data-datetime="6:16 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342172177181904897"
+                 data-text="Yes! @Mike_Batt you musical genius ðŸ¤˜ðŸ”¥" data-datetime="6:15 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342172097905307651"
+                 data-text="I was inspired by watching BBC Sunday afternoon re-runs of Fred Astaire films. My mum made the cozzies,- the top hats are plastic buckets covered in white cloth. I had to learn a basic tap time-step to â€œbeâ€ Orinoco on TOTPs. #Timslisteningparty #Superwombling https://t.co/W8rtuiomvo" data-datetime="6:15 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342171795022094336"
+                 data-text="@LlSTENlNG_PARTY @Mike_Batt Norwich! Just had 40 winks. Orinoco stylee" data-datetime="6:14 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342171774243504129"
+                 data-text="I had always fancied trying an arrangement of a big â€œHollywood musicalsâ€ sound stage orchestra. 
+[Pic of me conducting at Wessex studios in Highbury, where I made all the Wombles records] â€“ Same studio the Sex Pistols used! . #Timslisteningparty #Superwombling https://t.co/i9gLhZGS5S" data-datetime="6:14 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342171670421897216"
+                 data-text="@dollyblueMC @LlSTENlNG_PARTY @Mike_Batt &lt; Pretty sure I did [if not me it was my sister] but i def remember that in our house" data-datetime="6:13 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342171261225598982"
+                 data-text="I always love the fact that Chris turned down being in the Stones â€“ they got Ronnie Wood instead â€“ but he didnâ€™t turn down the Wombles! #Timslisteningparty #Superwombling" data-datetime="6:12 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342170954986905606"
+                 data-text="I got the title from Josh Whiteâ€™s EMPTY BED BLUES. Really fun to make. Chris Spedding on Guitar (as always) â€“ and Clem Cattini on drums (as always). II was always into the blues. Itâ€™s my most natural style of piano playing. #Timslisteningparty #Superwombling https://t.co/mt0udoHYM8" data-datetime="6:11 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342170717262131204"
+                 data-text="The words â€œsinging for youâ€ had to end on the DOMINANT of the song following it â€“ so as to lead seamlessly into EMPTY TIDY BAG BLUES #Timslisteningparty #Superwombling" data-datetime="6:10 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1342170674622824450"
+                 data-text="Please let @Mike_Batt know where you are tuned in from for our Wombles @LlSTENlNG_PARTY 
+
+What towns? Which cities?
+
+Extra points for anyone in Wimbledon, Wellington, Bulgaria or anywhere along the Orinoco https://t.co/3ljVOgaB0C" data-datetime="6:09 PM Dec 24, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342170610730991617"
+                 data-text="Yes that\'s Spedding on acoustic old-style #Timslisteningparty #Superwombling" data-datetime="6:09 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342170366563807241"
+                 data-text="â€œOh itâ€™s good to be vibrant by the old fire hydrantâ€ â€“ we hired a rubber prop fire hydrant for the album cover photo shoot #Timslisteningparty #Superwombling" data-datetime="6:08 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342170271147560962"
+                 data-text="Me and my several selves, overdubbed to create a barber shop quartet, more like an octet. The only voice â€œnot sung by meâ€ in the whole Wombles catalogue is the bass voice on this. Mike Sammes sings the bass voice which I couldnâ€™t reach. #Timslisteningparty #Superwombling" data-datetime="6:08 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342170215552065536"
+                 data-text="DOWN AT THE BARBER SHOP â€“ as we continue our journey through â€œSuperWomblingâ€ #Timslisteningparty #Superwombling" data-datetime="6:08 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1342170180793851905"
+                 data-text="Primal Scream hanging out with their heroes #TimsTwitterListeningParty @Mike_Batt @Tim_Burgess https://t.co/V1LwWGXGNa" data-datetime="6:08 PM Dec 24, 2020"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342170111994703873"
+                 data-text="My favourite bit of playing is the unison LSO trumpets at the end, being all powerful and triumphant! #Timslisteningparty #Superwombling" data-datetime="6:07 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342170049340182529"
+                 data-text="Thanks Tim. Praise indeed... https://t.co/iMaSOEdV0I" data-datetime="6:07 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342169945241776130"
+                 data-text="My fave lines in this one are:
+â€œThe King addressed his knights-at-arms, it looks as though weâ€™re here, so letâ€™s eat the sandwiches and drink the ginger beer!â€ #Timslisteningparty #Superwombling" data-datetime="6:07 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342169504252629002"
+                 data-text="They came to the land of Putney where the ancient river runs, a thousand armoured trash collectors glistening in the sun https://t.co/HUcTaBAZcw" data-datetime="6:05 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342169381107884035"
+                 data-text="Not even joking, some Wombles songs sound so good, they could have been written by The Beatles #TimsTwitterListeningParty" data-datetime="6:04 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342169167139639296"
+                 data-text="This was the first time I ever worked with the London Symphony Orchestra â€“ it was at Olympic Studios in Barnes before Virgin bought it and chopped the best recording room in town into small â€œbandâ€ sized studios. Bastards! #Timslisteningparty #Superwombling https://t.co/1cABFpjAYk" data-datetime="6:04 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342168913610760193"
+                 data-text="RT @Mike_Batt: Was on the tube last night on the way home to Wimbledon. Some young drunks got on, and it was a little bit intimidating, Asâ€¦" data-datetime="6:02 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342168854802423816"
+                 data-text="My affectionate piss-take on Rick Wakemanâ€™s rather grandiose proggy albums! â€œBefore the days of radio and telephones and trainsâ€ (The words the choir open with- not exactly easy to understand!) #Timslisteningparty #Superwombling" data-datetime="6:02 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342168721784262659"
+                 data-text="My favourite lines are â€œMiners do their digging jigging to the Womble Shuffle; Dockers do their docking rocking to the Womble Shuffleâ€ #Timslisteningparty #Superwombling" data-datetime="6:02 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342168659201044481"
+                 data-text="I remember pogo-sticking my way around the Blue Peter Garden when we performed it. Try doing THAT in a Womble cozzy. #Timslisteningparty #Superwombling" data-datetime="6:01 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342168587159674885"
+                 data-text="(For the young) â€“ the â€œGPOâ€ used to be â€œGENERAL POST OFFICEâ€ â€“ hence â€postmen do it for the GPOâ€. (Nowadays would be Royal Mail but that wouldnâ€™t rhyme!) #Timslisteningparty #Superwombling" data-datetime="6:01 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342168495715307522"
+                 data-text="Hi all â€“ thanks for â€œtuning inâ€ so fasten your seat belts and letâ€™s kick off with â€œTHE WOMBLE SHUFFLEâ€ @LISTENING_PARTY
+Chris Speddingâ€™s heavy punky guitar chugs on guitar opening this one. @LISTENING_PARTY !) #Timslisteningparty #Superwombling" data-datetime="6:01 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FMike_Batt%2Fstatus%2F1342168395685507078"
+                 data-text="Hi all â€“ thanks for â€œtuning inâ€ so fasten your seat belts and letâ€™s kick off with â€œTHE WOMBLE SHUFFLEâ€ @LISTENING_PARTY
+Chris Speddingâ€™s heavy punky guitar chugs on guitar opening this one. @LISTENING_PARTY !) #Timslisteningparty #Superwombling https://t.co/UAIgFPDUNk" data-datetime="6:00 PM Dec 24, 2020"> 
+                Mike_Batt            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1342168196854513664"
+                 data-text="Handing over to Womble in Chief: @Mike_Batt 
+
+#TimsTwitterListeningParty https://t.co/znJScAHlKf" data-datetime="6:00 PM Dec 24, 2020"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
