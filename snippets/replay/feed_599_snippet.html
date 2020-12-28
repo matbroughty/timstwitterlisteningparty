@@ -1,0 +1,661 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7aNLz6RDiSFBE91vFWzRuQ" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02a9bc9c469e529e12a4117097" alt="854" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Eyelids</span><br/><span class="sub-colour">854</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(9843889)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7aNLz6RDiSFBE91vFWzRuQ" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_9843889_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 116 tweets from Monday 28th December 2020 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/musicofEYELIDS" target="_blank"><img src="https://pbs.twimg.com/profile_images/842207190844755969/ocJKH3Mi_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@musicofEYELIDS</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/jddrews" target="_blank"><img src="https://pbs.twimg.com/profile_images/378800000035105368/259c5699c2ba286d0de0bff07ac8ce94_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@jddrews</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/kennethjohnz" target="_blank"><img src="https://pbs.twimg.com/profile_images/1342170672559099905/8w1_O_2__normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@kennethjohnz</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Seagulls Into Submission" data-start="0"
+             data-duration="172" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Psych #1" data-start="173"
+             data-duration="150" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Forget About Tomorrow" data-start="324"
+             data-duration="153" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Frame We Filled" data-start="478"
+             data-duration="205" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="854" data-start="684"
+             data-duration="151" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Mile to Wave" data-start="836"
+             data-duration="202" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Abby's Friends" data-start="1039"
+             data-duration="169" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Everybody" data-start="1209"
+             data-duration="123" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Into the Sun" data-start="1333"
+             data-duration="195" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="You Are Your Own" data-start="1529"
+             data-duration="142" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Floating Underground" data-start="1672"
+             data-duration="261" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Say It's Alright" data-start="1934"
+             data-duration="175" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="From a Distance" data-start="2110"
+             data-duration="164" style="display:none"></div>
+                        <div id="track-14" class="track-list"
+                     data-name="Finished" data-start="2275"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851a9bc9c469e529e12a4117097" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-116" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Flauramillz88%2Fstatus%2F1343688341921943557"
+                 data-text="Well that was absolutely great. What a stunning album, enjoyed that a lot thanks  @musicofEYELIDS  #TimsTwitterListeningParty" data-datetime="10:40 PM Dec 28, 2020"> 
+                lauramillz88            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343688038652624896"
+                 data-text="Tim Tim Tim....a round for @Tim_Burgess!!! He has made this year much more wonderful.  Onwards Tim...
+#timstwitterlisteningparty https://t.co/YeGpDuyTi3" data-datetime="10:39 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343688021464514573"
+                 data-text="@musicofEYELIDS @LlSTENlNG_PARTY â¤ï¸" data-datetime="10:39 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fcamillaaisa%2Fstatus%2F1343687897929703425"
+                 data-text="#TimsTwitterListeningParty Always a pleasure revisit 854. And please make sure to check out @musicofEYELIDS\' latest, The Accidental Falls - aka one of the finest records of the year. @LlSTENlNG_PARTY" data-datetime="10:38 PM Dec 28, 2020"> 
+                camillaaisa            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FEDouglasWW%2Fstatus%2F1343687846188748801"
+                 data-text="854 is so good, I\'m afraid to listen to @musicofEYELIDS\' 2020 record because I JUST wrapped up my Top 10 albums of the year... I can\'t change it anymore at this point! :(" data-datetime="10:38 PM Dec 28, 2020"> 
+                EDouglasWW            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343687834352320513"
+                 data-text="Thank you everyone...  this was really amazingly beautiful, fast, insane and fun...  We love you and we hope to see you sooner than we can imagine
+#timstwitterlisteningparty" data-datetime="10:38 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fomkafe%2Fstatus%2F1343687832272044032"
+                 data-text="First time listening to #TimsTwitterListeningParty great Album from the @musicofEYELIDS ." data-datetime="10:38 PM Dec 28, 2020"> 
+                omkafe            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343687828127981568"
+                 data-text="I Can\'t Be Told!!! Talk about a blast to play. #TimsTwitterListeningParty" data-datetime="10:38 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343687687912353792"
+                 data-text="Optimistic and openhearted... 
+#timstwitterlisteningparty" data-datetime="10:38 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343687630341500940"
+                 data-text="Huge amount of love and thanks to our @musicofEYELIDS fam ðŸ”¥ðŸ™Œ" data-datetime="10:37 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fseztez%2Fstatus%2F1343687601006510083"
+                 data-text="And finally - my fab @musicofEYELIDS original artwork!  #TimsTwitterListeningParty https://t.co/UPLJEH0Cmx" data-datetime="10:37 PM Dec 28, 2020"> 
+                seztez            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343687427970330624"
+                 data-text="Getting a little velvety here. #TimsTwitterListeningParty" data-datetime="10:37 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fkennethjohnz%2Fstatus%2F1343687418428342272"
+                 data-text="I am a new new new romantic. Sending out the loves #TimsTwitterListeningParty" data-datetime="10:36 PM Dec 28, 2020"> 
+                kennethjohnz            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fcamillaaisa%2Fstatus%2F1343687282004471809"
+                 data-text="Missing this #timstwitterlisteningparty @musicofEYELIDS @LlSTENlNG_PARTY https://t.co/lgleWyAQeg" data-datetime="10:36 PM Dec 28, 2020"> 
+                camillaaisa            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343687230620016643"
+                 data-text="And up last is a slow burn @kennethjohnz number.  So beautiful and a nice caper (unless you have the UK cd which has two more bonus tracks...).  So haunting and meaningful (to me)...
+#timstwitterlisteningparty" data-datetime="10:36 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343686918391746560"
+                 data-text="This song helped us get to future songs like Camelot, Slow It Goes and The Accidental Falls..
+
+#timstwitterlisteningparty" data-datetime="10:35 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fjk1234%2Fstatus%2F1343686908812156933"
+                 data-text="@musicofEYELIDS @thecharlatans another couple from Dublin https://t.co/Biw2ID1R3k" data-datetime="10:34 PM Dec 28, 2020"> 
+                jk1234            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDorianRogers%2Fstatus%2F1343686801345695744"
+                 data-text="Say Its Alright has grown into maybe my favourite song on the album. @musicofEYELIDS #TimsTwitterListeningParty" data-datetime="10:34 PM Dec 28, 2020"> 
+                DorianRogers            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fnewportandy75%2Fstatus%2F1343686767799660547"
+                 data-text="@musicofEYELIDS Say it\'s Alright is a favourite of mine!!!
+
+#timstwitterlisteningparty" data-datetime="10:34 PM Dec 28, 2020"> 
+                newportandy75            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343686726510735360"
+                 data-text="I think a lot of people are surprised at how rocking we can get live.  I think they though maybe we were a studio band of some sort but nopeâ€¦sorry folks...
+#TimsTwitterListeningParty
+https://t.co/XLw5qisGyS" data-datetime="10:34 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343686623804833792"
+                 data-text="Great John Moen switch the beat ala The Grifters...
+#timslisteningparty" data-datetime="10:33 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343686562370912256"
+                 data-text="This song is barely ever tamed live.  #TimsTwitterListeningParty" data-datetime="10:33 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343686501578596352"
+                 data-text="say it\'s alright:
+The last song written for the album and maybe a precursor of what was to come on OR.   It has that driving melancholy to it that Portland had growing up here.  Grey, dark, wet with a single pinpoint of light punching through.
+#TimsTwitterListeningParty" data-datetime="10:33 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343686390358261760"
+                 data-text="We always use the same acoustic guitar in every song...it\'s there even on the rockers...
+#timstwitterlisteningparty" data-datetime="10:32 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fnewportandy75%2Fstatus%2F1343686313338404866"
+                 data-text="With the now traditional post gig shot with @musicofEYELIDS with added @jaydomgon 
+
+ #TimsTwitterListeningParty https://t.co/U10DnnzJfp" data-datetime="10:32 PM Dec 28, 2020"> 
+                newportandy75            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fstoatwhisperer%2Fstatus%2F1343686310788268032"
+                 data-text="Eyelids in Glasgow a few years back. Can\'t wait till you can bring the coolest knitwear in music  across the pond again! #timstwitterlisteningparty #eyelids https://t.co/9lOSMoxcJc" data-datetime="10:32 PM Dec 28, 2020"> 
+                stoatwhisperer            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fmaccan_m%2Fstatus%2F1343686260460670976"
+                 data-text="@newportandy75 @musicofEYELIDS @kennethjohnz @Vic Was a great @musicofEYELIDS show!! https://t.co/mEIZXKwGpk" data-datetime="10:32 PM Dec 28, 2020"> 
+                maccan_m            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fkennethjohnz%2Fstatus%2F1343686160237830144"
+                 data-text="a kind tip of the hat to the rain parade #TimsTwitterListeningParty" data-datetime="10:31 PM Dec 28, 2020"> 
+                kennethjohnz            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343686070458675202"
+                 data-text="Hunt and peck guitar soloing. You\'re welcome. #TimsTwitterListeningParty" data-datetime="10:31 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fbritbandfan%2Fstatus%2F1343686017149263873"
+                 data-text="That same weekend Jan 2020 they did a @musicofEYELIDS signing with Peter Buck and John Cameron Mitchell at Wuxtry Records Athens. Amazing!!ðŸ˜ðŸ˜#TimsTwitterListeningParty https://t.co/PTM5M7jFK5" data-datetime="10:31 PM Dec 28, 2020"> 
+                britbandfan            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343685997192568832"
+                 data-text="The venn diagram that allowed me and john @kennethjohnz  in our youth to connect was that musical movement.  At 19 (myself in Death Midget and john in Dharma Bums) the Paisley Underground was our bond.
+#TimsTwitterListeningParty" data-datetime="10:31 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343685792397312001"
+                 data-text="Our most Paisley Underground song by far. 
+#TimsTwitterListeningParty" data-datetime="10:30 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343685773804118021"
+                 data-text="@musicofEYELIDS @LlSTENlNG_PARTY @thecharlatans ðŸ™ŒðŸ”¥" data-datetime="10:30 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fdebpears0n%2Fstatus%2F1343685744183881732"
+                 data-text="Discovered @musicofEYELIDS in Athens, GA in January and never looked back - have all your CDs now! #timstwitterlisteningparty https://t.co/RrINaPlqzv" data-datetime="10:30 PM Dec 28, 2020"> 
+                debpears0n            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343685728866193410"
+                 data-text="I wrote the song but wanted John @kennethjohnz  to sing it.  I just couldnâ€™t imagine anyone else singing it.  He delivers it beautifully.
+#TimsTwitterListeningParty" data-datetime="10:30 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343685606413656065"
+                 data-text="A few weeks later we had our first Eyelids â€œSummitâ€ where we shared songs that both John &amp; I had written for this â€œbandâ€ (it wasnâ€™t real yet).  Jonathan picked out 13 (with one of them getting kicked to the curb with a late addition that was added).
+#TimsTwitterListeningParty" data-datetime="10:29 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343685557918941184"
+                 data-text="The ear candy is buried deep. #FloatingUnderground #TimsTwitterListeningParty" data-datetime="10:29 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343685503963394048"
+                 data-text="@Dfactor 1 minute into floating underground" data-datetime="10:29 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343685409969111040"
+                 data-text="Floating Underground:This was demoed with John in his basement before I got swept up in being @_GuidedByVoices and he got in @thedecemberists.  One night 6 years later I played John &amp; Jonathan the demo and they excitedly said we should start a band.  
+#TimsTwitterListeningParty" data-datetime="10:29 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343685240150085632"
+                 data-text="3 part harmonies!!!
+#timstwitterlisteningparty" data-datetime="10:28 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343685188077817856"
+                 data-text="We will always be so thankful for you and @thecharlatans...it was so great to see you every night!!!
+#timstwitterlisteningparty https://t.co/6yTAJQRB9z" data-datetime="10:28 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FdollyblueMC%2Fstatus%2F1343685163960705026"
+                 data-text="@LlSTENlNG_PARTY @musicofEYELIDS 
+
+You Are Your Own - my favourite (or should that be favorite) off the album. Marvellous stuff. 
+
+ #TimsTwitterListeningParty https://t.co/Vi116bDaiE" data-datetime="10:28 PM Dec 28, 2020"> 
+                dollyblueMC            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343684923228520450"
+                 data-text="I kinda forgot how friggin\' hip shakin\' this track came out.  A little maraca and cowbell does the trick. #TimsTwitterListeningParty" data-datetime="10:27 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343684918270808065"
+                 data-text="This one is so groovy...and having the full 5 piece made for some swagger and stumble...
+@LlSTENlNG_PARTY" data-datetime="10:27 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FAllyDawkins%2Fstatus%2F1343684853519233024"
+                 data-text="â¦@musicofEYELIDSâ© âœŒï¸â¤ï¸ https://t.co/uBpH2yZyG3" data-datetime="10:26 PM Dec 28, 2020"> 
+                AllyDawkins            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1343684579429900289"
+                 data-text="Total top down driving tunes here! @musicofEYELIDS ðŸ˜ŽðŸŽ¶ #TimsTwitterListeningParty https://t.co/vguRBkJxp5" data-datetime="10:25 PM Dec 28, 2020"> 
+                soozworld            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fbritbandfan%2Fstatus%2F1343684540074778625"
+                 data-text="Every @musicofEYELIDS show Iâ€™ve seen has been so special! Here they are with Peter Buck in Athens Jan 2020!! ðŸ’•ðŸ’•ðŸ’•ðŸ’•ðŸ”¥ðŸ”¥ðŸ”¥#TimsTwitterListeningParty https://t.co/ZtNQ9uX4tX" data-datetime="10:25 PM Dec 28, 2020"> 
+                britbandfan            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343684445564375041"
+                 data-text="\"If you don\'t want me anymore...it\'s not that good anyway...push my life right into the sun\"  
+Right?
+#timstwitterlisteningparty" data-datetime="10:25 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fjk1234%2Fstatus%2F1343684348193763330"
+                 data-text="@musicofEYELIDS @thecharlatans Dublin with DBT https://t.co/lcFAhQfb0M" data-datetime="10:24 PM Dec 28, 2020"> 
+                jk1234            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343684286910611457"
+                 data-text="Really hard to sing that high!
+#TimsTwitterListeningParty" data-datetime="10:24 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343684196997287936"
+                 data-text="The space floaterâ€™s heart in this song is truly fucked!
+#TimsTwitterListeningParty" data-datetime="10:24 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fpaulbanks202%2Fstatus%2F1343684188348829698"
+                 data-text="@musicofEYELIDS https://t.co/IznJbjgHbh" data-datetime="10:24 PM Dec 28, 2020"> 
+                paulbanks202            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343684082543206400"
+                 data-text="This one\'s a gem. #IntoTheSun #TimsTwitterListeningParty" data-datetime="10:23 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343684041833291776"
+                 data-text="The original demo I made was a lot more Grandaddy-esque
+.  I think if there is one thing I learned working with everyone in Eyelids is that less is often more.
+#TimsTwitterListeningParty" data-datetime="10:23 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343683974154121216"
+                 data-text="@musicofEYELIDS @thecharlatans And fine tour companions they were too ; )" data-datetime="10:23 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343683866230329345"
+                 data-text="Side 2 is def a mood grower here...  Stormy...
+\"There\'s not much we can say when these words shut down...cause everybody knows\"
+#timstwitterlisteningparty" data-datetime="10:22 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343683598096875521"
+                 data-text="Those crashing waves of guitars in the middleâ€”they really got wild with those live.
+#TimsTwitterListeningParty" data-datetime="10:21 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343683545672216577"
+                 data-text="Classic Eyelids show opener. It was our first guitarmony effort. #TimsTwitterListeningParty" data-datetime="10:21 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343683470795694085"
+                 data-text="Everybody:
+Wanted to see if I could write a David Crosby type song (hence the tile Everybody) with Lou Reed type lyrics.  Not sure I succeeded but it was a valiant effort and nice moody piece to start off side 2 and our live shows at the time.  
+#TimsTwitterListeningParty" data-datetime="10:21 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343683352168026112"
+                 data-text="Side 2 flip over coming up...
+#timslisteningparty" data-datetime="10:20 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fnewportandy75%2Fstatus%2F1343683350536581120"
+                 data-text="Sunset Tavern, Seattle, 25th August 2019 with @musicofEYELIDS @kennethjohnz @vic
+
+ #TimsTwitterListeningParty https://t.co/H4k67xclVp" data-datetime="10:20 PM Dec 28, 2020"> 
+                newportandy75            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343683275399733248"
+                 data-text="You want a blurry @thecharlatans live photos when we were on tour with them in the U.S.  Here ya go!!!  A small reward today!!!!
+#TimsTwitterListeningParty https://t.co/cgIHB8fn18" data-datetime="10:20 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343683130759077888"
+                 data-text="John\'s vocals and Jonathan\'s solo here... I\'m honored to be in a band with them!!!!  
+#timstwitterlisteningparty" data-datetime="10:19 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343682985761984514"
+                 data-text="Our engineer Adam Selzer was stoked for the solo. Like three exclamation points stoked. #stoked #TimsTwitterListeningParty https://t.co/x0wDTcKgas" data-datetime="10:19 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343682943819030528"
+                 data-text="Some live @musicofEYELIDS (in DC &amp; NYC) from our tour with @thecharlatans 
+#TimsTwitterListeningParty https://t.co/6zZ10wd71s" data-datetime="10:19 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343682857324040192"
+                 data-text="And hello to all the lovelies we\'ve met and the ones we haven\'t.  Thanks for digging in with @musicofEYELIDS 
+#timstwitterlisteningparty" data-datetime="10:18 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343682685563064320"
+                 data-text="Fan fave: Abby\'s Friends...whenever @kennethjohnz counts this off live you never know where it\'s going to go!!!!
+#timstwitterlisteningparty" data-datetime="10:18 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343682465341140994"
+                 data-text="For the cover art I wanted something like Moby Grape\'s first cover...some thrift store vibe but we went with my video store with the drop box even.  854 was a number John came up with when I asked what the song should be called.  And we loved Wire\'s 154
+#TimsTwitterListeningParty https://t.co/q4Bga1QxoR" data-datetime="10:17 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343682323418497024"
+                 data-text="I love the sadness in our songs...we straddle the gap between sorrow &amp; joy...  given the day you listen to it...
+#timstwitterlisteningparty" data-datetime="10:16 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343682270109052930"
+                 data-text="RT @Tim_Burgess: One last reminder for tonight
+
+https://t.co/0Kj0fSmEH2" data-datetime="10:16 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343682240824238080"
+                 data-text="squeep! #TimsTwitterListeningParty" data-datetime="10:16 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343682178723373057"
+                 data-text="The boyz waiting for the paint to dry for the album shoot...
+#TimsTwitterListeningParty https://t.co/c2VTl6CKEE" data-datetime="10:16 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343682085463019520"
+                 data-text="Hand painted by Heather Cummings and photographed by John Clark with assistance by Erich Prichert.  This was staged in the video store I owned for 22 years in Portland.  R.I.P. Clinton St. Video   
+#TimsTwitterListeningParty https://t.co/btI4CFQ21J" data-datetime="10:15 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1343682010229964810"
+                 data-text="Anyone at The @LlSTENlNG_PARTY hearing @musicofEYELIDS for the first time??" data-datetime="10:15 PM Dec 28, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343681952843321344"
+                 data-text="This was an early one too.  Iâ€™d tried bringing Mile To Wave, Seagulls and Floating Underground to my previous band but we couldnâ€™t crack it.
+#TimsTwitterListeningParty" data-datetime="10:15 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343681914851356674"
+                 data-text="I always get goosey bumpy when we play this one live. #mile2wave #TimsTwitterListeningParty" data-datetime="10:15 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fkennethjohnz%2Fstatus%2F1343681888460840960"
+                 data-text="we shanâ€™t trouble you for long #TimsTwitterListeningParty" data-datetime="10:15 PM Dec 28, 2020"> 
+                kennethjohnz            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343681847406915584"
+                 data-text="Mile To Wave:
+This was the song that led Larry Beckett (poet, main lyricist for Tim Buckley and our lyricist on our last album The Accidental Falls) to us.  @LarryBeckett15
+#TimsTwitterListeningParty" data-datetime="10:14 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343681661003681792"
+                 data-text="Almost done with Side 1 how is that possible?
+#timstwitterlisteningparty" data-datetime="10:14 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343681542460039169"
+                 data-text="I didnâ€™t want to solo on this but the band were super supportive of me digging in with my own vibe.  Sadly the canâ€™t escape my weird clunky upsetting leads any more!!!  Ha!
+#TimsTwitterListeningParty" data-datetime="10:13 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343681363845607424"
+                 data-text="Paulie and Jim both brought much needed glue and power to the proceedings.  This song was one of those that was re-recorded after the initial 854 sessions to be replaced as a 5 piece.  #TimsTwitterListeningParty" data-datetime="10:12 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343681332614987776"
+                 data-text="ðŸ˜ðŸ˜ðŸ˜Total love for 854 (track and album but talking bout the track here) ðŸ˜ðŸ˜ðŸ˜" data-datetime="10:12 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343681299119132672"
+                 data-text="John and Chris, how about some more of these whole-song harmonies! That\'s some creamy business! Nice singin\', fellas. #TimsTwitterListeningParty" data-datetime="10:12 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343681272917344258"
+                 data-text="The band was going to be a studio project but soon after we played the record release for Seagulls we realized many of the songs of the sounded better with the 5 piece of having Jim Talstra (bass) and Paulie Pulvirenti @pahollie (drums) added.  #TimsTwitterListeningParty" data-datetime="10:12 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343681128796803073"
+                 data-text="Guitar solos descriptions:
+Jonathan: Ethereal expansive outer space under water
+John: Vibrating weird beauty and excitable melancholy
+Chris: Lop-sided guesswork w/ pass out qualities
+#TimsTwitterListeningParty" data-datetime="10:12 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343681034890563584"
+                 data-text="Alright...Live we really expand the outro into really heavy territory.  @kennethjohnz and @jddrews are so good at interweaving guitar solos.
+#TimsTwitterListeningParty" data-datetime="10:11 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343680960265515009"
+                 data-text="Rip and tear...." data-datetime="10:11 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fkennethjohnz%2Fstatus%2F1343680950782160897"
+                 data-text="Maybe singing with too much testosterone? #TimsTwitterListeningParty" data-datetime="10:11 PM Dec 28, 2020"> 
+                kennethjohnz            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343680888639541248"
+                 data-text="ðŸ‘‹ https://t.co/WlrEHFzos1" data-datetime="10:11 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343680802446475264"
+                 data-text="I\'m doing my best here to channel some BOC / Buck Dharma / Veteran of the Psychic Wars mojo in the end solo. Shh.. don\'t tell anyone. #TimsTwitterListeningParty" data-datetime="10:10 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343680709282578434"
+                 data-text="I love John\'s voice so much I often write songs for him to sing instead of myself....  Be sure to check out his solo albums and his work in @TheDecemberists" data-datetime="10:10 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343680532530429952"
+                 data-text="This is insanely fun everyone!!!  Hello to you all!!!!" data-datetime="10:09 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343680414729170945"
+                 data-text="Slow down for a @kennethjohnz John Moen classic...The sparseness at the beginning reminds me of one of our favorite bands The Moles.
+#TimsTwitterListeningParty" data-datetime="10:09 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343680180175437824"
+                 data-text="ðŸ¤˜ðŸ¤˜ðŸ”¥ðŸ”¥ https://t.co/ByUWsnAdZr" data-datetime="10:08 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343680099544023040"
+                 data-text="Oooo.  @jddrews with the secret guitar solo sauce!" data-datetime="10:07 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343680013544001536"
+                 data-text="We produced this record ourselves before Peter Buck of @remhq came on board for all the following records.  Peter often joins us on stage and tour...  Here we are post show and he knows just how to not look at the camera!!!  The coolest!  #TimsTwitterListeningParty https://t.co/6pWqJydzTE" data-datetime="10:07 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343679929959862272"
+                 data-text="As a band person musician type guy this was the first music video I was ever a part of. Thanks, Chris! #TimsTwitterListeningParty" data-datetime="10:07 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343679863413043200"
+                 data-text="Maybe one of the first optimistic songs Iâ€™d ever written.  The sanity in comforting each other.  Could be good for 2021.  #TimsTwitterListeningParty" data-datetime="10:06 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343679839077867522"
+                 data-text="@LlSTENlNG_PARTY @musicofEYELIDS Norfolk checking in" data-datetime="10:06 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343679735637819392"
+                 data-text="I was trying to learn Split Enz â€œSix Years In A Leaky Boatâ€ and wrote this instead.  Was a good accident.  The chords just floated off like butterâ€¦  #TimsTwitterListeningParty" data-datetime="10:06 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343679630000025601"
+                 data-text="Friend, actor &amp; musician #PaddyConsidine @ridingthelow got @Tim_Burgess  this record.  @ogenesisrecords kindly put it out in the UK and a US tour with @thecharlatans followed...  DREAMS!!!!  Here we are working on the 1st Riding The Low LP...
+#TimsTwitterListeningParty https://t.co/5dGUjExqHH" data-datetime="10:06 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343679482834501633"
+                 data-text="He @kennethjohnz has the beauty voice...right?  Heavy part here though..." data-datetime="10:05 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343679446876753920"
+                 data-text="@kennethjohnz Hi John!" data-datetime="10:05 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fkennethjohnz%2Fstatus%2F1343679340765036544"
+                 data-text="This song makes me wish I could ski fast #TimsTwitterListeningParty" data-datetime="10:04 PM Dec 28, 2020"> 
+                kennethjohnz            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1343679340534497283"
+                 data-text="Where we all at for our @musicofEYELIDS @LlSTENlNG_PARTY??? https://t.co/OQpJHHYTFs" data-datetime="10:04 PM Dec 28, 2020"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343679178680410112"
+                 data-text="One of my favorite songs to play liveâ€¦three guitars weaving in and out!!!
+#TimsTwitterListeningParty" data-datetime="10:04 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343679169201197056"
+                 data-text="This mix really took off when I added that hot delay to the opening guitar riff. #psyche #TimsTwitterListeningParty" data-datetime="10:04 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343679060572950528"
+                 data-text="Psych #1 is now!
+#timslisteningparty" data-datetime="10:03 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343678865164521472"
+                 data-text="Jonathan @jjdrews with the killer solo here  #TimsTwitterListeningParty" data-datetime="10:03 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fjddrews%2Fstatus%2F1343678759778467841"
+                 data-text="Eyelids secret sauce for recording is to always have an acoustic element when possible. Very evident here with the rhythm gtrs. #TimsTwitterListeningParty" data-datetime="10:02 PM Dec 28, 2020"> 
+                jddrews            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343678752446803968"
+                 data-text="Also this was the first band where there were harmonies on anything Iâ€™d ever sang.  Up to this point I was always a lone vocalist with out backing vocals.  Weirdâ€¦
+#TimsTwitterListeningParty" data-datetime="10:02 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343678710461902850"
+                 data-text="@musicofEYELIDS @LlSTENlNG_PARTY @kennethjohnz @jddrews Hello!" data-datetime="10:02 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343678601611206658"
+                 data-text="John aka @kennethjohnz came up with the idea of the title of Seagulls and I came up with into Submission for the titleâ€”it seemed perfectly strange yet clear.  The lyrics came into focus shortly after.  #TimsTwitterListeningParty" data-datetime="10:01 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343678457268510720"
+                 data-text="When @kennethjohnz first played the intro hi-hat fill during our 1st songwriting summit it shocked me.  Seemed so groovy but itâ€™s was a perfect start to what Eyelids would become.  #TimsTwitterListeningParty" data-datetime="10:01 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FmusicofEYELIDS%2Fstatus%2F1343678308857212928"
+                 data-text="Thank you Tim!!  Hello Everyone!!!  
+
+Hit it in 5, 4, 3, 2, 1....!!!
+
+And away we go!!! 
+
+Joining in for Team Eyelids:
+Chris Slusarenko (@musicofeyelids)
+John Moen (@kennethjohnz)
+Jonathan Drews (@jddrews)
+
+#TimsTwitterListeningParty" data-datetime="10:00 PM Dec 28, 2020"> 
+                musicofEYELIDS            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1343678176443179010"
+                 data-text="#TimsTwitterListeningParty 
+
+854 (but listening party number 615)
+
+Handing over to @musicofEYELIDS 
+@kennethjohnz 
+@jddrews &amp;
+@Pahoolie https://t.co/rDZwL817ab" data-datetime="10:00 PM Dec 28, 2020"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
