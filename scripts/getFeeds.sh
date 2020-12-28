@@ -241,5 +241,5 @@ fi
 
 if [ $ERROR -ne 0 ]
 then
-    ehco -e "${RED}There have been errors${NC}"
+    echo -e "${RED}There have been errors${NC}"
 fi
