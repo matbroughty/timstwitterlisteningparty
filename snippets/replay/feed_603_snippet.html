@@ -1,0 +1,519 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7G7cCHgQKbDD6zvwDQZyJu" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0232922d86fcf090a1a6d4deb0" alt="You've Come a Long Way, Baby" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Fatboy Slim</span><br/><span class="sub-colour">You've Come a Long Way, Baby</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(371111)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7G7cCHgQKbDD6zvwDQZyJu" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_371111_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 92 tweets from Friday 1st January 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/FatboySlim" target="_blank"><img src="https://pbs.twimg.com/profile_images/1037296764158713856/34YFzY7R_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@FatboySlim</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/simonth" target="_blank"><img src="https://pbs.twimg.com/profile_images/1577358129/n507984238_52978_4271_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@simonth</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Right Here, Right Now" data-start="0"
+             data-duration="387" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Rockafeller Skank - Short Edit" data-start="388"
+             data-duration="413" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Fucking in Heaven" data-start="802"
+             data-duration="234" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Gangster Trippin" data-start="1037"
+             data-duration="320" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Build It Up, Tear It Down" data-start="1358"
+             data-duration="305" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Kalifornia" data-start="1664"
+             data-duration="353" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Soul Surfing" data-start="2018"
+             data-duration="297" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="You're Not from Brighton" data-start="2316"
+             data-duration="320" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Praise You" data-start="2637"
+             data-duration="324" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Love Island" data-start="2962"
+             data-duration="318" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="3281"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485132922d86fcf090a1a6d4deb0" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-92" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="249000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345144448385249280"
+                 data-text="âœŠ https://t.co/9SjQunxRbk" data-datetime="11:06 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345143404192264192"
+                 data-text="#TimsTwitterListeningParty       well.. thanks you all so much for that little wander through the past... so many luscious memories, wonderful times and people. sending love to you all in these hairy times!!! https://t.co/cRkX6DXqm0" data-datetime="11:02 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345143111522119684"
+                 data-text="Absolutely amazing. What a way to start the year. Thanks @FatboySlim x x x https://t.co/kLmhMSeQNu" data-datetime="11:01 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345142618368454658"
+                 data-text="@MissTrudyAnn IF THIS DON\'T MAKE YOUR BOOTY MOVE YOUR BOOTY MUST BE DEAD..." data-datetime="10:59 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345142289413320704"
+                 data-text="@Konn63 #TimsTwitterListeningParty   actually it was \'i\'ve got to house\' i used to get told off at Manumission for not playing house tunes..." data-datetime="10:58 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345142007983955969"
+                 data-text="@andylewisuk @FatboySlim @LlSTENlNG_PARTY Aww shucks" data-datetime="10:57 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="123000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345141922273308672"
+                 data-text="Hey Norm,
+Weâ€™ve come a long way, baby ; ) https://t.co/7F1GihjZXk" data-datetime="10:56 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345141406856323085"
+                 data-text="ðŸ™ŒðŸ™ŒðŸ™Œ https://t.co/aDL4f9BjMT" data-datetime="10:54 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345141385108860930"
+                 data-text="#timstwitterlisteningparty   Acid 8000. My attempt at an acid opusâ€¦â€¦â€¦.. Higher State of Consciousness meets Champagne Supernovaâ€¦ https://t.co/9a3xuDfC6o" data-datetime="10:54 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345141104887308288"
+                 data-text="#timstwitterlisteningparty       can i just give a big shout out to the SKINT RECORDS crew who helped me make this and packaged &amp; marketed it so well. big up Andy Mac, JC Reid, Damian Harris, Red design and all the Skint crew xxxx" data-datetime="10:53 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345140947819126785"
+                 data-text="What a way to start 2021 @FatboySlim absolutely bossing the @LlSTENlNG_PARTY - what an album and what a beautiful person he is. Welcome aboard sir https://t.co/bh0Dx0ctMV" data-datetime="10:52 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345140547317600258"
+                 data-text="@MasterDave_S #timstwitterlisteningparty   Damian Harris (midfield general) was my a&amp;r man. he sequenced the tracks" data-datetime="10:51 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345140506544775172"
+                 data-text="@halfmanhalfimp @LlSTENlNG_PARTY &lt; He was def in the audience" data-datetime="10:51 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345140445572161542"
+                 data-text="#TimsTwitterListeningParty https://t.co/huuVxAgFxV" data-datetime="10:50 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345140130688991233"
+                 data-text="#TimsTwitterListeningParty    Love Island.  I made this for Mike and Claire Manumissionâ€™s film soundtrack. Working title; â€˜song for Manumissionâ€ the only club in Ibiza that would book me in those days, the only Club in Ibiza I wanted to be at in those heady days.." data-datetime="10:49 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345140033867673600"
+                 data-text="@LillivickBaker #TimsTwitterListeningParty  yes i have, i was very touched.. they did \'dub be good to me\' too as i remember..." data-datetime="10:49 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1345139999809933313"
+                 data-text="WAIT!!! Did @FatboySlim invent @LoveIsland????? 
+
+#TimsTwitterListeningParty https://t.co/hobOSOGJb2" data-datetime="10:49 PM Jan 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345139983254958085"
+                 data-text="@generalisation @FatboySlim That\'s the fella" data-datetime="10:48 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345139883501903873"
+                 data-text="@Adidassler75 @Problematicdis2 i was married to her for 18 years!" data-datetime="10:48 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Fgeneralisation%2Fstatus%2F1345139789792731137"
+                 data-text="@FatboySlim @simonth https://t.co/VKubXL3glU" data-datetime="10:48 PM Jan 1, 2021"> 
+                generalisation            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345139421478330370"
+                 data-text="https://t.co/fRvraS89kN" data-datetime="10:46 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345139130670440451"
+                 data-text="@karlpalmas he found me! long story......" data-datetime="10:45 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345139113528336386"
+                 data-text="More listening party gold https://t.co/FmByzEg8gk" data-datetime="10:45 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345138841494171648"
+                 data-text="#TimsTwitterListeningParty      Praise you. I recently bumped into the guy who sold me the copy of â€œtake yo praiseâ€ in Camden market back in the day. Best Â£7.99 I ever spent." data-datetime="10:44 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345138765308829699"
+                 data-text="Oh hello. What a song" data-datetime="10:44 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345138595976327169"
+                 data-text="#TimsTwitterListeningParty" data-datetime="10:43 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345138574488973313"
+                 data-text="@musetheweb me!" data-datetime="10:43 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345138399276113922"
+                 data-text="Oh yeah, that too.
+
+#TimsTwitterListeningParty https://t.co/rjI984PGxW" data-datetime="10:42 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345138241125675016"
+                 data-text="@weathergil @FatboySlim Haha, awww" data-datetime="10:42 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345138223559962628"
+                 data-text="@simonth it was briefly gonna be called \'let\'s hear it for the little guy\'....." data-datetime="10:41 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345138056681160705"
+                 data-text="I tried as hard as I could to make it not sound like Norman, but you can still tell. Sorry everyone (etc) https://t.co/qzZFWh2ylL" data-datetime="10:41 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345137984748793857"
+                 data-text="RT @Tim_Burgess: Everyone OK? ; )" data-datetime="10:41 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345137940058370048"
+                 data-text="#TimsTwitterListeningParty    the idea came from \'groovy thing\' by minimal funk. we thought it sounded like \'you\'re from Brighton\' so i re recorded it with a vocoder" data-datetime="10:40 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345137707840888832"
+                 data-text="And some of the master DATs were  still called that for quite a while.
+
+#TimsTwitterListeningParty https://t.co/zLekoNYJCd" data-datetime="10:39 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345137654162186246"
+                 data-text="#TimsTwitterListeningParty    Youâ€™re not from Brighton. Had to give my home town a namecheck. Me on vocals! Working title â€œfunk UKâ€™ Iâ€™d just been working with Bootsy and he taught me that true funk has to be on the one. No offbeats.." data-datetime="10:39 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="109000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345137470850084869"
+                 data-text="@holland2312 check the shorts in the picture..." data-datetime="10:38 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345137016095309830"
+                 data-text="#TimsTwitterListeningParty   the working title of the album was VIVA LA UNDERACHEIVER........" data-datetime="10:37 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345136985388810242"
+                 data-text="Iâ€™m saying Soul Surfing" data-datetime="10:37 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345136801766400002"
+                 data-text="#TimsTwitterListeningParty https://t.co/NSj3QRFNbP" data-datetime="10:36 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345136694237028352"
+                 data-text="Fave track on You\'ve Come a Long Way, Baby?
+
+And that question is also for you @FatboySlim ; )" data-datetime="10:35 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345136251725377536"
+                 data-text="@stephengershon @FatboySlim @tearsforfears Awww, thanks!" data-datetime="10:34 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345136237724753923"
+                 data-text="#TimsTwitterListeningParty   SOUL SURFING   
+  I met a guy when we were shooting the video for â€˜Rockafella skankâ€™ in Ventura Beach who told me about these dudes who were going back to old skool long boards, less tricks, longer wavesâ€¦.. they called it Soul Surfingâ€¦." data-datetime="10:34 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345135980026753024"
+                 data-text="@iamlouislaroche bang on LOUIS !" data-datetime="10:33 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345135929963507712"
+                 data-text="More @LlSTENlNG_PARTY gold https://t.co/tZGtEvLaL0" data-datetime="10:32 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345135700480552960"
+                 data-text="#TimsTwitterListeningParty     ....via these pair of shorts that i bought my girlfriend in Seattle... https://t.co/f6D5EM0E87" data-datetime="10:31 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345135651163934720"
+                 data-text="https://t.co/7VLxQaRTaG" data-datetime="10:31 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345135496041816066"
+                 data-text="#TimsTwitterListeningParty   the album title came unwittingly from a cigarette advert campaign.... https://t.co/doZ5nUK19X" data-datetime="10:31 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345135258027642883"
+                 data-text="#TimsTwitterListeningParty      Kalifornia. Nobody ever twigged where the vocal came from. My tribute to the 90â€™s west coast breakbeat rave scene, particularly the Crystal Method.." data-datetime="10:30 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345135136229175299"
+                 data-text="@BallyAmes @FatboySlim @DrRubberfunk @errolk Hi Bally! X" data-datetime="10:29 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345134951688253440"
+                 data-text="@JonathanWood3 #TimsTwitterListeningParty California is druggy druggy druggy" data-datetime="10:28 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345134832024772609"
+                 data-text="I first met Norman at The International in Manchester I was really taken with him because he chatted to me about his records. The Housemartins had just finished their gig - that was a while back ; )" data-datetime="10:28 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345134739896889349"
+                 data-text="#TimsTwitterListeningParty https://t.co/Ca579abR4P" data-datetime="10:28 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345134735203434501"
+                 data-text="I\'m don\'t think I\'m breaking too many confidences in saying Radio 1 weren\'t super happy about the very loud bit of Rockafella Skank on the radio edit.
+
+#TimsTwitterListeningParty https://t.co/VpMOCZmmrN" data-datetime="10:28 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345134637010608130"
+                 data-text="@Alex_DJtherapy #TimsTwitterListeningParty i think i might have used the same sample yes... oops!" data-datetime="10:27 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345134541678194693"
+                 data-text="@LlSTENlNG_PARTY @FatboySlim https://t.co/hbl8BmZXIF" data-datetime="10:27 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345134490994278400"
+                 data-text="#TimsTwitterListeningParty sounds a bit like Moulin Rouge huh?" data-datetime="10:27 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1345134410543362048"
+                 data-text="Please show how you are dancing at the @FatboySlim @LlSTENlNG_PARTY - only using a gif https://t.co/XvGsRHixXb" data-datetime="10:26 PM Jan 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345134226967048195"
+                 data-text="#TimsTwitterListeningParty https://t.co/iQPsKtUmQn" data-datetime="10:26 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345134155881963520"
+                 data-text="#TimsTwitterListeningParty   by the way. SIMON THORNTON, who engineered and mixed this album is here with us if anyone wants to ask him questions or simply show him big love...." data-datetime="10:25 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345133773902508032"
+                 data-text="#TimsTwitterListeningParty here are some of the floppy discs that the tunes were stored on...... https://t.co/p9k3spGd6Z" data-datetime="10:24 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345133528367968257"
+                 data-text="#TimsTwitterListeningParty BUILD IT UP    
+Northern soul meets Jimi Hendrix. Why not? I loved this on the opening credits for â€œhuman trafficâ€" data-datetime="10:23 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345133464501280770"
+                 data-text="So much love for @FatboySlim - making New Yearâ€™s Day better for lots of music fans around the world" data-datetime="10:23 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345133323421671435"
+                 data-text="It was fucking difficult, me and Norm doing live passes (wiggling a mouse) using the a very old very poor time stretch on protools 4 straight back into a DAT then importing in back in and editing it into the different speed parts.
+
+#timstwitterlisteningparty https://t.co/nVZVvLb25R" data-datetime="10:22 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="158000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345133299916820480"
+                 data-text="@brian_mccaul #TimsTwitterListeningParty YES Roman Copolla directed it and we went down to the 007 backlot at Pinewood studios and blew a lot of shit up!" data-datetime="10:22 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345132636130451456"
+                 data-text="@chinamartens initially he was mortified but i think he secretly loved it.... i did the remix for too!
+#TimsTwitterListeningParty" data-datetime="10:19 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345132243912695810"
+                 data-text="#timstwitterlisteningparty  Gangster Tripping. Inspiration was these AV8 records hip hop sample tracks that we used to play at 45â€¦ particularly DJ Rags â€˜yes yes yâ€™allâ€™ it was through sampling on this him off DJ Shadowâ€™s â€œentropyâ€ that I met Lateef, now a firm friend  Lateef" data-datetime="10:18 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345132039536848896"
+                 data-text="@CarolynHardwi12 #TimsTwitterListeningParty   beautiful venue. show was too early to really get going but nice crowd...." data-datetime="10:17 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345132032020652033"
+                 data-text="@DrRubberfunk \"Bite me\", more like." data-datetime="10:17 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345131804232187905"
+                 data-text="Thanks for confirming what station it was and thanks to WBCN!
+#TimsTwitterListeningParty @LlSTENlNG_PARTY https://t.co/JFOMqhX3L7" data-datetime="10:16 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345131721914777603"
+                 data-text="ðŸ¤š https://t.co/4K0dOi924J" data-datetime="10:16 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345131481992204289"
+                 data-text="#timstwitterlisteningpartyanybody know exactly how many \'fucking\'s are in this tune?" data-datetime="10:15 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345131306326351876"
+                 data-text="@DrRubberfunk Yes there were, and you know who that was." data-datetime="10:14 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345131223161696258"
+                 data-text="Never dare him. https://t.co/LBGJSpaYHL" data-datetime="10:14 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345131058505916422"
+                 data-text="#timstwitterlisteningparty  FUCKING IN HEAVEN    
+Freddy Fresh sent me some stems on a DAT tape for a stupidly recorded his voice saying..   â€if I could have a fat boy slim remix I would be fucking in heavenâ€¦. By the way, please donâ€™t use my vocal.â€ Red rag to a bullâ€¦.." data-datetime="10:13 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345131037190455298"
+                 data-text="@errolk @FatboySlim @LED_Tom *waves*!" data-datetime="10:13 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1345130932903182337"
+                 data-text="You\'ve Come a Long Way, Baby was number 11 on the Melody Makerâ€™s chart of the best albums of 1998. Mixmag had it at number 2, while Muzik placed it at number 7. #TimsTwitterListeningParty @FatboySlim @Tim_Burgess https://t.co/TftcSiXg4t" data-datetime="10:13 PM Jan 1, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345130865274314761"
+                 data-text="It has a very clever cross fade in I was most proud of." data-datetime="10:12 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345130763029770241"
+                 data-text="@LillivickBaker To this day we have not found him!
+#TimsTwitterListeningParty" data-datetime="10:12 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonth%2Fstatus%2F1345130672743186433"
+                 data-text="Yeah I did that, despite anyone that says otherwise. There was at least 5 edits of it. https://t.co/MDTwqoMwU3" data-datetime="10:11 PM Jan 1, 2021"> 
+                simonth            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345130557257244684"
+                 data-text="@JonathanWood3 TimsTwitterListeningParty all down to my genius engineer SIMON THORNTON" data-datetime="10:11 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345130458510721025"
+                 data-text="@LED_Tom It was actually a call into a radio station in America, can\'t remember the station but it was a real caller #TimsTwitterListeningParty" data-datetime="10:11 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345130428026515458"
+                 data-text="My debut as Fratboy Tim https://t.co/sYud65qTxq" data-datetime="10:11 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345130385873760257"
+                 data-text="@pkwilkins TimsTwitterListeningParty it was from a beer festival in the 80\'s. i saw the photo in a newspaper and licensed it from the photographer..." data-datetime="10:10 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345130004410216449"
+                 data-text="RT @Tim_Burgess: Whereâ€™s everyone at for @FatboySlimâ€™s You\'ve Come a Long Way, Baby @LlSTENlNG_PARTY???
+
+Let us know https://t.co/VRKCHpUzix" data-datetime="10:09 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345129705066946567"
+                 data-text="Rockerfeller Skank sounding as fresh as the first time I ever heard it" data-datetime="10:08 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345129272856502274"
+                 data-text="#TimsTwitterListeningParty    Rockafella Skank. Inspired by Natural born chillers â€œrock the funky beatâ€ a big hit at the Big Beat Boutique club where I was resident. Chop up the syllables to create a different rhythm.. big up Aphrodite.." data-datetime="10:06 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345128966739406848"
+                 data-text="This album was a tour bus favourite for us" data-datetime="10:05 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="217000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345128912955838465"
+                 data-text="@Ascully1980 #TimsTwitterListeningParty      we couldn\'t find the fat kid in the photo and under US law we couldn\'t use his photo without his express permission" data-datetime="10:04 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345128002867384321"
+                 data-text="Right here
+Right now" data-datetime="10:01 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345127907056881665"
+                 data-text="#timstwitterlisteningparty   ....tune featuring strings" data-datetime="10:00 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FFatboySlim%2Fstatus%2F1345127818997485568"
+                 data-text="#timstwitterlisteningparty SO HEAR GOES.... track 1.
+Right here, right now. After â€˜unfinished sympathyâ€™ by massive attack got voted BEST DANCE SONG OF ALL TIME in a poll I thought â€˜what makes it so special?â€™ it was the strings that lifted it above the others so I decided to make" data-datetime="10:00 PM Jan 1, 2021"> 
+                FatboySlim            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1345127772100964354"
+                 data-text="In we go
+
+Over to you @FatboySlim https://t.co/HpFnnaQtFK" data-datetime="10:00 PM Jan 1, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
