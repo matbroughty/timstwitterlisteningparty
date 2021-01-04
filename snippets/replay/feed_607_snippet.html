@@ -1,0 +1,576 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/6A9D2HxbSFq60qC3BzDWFd" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e026c0ad5194747cde8c46ec496" alt="Twelve Stops And Home" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Feeling</span><br/><span class="sub-colour">Twelve Stops And Home</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(200057)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/6A9D2HxbSFq60qC3BzDWFd" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_200057_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 112 tweets from Monday 4th January 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/CptRJones" target="_blank"><img src="https://pbs.twimg.com/profile_images/1320716503436693506/MOxPJaWt_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@CptRJones</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/DanGSells" target="_blank"><img src="https://pbs.twimg.com/profile_images/659391321367556096/4Du3svDa_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@DanGSells</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/PaulSte87454211" target="_blank"><img src="https://pbs.twimg.com/profile_images/1346120605926633473/DzSs7gWh_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@PaulSte87454211</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="I Want You Now" data-start="0"
+             data-duration="227" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Never Be Lonely" data-start="228"
+             data-duration="211" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Fill My Little World" data-start="440"
+             data-duration="247" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Kettle's On" data-start="688"
+             data-duration="247" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Sewn" data-start="936"
+             data-duration="355" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Anyone" data-start="1292"
+             data-duration="248" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Strange" data-start="1541"
+             data-duration="261" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Love It When You Call" data-start="1803"
+             data-duration="214" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Rosé" data-start="2018"
+             data-duration="256" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Same Old Stuff" data-start="2275"
+             data-duration="310" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Helicopter" data-start="2586"
+             data-duration="198" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Blue Piccadilly" data-start="2785"
+             data-duration="303" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3089"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048516c0ad5194747cde8c46ec496" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-112" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346214108887183362"
+                 data-text="RT @Tim_Burgess: Sunday February 14th 
+9pm (U.K. time)
+
+Itâ€™s a day all about love. So Love, the debut album by Love will be our album of châ€¦" data-datetime="9:57 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346214096551759874"
+                 data-text="RT @Tim_Burgess: Saturday January 30th
+9pm (U.K. time)
+
+@johnnysecho will be joining us again for a @LlSTENlNG_PARTY - this time it will beâ€¦" data-datetime="9:57 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346213854154518528"
+                 data-text="Miss you just felt like the perfect little hidden gem and way to say goodnight at the end of the album and on that note, night all and sending lots of love from our house to yours Xx  #TimsTwitterListeningParty  #12stopsandhome  @thefeeling" data-datetime="9:56 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346213734604099585"
+                 data-text="ðŸ™ŒGood to have you along DGS x x https://t.co/QcoDe34q2b" data-datetime="9:55 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346213482119782403"
+                 data-text="forward to the end! Quick https://t.co/qEYbdaKHV3" data-datetime="9:54 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346213226023936000"
+                 data-text="Anyway....@Tim_Burgess Thanks for having us! it\'s been a mad little moment hearing the songs like this again. We are working on our 6th album so this has been really lovely and inspiring! @thefeeling xxxxx" data-datetime="9:53 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346213103684513798"
+                 data-text="The song actually became a live favourite and many people asked why we had it as a hidden track and not on the main part of the album.. We love classic albums and the journey they can take you on - thatâ€™s always been our inspiration #TimsTwitterListeningParty  #12stopsandhome" data-datetime="9:53 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346212920674447360"
+                 data-text="Not sure if your version has the secret track? If so you have to wait a little while. We recorded a real bar closing and followed with a little song called Miss You #TimsTwitterListeningParty @thefeeling" data-datetime="9:52 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346212907735011334"
+                 data-text="If youâ€™re listening on Spotify then annoyingly they cut off the hidden track Miss you - CD and Vinyl both have it.. after the pub noise fades thereâ€™s a minute of so gap then you can hear the sound of Dan walking down the hallway in my old house #TimsTwitterListeningParty" data-datetime="9:52 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346212834645073920"
+                 data-text="Yeah! That was ace. Thanks @DanGSells @CptRJones &amp; @PaulSte87454211 - a welcome tonic. Hope to see you all in the real world at some point not too far away" data-datetime="9:52 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346212730857025536"
+                 data-text="The pub noise at the end was recorded at The Rocket pub in Acton opposite where drummer Paul Stewart lived at the time  #TimsTwitterListeningParty  #12stopsandhome  @thefeeling" data-datetime="9:51 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346212615756910593"
+                 data-text="You can just about hear my oldest son Sonny gurgling on the outro as it fades - aged 14 months at the time.. Sonny features on the first 3 TF albums in various places and later (aged 6) went on the record a song with Kâ€™Naan and Will I Am called Alone  #TimsTwitterListeningParty" data-datetime="9:51 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346212405223821317"
+                 data-text="I used to get the Piccadilly Line home after nights out in Gay Bars in soho. I was always left feeling a bit empty. Home was always a safe place for me and I will always be grateful #TimsTwitterListeningParty @thefeeling" data-datetime="9:50 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="133000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346212257815027720"
+                 data-text="@DanGSells wrote this song quite near to the end of making the album - the line \'twelve stops and home\' just made so much as an album title to me. One to end on" data-datetime="9:49 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346211701302177794"
+                 data-text="We were obsessed with Stevie Wonder and that\'s where the intro came from. Particularly A journey through the secret live of plants!#TimsTwitterListeningParty" data-datetime="9:47 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346211477397659651"
+                 data-text="The intro of Blue Piccadilly is made entirely by using a Moog Voyager (I had just got one in Sophie and my shoe room studio) Dan and me were referencing the secret life of plants by Stevie wonder (not that you would know it!)  #TimsTwitterListeningParty  #12stopsandhome" data-datetime="9:46 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FPaulSte87454211%2Fstatus%2F1346211379473227776"
+                 data-text="@LlSTENlNG_PARTY @thefeeling
+ #TimsTwitterListeningParty Perhaps the heaviest outro we have...? Discuss" data-datetime="9:46 PM Jan 4, 2021"> 
+                PaulSte87454211            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346211365887881216"
+                 data-text="Guitar ORGY! #TimsTwitterListeningParty" data-datetime="9:46 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346211294265937920"
+                 data-text="We all met Metallica in Japan in about 2007 .. the label gave them each a copy of 12 stops - worried it was a bit light weight for them I told Lars Ulrich to check out the heavy riff at the end of helicopter.. I still cringe to think about it ðŸ˜¬  #TimsTwitterListeningParty" data-datetime="9:45 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346211101910986752"
+                 data-text="@Robin_Eveleigh You missed two! Check the replay page ; )" data-datetime="9:45 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346211101659308032"
+                 data-text="@soozworld @thefeeling HAHAHA" data-datetime="9:45 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346211038883160065"
+                 data-text="Dan did get helicopter lessons but never quite got the licence.. I eventually got my fixed wing licence and now share an aeroplane with Nick Mason from Pink Floyd (brag brag).. so do I feel much better for it? Erm.. yeah, I would say I do  #TimsTwitterListeningParty" data-datetime="9:44 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346210957845008389"
+                 data-text="I always had an obsession with Helicopters and was completely aware of how ridiculous it was. I also had an out of tune piano and that\'s how this song came about @thefeeling #TimsTwitterListeningParty" data-datetime="9:44 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346210817944018945"
+                 data-text="RT @Tim_Burgess: Just sent 4 texts and five emails about prospective listening parties ðŸ¤ž" data-datetime="9:44 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346210746091397122"
+                 data-text="The original demo of Helicopter featured a really proggy mid 8 which we cut from the final version - during the 12stops tour we used to perform it live as a triple guitar solo.. truly ridiculous (but lots of fun!)  #TimsTwitterListeningParty  #12stopsandhome  @thefeeling https://t.co/LE4Pt3uJOW" data-datetime="9:43 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346210565220392960"
+                 data-text="sounds about right https://t.co/IL4ntLOsvo" data-datetime="9:43 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346210358764195842"
+                 data-text="my fave solo on the album! #TimsTwitterListeningParty" data-datetime="9:42 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346210341366214656"
+                 data-text="ðŸ¤“if nothing else, we like to be accurate https://t.co/1nkyfHL9Ef" data-datetime="9:42 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346210261175300108"
+                 data-text="The 60% water BV was an interesting moment #TimsTwitterListeningParty" data-datetime="9:41 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346210038592008192"
+                 data-text="I always like the random solo! it\'s the way it should be https://t.co/20s1IiTO2O" data-datetime="9:40 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346209755707166726"
+                 data-text="Some shots from the very shed where we recorded (not the best quality) #12stopsandhome #TimsTwitterListeningParty https://t.co/hb7yogZkrg" data-datetime="9:39 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346209676531281921"
+                 data-text="We don\'t get to play this much live these days but on the 2019 \"12 years and Home\" tour we did every night and it was a real treat. I never got the solo right but thats the fun of live music! @thefeeling #TimsTwitterListeningParty" data-datetime="9:39 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FPaulSte87454211%2Fstatus%2F1346209483320602626"
+                 data-text="@chrissalmon @LlSTENlNG_PARTY @DanGSells @thefeeling @CptRJones @Tim_Burgess So do I!! Pretty weird colour now though - more Burgundy/Maroon...." data-datetime="9:38 PM Jan 4, 2021"> 
+                PaulSte87454211            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346209384385441793"
+                 data-text="Still on the shelf! #TimsTwitterListeningParty https://t.co/yYUHrjn6Y2" data-datetime="9:38 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346209053027037185"
+                 data-text="This is always fun to play live. People sing along and I feel well supported! @thefeeling #TimsTwitterListeningParty" data-datetime="9:37 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346208994147364864"
+                 data-text="Rosie Huntingdon Whitley once thanked me personally for writing RosÃ© about her (after Burberry used it for an as campaign that she we in).. I didnâ€™t have the heart to tell her it was obviously not about her - have you actually listened to the lyrics!? ðŸ˜‰#TimsTwitterListeningParty" data-datetime="9:36 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346208718799708161"
+                 data-text="It seemed people had a bit of a snobby attitude to Rose back then so it seemed right to create a character who didnâ€™t quite fit in and write about that. @thefeeling #TimsTwitterListeningParty" data-datetime="9:35 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346208581813743616"
+                 data-text="We were recording at the Jeremiah family shed in Sussex when we wrote this. A very drunk jam session after a trip to Tesco where RoseÂ´ was on offer!@thefeeling #TimsTwitterListeningParty" data-datetime="9:35 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346208552998858752"
+                 data-text="RosÃ© - 2 for 1 on offer at Tesco for RosÃ© wine - drunk jam - true story.. We really did love Rose that day ðŸŒ¹ðŸ¥‚  #TimsTwitterListeningParty  #12stopsandhome  @thefeeling" data-datetime="9:35 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346208484216500226"
+                 data-text="Dan has also  sung this song so many times that one night on tour he missed the 2nd verse - but not to worry the next time he sang it twice.. how we laughed ðŸ˜‚  #TimsTwitterListeningParty  #12stopsandhome @thefeeling" data-datetime="9:34 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346208419238326274"
+                 data-text="Whenever we play love it when you call live everyone has their hands in the air singing along and it just lifts the whole place.. I always feel like itâ€™s the moment when the credits roll on the movie and I still love it every time  #TimsTwitterListeningParty  #12stopsandhome https://t.co/4NLYTx5loX" data-datetime="9:34 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346208068116295681"
+                 data-text="Dan and me wrote love it when you call one afternoon when we lived together in Bounds Green (12 stops from soho on the Blue Piccadilly!) I was playing the chords on the guitar and he came in from the kitchen and started bashing it out on the piano  #TimsTwitterListeningParty" data-datetime="9:33 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346207882233180163"
+                 data-text="@CptRJones Its true!!!!" data-datetime="9:32 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346207657842126848"
+                 data-text="- @DanGSells  came up with the melody and lyric really fast..
+We thought it was a little ridiculous so asked our house mate Katie if â€˜we could get away with itâ€™.. she replied â€˜definitely notâ€™ so we knew we were onto a winner haha..  #TimsTwitterListeningParty  #12stopsandhome" data-datetime="9:31 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346207573591154688"
+                 data-text="I donâ€™t feel much ownership of this song anymore. I donâ€™t know why. It was such a bit hit on the radio and always a crowd pleaser. Maybe thatâ€™s why! Sometimes that happens. Feels like the crowd own it really. #TimsTwitterListeningParty" data-datetime="9:31 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346207487154909191"
+                 data-text="@DanGSells  and me wrote love it when you call one afternoon when we lived together in Bounds Green (12 stops from soho on the Piccadilly!) I was playing the chords on the guitar and he came in from the kitchen and started bashing it out on the piano  #TimsTwitterListeningParty" data-datetime="9:30 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346207461452226560"
+                 data-text="This is my favourite @DanGSells &amp; @CptRJones - in case you wanted to know ; )" data-datetime="9:30 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346207344452120578"
+                 data-text="Ebows!! #TimsTwitterListeningParty" data-datetime="9:30 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346207207453564930"
+                 data-text="My mate Seb and his brother made a a beautiful unofficial video for this. Check it out after! @thefeeling #TimsTwitterListeningParty" data-datetime="9:29 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346207107788529666"
+                 data-text="Agreed.. should have been a single. I still love how this song sounds https://t.co/iho3415uJU" data-datetime="9:29 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346206962644623361"
+                 data-text="ðŸ¤˜ https://t.co/TJAIJrBx0T" data-datetime="9:28 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346206884500484097"
+                 data-text="It was a mistake for us not to release this as a single. Partly my fault. I might have been a bit self conscious about it at the time. @thefeeling #TimsTwitterListeningParty" data-datetime="9:28 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346206475987910656"
+                 data-text="This is a song i wrote for my fellow misfits, oddballs, queer kids, nerds..... Trekkies.@thefeeling #TimsTwitterListeningParty" data-datetime="9:26 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346206355548491780"
+                 data-text="Strange is one of my favourite songs of ours - Iâ€™m very proud of the bass inversions at the end.. I was actually listening to Interpols brilliant debut album a lot which is what influenced those movements - bet you never would have guessed it!  #TimsTwitterListeningParty" data-datetime="9:26 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346206177022136320"
+                 data-text="Wow - where was this? https://t.co/XNk39kuomW" data-datetime="9:25 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346206046990249986"
+                 data-text="So many songs about heartbreak! I suppose if youâ€™re a songwriter sorrow is the gift that keeps giving. @thefeeling #TimsTwitterListeningParty" data-datetime="9:25 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="114000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346205868589785091"
+                 data-text="Also beer chucking great! https://t.co/Drb4SxQETp" data-datetime="9:24 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346205391974260736"
+                 data-text="Some Fleetwood Mac energy going on here. I remember us not having a banjo and using an old nylon string guitar of my mums instead. Itâ€™s in there somewhere if you listen. #TimsTwitterListeningParty @thefeeling" data-datetime="9:22 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346205205579370499"
+                 data-text="@empiresend Give us a follow and I can ping you some details ðŸ¤˜" data-datetime="9:21 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346205129826050050"
+                 data-text="True that - it\'s one of the best https://t.co/oZodGCmNkd" data-datetime="9:21 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346205096766529541"
+                 data-text="@empiresend @StevoMusicMan @Theicicleworks Saddle up ; )" data-datetime="9:21 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346204993855041543"
+                 data-text="Here we go GUITARS @thefeeling #TimsTwitterListeningParty" data-datetime="9:20 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346204532976529410"
+                 data-text="I remember the main â€œNaNa....â€ hook was originally a little guitar line. The band totally reimagined my original demo which sounded really different! @thefeeling #TimsTwitterListeningParty" data-datetime="9:19 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346204360657797121"
+                 data-text="Oh - for sure agree with both those https://t.co/WOTpFF6Zmo" data-datetime="9:18 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346204354299244545"
+                 data-text="Itâ€™s not a very straight forward song structure.... just has lots of bits you can sing.@thefeeling #TimsTwitterListeningParty" data-datetime="9:18 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FPaulSte87454211%2Fstatus%2F1346204301312610304"
+                 data-text="@LlSTENlNG_PARTY @thefeeling @DanGSells @CptRJones The first time we played Sewn and the crowd sang the chorus as it had been on the radio - Leeds Cockpit was it..?" data-datetime="9:18 PM Jan 4, 2021"> 
+                PaulSte87454211            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346204242193874946"
+                 data-text="@LlSTENlNG_PARTY @thefeeling @DanGSells @CptRJones @PaulSte87454211 Manchester Apollo &amp; Brixton Academy. Iâ€™m allowed two ; )" data-datetime="9:17 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346204158765002754"
+                 data-text="We all went down to Kev and Ciaran\'s parents place and set up in the shed in the garden and put down the first 4 demos in an afternoon 
+Both Fill my little world and Sewn are those very recordings from that first shed session #TimsTwitterListeningParty @thefeeling" data-datetime="9:17 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346204090582376448"
+                 data-text="@LlSTENlNG_PARTY @thefeeling @CptRJones @PaulSte87454211 Shep Bush Empire every time!!!" data-datetime="9:17 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346203940430487552"
+                 data-text="@bigbrojeremiah  and @CiaranJeremiah were going to rehearsing to do an acoustic show with Dan but having heard the song I convinced them that we should find a way record it as a band #TimsTwitterListeningParty  #12stopsandhome  @thefeeling" data-datetime="9:16 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346203902430089216"
+                 data-text="This was our first proper single. Itâ€™s almost 6 mins long so the radio edit had to be brave! We cut a whole verse and chorus so that we could keep the guitars at the end. @thefeeling #TimsTwitterListeningParty" data-datetime="9:16 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346203869051834376"
+                 data-text="Sewn is the song that really drove the creation of the band. Dan played it to me when I got back from touring with @SophieEB and I was blown away. #TimsTwitterListeningParty  #12stopsandhome  @thefeeling" data-datetime="9:16 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1346203849036619779"
+                 data-text="Favourite gig by @thefeeling?
+
+That question also for you @DanGSells @CptRJones &amp; 
+@PaulSte87454211" data-datetime="9:16 PM Jan 4, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346203812953018368"
+                 data-text="We all got sewn up for this one! #TimsTwitterListeningParty  #12stopsandhome  @thefeeling https://t.co/2mNTEBGoJo" data-datetime="9:16 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346203625396314117"
+                 data-text="We didnâ€™t have pedal steel or lap steel guitar so we cheated by multi tracking solo lines. Makes it sound a bit drunk! #TimsTwitterListeningParty @thefeeling" data-datetime="9:15 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346203598435344385"
+                 data-text="it\'s the simple things sometimes https://t.co/s9iYpdP6HK" data-datetime="9:15 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346203427890716682"
+                 data-text="haha https://t.co/HVCGjMcqjz" data-datetime="9:14 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346203365118767105"
+                 data-text="Kev nailing the old slide guitar here #TimsTwitterListeningParty" data-datetime="9:14 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346203107655610376"
+                 data-text="@SophieEB always used to sing this song to Sonny when i was away on tour.." data-datetime="9:13 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FPaulSte87454211%2Fstatus%2F1346203060280958979"
+                 data-text="@LlSTENlNG_PARTY @thefeeling Like Fill My Little World, Kettle\'s On is basically a reggae song with a different drum drum groove" data-datetime="9:13 PM Jan 4, 2021"> 
+                PaulSte87454211            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346202987492995072"
+                 data-text="The verses are quite reggae influenced (melody and bass line) #TimsTwitterListeningParty" data-datetime="9:12 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346202743199952906"
+                 data-text="Kettles on - my favourite bass intro  to play live by a reggae mile (except for Murder on the dance floor but @guypratt  came up with that so weâ€™ll file that in the disco corner - where the bass goes when itâ€™s been naughty) #TimsTwitterListeningParty #12stopsandhome @thefeeling" data-datetime="9:11 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346202717409128453"
+                 data-text="I like writing about ordinary things #TimsTwitterListeningParty" data-datetime="9:11 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346202578468614146"
+                 data-text="ðŸ˜‰ https://t.co/iMxHmpEkhI" data-datetime="9:11 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346202486793773059"
+                 data-text="Jonathan Ross said the outro was â€œa bit gayâ€ when we played it live on his radio show. Certainly was! Certainly am! #TimsTwitterListeningParty" data-datetime="9:10 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346202472822566913"
+                 data-text="Love that tour https://t.co/TrlAYsFkfQ" data-datetime="9:10 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346202412617490432"
+                 data-text="i feel that https://t.co/uZbfP6fihn" data-datetime="9:10 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346202311509610497"
+                 data-text="another. Ciaran solo moment!!! #TimsTwitterListeningParty" data-datetime="9:10 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346202145197092864"
+                 data-text="We tried to re record the song twice after this but could never quite capture the magic of that first demo so the original recording is what appears on the album #TimsTwitterListeningParty #12stopsandhome  @thefeeling" data-datetime="9:09 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FPaulSte87454211%2Fstatus%2F1346202083616305153"
+                 data-text="@LlSTENlNG_PARTY When played live, the crowd singalong for Never Be Lonely has been the same since 2007" data-datetime="9:09 PM Jan 4, 2021"> 
+                PaulSte87454211            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346202027639119876"
+                 data-text="I donâ€™t normally have the same chords going all the way through a song but they were slightly odd enough chords to get away with it! #TimsTwitterListeningParty" data-datetime="9:09 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346201936580792320"
+                 data-text="The songs are so catchy, I was singing along by about 3 gigs in ; )" data-datetime="9:08 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346201927537860609"
+                 data-text="ðŸ’• https://t.co/0s2BuTIH89" data-datetime="9:08 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346201867030851586"
+                 data-text="This was the song that gave us our big break on Radio1 when the demo got played #TimsTwitterListeningParty" data-datetime="9:08 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346201733630984194"
+                 data-text="Fill my little world was our debut single - it was recorded in @bigbrojeremiah  and @CiaranJeremiah  parents shed at our first ever session (along with Sewn, Strange and Kettles on) #TimsTwitterListeningParty  #12stopsandhome @thefeeling" data-datetime="9:07 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346201643344343047"
+                 data-text="it\'s never great! https://t.co/1nqmaLodkm" data-datetime="9:07 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346201591880232961"
+                 data-text="And then we decided to be Beachboys! So much fun doing these harmonies #TimsTwitterListeningParty" data-datetime="9:07 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346201224840933386"
+                 data-text="Totally Supertramp inspired keys here!! #TimsTwitterListeningParty" data-datetime="9:05 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346201154024255490"
+                 data-text="ðŸ™‹" data-datetime="9:05 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346200898498945029"
+                 data-text="On this one I wrote the verse on the guitar and the chorus on piano - in completely different keys! Seemed more exciting to try and make the song work in two keys rather than one. #TimsTwitterListeningParty" data-datetime="9:04 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346200847726882824"
+                 data-text="The drums for Never Be Lonely were recorded in @SophieEB shoe room in our old house (a room with around 300 pairs of shoes next to our bedroom studio) At the end of one of the takes hundreds of shoe boxes became dislodged and toppled on top of Paul - #TimsTwitterListeningParty" data-datetime="9:04 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1346200760242077699"
+                 data-text="Checking where are @LlSTENlNG_PARTY people are for @thefeelingâ€™s Twelve Stops and Home
+
+@DanGSells &amp; @CptRJones will mark you on their map https://t.co/6z52nTjUDF" data-datetime="9:04 PM Jan 4, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FPaulSte87454211%2Fstatus%2F1346200673629720576"
+                 data-text="I\'d love to claim this ridiculous beat for my own but it is a \"Dan Special\" ie. something he sings me that is virtually impossible to play and I am challenged to \'make it happen\'  #TimsTwitterListeningParty @thefeeling" data-datetime="9:03 PM Jan 4, 2021"> 
+                PaulSte87454211            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346200629270749184"
+                 data-text="Oooooh Theremin! #TimsTwitterListeningParty" data-datetime="9:03 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346200495216615424"
+                 data-text="go Ciaran Solo Vox!!!" data-datetime="9:03 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346200431521914881"
+                 data-text="Kev and me literally spent an entire afternoon trying to make the Theramin solo work on want you now (yes itâ€™s a real theramin).. we had to draw lines all over it in sharpey to find the notes, which are still there to this day #TimsTwitterListeningParty  #12stopsandhome" data-datetime="9:02 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346200282695409665"
+                 data-text="We knew quite early on that we were going to open the album with this song. It was immediate and we felt like we were telling the listener what they were in for. Lots of harmonies and guitar solos and pop melodies with some prog thrown in.#TimsTwitterListeningParty" data-datetime="9:02 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346200201518854144"
+                 data-text="Did anyone at the @LlSTENlNG_PARTY see @thefeeling when they supported us on tour? https://t.co/C6oF7j9mJE" data-datetime="9:01 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346200002545274886"
+                 data-text="When we play want you now live the bass is in drop D.. one time our tech forgot to tune it down and as it was the first song in the set when I came in on the bass it sounded like Satanâ€™s fart.. and not in a good way ðŸ˜¬ #TimsTwitterListeningParty @thefeeling" data-datetime="9:01 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FDanGSells%2Fstatus%2F1346199974497951749"
+                 data-text="Here we Gooooooooooo! #TimsTwitterListeningParty" data-datetime="9:00 PM Jan 4, 2021"> 
+                DanGSells            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FCptRJones%2Fstatus%2F1346199824681627648"
+                 data-text="Letâ€™s do this.. We opened the show on the 12 stops tour with this one so it feels appropriate. Letâ€™s listen and chat and forget about everything else for a little while together. I know I need it this eve - thanks @Tim_Burgess  #TimsTwitterListeningParty  @thefeeling" data-datetime="9:00 PM Jan 4, 2021"> 
+                CptRJones            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1346199752900288514"
+                 data-text="Time to press play/ drop the needle on the record for @thefeelingâ€™s Twelve Stops and Home 
+
+Handing you over to our tour guides @DanGSells &amp; @CptRJones https://t.co/IwFBO7u0S3" data-datetime="9:00 PM Jan 4, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
