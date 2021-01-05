@@ -28,6 +28,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
 
     val beans = TimeSlotReader(fileName, inputStream).timeSlots
     beans.forEach { logger.debug("Read in Bean {}", it) }
+    beans.get(0).dateStr.length
     val tbd = beans.stream()
       .filter { it.is1970() }.collect(Collectors.toList())
     val completed = beans.stream()
