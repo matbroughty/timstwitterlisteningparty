@@ -215,7 +215,7 @@ class TweetUtils {
       HttpParameter("name", name),
       HttpParameter("description", description),
       HttpParameter("timeline_order", order))
-    logger.info("response from collection create $name iStrings $response")
+    logger.info("response from collection create $name is $response")
     if (response != null && response.statusCode == 200) {
       return (response.asJSONObject().get("response") as JSONObject).get("timeline_id").toString()
     }
