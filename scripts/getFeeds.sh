@@ -51,7 +51,7 @@ LOCAL_PATH=".."
 numArgs=$#
 
 # Must supply at least one switch and id1 and id2
-if [ "$numArgs" -lt 3 ]
+if [ "$numArgs" -lt 2 ]
 then
     usage
 fi
@@ -164,6 +164,7 @@ then
     localfile4=${LOCAL_PATH}/snippets/replay/replay_artist${ids[0]}_snippet.html
     localfile5=${LOCAL_PATH}/snippets/mixtape-snippet-${ids[0]}.html
     localfile6=${LOCAL_PATH}/snippets/stats.html
+    localfile7=${LOCAL_PATH}/snippets/artists-snippet.html
     curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile1
     verify "$localfile1" "section"
     curl "${REMOTE_PATH}/replaysnip.php?levels=1" -o $localfile2
@@ -172,6 +173,8 @@ then
     verify "$localfile6" "script"
     curl "${REMOTE_PATH}/mixtape.php" -o $localfile5
     verify "$localfile5" "script"
+    curl "${REMOTE_PATH}/artistsnip.php" -o $localfile7
+    verify "$localfile7" "script"
     sed "s/\.\.\/snippets\/replay\/feed_.*_snippet.html/\.\.\/snippets\/replay\/feed_list${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
     mv tmp.txt ${LOCAL_PATH}/pages/replay.html
     sed "s/\.\.\/snippets\/replay\/replay_home.*_snippet.html/\.\.\/snippets\/replay\/replay_home${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
@@ -191,6 +194,7 @@ then
     addtogit $localfile4
     addtogit $localfile5
     addtogit $localfile6
+    addtogit $localfile7
     addtogit ${LOCAL_PATH}/pages/replay.html
     addtogit ${LOCAL_PATH}/pages/mixtape.html
 

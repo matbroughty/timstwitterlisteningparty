@@ -1,0 +1,366 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5bBCggI8wGCWLtrzqCAROh" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02381e8ce718a5d71f1d48fb82" alt="The Performance" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Dame Shirley Bassey</span><br/><span class="sub-colour">The Performance</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5bBCggI8wGCWLtrzqCAROh" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 47 tweets from Monday 11th January 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/DavidGArnold" target="_blank"><img src="https://pbs.twimg.com/profile_images/1273198345700478978/9i3KZs6K_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@DavidGArnold</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Almost There" data-start="0"
+             data-duration="289" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Apartment" data-start="290"
+             data-duration="206" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="This Time" data-start="497"
+             data-duration="248" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="I Love You Now" data-start="746"
+             data-duration="223" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Our Time Is Now" data-start="970"
+             data-duration="187" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="As God Is My Witness" data-start="1158"
+             data-duration="272" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="No Good About Goodbye" data-start="1431"
+             data-duration="258" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="The Girl From Tiger Bay" data-start="1690"
+             data-duration="254" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Nice Men" data-start="1945"
+             data-duration="170" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="After The Rain" data-start="2116"
+             data-duration="182" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="The Performance Of My Life" data-start="2299"
+             data-duration="212" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2512"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851381e8ce718a5d71f1d48fb82" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-47" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348748583319826433"
+                 data-text="@DavidGArnold Such a brilliant experience to share with everyone. Such a fantastic project x x What a record!" data-datetime="9:48 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348748124127432708"
+                 data-text="#TimsTwitterListeningParty thanks for listening ...its been a few years since Iâ€™ve heard it so it was lovely to remember it all. SO MANY STORIES THOUGH !!! Too many for here ......if you want to ask anything feel free. Thanks TIm for this thing of beauty youâ€™ve created  x" data-datetime="9:46 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348747740759678977"
+                 data-text="#TimsTwitterListeningParty I think overall we managed to make a record which felt real....an expression of her through other peoples eyes . All the writers understood that...all the musicians understood that .Iâ€™m so glad she did it and didnâ€™t insist on a covers record" data-datetime="9:44 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348747372348715011"
+                 data-text="#TimsTwitterListeningParty This was so in DSBâ€™s wheelhouse a song....both musically and lyrically. Neil and Chris know how to get to the heart of whomever theyâ€™re writing for and it was a joy to get this song arranged and moulded to Shirleys shape ." data-datetime="9:43 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348746993389236229"
+                 data-text="#TimsTwitterListeningParty to a certain extent there was always going to be a couple of â€˜BIGâ€™ songs on this record.....she wouldnâ€™t have it any other way. I bookended the record with Tom Baxterâ€™s Almost There and this Pet Shop Boys song â€œ The Performance of My Life â€œ." data-datetime="9:41 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348746938972307458"
+                 data-text="Thanks so much @DavidGArnold. That was brilliant https://t.co/rGWr6sPQbY" data-datetime="9:41 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348746622327533568"
+                 data-text="#TimsTwitterListeningParty at Air...i was standing next to Shirley and she was quietly singing it to herself . I leaned over and said maybe she should sing it that quietly when we do it for real. Itâ€™s my favourite vocal from her on the album...delicate,exposed, truthful." data-datetime="9:40 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348746285013213184"
+                 data-text="#TimsTwitterListeningParty Richard Hawley had something very special with After The Rain. Richard is another of those writers who understand the bones of a song ...the anatomy  of it....he knows where the secrets are musically and lyrically . When we recorded the strings ..." data-datetime="9:39 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348745880636190725"
+                 data-text="#TimsTwitterListeningParty the music was all recorded at Londonâ€™s Air Studios . The players , as always , were bang on and brilliant ." data-datetime="9:37 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="130000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348745724217995264"
+                 data-text="#TimsTwitterListeningParty Kt Tunstallâ€™s â€˜Nice Menâ€™ was a song that appealed to Shirleys sense of naughtiness. It was provocative , slinky and a bit rude. Right up her street . @KTTunstall original was much more funky and i hope she forgives me for dragging it into the gutter" data-datetime="9:36 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348745179168182275"
+                 data-text="#TimsTwitterListeningParty tiger Bay played so well when we did it live at the Roundhouse .....James Bradfield came to play guitar live which was amazing ." data-datetime="9:34 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348744986284720129"
+                 data-text="#TimsTwitterListeningParty were an authority . Itâ€™s a poetic song and feels like a homecoming musically. I threw a few ideas in as a producer and the band insisted i have a writing credit despite me saying I didnâ€™t want it. I love the song and i love the band ." data-datetime="9:33 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348744501498621965"
+                 data-text="#TimsTwitterListeningParty The Girl from Tiger Bay written by the Manic Street Preachers was a thing of wonder . Theyâ€™re such great melodists...they so completely understood what we were  trying to do and being Welsh and so aware of the history of Wales and Shirley that they were" data-datetime="9:32 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348744153170141187"
+                 data-text="#TimsTwitterListeningParty mike knew what it took to negotiate these twists and turns and I was very happy thatâ€™s he could come with us To Dublin to record the vocals and smooth the way. We chose a studio outside Dublin with no shops or casinos . Concentration !" data-datetime="9:30 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348743861598879745"
+                 data-text="#TimsTwitterListeningParty yes it is very Bondy....unsurprising really considering the cast . Shirley struggled a little with the recording..took a while to connect. That was when having her long serving ( at that point ) MD @mikedixonmusic with me for the vocal sessions valuable" data-datetime="9:29 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348743471612514311"
+                 data-text="#TimsTwitterListeningParty No Good About Goodbye was a song Iâ€™d written with Don Black . Iâ€™d sketched an idea after Quantum of Solace came out as I liked a string line Iâ€™d written for that film ...and asked Don to put a lyric to it when I knew Shirley was going to sing it ." data-datetime="9:27 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348743125678882816"
+                 data-text="#TimsTwitterListeningParty just write a great song and ill make it a Shirley Bassey song . She does that just by singing...but you know what i mean...i have to provide the platform , the stage" data-datetime="9:26 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348742929347653633"
+                 data-text="#TimsTwitterListeningParty When i asked people to write for this...the idea of writing for that voice is very intimidating...youâ€™re effectively in competition with Goldfinger , Something, I Am What I am etc....all the songs sheâ€™s owned . I said to the writers...." data-datetime="9:25 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348742867158757376"
+                 data-text="https://t.co/S7jB8BduDd" data-datetime="9:25 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348742565202448386"
+                 data-text="#TimsTwitterListeningParty Shirley excels in soaring through painful emotions in songs....its easy to get side swiped by the size of her voice...but thereâ€™s so much truth in her delivery" data-datetime="9:24 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348742311581253634"
+                 data-text="#TimsTwitterListeningParty As God Is My Witness was a song Iâ€™d written for DSB with David Mcalmont . A hugely underrated writer i feel...i love his voice and heâ€™s been a good friend for many years. I love the lyric David wrote for this . I love a bit of tragedy in a song ." data-datetime="9:23 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348742308125143043"
+                 data-text="Yes @DavidGArnold, totally loving this listening party https://t.co/vU8WoqjMJi" data-datetime="9:23 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348741891320410116"
+                 data-text="#TimsTwitterListeningParty when i was playing her song Iâ€™d tell her whoâ€™d written them ...when i said this was by John Barry and Don...she said â€œ what....MY John Barry ??â€" data-datetime="9:21 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348741684176289795"
+                 data-text="#TimsTwitterListeningParty when John and Don agreed to write . John sent me a fax of his melody and chords that accompanied the melody and I did the arrangement having mocked it up for Shirley so she could hear it" data-datetime="9:20 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348741648415674376"
+                 data-text="@LlSTENlNG_PARTY @shirleybassey @DavidGArnold Trying to find inspiration in the studio" data-datetime="9:20 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348741418483933186"
+                 data-text="#TimsTwitterListeningParty Our Time Is Now is a John Barry/Don Black song....the first theyâ€™d written for Shirley since Diamonds are Forever I think. Iâ€™d known John for quite a while and had worked with Don on numerous occasions .its a timeless Barry melody and i was thrilled" data-datetime="9:19 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1348741406697918464"
+                 data-text="Checking in where our @LlSTENlNG_PARTY people are right now, for our @shirleybassey @DavidGArnold @LlSTENlNG_PARTY https://t.co/xdugo2LwX9" data-datetime="9:19 PM Jan 11, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348741079856721926"
+                 data-text="#TimsTwitterListeningParty she was 73 i think when we did it....why should she agree to do that...it was unfamiliar and she didnâ€™t need to....but Iâ€™m glad we talked her round ." data-datetime="9:18 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348740905482784772"
+                 data-text="#TimsTwitterListeningParty the other thing about this record was that DSB was used to making a record live....going in with an orchestra and it all going down live in a few sessions . Iâ€™d told her that i wanted to make a record in a studio and make the most of that environment" data-datetime="9:17 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348740636309073920"
+                 data-text="#TimsTwitterListeningParty Iâ€™d worked with Kaiser Chiefs a few times and wed always had a blast. Nick Hodgson was a great songwriter and i asked if if heâ€™d want to write for DSB (Dame Shirley Bassey!)Not a combination youâ€™d expect but the juxtaposition of these styles really work" data-datetime="9:16 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTheNWRA_%2Fstatus%2F1348740233240727553"
+                 data-text="ICYMI - Rescheduled dates just announced PLUS @Tim_Burgess hosts \'Watch Parties\' via @LlSTENlNG_PARTY on Mon 29 March for @thecharlatans @ististmusic @WEARELIINES + Tues 30 March with guest @IanZBroudie for @Lightning_Seeds @RedRumClub @thisiszuzu 96hr playback now included -x- https://t.co/Ieq1TIvXem" data-datetime="9:15 PM Jan 11, 2021"> 
+                TheNWRA_            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348740135404380162"
+                 data-text="#TimsTwitterListeningParty to a Bacharachy kind of vibe....we performed this at the Albert Hall for Children in Need with a full orchestra...Gary on Piano and me on guitar. We had to start it twice when the monitors failed and we couldnâ€™t hear strings. Shirley wasnâ€™t phased" data-datetime="9:14 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348739750711226370"
+                 data-text="#TimsTwitterListeningParty This Time by Gary Barlow was Gary trying to write what we as writers would call a standard. Timeless and tuneful. He was very excited by his use of 9th chords in this song....its a throwback to Shirleys earlier song choices...very melodic ...i took it" data-datetime="9:13 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1348739570028916743"
+                 data-text="#TimsTwitterListeningParty 
+@shirleybassey https://t.co/FXQcMLwoUW" data-datetime="9:12 PM Jan 11, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348739339581321220"
+                 data-text="#TimsTwitterListeningParty The Apartment by Rufus Wainwright was slinky and fun and pointed and arch and wonderful. Shirley loved it....it was a bit rude .....i tried to keep a bit of filth in it" data-datetime="9:11 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348738945190940672"
+                 data-text="#TimsTwitterListeningParty a special effect. A proper record with proper songs and not covers of hits. DSB was keen to make that record but i talked her out of it and felt we could make a â€˜proper recordâ€™" data-datetime="9:09 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348738869689278469"
+                 data-text="Such a brilliant Monday evening soundtrack - sounding amazing @DavidGArnold! #TimsTwitterListeningParty" data-datetime="9:09 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="134000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348738736784334851"
+                 data-text="#TimsTwitterListeningParty its odd for me to talk about his record as most of the listening parties are the artist talking about their work. Iâ€™m talking about someone elseâ€™s record. I wanted to make this album because i wanted people to take her seriously as a singer and not a" data-datetime="9:09 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348738173803892737"
+                 data-text="#TimsTwitterListeningParty tom Baxterâ€™s â€˜almost thereâ€™ gave her the platform to fly and she really took advantage of it" data-datetime="9:06 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348737987379662855"
+                 data-text="#TimsTwitterListeningParty People love a big voice...real control, real power, real emotion....like watching an elite athlete do something incredible right in front of you. No tricks, no mic technique get outs...just raw talent" data-datetime="9:06 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348737690754293764"
+                 data-text="#TimsTwitterListeningParty I wanted to make this record because i was a bit tired of reviews of Shirley Bassey being all about her persona rather than her voice. First and foremost sheâ€™s an incredible singer" data-datetime="9:04 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348737395781492736"
+                 data-text="@DavidGArnold @LlSTENlNG_PARTY ðŸ¤˜" data-datetime="9:03 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348737188566081538"
+                 data-text="Iâ€™m presuming weâ€™ve all pressed go on â€˜almost thereâ€™" data-datetime="9:02 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348737007300845570"
+                 data-text="@DavidGArnold @LlSTENlNG_PARTY What an opening track" data-datetime="9:02 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348736817005268999"
+                 data-text="Wow! @shirleybasseyâ€™s voice on Almost There ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥
+#TimsTwitterListeningParty" data-datetime="9:01 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2FDavidGArnold%2Fstatus%2F1348736785669640193"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY And were off ?????" data-datetime="9:01 PM Jan 11, 2021"> 
+                DavidGArnold            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1348736450418921472"
+                 data-text="Aaaaand, itâ€™s time for The Performance
+
+Handing over to our @LlSTENlNG_PARTY host, @DavidGArnold https://t.co/lDjF4IzxXl" data-datetime="9:00 PM Jan 11, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
