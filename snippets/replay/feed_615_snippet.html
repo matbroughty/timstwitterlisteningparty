@@ -1,0 +1,595 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1QMKGKbYRmIGNPshvw0BHG" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0245db44ec4f4480babbc0469e" alt="Old Wow" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Sam Lee</span><br/><span class="sub-colour">Old Wow</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(2234440)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1QMKGKbYRmIGNPshvw0BHG" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_2234440_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 79 tweets from Tuesday 12th January 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/samleesong" target="_blank"><img src="https://pbs.twimg.com/profile_images/1336361940587868160/agb2MDiU_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@samleesong</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/petepaphides" target="_blank"><img src="https://pbs.twimg.com/profile_images/583030202906873856/rTmMRwPE_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@petepaphides</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="The Garden of England (Seeds of Love)" data-start="0"
+             data-duration="256" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Lay This Body Down" data-start="257"
+             data-duration="287" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="The Moon Shines Bright" data-start="545"
+             data-duration="253" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Soul Cake" data-start="799"
+             data-duration="360" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Spencer the Rover" data-start="1160"
+             data-duration="291" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Jasper Sea" data-start="1452"
+             data-duration="357" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Sweet Sixteen" data-start="1810"
+             data-duration="190" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Turtle Dove" data-start="2001"
+             data-duration="298" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Worthy Wood" data-start="2300"
+             data-duration="251" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Balnafanen" data-start="2552"
+             data-duration="323" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2876"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485145db44ec4f4480babbc0469e" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-79" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349112343712641033"
+                 data-text="@samleesong ?? https://t.co/0zCgjN7tsv" data-datetime="9:53 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349112099520335874"
+                 data-text="#TimsTwitterListeningParty https://t.co/9SVHjEsU85" data-datetime="9:52 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349112048173658116"
+                 data-text="@matriches Thank you Mat! Bookmarked!" data-datetime="9:52 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Frobkb2%2Fstatus%2F1349111972877529088"
+                 data-text="@petepaphides A year on, I still gasp when Liz Fraser comes in. An absolutely breathtaking duet." data-datetime="9:52 PM Jan 12, 2021"> 
+                robkb2            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349111938010255361"
+                 data-text="Im so glad Bernard never mentioned this while we were recording.. Old Wow is many things but it is possibly one of the unsexiest album i know... @petepaphides https://t.co/GDu8KzDGGG" data-datetime="9:52 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349111806103609345"
+                 data-text="Samâ€™s also written a book: the story of The Nightingale in nature, mythology, folklore and history. You can pre-order it here. https://t.co/XMcJ0RwCbE #TimsTwitterListeningParty" data-datetime="9:51 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349111602260402176"
+                 data-text="and what a front room it was... Bernard was more than a producer for this album.. he was muse and medium.. he really entered into the subtle and powerful vortex that album making does to humans ... its shamanic work and he embraced the unknown so majestically, there maybe more.. https://t.co/TiUtHUwu8p" data-datetime="9:50 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fcarl_rob68%2Fstatus%2F1349111570119450632"
+                 data-text="@Tim_Burgess @samleesong @petepaphides First time listening to this album and I\'ll be listening again  many more times, amazing !!" data-datetime="9:50 PM Jan 12, 2021"> 
+                carl_rob68            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1349111516293984257"
+                 data-text="@samleesong A new wow for me. Thanks ðŸ™" data-datetime="9:50 PM Jan 12, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349111257782231041"
+                 data-text="And because Samâ€™s far too reticent a salesman, here are some places where you can buy Old Wow. https://t.co/6rIMRxzltw #TimsTwitterListeningParty" data-datetime="9:49 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1349111173652885507"
+                 data-text="Thanks @samleesong for such a fantastic album. And to @petepaphides for his tweets  ( and for sharing Bernard Butlerâ€™s notes too). Thanks x x" data-datetime="9:49 PM Jan 12, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349110898334593027"
+                 data-text="The very best folk singers are doing the job that clairvoyants are purporting to do. Thanks @samleesong xx #TimsTwitterListeningParty" data-datetime="9:47 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349110827232751617"
+                 data-text="Thank you so much @Tim_Burgess for having me join this session and to all you listeners for staying here and joining me and Old WOw  #timstwitterlisteningparty" data-datetime="9:47 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349110586295123974"
+                 data-text="@Henry__Lee_ i bloody well do!!! oh to think of a mere storms being our greatest issue back in those days!!!" data-datetime="9:46 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349110283265056772"
+                 data-text="our world would be a much less diminished place ...
+this song is one of the finest love songs I know.. it speaks really of rewilding and how our tending to nature is the greatest service we can do in our lives.. the most noble ..." data-datetime="9:45 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349110281859969024"
+                 data-text="a devotion to the hills of heather... and how the travellers loved for nothing greater than that sacred plant that symbolised their freedom and their wildness.. this is a love song and ends the album in hope that if our reverence of nature was as great as it is for oursleves .." data-datetime="9:45 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349110280496807936"
+                 data-text="And finaly...
+
+Balnafanen
+once again from my teacher Stanley Robertson 
+one of the smallest and most stunningly perfect songs.. a  version of wild mountain thyme - will ye go lassie go
+a Aberdeen version of that ballad.... 
+
+#timstwitterlisteningparty" data-datetime="9:45 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349109910852825089"
+                 data-text="When this is finished, you can treat yourself to the sight of Sam and Liz Fraser SINGING TOGETHER IN THE SAME ROOM! #TimsTwitterListeningParty https://t.co/oWadcl13YX" data-datetime="9:44 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349109489522401281"
+                 data-text="Bernard Butler on Old Wow: \"This is the best sounding thing I ever recorded and Iâ€™m really proud it was largely recorded in my front room.â€ #TimsTwitterListeningParty" data-datetime="9:42 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349109423906693121"
+                 data-text="Worthy Wood
+
+This song is based upon a west country gypsy song..
+
+You will come to die for we
+the elder for the crisscross tree
+A Gypsy nail prophesy
+Diminishing responsibility 
+Inherit no ones tragedy 
+sleep then 
+
+#timstwitterlisteningparty" data-datetime="9:42 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349109070649815051"
+                 data-text="Bernard Butler: (contâ€™d) \"This was done in the same room (Rak Studio 2 â€“ my favourite room ever) that Mickie Most â€˜rocked the wahâ€™ under the desk on Hot Chocolateâ€™s You Sexy Thingâ€ I never told anyone I was thinking that at the time.â€ (2/2) #TimsTwitterListeningParty" data-datetime="9:40 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349109018929848328"
+                 data-text="percussed by Josh Green with a pair of chopsticks
+
+Check out @MishaMAmusic \'s incredible bass solo at the end" data-datetime="9:40 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349109017499508736"
+                 data-text="Worthy Wood 
+
+a lullaby to the end of the world
+the song written to be sung to our children about why the world is no longer living ....
+
+dark stuff i know... featuring the strings of Bernard Butlers Cherry red guitar being...&gt;
+
+#timstwitterlisteningparty" data-datetime="9:40 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349108900797304832"
+                 data-text="Bernard Butler: \"The guitar on Worthy Wood was my Gibson 355 open tuned, played with drum sticks by Josh the drummer while I rocked the wah wah through my distorted amp.â€ [contâ€™d] #TimsTwitterListeningParty (1/2)" data-datetime="9:40 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349108691019161611"
+                 data-text="@samleesong Iâ€™ll never stop evangelising about this record. x" data-datetime="9:39 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349108499943456768"
+                 data-text="like his!!! thanks Pete" data-datetime="9:38 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349108498525790214"
+                 data-text="OMG i dont think i\'ve typed this fast yet this year...
+Loving sharing the stories of these songs with you all
+
+Shout out to @petepaphides for all his love and support of this album... and really championing it.. there are few sets of ears out there..
+#timstwitterlisteningparty" data-datetime="9:38 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349108288974168066"
+                 data-text="I think itâ€™s telling that Sam was a burlesque dancer before he became a folk singer. Thereâ€™s a balletic physicality that he brings to these songs, that is mirrored by the production and arrangements on Old Wow. #TimsTwitterListeningParty" data-datetime="9:37 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349107985403031554"
+                 data-text="Turtle Dove
+
+\"The rocks shall melt with the sun and roaring the billows burn\"
+
+ #timstwitterlisteningparty" data-datetime="9:36 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349107837696356352"
+                 data-text="Turtle Dove
+
+\"if i prove false to the songbird that i love
+The noonday shall sound as night my love\"
+
+ #timstwitterlisteningparty" data-datetime="9:35 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349107714690060289"
+                 data-text="Turtle Dove
+
+this 400+ year old song tells everything about extinction.. the words fortell the prophesy of species decline and global warming its incredible .. what once was biblical is now commonplace 
+
+#timstwitterlisteningparty" data-datetime="9:35 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349107431746498568"
+                 data-text="Turtle Dove
+
+this is my devotional song to the most incredible bird .. set to be the next bird to go extinct in the UK within 25 years... declining at 97% every year... purely due to the ecological damage we are doing to our land and their home.
+
+ #timstwitterlisteningparty" data-datetime="9:34 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349107191341584384"
+                 data-text="OLD WOW : Part 3 EARTH
+
+Turtle Dove
+
+ #timstwitterlisteningparty" data-datetime="9:33 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349106730010087424"
+                 data-text="Sweet Sixteen 
+
+Feat. @caoimhinoragha1 the mighty viola d\'amor player (7 string viola with resonant strings.. a truly otherworldly human and player i have one of the highest praise for musically 
+#timstwitterlisteningparty" data-datetime="9:31 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349106451294380035"
+                 data-text="check out Alan lomax\'s recordings of her from the 50s..." data-datetime="9:30 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349106449989967875"
+                 data-text="Sweet Sixteen
+
+One of two songs on Old Wow that i learned from my teacher, mentor and legendary Scots Traveller Ballad singer Stanley Robertson... he learned inturn from his Aunti Jeannie one of the greatest ballad singers ever to live.. 
+
+#timstwitterlisteningparty" data-datetime="9:30 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="109000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349106068547395584"
+                 data-text="Jasper Sea
+
+This song in its essence is all about the ocean
+it for me speaks of the eventual consumption that the sea will have of all of us and all life.. 
+
+#timstwitterlisteningparty" data-datetime="9:28 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349105612555218948"
+                 data-text="of this tragic song lamenting the journey of a doomed father and son out at sea" data-datetime="9:26 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349105611317899267"
+                 data-text="Jasper Sea
+
+accompanying James Keay on piano is the Japanese Shakuhachi - the bambo flute played by master player @AdrianFreedman2 a deeply spiritual man who tuned into this song one night in Devon and whispered all the characters and shades...
+
+#timstwitterlisteningparty" data-datetime="9:26 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349105310217216001"
+                 data-text="\"Lee graduated from art school &amp; secured work dancing in a burlesque West End show near Leicester Square. He would scramble across roofs into the bookshop on the top floor of the Photographers\' Gallery, where he would rehearse, unknown to its owners.\" 
+https://t.co/RmWZhojEac" data-datetime="9:25 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349105181330464769"
+                 data-text="Jasper Sea
+
+a winding wandering strange little known folksong... 
+this gem comes from Norfolk from a singer called Jumbo Brightwell recorded in the 50s singing in the pub... when songs were shared like pints 
+#timstwitterlisteningparty" data-datetime="9:25 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349104829226999809"
+                 data-text="This section HEARTH is all about the home and how we search and create and lose and value our sense of home physically and the home within us 
+#timstwitterlisteningparty" data-datetime="9:23 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349104431078453253"
+                 data-text="Check out the subtle prangs of Hammer Dulcimer in the background  and @matthewmbarley on cello here 
+#timstwitterlisteningparty" data-datetime="9:22 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349104272328241154"
+                 data-text="its the woods that take him in and send him into turmoil and send him the wisdom to find his way home" data-datetime="9:21 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349104271120363528"
+                 data-text="This song is a much misunderstood folk song.. its about the shamanic journey of a man in great life distress... heart broken depressed and lost on the road destitute 
+#timstwitterlisteningparty" data-datetime="9:21 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1349104134214078464"
+                 data-text="Itâ€™s the most soundcheck time on National Soundcheck Day 
+
+21:21
+12. 1. 21 https://t.co/PxWcYRi66T" data-datetime="9:21 PM Jan 12, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349103979310043136"
+                 data-text="Welcome in Sussex first family of Folk,.... The Copper Family ... from where this 400 year old song comes from
+
+Its a tale of the cure of nature to help you find your way home
+
+#timstwitterlisteningparty" data-datetime="9:20 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349103774762205188"
+                 data-text="Now for part 2 of the album HEARTH
+
+with Spencer the Rover
+
+#timstwitterlisteningparty" data-datetime="9:19 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349103581895471109"
+                 data-text="Check James\'s piano playing here... he hits some incredible notes... we loved playing this outro...
+I wanted to channel steven Spielberg in this.. find something otherworldly in this song 
+#timstwitterlisteningparty" data-datetime="9:18 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349103362504011777"
+                 data-text="Soul Cake
+.. this is a waltz through our lives... 
+\"Dance with Death in a soul cake\"
+One the Sea two for the soil three for a spin on this mortal coil\"
+#timstwitterlisteningparty" data-datetime="9:18 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349103203300896769"
+                 data-text="Bernard Butler: \"We recorded Alice Zawadzkiâ€™s unbelievable violin and Matthew Barleyâ€™s cello in my front room and I think about this a lot when Iâ€™m watching tv.â€ #timstwitterlisteningparty @LlSTENlNG_PARTY" data-datetime="9:17 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349103130135437314"
+                 data-text="Soul Cake
+
+All praise to @AliceZawadzki on violin here!! 
+#timstwitterlisteningparty" data-datetime="9:17 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349103015509315592"
+                 data-text="No re imagined as a blessing song for all that is sacred and profane in our lives today... fragments of the sublime and ridiculous that makes up our lives and humours we exist from and the vapours we live off" data-datetime="9:16 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="119000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349103014318133252"
+                 data-text="Soul Cake 
+
+This song is a re write of the Lancashire souling song sung as a pre christian carol around houses on All Souls Day Nov2nd - this is our indigenous Day of the Dead song
+#timstwitterlisteningparty" data-datetime="9:16 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349102516559114246"
+                 data-text="Soul Cake
+but the main song is the last part of the 1st stage of this album 
+HEART (followed by HEARTH &amp; EARTH)
+#timstwitterlisteningparty" data-datetime="9:14 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349102436460482562"
+                 data-text="{contâ€™d}
+
+\'You mean from the Cocteau Twins?\',
+\'Yeah do you know them?\'
+\'Yeah I know themâ€™.
+\'Iâ€™m not sure but do you think we should do it?\'
+Seizing my chance to serve The People \'yeah we need to do thatâ€™.
+(2/2)
+#TimsTwitterListeningParty" data-datetime="9:14 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349102325823102977"
+                 data-text="Soul Cake
+
+two songs in one.. Green Grow the Rushes... an ancient mystical counting song... a visualisation of the elements and the elemental
+#timstwitterlisteningparty" data-datetime="9:13 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349102169065205760"
+                 data-text="Bernard Butler: \"Seeing at the bottom of a lyric sheet the words \'Liz Fraser?\':
+I said to Sam \'Is that Liz Frazer?â€™
+\'Itâ€™s my friend Elizabeth. Do you know her?â€™â€¦.(contâ€™d)
+#timstwitterlisteningparty" data-datetime="9:13 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349102159128883200"
+                 data-text="\"Ever more watchful be\" a line i have often treasured about being alert aware and open to the world around us.. attentive to her and always listening
+#timstwitterlisteningparty" data-datetime="9:13 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349101903016288256"
+                 data-text="#timstwitterlisteningparty" data-datetime="9:12 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349101901766385667"
+                 data-text="Some of the lyrics are from the Scottish classic Wild Mountain Thyme as ELizabeth sings..
+
+Other lines are from a Navajo / Zuni blessing song i learned as child and discovered again when making a BBc Doc on Navajo culture and language (see BBCR3 Taking it All Back home" data-datetime="9:12 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349101884095787009"
+                 data-text="...The relevance of this being that, even then, he understood that the folk corpus is a beautiful, living corpus that doesnâ€™t want to be treated too respectfully. Thatâ€™s the great thing about these songs. Sam reanimates them so tenderly &amp; intuitively. #timstwitterlisteningparty" data-datetime="9:12 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FHenry__Lee_%2Fstatus%2F1349101871181557761"
+                 data-text="The last full gig I went to. @samleesong at the @TheGulbenkian. Was incredible to hear this wonderful music live  #TimsTwitterListeningParty https://t.co/3ArL5z4zGQ" data-datetime="9:12 PM Jan 12, 2021"> 
+                Henry__Lee_            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349101578880430094"
+                 data-text="we have to make and the love we surround ourselves with" data-datetime="9:10 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349101577437671424"
+                 data-text="Moon Shines Bright features the voice of Elizabeth Fraser who for me (&amp;many) is one of the greatest singers in the world... 
+Also in there is the cello of my friend and legend Matthew Barley..
+This song is about the passage of life the choices....
+
+#timstwitterlisteningparty" data-datetime="9:10 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349101115674128386"
+                 data-text="The Moon Shines Bright 
+An ancient mid winter carol that i re wrote from the fragments taught to me by my friend and teacher Freda Black https://t.co/NirMgXSZyV
+She died aged 93 back in June during  the lunar eclipse
+#timstwitterlisteningparty" data-datetime="9:09 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349100979283763200"
+                 data-text="First time I met Sam Lee was over 10 years ago, when he asked me to DJ at his folk club in London. Lots of straight-up folk fans in the room and Iâ€™d brought along quite a bit of 70s psych/acid-folk with me. Sam was unfazed and ultra-enthusiasticâ€¦. #TimsTwitterListeningParty" data-datetime="9:08 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349100750056681481"
+                 data-text="Transformation" data-datetime="9:07 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="120000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349100748697694211"
+                 data-text="Lay This Body Down:
+An African American spiritual learned from the lips of a free slave on the Georgia Sea Island off Florida .. he was the ferry man who rowed passengers across the water and sang as he sailed... 
+Channeling the ideas of death and....
+
+#timstwitterlisteningparty" data-datetime="9:07 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349100246249463808"
+                 data-text="#timstwitterlisteningparty" data-datetime="9:05 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349100147502886913"
+                 data-text="1 â€“ THE GARDEN OF ENGLAND (SEEDS OF LOVE) First version I heard of this was the one used on Far From The Madding Crowd, with Terence Stamp &amp; Julie Christie. Richard Rodney Bennettâ€™s wonderful. score fast-tracked me to a love of British folk. #TimsTwitterListeningParty" data-datetime="9:05 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349100127181537284"
+                 data-text="Thank you to the wonderful Bernard Butler on electric guitar and also album producer for creating the wonderous moods ... Also Misha Mullov Abbado on Bass James Keay on Piano and Josh Green on Percussion" data-datetime="9:05 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349099888500482051"
+                 data-text="The Old Wow never wears thin....
+a name that came to me from an encounter with a buzzard that swooped down on me one day and sang his songs onto me and i now use the name as the magical potency of life that exists in all of nature..." data-datetime="9:04 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349099883031105537"
+                 data-text="Garden of England is a rewrite of the classic ENglish folk song Seeds of Love the song that set off the whole revival
+in here lies the album name Old Wow..
+
+#timstwitterlisteningparty" data-datetime="9:04 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1349099570886815752"
+                 data-text="@LlSTENlNG_PARTY @samleesong ðŸ™‹" data-datetime="9:02 PM Jan 12, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fpetepaphides%2Fstatus%2F1349099472563937287"
+                 data-text="Bernard Butler: \"Me and Sam jammed years ago and it only stopped because I got locked out of my studio. It took 8 years to reconvene.â€ #oldwow #TimsTwitterListeningParty" data-datetime="9:02 PM Jan 12, 2021"> 
+                petepaphides            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1349099461054763009"
+                 data-text="Anyone at The @LlSTENlNG_PARTY hearing @samleesong for the first time??" data-datetime="9:02 PM Jan 12, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2Fsamleesong%2Fstatus%2F1349099285808369671"
+                 data-text=".... Garden Of England Seeds of Love...
+the song for the songs themselves...
+A telling of the wildness of the ancient songs that have come to us like rare species carrying knowledge and complex wisdom from our elders...
+ #timstwitterlisteningparty https://t.co/RR86ayrPw7" data-datetime="9:01 PM Jan 12, 2021"> 
+                samleesong            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1349098854466146304"
+                 data-text="Handing over to @samleesong 
+
+&amp; @petepaphides https://t.co/inE7k5rSc5" data-datetime="9:00 PM Jan 12, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
