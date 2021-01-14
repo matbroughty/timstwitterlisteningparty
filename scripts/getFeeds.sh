@@ -164,7 +164,7 @@ then
     localfile4=${LOCAL_PATH}/snippets/replay/replay_artist${ids[0]}_snippet.html
     localfile5=${LOCAL_PATH}/snippets/mixtape-snippet-${ids[0]}.html
     localfile6=${LOCAL_PATH}/snippets/stats.html
-    localfile7=${LOCAL_PATH}/snippets/artists-snippet.html
+    localfile7=${LOCAL_PATH}/snippets/artists_snippet.html
     curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile1
     verify "$localfile1" "section"
     curl "${REMOTE_PATH}/replaysnip.php?levels=1" -o $localfile2
