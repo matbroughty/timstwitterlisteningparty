@@ -1,13 +1,14 @@
 package com.timstwitterlisteningparty.tools.social
 
+import com.github.redouane59.twitter.TwitterClient
+import com.github.redouane59.twitter.dto.collections.TimeLineOrder
+import com.github.redouane59.twitter.signature.TwitterCredentials
 import com.timstwitterlisteningparty.tools.parser.Replay
 import com.timstwitterlisteningparty.tools.parser.TimeSlot
 import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import twitter4j.HttpParameter
-import twitter4j.JSONObject
 import twitter4j.Twitter
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
@@ -21,6 +22,15 @@ class TweetUtils {
 
 
   private val logger = LoggerFactory.getLogger(javaClass)
+
+  fun getTwittered(): TwitterClient {
+    return TwitterClient(TwitterCredentials.builder()
+      .accessToken(System.getenv("twitter4j_oauth_accessToken"))
+      .accessTokenSecret(System.getenv("twitter4j_oauth_accessTokenSecret"))
+      .apiKey(System.getenv("twitter4j_oauth_consumerKey"))
+      .apiSecretKey(System.getenv("twitter4j_oauth_consumerSecret"))
+      .build())
+  }
 
 
   /**
@@ -139,6 +149,7 @@ class TweetUtils {
     return tweet("List available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $curatedTweetUrl #TimsTwitterListeningParty")
   }
 
+
   /**
    * Creates a collection of tweets for the Replay feed id
    */
@@ -159,6 +170,7 @@ class TweetUtils {
     }
     return retMsg
   }
+
 
   /**
    * Builds up collection of the first tweet from the replay feeds (https://timstwitterlisteningparty.com/snippets/replay/feed_nn)
@@ -210,14 +222,25 @@ class TweetUtils {
    * Create a Twitter collection and returns the collection id in form "custom-$collectionId"
    * @param order defaults to tweet_chron i.e. oldest first, tweet_reverse_chron is newest first
    */
+//  fun createCollection(name: String, description: String, order: String = "tweet_chron"): String {
+//    val response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/create.json",
+//      HttpParameter("name", name),
+//      HttpParameter("description", description),
+//      HttpParameter("timeline_order", order))
+//    logger.info("response from collection create $name is $response")
+//    if (response != null && response.statusCode == 200) {
+//      return (response.asJSONObject().get("response") as JSONObject).get("timeline_id").toString()
+//    }
+//    logger.warn("issue creating collection for $name and $description - collectionid not known")
+//    return ""
+//  }
+
   fun createCollection(name: String, description: String, order: String = "tweet_chron"): String {
-    val response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/create.json",
-      HttpParameter("name", name),
-      HttpParameter("description", description),
-      HttpParameter("timeline_order", order))
-    logger.info("response from collection create $name is $response")
-    if (response != null && response.statusCode == 200) {
-      return (response.asJSONObject().get("response") as JSONObject).get("timeline_id").toString()
+
+    val response = getTwittered().collectionsCreate(name, description, "", TimeLineOrder.CHRONOLOGICAL_REVERSE);
+    logger.info("response from collection create $name is ${response.response.timeLineId}")
+    if (response != null && !response.hasErrors()) {
+      return response.response.timeLineId
     }
     logger.warn("issue creating collection for $name and $description - collectionid not known")
     return ""
@@ -228,13 +251,21 @@ class TweetUtils {
    * The tweetIds to add to the collectionId (not collectionid needs to be in format "custom-$collectionId")
    */
   fun addToCollection(tweetIds: List<String>, collectionId: String) {
-    var json = "{\"id\": \"$collectionId\",\"changes\": ["
-    json = json.plus(tweetIds.joinToString { tweetId -> "{ \"op\": \"add\", \"tweet_id\": \"$tweetId\"}" })
-    json = json.plus("]}")
-    logger.info("json curation json is $json")
-    val response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/entries/curate.json", JSONObject(json))
-    logger.info("response from curate for collection $collectionId is $response")
+    getTwittered().collectionsCurate(collectionId, tweetIds)
   }
+
+
+  /**
+   * The tweetIds to add to the collectionId (not collectionid needs to be in format "custom-$collectionId")
+   */
+//  fun addToCollection(tweetIds: List<String>, collectionId: String) {
+//    var json = "{\"id\": \"$collectionId\",\"changes\": ["
+//    json = json.plus(tweetIds.joinToString { tweetId -> "{ \"op\": \"add\", \"tweet_id\": \"$tweetId\"}" })
+//    json = json.plus("]}")
+//    logger.info("json curation json is $json")
+//    val response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/entries/curate.json", JSONObject(json))
+//    logger.info("response from curate for collection $collectionId is $response")
+//  }
 
 
 }
