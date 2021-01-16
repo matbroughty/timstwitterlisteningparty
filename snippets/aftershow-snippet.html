@@ -1,0 +1,125 @@
+                <div class="posts">
+                    <h1 id="aftershow-title" class="content-subhead"></h1>
+                    <div style="width:100%;max-width:640px;">
+                        <div id="aftershow-container" class="video-container">
+                        </div>
+                    </div>
+                    <div id="buttons-social" class="d-flex flex-row justify-content-center" style="margin-top:8px;margin-bottom:8px;">
+                    </div>
+                    <br/>
+                    <h1 class="content-subhead">All Aftershows</h1>
+                    <div style="margin-left:25px;margin-right:25px">
+                        <div class="glider-contain">
+                            <div class="aftershow-glider">
+                                                            <div id="aftershow-2" class="aftershow-item"
+                                     style="text-align:center;font-size:0.85em" data-id="2"
+                                     data-artist="Susanna Hoffs" data-video="501195616"
+                                     onclick="showSelected(2,'Susanna Hoffs',501195616)">
+                                    <img src="./aftershow/img/show_2.jpg" style="width:140px;height:80px;border-style:solid;border-width:1px;"><br/>
+                                    <b>Susanna Hoffs</b><br/>15th Jan 2021                                </div>
+                                                            <div id="aftershow-1" class="aftershow-item"
+                                     style="text-align:center;font-size:0.85em" data-id="1"
+                                     data-artist="Nitin Sawhney" data-video="498631793"
+                                     onclick="showSelected(1,'Nitin Sawhney',498631793)">
+                                    <img src="./aftershow/img/show_1.jpg" style="width:140px;height:80px;border-style:solid;border-width:1px;"><br/>
+                                    <b>Nitin Sawhney</b><br/>8th Jan 2021                                </div>
+                                                        </div>
+                            <button id="aftershow-prev" aria-label="Previous" class="glider-prev">«</button>
+                            <button id="aftershow-next" aria-label="Next" class="glider-next">»</button>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+<script src="../js/glider/glider.min.js?ttlp=1"></script>
+
+<script type="text/javascript">
+    $(function(){
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        if (id !== null) {
+            findSelected(id);
+        } else {
+            findSelected(0);
+        }
+    });
+
+    new Glider(document.querySelector('.aftershow-glider'), {
+        slidesToScroll: 1.5,
+        slidesToShow: 'auto',
+        itemWidth: 150,
+        exactWidth: true,
+        draggable: true,
+        arrows: {
+            prev: '#aftershow-prev',
+            next: '#aftershow-next'
+        }
+    });
+
+    function findSelected(id) {
+        var selectedItem = null;
+        var artist;
+        var video;
+
+        if (id > 0) {
+            // Find the show with the passed id
+            selectedItem = document.getElementById('aftershow-' + id);
+            if (selectedItem !== null) {
+                artist = selectedItem.getAttribute('data-artist');
+                video = selectedItem.getAttribute('data-video');
+            }
+        } 
+        
+        if (selectedItem === null) {
+            var maxId = 0;
+            
+            // Find the show with the max id            
+            [].forEach.call(document.getElementsByClassName("aftershow-item"), function (v, i) {
+                if (parseInt(v.getAttribute('data-id')) > maxId) {
+                    maxId = parseInt(v.getAttribute('data-id'));
+                    artist = v.getAttribute('data-artist');
+                    video = v.getAttribute('data-video');
+                }
+            });
+            
+            id = maxId;
+        }
+        
+        showSelected(id, artist, video);
+    }
+    
+    function showSelected(id, artist, videoLink) {
+        var title = document.getElementById('aftershow-title');
+        title.innerHTML = 'Aftershow No. ' + id + ' - ' + artist;
+
+        var video = document.getElementById('aftershow-container');
+        video.innerHTML = 
+            '<iframe src="https://player.vimeo.com/video/' + videoLink + '" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+            
+        showSocialButtons(id, artist);
+    }
+    
+    function showSocialButtons(id, artist) {
+        var link = encodeURIComponent(document.URL.split('?')[0] + '?id=' + id); 
+        var facebookShare = '<a href="https://www.facebook.com/sharer/sharer.php?u='+link+'" target="_blank" title="Share on Facebook" style="display:inline-block;line-height:2em;vertical-align:middle;text-align:center;width:2em;height:2em;color:#fff;background:#3b5998;margin-right:5px"><span style="font-size:1.3em;"><i class="fab fa-facebook-f"></i></span></a>';
+        var twitterShare = '<a href="https://twitter.com/intent/tweet?url='+link+'&text='+encodeURIComponent('Watch the listening party aftershow with special guest ' + artist)+'&via=LlSTENlNG_PARTY&hashtags=TimsTwitterListeningParty&related=Tim_Burgess,andrewb1970" target="_blank" title="Share on Twitter" style="display:inline-block;line-height:2em;vertical-align:middle;text-align:center;width:2em;height:2em;color:#fff;background:#1b95e0;margin-right:5px"><span style="font-size:1.3em;"><i class="fab fa-twitter"></i></span></a>';
+        var whatsAppShare = (/mobile|android|blackberry/i.test(navigator.userAgent)?'<a href="whatsapp://send?text='+link+'" title="Share on WhatsApp" style="display:inline-block;line-height:2em;vertical-align:middle;text-align:center;width:2em;height:2em;color:#fff;background:#43d854;margin-right:5px"><span style="font-size:1.3em;"><i class="fab fa-whatsapp"></i></span></a>':'');
+        var copyLink = '<a href="javascript:copyToClipboard(\''+link+'\')" title="Copy Page Link" style="display:inline-block;line-height:2em;vertical-align:middle;text-align:center;width:2em;height:2em;color:#fff;background:#ff0000;"><span style="font-size:1.3em;"><i id="copy-button" class="far fa-copy"></i></span></a>';
+        $("#buttons-social").html(twitterShare + facebookShare + whatsAppShare + copyLink);
+    }
+
+    function copyToClipboard(text) {
+        var dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+
+        document.getElementById('copy-button').className = 'far fa-check-circle';
+        setTimeout("setCopyBack()", 2000);        
+    }
+    
+    function setCopyBack() {
+        document.getElementById('copy-button').className = 'far fa-copy';            
+    }
+</script>
