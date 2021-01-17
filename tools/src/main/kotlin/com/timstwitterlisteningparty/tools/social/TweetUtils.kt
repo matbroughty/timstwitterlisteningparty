@@ -9,9 +9,6 @@ import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import twitter4j.Twitter
-import twitter4j.TwitterFactory
-import twitter4j.conf.ConfigurationBuilder
 import java.time.LocalDate
 import java.time.MonthDay
 import java.time.format.DateTimeFormatter
@@ -32,42 +29,12 @@ class TweetUtils {
       .build())
   }
 
-
-  /**
-   * Use env variables to get the Twitter client initialised for api calls
-   */
-  fun getTwitter(): Twitter? {
-    var twitter: Twitter? = null
-    try {
-      val consumerKey: String? = System.getenv("twitter4j_oauth_consumerKey")
-      val consumerSecret: String? = System.getenv("twitter4j_oauth_consumerSecret")
-      val accessToken: String? = System.getenv("twitter4j_oauth_accessToken")
-      val accessTokenSecret: String? = System.getenv("twitter4j_oauth_accessTokenSecret")
-
-      val cb = if (consumerKey.isNullOrEmpty()) {
-        // in the properties file
-        ConfigurationBuilder()
-      } else {
-        ConfigurationBuilder()
-          .setOAuthConsumerKey(consumerKey)
-          .setOAuthConsumerSecret(consumerSecret)
-          .setOAuthAccessToken(accessToken)
-          .setOAuthAccessTokenSecret(accessTokenSecret)
-      }
-      val tf = TwitterFactory(cb.build())
-      twitter = tf.instance
-    } catch (e: Exception) {
-      logger.info("Some badness with getting twitter instance ${e.localizedMessage}", e)
-    }
-    return twitter
-  }
-
   /**
    * Tweet a message
    */
   fun tweet(msg: String): String {
     return try {
-      getTwitter()?.updateStatus(msg).toString()
+      getTwittered().postTweet(msg).id
     } catch (e: Exception) {
       print("Some badness with sending $msg  as a tweet ${e.localizedMessage}")
       e.localizedMessage
@@ -217,24 +184,6 @@ class TweetUtils {
 
   }
 
-
-  /**
-   * Create a Twitter collection and returns the collection id in form "custom-$collectionId"
-   * @param order defaults to tweet_chron i.e. oldest first, tweet_reverse_chron is newest first
-   */
-//  fun createCollection(name: String, description: String, order: String = "tweet_chron"): String {
-//    val response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/create.json",
-//      HttpParameter("name", name),
-//      HttpParameter("description", description),
-//      HttpParameter("timeline_order", order))
-//    logger.info("response from collection create $name is $response")
-//    if (response != null && response.statusCode == 200) {
-//      return (response.asJSONObject().get("response") as JSONObject).get("timeline_id").toString()
-//    }
-//    logger.warn("issue creating collection for $name and $description - collectionid not known")
-//    return ""
-//  }
-
   fun createCollection(name: String, description: String, order: String = "tweet_chron"): String {
 
     val response = getTwittered().collectionsCreate(name, description, "", TimeLineOrder.CHRONOLOGICAL_REVERSE);
@@ -253,19 +202,6 @@ class TweetUtils {
   fun addToCollection(tweetIds: List<String>, collectionId: String) {
     getTwittered().collectionsCurate(collectionId, tweetIds)
   }
-
-
-  /**
-   * The tweetIds to add to the collectionId (not collectionid needs to be in format "custom-$collectionId")
-   */
-//  fun addToCollection(tweetIds: List<String>, collectionId: String) {
-//    var json = "{\"id\": \"$collectionId\",\"changes\": ["
-//    json = json.plus(tweetIds.joinToString { tweetId -> "{ \"op\": \"add\", \"tweet_id\": \"$tweetId\"}" })
-//    json = json.plus("]}")
-//    logger.info("json curation json is $json")
-//    val response = getTwitter()?.postResponse("https://api.twitter.com/1.1/collections/entries/curate.json", JSONObject(json))
-//    logger.info("response from curate for collection $collectionId is $response")
-//  }
 
 
 }

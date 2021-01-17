@@ -36,11 +36,9 @@ dependencies {
   implementation("se.michaelthelin.spotify:spotify-web-api-java:6.0.0-RC1"){
     exclude(group = "org.slf4j")
   }
+  implementation("com.github.redouane59.twitter:twittered:1.17")
 
-  // had to add some additional code to allow for update of collections to twitter4j
-  implementation(files("$projectDir/commonjar/3rdparty/twitter4j-core-4.0.8-SNAPSHOT.jar"))
-  implementation(files("$projectDir/commonjar/3rdparty/twitter4j-stream-4.0.8-SNAPSHOT.jar"))
-  implementation(files("$projectDir/commonjar/3rdparty/twittered-1.15.jar"))
+
 
   runtimeOnly("com.amazonaws:aws-lambda-java-log4j2:1.1.0")
 
