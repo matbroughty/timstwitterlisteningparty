@@ -21,6 +21,7 @@ class TweetUtils {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   fun getTwittered(): TwitterClient {
+    logger.info("getting-twitter-client")
     return TwitterClient(TwitterCredentials.builder()
       .accessToken(System.getenv("twitter4j_oauth_accessToken"))
       .accessTokenSecret(System.getenv("twitter4j_oauth_accessTokenSecret"))
@@ -34,6 +35,7 @@ class TweetUtils {
    */
   fun tweet(msg: String): String {
     return try {
+      logger.info("tweeting $msg");
       getTwittered().postTweet(msg).id
     } catch (e: Exception) {
       print("Some badness with sending $msg  as a tweet ${e.localizedMessage}")
@@ -73,6 +75,7 @@ class TweetUtils {
         if (logOnly) {
           logger.info(msg)
         } else {
+          logger.info("tweet-anniversary $msg")
           tweet(msg)
         }
       }
@@ -86,6 +89,7 @@ class TweetUtils {
     if (!pageExists(replayLink)) {
       return "$replayLink page doesn't exist yet"
     }
+    logger.info("tweeting-replay-msg for replay $replayLink")
     return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty #ttlp${timeSlot.listeningPartyNumber}")
   }
 
