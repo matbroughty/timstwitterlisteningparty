@@ -13,8 +13,7 @@ class TweetCommand {
   @ShellMethod("tweets out the collection page for the replayId i.e. http://timstwitterlisteningparty.com/pages/list/collection_replayId.html")
   fun tweetCollection(@ShellOption("-R", "--id") replayId: String): String {
     val timeSlot = findTimeSlot(replayId)
-    val msg: String
-    msg = if (timeSlot != null) {
+    val msg: String = if (timeSlot != null) {
       TweetUtils().tweetCollection(timeSlot, replayId = replayId)
     } else {
       "couldn't find TimeSlot for replayId $replayId - no tweet sent"

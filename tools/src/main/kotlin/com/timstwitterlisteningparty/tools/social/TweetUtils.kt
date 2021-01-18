@@ -9,6 +9,9 @@ import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import twitter4j.Twitter
+import twitter4j.TwitterFactory
+import twitter4j.conf.ConfigurationBuilder
 import java.time.LocalDate
 import java.time.MonthDay
 import java.time.format.DateTimeFormatter
@@ -31,17 +34,52 @@ class TweetUtils {
   }
 
   /**
+   * TODO - remove when either twittered can run under Java 8 or aws allows Lambda's to be run under Java 15
+   * Use env variables to get the Twitter client initialised for api calls
+   */
+  fun getTwitter(): Twitter? {
+    var twitter: Twitter? = null
+    try {
+      val consumerKey: String? = System.getenv("twitter4j_oauth_consumerKey")
+      val consumerSecret: String? = System.getenv("twitter4j_oauth_consumerSecret")
+      val accessToken: String? = System.getenv("twitter4j_oauth_accessToken")
+      val accessTokenSecret: String? = System.getenv("twitter4j_oauth_accessTokenSecret")
+
+      val cb = if (consumerKey.isNullOrEmpty()) {
+        // in the properties file
+        ConfigurationBuilder()
+      } else {
+        ConfigurationBuilder()
+          .setOAuthConsumerKey(consumerKey)
+          .setOAuthConsumerSecret(consumerSecret)
+          .setOAuthAccessToken(accessToken)
+          .setOAuthAccessTokenSecret(accessTokenSecret)
+      }
+      val tf = TwitterFactory(cb.build())
+      twitter = tf.instance
+    } catch (e: Exception) {
+      logger.info("Some badness with getting twitter instance ${e.localizedMessage}", e)
+    }
+    return twitter
+  }
+
+  /**
    * Tweet a message
    */
   fun tweet(msg: String): String {
     return try {
       logger.info("tweeting $msg");
-      getTwittered().postTweet(msg).id
+      if (javaVersion() < 15) {
+        getTwitter()?.updateStatus(msg).toString()
+      } else {
+        getTwittered().postTweet(msg).id
+      }
     } catch (e: Exception) {
       print("Some badness with sending $msg  as a tweet ${e.localizedMessage}")
       e.localizedMessage
     }
   }
+
 
   /**
    * Runs through the ([TimeSlotReader#timeSlots] of timeSlots is empty) and if today is an anniversary tweets it
@@ -207,5 +245,10 @@ class TweetUtils {
     getTwittered().collectionsCurate(collectionId, tweetIds)
   }
 
+  fun javaVersion(): Int {
+    val versionString = System.getProperty("java.specification.version")
+    return versionString.substring(2).toInt()
+
+  }
 
 }

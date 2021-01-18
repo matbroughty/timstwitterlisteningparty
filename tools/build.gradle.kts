@@ -38,6 +38,10 @@ dependencies {
   }
   implementation("com.github.redouane59.twitter:twittered:1.17")
 
+  // had to add some additional code to allow for update of collections to twitter4j - need
+  // this until aws updates to Java 15 for lambda's or twittered drops back to java 8
+  implementation(files("$projectDir/commonjar/3rdparty/twitter4j-core-4.0.8-SNAPSHOT.jar"))
+  implementation(files("$projectDir/commonjar/3rdparty/twitter4j-stream-4.0.8-SNAPSHOT.jar"))
 
 
   runtimeOnly("com.amazonaws:aws-lambda-java-log4j2:1.1.0")
