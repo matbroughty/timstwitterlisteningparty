@@ -1,0 +1,476 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/0jIO71gxam9yuOq1PuWJzu" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02d6e8a875e79441be64e6bf0b" alt="Once" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Tyde</span><br/><span class="sub-colour">Once</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/0jIO71gxam9yuOq1PuWJzu" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 86 tweets from Monday 18th January 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/darrenrademaker" target="_blank"><img src="https://pbs.twimg.com/profile_images/1328557069843243010/D1YgLQ8j_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@darrenrademaker</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/brentrademaker" target="_blank"><img src="https://pbs.twimg.com/profile_images/1094714450286850048/_RKvWyaW_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@brentrademaker</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/TheTydeOfficial" target="_blank"><img src="https://pbs.twimg.com/profile_images/442374332866519040/BknU4DRr_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@TheTydeOfficial</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="All My Bastard Children" data-start="0"
+             data-duration="309" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="New Confessions" data-start="310"
+             data-duration="195" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Strangers Again" data-start="506"
+             data-duration="193" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Get Around Too" data-start="700"
+             data-duration="318" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="North County Times" data-start="1019"
+             data-duration="146" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="The Dawn" data-start="1166"
+             data-duration="354" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Improper" data-start="1521"
+             data-duration="165" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Your Tattoos" data-start="1687"
+             data-duration="257" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Silver's Okay Michelle" data-start="1945"
+             data-duration="582" style="display:none"></div>
+                        <div id="track-10" class="track-list"
+                     data-name="Finished" data-start="2528"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851d6e8a875e79441be64e6bf0b" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-86" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1351285424237457408"
+                 data-text="@darrenrademaker @Tim_Burgess @brentrademaker @TheTydeOfficial https://t.co/WQQhhdydIk" data-datetime="9:48 PM Jan 18, 2021"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351285329634816001"
+                 data-text="@the_betsey @darrenrademaker ðŸ†" data-datetime="9:48 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351285276207931394"
+                 data-text="@Muxley14 @Tim_Burgess @brentrademaker @TheTydeOfficial Thank YOU ðŸ–¤" data-datetime="9:48 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351284826230280192"
+                 data-text="@adpucci @TheTydeOfficial @darrenrademaker Six piece sometimes seven. Thatâ€™s BIG!" data-datetime="9:46 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351284710400528384"
+                 data-text="@Tim_Burgess @brentrademaker @TheTydeOfficial Love you Tim! Did I do it right?" data-datetime="9:45 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351284483526438913"
+                 data-text="@Michellebwatso3 @LlSTENlNG_PARTY Dedicated to all Michelleâ€™s out there ðŸ–¤" data-datetime="9:45 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351284480317640704"
+                 data-text="@Tim_Burgess @darrenrademaker @TheTydeOfficial Thank you TIM and EVERYONE who supports our music - without the togetherness it jus disappears ðŸ§¡" data-datetime="9:45 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351284201962795013"
+                 data-text="Thank you all so much for tuning in, get ready for my new record coming out later this year, I seriously love you all music is life #TimsTwitterListeningParty" data-datetime="9:43 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FCurationRecords%2Fstatus%2F1351284043971629056"
+                 data-text="@darrenrademaker @TheTydeOfficial @LlSTENlNG_PARTY ONCE reissue coming SOON  remastered- rehabbed   All the Tyde vinyl is coming back in print" data-datetime="9:43 PM Jan 18, 2021"> 
+                CurationRecords            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fscottmccready%2Fstatus%2F1351283996550946819"
+                 data-text="@darrenrademaker @TheTydeOfficial This was best #TimsTwitterListeningParty done of  band  never listened to before. Amazing. Sound of all 80s Creation bands obsessed with 60s L.A. registering across Atlantic and reflected back through actual West Coast rockers. Needs artwork by William S. Harvey. ðŸ‘ðŸ‘ðŸ‘ŒðŸ’š TA!" data-datetime="9:43 PM Jan 18, 2021"> 
+                scottmccready            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351283949050474499"
+                 data-text="London Camden Barfly Once Tour. Best show ever. Thank you all. Thank you @Tim_Burgess #TimsTwitterListeningParty https://t.co/hJDjeECCtS" data-datetime="9:42 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1351283900920819713"
+                 data-text="Big love and thanks to @brentrademaker @darrenrademaker &amp; @TheTydeOfficial â¤ï¸â¤ï¸â¤ï¸" data-datetime="9:42 PM Jan 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351283614315671552"
+                 data-text="LAWRENCE FOREVER ðŸ–¤ #TimsTwitterListeningParty https://t.co/qpQqoKarel" data-datetime="9:41 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351283490168451073"
+                 data-text="This parts like THE WHO" data-datetime="9:41 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351283362636316673"
+                 data-text="@darrenrademaker @officialSpzd Fine line between @U2 and @officialSpzd  in the wrongs hands" data-datetime="9:40 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351283237146877954"
+                 data-text="@darrenrademaker @officialSpzd Blew the roof off the Poptones club with this one" data-datetime="9:40 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351283228032851971"
+                 data-text="Iâ€™m sure I forgot people but I love them #TimsTwitterListeningParty" data-datetime="9:40 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351283107681497089"
+                 data-text="Seriously thank you to everyone who listens to my songs @TheTydeOfficial is the first where I wrote alone, and TELL IT LIKE IT IS" data-datetime="9:39 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351283038957670400"
+                 data-text="The first year of @TheTydeOfficial was MAGIC total fun in LA/SF/UK 
+/@beachwoodsparks shared members,many gigs and were able to play together @RoughTrade , #trackandfield and #alanmcgee #poptones were great supporters. Thanks for the great songs @darrenrademaker @LlSTENlNG_PARTY" data-datetime="9:39 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351282829305516044"
+                 data-text="Silvers Ok recorded live including the SM57 scratch vocal. #thetyde #TimsTwitterListeningParty" data-datetime="9:38 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351282615773519882"
+                 data-text="Going for a @officialSpzd vibe is always a 50/50 proposition #TimsTwitterListeningParty" data-datetime="9:37 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351282406754574337"
+                 data-text="Here goes Ben Playing Ballad Of The Band" data-datetime="9:36 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1351282371329478658"
+                 data-text="Beauty @darrenrademaker Silvers Okay Michelle.... absolute classic masterpiece" data-datetime="9:36 PM Jan 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351282288072523778"
+                 data-text="Twink the legend is percussion on all tracks!!! Honored ðŸ–¤" data-datetime="9:36 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351282106694066184"
+                 data-text="â€œCocaines a helluva drugâ€ - @benchten @LlSTENlNG_PARTY" data-datetime="9:35 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351281889722724371"
+                 data-text="2nd place is first place sometimes. #TimsTwitterListeningParty" data-datetime="9:34 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351281764573044745"
+                 data-text="Not just about Michelle Kwan but another Michelle too ðŸ¥ˆ#Silversok #TimsTwitterListeningParty" data-datetime="9:34 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351281432094715905"
+                 data-text="Ann always charmingly a little ahead of the beat, no one could ever copy it right. #TimsTwitterListeningParty" data-datetime="9:32 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1351281233842593797"
+                 data-text="Itâ€™s not easy to write and record songs this good, right? It sounds so effortlessly perfect ðŸ˜Ž @brentrademaker @darrenrademaker @TheTydeOfficial @LlSTENlNG_PARTY #TimsTwitterListeningParty" data-datetime="9:32 PM Jan 18, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351281231493804033"
+                 data-text="Weâ€™re just a little band. Thank you @Tim_Burgess ðŸ–¤ #TimsTwitterListeningParty" data-datetime="9:32 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351281062454972416"
+                 data-text="I LOVE YOU ALL ðŸ–¤" data-datetime="9:31 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351280971086237698"
+                 data-text="I can hear @farmerdeez here. Solos Darren then Ben then Ann. #TimsTwitterListeningParty" data-datetime="9:31 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351280896544894977"
+                 data-text="@fogindex @LlSTENlNG_PARTY @darrenrademaker @Tim_Burgess Ha ha. He was in further too but I was quoting the guy from the moldy peaches" data-datetime="9:30 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="141000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351280733785116675"
+                 data-text="Tattoos followed the felt blueprint, Poem Of The River specifically, Your Tattoos sheâ€™s a famous photographer now #TimsTwitterListeningParty" data-datetime="9:30 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351280143583494144"
+                 data-text="@darrenrademaker @RoughTrade @LlSTENlNG_PARTY The Columbia" data-datetime="9:27 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351280045734596609"
+                 data-text="@darrenrademaker @RoughTrade @LlSTENlNG_PARTY Iâ€™ve got a lotta spots" data-datetime="9:27 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351280004957696003"
+                 data-text="Improper another cheating song #dirtyshoes @LlSTENlNG_PARTY @TheTydeOfficial" data-datetime="9:27 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351279933717299201"
+                 data-text="@stuporfly @TheTydeOfficial @darrenrademaker Still in the set" data-datetime="9:26 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351279841690198030"
+                 data-text="Brent Chris and I @RoughTrade Covent Garden shop @LlSTENlNG_PARTY https://t.co/2klhyed5lt" data-datetime="9:26 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351279658491277315"
+                 data-text="@espendholsen @darrenrademaker @farmerdeez  Frampton Comes Alive - The Dawn.  Is Twink on this tune?" data-datetime="9:25 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351279378588643339"
+                 data-text="#TimsTwitterListeningParty @RollingStone @TheTydeOfficial https://t.co/E9MGV8LAS2" data-datetime="9:24 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351279374885031941"
+                 data-text="You gotta give CHRIS GUNST a lotta credit for the perfect drumming by a guy that NEVER played the drums before / â€œheâ€™s the singer for the Beachwood Sparksâ€... @LlSTENlNG_PARTY #thetyde #once @darrenrademaker @Tim_Burgess" data-datetime="9:24 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351279212003524626"
+                 data-text="We also saw @ThinLizzy_ as teens. #TimsTwitterListeningParty" data-datetime="9:24 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351279070449971206"
+                 data-text="FLORIDA ROOTS right here @allmanbrothers vibes. #TimsTwitterListeningParty" data-datetime="9:23 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351278852597821446"
+                 data-text="@brentrademaker @LlSTENlNG_PARTY @NME @Tim_Burgess Charlatans were number 30. Beat us!" data-datetime="9:22 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351278628479201281"
+                 data-text="@TheTydeOfficial @darrenrademaker Burner account" data-datetime="9:21 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351278558417707010"
+                 data-text="The Dawn is an attempt at a @ScreamOfficial second album vibe merging into a full blown @MarshallTucker guitar freak out in the end. Not enough shredding in Indie Pop lol. #TimsTwitterListeningParty" data-datetime="9:21 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351278475412295680"
+                 data-text="@petalmotel @thetyde Just not the right Tyde tagged" data-datetime="9:21 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351278234604720129"
+                 data-text="@stuporfly @TheTydeOfficial @darrenrademaker New County is a moving song I think North County Is a surfing tune. North SD County. Itâ€™s alright itâ€™s ok. #bedbroomboogie" data-datetime="9:20 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351277981453459457"
+                 data-text="After surfing one day I saw a guy selling newspapers in the middle of the road NORTH COUNTY TIMES #TimsTwitterListeningParty @TheTydeOfficial" data-datetime="9:19 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351277908258562048"
+                 data-text="@petalmotel @thetyde North County Times #5" data-datetime="9:18 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351277661138669570"
+                 data-text="Aww yeah. Velvety San Diego vibe here #timstwitterlisteningparty" data-datetime="9:17 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351277625872797697"
+                 data-text="@darrenrademaker I thought it was about not having wheels - MY FAVE TUNE on ONCE @LlSTENlNG_PARTY #thetyde" data-datetime="9:17 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351277345924132869"
+                 data-text="TURN IT UP @TheTydeOfficial #TimsTwitterListeningParty" data-datetime="9:16 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351277222133460992"
+                 data-text="N.M.E. wrote that the Tyde capture the spirit and \"wild mercury jangle\" of Felt, while Melody Maker referred to the band as \"frazzled Dylan obsessives,\" sounding like Bob \"before the motorbike accident, caught in a druggy haze as the summer hits of the \'60s wash against him.\"" data-datetime="9:16 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351277156416905216"
+                 data-text="UK LOVE for ONCE #44 of 2001 @darrenrademaker @LlSTENlNG_PARTY @NME https://t.co/5YouB5k6r0" data-datetime="9:15 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351276926481162243"
+                 data-text="Ben Knight gives a glimpse into his wild effect guitar future here" data-datetime="9:14 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351276700215242763"
+                 data-text="I cried the first time I played this to Ann. ðŸ–¤" data-datetime="9:14 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351276553422954496"
+                 data-text="I love @richardashcroft solo LPs this is a sad attempt to sing as good as him lol. Never" data-datetime="9:13 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351276339614007298"
+                 data-text="@1RecordEveryday @TheTydeOfficial @darrenrademaker @Tim_Burgess @MOJOmagazine https://t.co/FOCyuoxIZK" data-datetime="9:12 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351276311222824962"
+                 data-text="Get Around Too a play on @TheBeachBoys obvi" data-datetime="9:12 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1351276254327148544"
+                 data-text="I moved to LA in 1998 it was a round that time that i met @brentrademaker and @darrenrademaker they knew good things and the bands they\'ve been in have all been killer, always putting new shapes into a super fine LA sound.  love em x" data-datetime="9:12 PM Jan 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351276150635589632"
+                 data-text="Whew this is fun but rough." data-datetime="9:11 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351276063666614274"
+                 data-text="Original version on Track and Field 7â€ we owe a lot to Stephen And Paul" data-datetime="9:11 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351275982678761474"
+                 data-text="@LlSTENlNG_PARTY @darrenrademaker @Tim_Burgess @BadPaintings #HMV https://t.co/RH3xCNcYND" data-datetime="9:11 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351275812352307212"
+                 data-text="Itâ€™s about seeing an ex in public and they walk right by like they never new you." data-datetime="9:10 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351275561084182532"
+                 data-text="Strangers Again owes a lot to a Lee Hazlewood melody somewhere." data-datetime="9:09 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351275476359155712"
+                 data-text="@Tim_Burgess @darrenrademaker LA days and SF too https://t.co/dXEdjz2P5s" data-datetime="9:09 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351275312374538243"
+                 data-text="TeArdrop Explodes passionate friend ending" data-datetime="9:08 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1351275255168454656"
+                 data-text="Taking me back to being in Los Angeles. Thanks @darrenrademaker //@brentrademaker" data-datetime="9:08 PM Jan 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351275173698273280"
+                 data-text="Also about cheating and not wanting to know about your significant others exes. Killer backing vox by @brentrademaker and Keys by Ann." data-datetime="9:08 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351274810656104449"
+                 data-text="Judy was a preachers daughter and the first Tyde keyboardist." data-datetime="9:06 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351274659325599746"
+                 data-text="New Confessions sees us at our most @bellesglasgow" data-datetime="9:05 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351274517075783683"
+                 data-text="Legendary Journalist Everett True said itâ€™s a perfect song ruined by the Drug References. Haha" data-datetime="9:05 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351274486788591616"
+                 data-text="@espendholsen @thetyde @darrenrademaker Aaah. The USA version. A reissue is coming" data-datetime="9:05 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1351274345994346496"
+                 data-text="Mellotron xx Gorgeous @darrenrademaker @brentrademaker xx" data-datetime="9:04 PM Jan 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351274280990994432"
+                 data-text="The title of this song comes from the ABC soap opera â€œAll My Childrenâ€" data-datetime="9:04 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351274157464379392"
+                 data-text="@espendholsen @thetyde @darrenrademaker NiCE!!! Track &amp; Field ??" data-datetime="9:03 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351274024618364931"
+                 data-text="\'you only go around once, but if you play your cards right, once is enough\'? Lewis responded, \"I was wrong, Jackie. Once is not enough.\"" data-datetime="9:03 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1351273869802409985"
+                 data-text="@ciaranc77 Me Too x" data-datetime="9:02 PM Jan 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351273821748256769"
+                 data-text="The title of the Jacqueline Susann novel and film \"Once Is Not Enough\" derives from a conversation Susann had with her old friend, comedian Joe E. Lewis, on his deathbed. Trying to perk up his spirits, she supposedly said, \"Come on, Joe. Didn\'t you always say" data-datetime="9:02 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351273560547975170"
+                 data-text="This is where the Album title comes from https://t.co/Kc2xZUyEdF" data-datetime="9:01 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenrademaker%2Fstatus%2F1351273399423741961"
+                 data-text="And weâ€™re OFF! #timstwitterlisteningparty" data-datetime="9:00 PM Jan 18, 2021"> 
+                darrenrademaker            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fbrentrademaker%2Fstatus%2F1351273353948979201"
+                 data-text="@soozworld @Tim_Burgess @TheTydeOfficial @darrenrademaker You got it!!!" data-datetime="9:00 PM Jan 18, 2021"> 
+                brentrademaker            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1351273296650776577"
+                 data-text="â¤ï¸ https://t.co/o7SCZhbDHi" data-datetime="9:00 PM Jan 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1351273217055457282"
+                 data-text="Time for our @TheTydeOfficial @LlSTENlNG_PARTY 
+
+Handing over to @darrenrademaker &amp; @brentrademaker https://t.co/HP7rhfmXfk" data-datetime="9:00 PM Jan 18, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
