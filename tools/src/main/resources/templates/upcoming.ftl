@@ -56,7 +56,8 @@
               <a class="pure-button pure-button-active"
                  href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
                  title="Twitter Listening Party Announcement <#if slot.hasNumber() >
-                 (ttlp ${slot.listeningPartyNumber})
+                 (ttlp ${slot.maiden()} )
+<#--             (ttlp ${slot.listeningPartyNumber} )-->
               </#if>">
 
                 <#if slot.isToday() >
@@ -67,7 +68,9 @@
               </a>
               <br>
               <#if slot.hasNumber() >
-                <small>ttlp ${slot.listeningPartyNumber}</small>
+                <small>ttlp ${slot.maiden()}</small>
+<#--                <small>ttlp ${slot.listeningPartyNumber}</small>-->
+
               </#if>
             </td>
           </tr>
