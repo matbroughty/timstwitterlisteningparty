@@ -70,12 +70,14 @@ class TweetUtils {
     return try {
       logger.info("tweeting $msg");
       if (javaVersion() < 15) {
+        logger.info("java version < 15 - tweeting $msg using old twitter library");
         getTwitter()?.updateStatus(msg).toString()
       } else {
+        logger.info("java version 15 - tweeting $msg using twittered");
         getTwittered().postTweet(msg).id
       }
     } catch (e: Exception) {
-      print("Some badness with sending $msg  as a tweet ${e.localizedMessage}")
+      logger.error("Some badness with sending '$msg'  as a tweet - ${e.localizedMessage}", e)
       e.localizedMessage
     }
   }
@@ -247,6 +249,7 @@ class TweetUtils {
 
   fun javaVersion(): Int {
     val versionString = System.getProperty("java.specification.version")
+    logger.info("java version = $versionString")
     return versionString.substring(2).toInt()
 
   }
