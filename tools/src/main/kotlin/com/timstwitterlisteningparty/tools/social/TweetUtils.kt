@@ -250,7 +250,13 @@ class TweetUtils {
   fun javaVersion(): Int {
     val versionString = System.getProperty("java.specification.version")
     logger.info("java version = $versionString")
-    return versionString.substring(2).toInt()
+    var versionInt = 8
+      try{
+        versionInt = versionString.toInt()
+      }catch(e : Exception){
+        logger.warn("couldn't convert java version to int = $versionString", e)
+      }
+    return versionInt
 
   }
 
