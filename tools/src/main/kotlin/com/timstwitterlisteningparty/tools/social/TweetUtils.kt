@@ -9,9 +9,6 @@ import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import twitter4j.Twitter
-import twitter4j.TwitterFactory
-import twitter4j.conf.ConfigurationBuilder
 import java.time.LocalDate
 import java.time.MonthDay
 import java.time.format.DateTimeFormatter
@@ -19,7 +16,6 @@ import java.time.format.DateTimeFormatter
 
 @Component
 class TweetUtils {
-
 
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -33,49 +29,14 @@ class TweetUtils {
       .build())
   }
 
-  /**
-   * TODO - remove when either twittered can run under Java 8 or aws allows Lambda's to be run under Java 15
-   * Use env variables to get the Twitter client initialised for api calls
-   */
-  fun getTwitter(): Twitter? {
-    var twitter: Twitter? = null
-    try {
-      val consumerKey: String? = System.getenv("twitter4j_oauth_consumerKey")
-      val consumerSecret: String? = System.getenv("twitter4j_oauth_consumerSecret")
-      val accessToken: String? = System.getenv("twitter4j_oauth_accessToken")
-      val accessTokenSecret: String? = System.getenv("twitter4j_oauth_accessTokenSecret")
-
-      val cb = if (consumerKey.isNullOrEmpty()) {
-        // in the properties file
-        ConfigurationBuilder()
-      } else {
-        ConfigurationBuilder()
-          .setOAuthConsumerKey(consumerKey)
-          .setOAuthConsumerSecret(consumerSecret)
-          .setOAuthAccessToken(accessToken)
-          .setOAuthAccessTokenSecret(accessTokenSecret)
-      }
-      val tf = TwitterFactory(cb.build())
-      twitter = tf.instance
-    } catch (e: Exception) {
-      logger.info("Some badness with getting twitter instance ${e.localizedMessage}", e)
-    }
-    return twitter
-  }
 
   /**
    * Tweet a message
    */
   fun tweet(msg: String): String {
     return try {
-      logger.info("tweeting $msg");
-      if (javaVersion() < 15) {
-        logger.info("java version < 15 - tweeting $msg using old twitter library");
-        getTwitter()?.updateStatus(msg).toString()
-      } else {
-        logger.info("java version 15 - tweeting $msg using twittered");
-        getTwittered().postTweet(msg).id
-      }
+      logger.info("tweeting $msg")
+      getTwittered().postTweet(msg).id
     } catch (e: Exception) {
       logger.error("Some badness with sending '$msg'  as a tweet - ${e.localizedMessage}", e)
       e.localizedMessage
@@ -230,7 +191,7 @@ class TweetUtils {
 
   fun createCollection(name: String, description: String, order: String = "tweet_chron"): String {
 
-    val response = getTwittered().collectionsCreate(name, description, "", TimeLineOrder.CHRONOLOGICAL_REVERSE);
+    val response = getTwittered().collectionsCreate(name, description, "", TimeLineOrder.CHRONOLOGICAL_REVERSE)
     logger.info("response from collection create $name is ${response.response.timeLineId}")
     if (response != null && !response.hasErrors()) {
       return response.response.timeLineId
@@ -239,25 +200,10 @@ class TweetUtils {
     return ""
   }
 
-
   /**
    * The tweetIds to add to the collectionId (not collectionid needs to be in format "custom-$collectionId")
    */
   fun addToCollection(tweetIds: List<String>, collectionId: String) {
     getTwittered().collectionsCurate(collectionId, tweetIds)
   }
-
-  fun javaVersion(): Int {
-    val versionString = System.getProperty("java.specification.version")
-    logger.info("java version = $versionString")
-    var versionInt = 8
-      try{
-        versionInt = versionString.toInt()
-      }catch(e : Exception){
-        logger.warn("couldn't convert java version to int = $versionString", e)
-      }
-    return versionInt
-
-  }
-
 }
