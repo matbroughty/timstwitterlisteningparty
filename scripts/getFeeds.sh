@@ -2,7 +2,7 @@
 RED='\033[0;31m'
 NC='\033[0m'
 ERROR=0
-
+#
 function usage() {
     echo Usage: getFeeds.sh [-i] [-s] [-t] [-p] [-a] id1 id2
     echo "-i : generate index"
