@@ -1,0 +1,457 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/2Av2EXgkvzZbq3sJqQAUaE" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0235637e57e146ca4136c1cf00" alt="Red" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Communards</span><br/><span class="sub-colour">Red</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/2Av2EXgkvzZbq3sJqQAUaE" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 65 tweets from Wednesday 27th January 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/RevRichardColes" target="_blank"><img src="https://pbs.twimg.com/profile_images/807500644957437952/TKjsiWC8_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@RevRichardColes</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Tomorrow" data-start="0"
+             data-duration="287" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="T.M.T. Love T.B.M.G." data-start="288"
+             data-duration="267" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Matter of Opinion" data-start="556"
+             data-duration="266" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Victims" data-start="823"
+             data-duration="272" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="For a Friend" data-start="1096"
+             data-duration="303" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Never Can Say Goodbye" data-start="1400"
+             data-duration="285" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Lovers and Friends" data-start="1686"
+             data-duration="258" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Hold On Tight" data-start="1945"
+             data-duration="289" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="If I Could Tell You" data-start="2235"
+             data-duration="257" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="C Minor" data-start="2493"
+             data-duration="311" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2805"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485135637e57e146ca4136c1cf00" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-65" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="113000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354532663986708481"
+                 data-text="Weâ€™ll be right back with @RevRichardColes for the @LlSTENlNG_PARTY Aftershow. Hang on there for a minute. Maybe grab a drink / snack" data-datetime="8:52 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354532188151308288"
+                 data-text="@RevRichardColes @LlSTENlNG_PARTY Thank you ðŸ™" data-datetime="8:50 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354531838337937413"
+                 data-text="That time Jimmy Somerville joined in with a busker who was singing Smalltown Boy...
+ https://t.co/3mevlJ4fSX" data-datetime="8:48 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354531561014775812"
+                 data-text="Wow. Such a brilliant @LlSTENlNG_PARTY - thanks so so much @RevRichardColes https://t.co/7E5UUyU94z" data-datetime="8:47 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354531294387073026"
+                 data-text="#TimsTwitterListeningParty thanks for listening. Weirdly enough I heard Thereâ€™s More To Love today for the first time in years played in Broughton Co-op where I was picking up some bits and bobs for mum." data-datetime="8:46 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354531008666886147"
+                 data-text="#TimsTwitterListeningParty Joss Pook viola solo. She went on to score Eyes Wide Shut for Stanley Kubrick." data-datetime="8:45 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354530648271282178"
+                 data-text="#TimsTwitterListeningParty ...
+Audrey Riley on cello. I think this was the last song we ever played together on stage apart from our pioneering cover of Dancing Queen. Hereâ€™s the page of our last ever gig in Barcelona from the tour handbook.
+(2/2) https://t.co/vBKmnZKv2q" data-datetime="8:44 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="141000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354530457917022208"
+                 data-text="C Minor.
+
+#TimsTwitterListeningParty Not the most imaginative title. I originally called the track London Wall, I canâ€™t remember why. I really like it. You can tell weâ€™d toured it for a year before recording it. Great performance by Jimmy...(1/2)" data-datetime="8:43 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="146000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354529863919665152"
+                 data-text="#TimsTwitterListeningParty Percussion on this track was by Pandit Dinesh. By the way, Jeff Wayneâ€™s War of the Worlds was recorded in this studio. Thereâ€™s another literary connection for you. https://t.co/bloiBEA9Ma" data-datetime="8:41 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="123000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354529251572281349"
+                 data-text="If I Could Tell You
+
+#TimsTwitterListeningParty Music by Jimmy words by WH Auden. It sounds again like a lament. I can see now we were overwhelmed by grief making this album. The jolly numbers have something a bit manic about them." data-datetime="8:38 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1354528737774198789"
+                 data-text="The Communards in Blitz magazine, Oct 85 - article to follow in this thread (1 of 4) #TimsTwitterListeningParty @Tim_Burgess @RevRichardColes https://t.co/2UPhqJpSe5" data-datetime="8:36 PM Jan 27, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354528699551367171"
+                 data-text="RT @LlSTENlNG_PARTY: Shout up where you are in the world for our Communards @LlSTENlNG_PARTY hosted by @RevRichardColes.
+
+What town? What câ€¦" data-datetime="8:36 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354528600343650309"
+                 data-text="#TimsTwitterListeningParty https://t.co/E3OhFz5fsE" data-datetime="8:35 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="258000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354528461000470530"
+                 data-text="Hold on Tight 
+
+#timsTwitterListeningParty 
+
+You can tell weâ€™d been on tour with the Style Council. https://t.co/WOLZZLzzFU" data-datetime="8:35 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1354527380140912641"
+                 data-text="The Communards in the NME, Dec 1986 #TimsTwitterListeningParty @Tim_Burgess @RevRichardColes (1 of 2) https://t.co/T3mVoPgPtS" data-datetime="8:31 PM Jan 27, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354527332971782148"
+                 data-text="#TimsTwitterListeningParty https://t.co/OqIesygpmL" data-datetime="8:30 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354527266005516294"
+                 data-text="@RevRichardColes Sending love Richard x x x" data-datetime="8:30 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354527126217760770"
+                 data-text="#TimsTwitterListeningParty I wished Iâ€™d made a better job of the strings, they fall apart a bit. Also itâ€™s pitched in a key thatâ€™s not Jimmyâ€™s best, B major I think, but I couldnâ€™t be arsed to change it." data-datetime="8:30 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354526904221577219"
+                 data-text="Lovers and Friends.
+
+#TimsTwitterListeningParty I wrote music and lyrics for this. It was written after another friend died, thirty years ago. I canâ€™t listen to it now because it reminds me of David, my husband, who died a year ago. https://t.co/y3TbHvjZgc" data-datetime="8:29 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FLondonCentrical%2Fstatus%2F1354526831978958854"
+                 data-text="A few more of my passes from the â€œRedâ€ UK tour. #TheCommunards #Red listening party.  @LlSTENlNG_PARTY @RevRichardColes  https://t.co/H2ZwfSXWOd https://t.co/jwgLu0TCVq" data-datetime="8:28 PM Jan 27, 2021"> 
+                LondonCentrical            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354526785820618754"
+                 data-text="Anyone want anything from the bar??
+
+@RevRichardColes? 
+
+#TimsTwitterListeningParty https://t.co/xZnHU9tNLv" data-datetime="8:28 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354526612151267329"
+                 data-text="Hereâ€™s Stephen Hague - a genius - and David Jacobs - another genius. #TimsTwitterListeningParty https://t.co/5uIDllVT7L" data-datetime="8:28 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354526329937518593"
+                 data-text="#TimsTwitterListeningParty Iâ€™m really really sorry about the dancing." data-datetime="8:26 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354526285356261378"
+                 data-text="ðŸ˜³ðŸ˜³ðŸ˜³ https://t.co/SfsRB22aqK" data-datetime="8:26 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354526236266131460"
+                 data-text="#TimsTwitterListeningParty here we are being pop stars https://t.co/NPrGBsxyTp" data-datetime="8:26 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354526065742516236"
+                 data-text="#TimsTwitterListeningParty Muso note: we recorded this in Advision Studios. Also in at the same time were The Pet Shop Boys and New Order, all working with Stephen Hague. So never Can Say Goodbye, Itâ€™s A Sin and True Faith were all made at the same time and in the same place. https://t.co/MrPV2q49cd" data-datetime="8:25 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354525794572365827"
+                 data-text="...Thereâ€™s a note in this which I thought would be impossible, but he took it effortlessly and accurately. The keyboard break is not me but the programmer is the late Rob Fisher (hereâ€™s the back of his head) who was much better than me. (2/2) #TimsTwitterListeningParty https://t.co/iCF567cYvK" data-datetime="8:24 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354525641534828545"
+                 data-text="#TimsTwitterListeningParty https://t.co/gBhdPydlmp" data-datetime="8:24 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="136000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354525593526816768"
+                 data-text="Never Can Say Goodbye
+
+#TimsTwitterListeningParty Another of our reworkings of a disco classic. It was a big hit, like our first attempt, Donâ€™t Leave Me This Way. Both expose the shortcomings of our songwriting, and reveal Jimmyâ€™s miraculous voice.. (1/2)" data-datetime="8:24 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354525025110519811"
+                 data-text="Such heartbreaking lyrics -
+Jimmy has an amazing way with words" data-datetime="8:21 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354524716351041539"
+                 data-text="#TimsTwitterListeningParty I still miss Mark, and often think â€˜how would he have turned out?â€™ I think he would have been a great MP in the 90s. So much fun, and very naughty. This song became an anthem for the generation of gay men who were wrecked by HIV. 
+Gary Barnacle on sax. https://t.co/zkM017Zr2V" data-datetime="8:20 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354524542547468293"
+                 data-text="For A Friend. Always loved this song" data-datetime="8:19 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1354524473249173509"
+                 data-text="#TimsTwitterListeningParty https://t.co/dbJ6efEjQU" data-datetime="8:19 PM Jan 27, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1354524384388636686"
+                 data-text="#TimsTwitterListeningParty https://t.co/pukLfE3kWf" data-datetime="8:19 PM Jan 27, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1354524324640784385"
+                 data-text="#TimsTwitterListeningParty https://t.co/9PinPvRVhQ" data-datetime="8:18 PM Jan 27, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354524279556157446"
+                 data-text="For A Friend. 
+
+#TimsTwitterListeningParty Written in memory of our friend Mark Ashton, the first of our circle to die of AIDS, in 1987. He was 26, and a wonderful, exciting, inspiring man - the central character in the film Pride which came out a few years ago. I took this snap. https://t.co/XZoXnl2TGi" data-datetime="8:18 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1354524190620213250"
+                 data-text="For A Friend was written about Mark Ashton - an activist and campaigner who died in 1987, aged 26.
+Part of his story was told in the brilliant film, Pride.Â 
+Money is still raised in his memory, you can donate hereÂ 
+https://t.co/3CDQLR7Jcr" data-datetime="8:18 PM Jan 27, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fsimonemarie4%2Fstatus%2F1354524030716571649"
+                 data-text="Major nostalgia trip! Stay with the @LlSTENlNG_PARTY page on here after as @Tim_Burgess and myself will be hosting the aftershow live with @RevRichardColes at 9pm . Do u have any questions for the Rev ? X https://t.co/XTkOMaQBHY" data-datetime="8:17 PM Jan 27, 2021"> 
+                simonemarie4            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1354524020117557249"
+                 data-text="May 19th 1960, - February 11th 1987 #TimsTwitterListeningParty https://t.co/WAQNR3MXKy" data-datetime="8:17 PM Jan 27, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354523774104776713"
+                 data-text="#TimsTwitterListeningParty Judd Lander played harmonica, who played on Do You Really Want to Hurt Me. He twas noted for taking his trousers off when he played, I donâ€™t know why. Hereâ€™s Jimmy and CAROLINE from Banderas and the film composer Jocelyn Pook who were in the band. https://t.co/m5EpJQ0qJX" data-datetime="8:16 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1354523689845456902"
+                 data-text="Smash Hits / Panini sticker #TimsTwitterListeningParty #Communards @Tim_Burgess @RevRichardColes https://t.co/tr42xjBH3O" data-datetime="8:16 PM Jan 27, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FFlutterBec%2Fstatus%2F1354523576175620099"
+                 data-text="@Tim_Burgess @RevRichardColes Itâ€™s amazing tonight, as I follow you both on Twitter...itâ€™s like a game of tennis ðŸ˜‚ðŸ¥°" data-datetime="8:16 PM Jan 27, 2021"> 
+                FlutterBec            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354523313226330117"
+                 data-text="Victims.
+
+#TimsTwitterListeningParty Sounds like a not very good pastiche of someone else to me. The keyboard figure sounds amphetamine-driven, which it may well have been. https://t.co/KtGmPZvHbT" data-datetime="8:14 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354523098297597957"
+                 data-text="#TimsTwitterListeningParty Annie Stephenson fiddle solo. Her son, who came on tour as a four year old, is Pete Bennett the guy with Touretteâ€™s who won Big Brother." data-datetime="8:14 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354522985022050312"
+                 data-text="@ClareSergeant @RevRichardColes end of Matter Of oPINION" data-datetime="8:13 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354522660567470081"
+                 data-text="Hey, I know I say this a lot but the amazingness of us all listening to an album together is never lost on me. Wherever you are youâ€™re not alone. We have @RevRichardColes with us too. This is such a brilliant thing. Thanks for joining us x x" data-datetime="8:12 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354522613096341507"
+                 data-text="#TimsTwitterListeningParty I like the jolliness and the string arrangement, which was my department. I thought of myself then as the next Burt Bacharach, which was perhaps a tiny overestimation of my powers." data-datetime="8:12 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354522400105373708"
+                 data-text="This is what we looked like then #TimsTwitterListeningParty https://t.co/pqfNioweBU" data-datetime="8:11 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1354522353154326532"
+                 data-text="Programme for the Red Tour 1987 #TimsTwitterListeningParty #Communards @Tim_Burgess @RevRichardColes View it all here https://t.co/Y6jloqvqch https://t.co/TQc9adEKJ8" data-datetime="8:11 PM Jan 27, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354522260745420800"
+                 data-text="Matter of Opinion
+
+#TimsTwitterListeningParty We went acoustic a bit on this album, after playing with the band we toured with I really like this song. I didnâ€™t realise until later that Jimmy might as well have been singing it to me, because we were fighting so much at that time." data-datetime="8:10 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354522089366151172"
+                 data-text="So much power disguised as perfect pop ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="8:10 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FLondonCentrical%2Fstatus%2F1354521987201294349"
+                 data-text="I was lucky enough to do some merchandise work on the UK Tour to promote #TheCommunards #Red #TimsTwitterListeningParty https://t.co/H2ZwfSXWOd https://t.co/xmrt46ZGlG" data-datetime="8:09 PM Jan 27, 2021"> 
+                LondonCentrical            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354521813066383361"
+                 data-text="Jimmy, Richard and June sounding so beautiful" data-datetime="8:09 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1354521780652806144"
+                 data-text="Cover stars #TimsTwitterListeningParty #Communards @Tim_Burgess @RevRichardColes https://t.co/YzmRRL4ZCS" data-datetime="8:08 PM Jan 27, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354521690986962945"
+                 data-text="Original artwork for the tour by Di Pacey #TimsListeningParty https://t.co/EumYYsMqkF" data-datetime="8:08 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354521505896550404"
+                 data-text="#TimsTwitterListeningParty 
+
+The Italian voice over was by Zita Wadwa who was a secretary at our record company. Somebody on a ship years later told me that this song had changed his life. I think he meant for ir the better." data-datetime="8:07 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354521411927339010"
+                 data-text="@RevRichardColes It\'s a classic" data-datetime="8:07 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354521082447990793"
+                 data-text="â¤ï¸There\'s more to love than boy meets girlâ¤ï¸" data-datetime="8:06 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354520978315997184"
+                 data-text="TMTLTBMG
+
+#TimsTwitterListeningParty Stephen Hague produced. June Miles Kingston on backing vocals. I wrote the figure in major thirds for mariachi trumpets originally. I really like this song." data-datetime="8:05 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354520625373655043"
+                 data-text="...but would look like finger puppets now. JImmy had a fight with me over one of the guys in the art department. He was called Clive and was very handsome. (2/2)#TimsListeningParty" data-datetime="8:04 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354520528988606465"
+                 data-text="#TimsTwitterListeningParty Normally I wrote a music track and Jimmy would come up with a melody and lyrics. The video was quite good, and used new computer camera technology so we would get what looked like dazzling special effects at the time (1/2)" data-datetime="8:03 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354520168165158923"
+                 data-text="...I pinched a figure in the string arrangement from Mozartâ€™s Magic Flute (2/2) #TimsListeningParty" data-datetime="8:02 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="104000" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354520041241407500"
+                 data-text="Tomorrow
+
+#TimsTwitterListeningParty Stephen Hague produced, David Jacobs engineered, the hot twosome of the time. Tomorrow was, typically for us, a synth pop song about domestic violence, and - amazingly! - failed to do very well(1/2)" data-datetime="8:01 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FRevRichardColes%2Fstatus%2F1354519604845015042"
+                 data-text="Ooh do I have to press something or do something? #timstwitterlisteningparty https://t.co/JOgW6N5H5p" data-datetime="8:00 PM Jan 27, 2021"> 
+                RevRichardColes            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354519604140400661"
+                 data-text="Itâ€™s time 
+
+Red by The Communards 
+
+Drop the needle on the record/ press play.
+
+Over to you @RevRichardColes https://t.co/GPmtmPHQtJ" data-datetime="8:00 PM Jan 27, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
