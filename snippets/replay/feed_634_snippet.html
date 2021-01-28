@@ -1,0 +1,601 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/11iAZMUa41jIqQnVBxiZbw" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0240014e4abb139711e03e1b2f" alt="Daphne &amp; Celeste Save The World" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Daphne &amp; Celeste</span><br/><span class="sub-colour">Daphne &amp; Celeste Save The World</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/11iAZMUa41jIqQnVBxiZbw" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 112 tweets from Thursday 28th January 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Daphne_Celeste" target="_blank"><img src="https://pbs.twimg.com/profile_images/971517471013396481/2arlTTQV_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Daphne_Celeste</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/MaxTundra" target="_blank"><img src="https://pbs.twimg.com/profile_images/1268098228454653958/luQqEVve_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@MaxTundra</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Save The World" data-start="0"
+             data-duration="71" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Sunny Day" data-start="72"
+             data-duration="215" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="BB" data-start="288"
+             data-duration="246" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="A.L.T.O." data-start="535"
+             data-duration="219" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="16 Stars" data-start="755"
+             data-duration="215" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Paint Can" data-start="971"
+             data-duration="212" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="You & I Alone" data-start="1184"
+             data-duration="241" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Alarms" data-start="1426"
+             data-duration="215" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Taking Notes" data-start="1642"
+             data-duration="226" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Golden Doldrum" data-start="1869"
+             data-duration="116" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Song To A Succulent" data-start="1986"
+             data-duration="163" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Whatever Happened To Yazz?" data-start="2150"
+             data-duration="172" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Kandy Korn" data-start="2323"
+             data-duration="262" style="display:none"></div>
+                        <div id="track-14" class="track-list"
+                     data-name="Finished" data-start="2586"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485140014e4abb139711e03e1b2f" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-112" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1354909293984837635"
+                 data-text="The Specials performing Too Much Too Young on OGWT in 79. Replay #TimsTwitterListeningParty for their debut LP with @horacepanterart @thespecials &amp; @Tim_Burgess here https://t.co/CpMDuFxhuy https://t.co/PInmBoVXhT" data-datetime="9:48 PM Jan 28, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354909217946279940"
+                 data-text="@bluecat67 aww man - I hope so!" data-datetime="9:48 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354909039138844673"
+                 data-text="@clarapandy @Daphne_Celeste @Tim_Burgess ahhh, nice one, Clara - thanks for the kind words!" data-datetime="9:47 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354908932121239554"
+                 data-text="@skierpage @Daphne_Celeste Yes!" data-datetime="9:47 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354908881831526403"
+                 data-text="@LlSTENlNG_PARTY A huge thanks to @Tim_Burgess for having us over. You throw the best parties ðŸŽ‰ -C
+#TimsTwitterListeningParty" data-datetime="9:47 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354908861975699463"
+                 data-text="@bacon_on_on @LlSTENlNG_PARTY @Daphne_Celeste OMG - thank you so much! That is wonderful to hear." data-datetime="9:47 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354908796603289605"
+                 data-text="@bluecat67 @Daphne_Celeste Dawwww look! x" data-datetime="9:46 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354908766756614147"
+                 data-text="@MaxTundra @LlSTENlNG_PARTY Hey Max (and @Daphne_Celeste) it was a pleasure)" data-datetime="9:46 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354908744585457670"
+                 data-text="@Tim_Burgess @Daphne_Celeste Thank YOOOOOOOUUUU!!!" data-datetime="9:46 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354908470689071109"
+                 data-text="@Daphne_Celeste love you guys! xoxo" data-datetime="9:45 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354908310265360386"
+                 data-text="And a huge virtual hug and elbow bump to the lovely @Tim_Burgess for making it happen! #TimsTwitterListeningParty" data-datetime="9:44 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354908280351584262"
+                 data-text="A huge thanks to @Daphne_Celeste &amp; @MaxTundra - a new album for me. Brilliant. Thanks! https://t.co/QhSTiWoIr9" data-datetime="9:44 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354908269135998978"
+                 data-text="@LlSTENlNG_PARTY This album was a dream come true!! I hope you can all hear how much fun we had making it. We love you!!! Thanks for listening ðŸ’– - C
+#TimsTwitterListeningParty" data-datetime="9:44 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354908181307269135"
+                 data-text="I love the lyrics the album ends on, thank you for listening with us! -- D @MaxTundra #TimsListeningParty" data-datetime="9:44 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354908103066726401"
+                 data-text="Thank you so much for tuning in! This was a total honour. And @Daphne_Celeste, I love you - thank you for saving the world. #TimsTwitterListeningParty https://t.co/766weFmUnP" data-datetime="9:43 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354907672374554625"
+                 data-text="The original Beefheart version doesn\'t have words over this instrumental section, but I couldn\'t resist. #TimsTwitterListeningParty  https://t.co/iJfh22n1KU" data-datetime="9:42 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354907403624599554"
+                 data-text="I love @LlSTENlNG_PARTY tweets like this. The excitement and joy really comes across in the sound of the album https://t.co/ICwg1EA1es" data-datetime="9:41 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354907302059532291"
+                 data-text="@LlSTENlNG_PARTY Captain Beefheart ðŸ‘‘ðŸ‘‘ðŸ‘‘
+-C
+#TimsTwitterListeningParty" data-datetime="9:40 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354907067522424832"
+                 data-text="Working on this album was so awesome -- from Brooklyn to Joshua Tree to Tooting!!!!!!!!  @MaxTundra thank you for reaching out on Twitter all those years ago xoxoxo - D #TimsTwitterListeningParty" data-datetime="9:39 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354906941668130821"
+                 data-text="KANDY KORN: Captain Beefheart cover, innit. #TimsTwitterListeningParty https://t.co/xvCiQz5gXd" data-datetime="9:39 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354906831932502017"
+                 data-text="@MaxTundra @LlSTENlNG_PARTY @Daphne_Celeste Most definitely x x" data-datetime="9:38 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354906754233081861"
+                 data-text="@timchipping Should we plan a collaboration? -- D @MaxTundra" data-datetime="9:38 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354906645957144578"
+                 data-text="It was such an incredible experience working with @Daphne_Celeste on this record. I am ludicrously proud of what we made. Hope you\'re all enjoying it out there! #TimsTwitterListeningParty" data-datetime="9:38 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Facolinmackenzie%2Fstatus%2F1354906627485409280"
+                 data-text="@MaxTundra I think she lives in a religious commune in Spain?" data-datetime="9:38 PM Jan 28, 2021"> 
+                acolinmackenzie            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354906423478657025"
+                 data-text="Confession -- I didn\'t know who Yazz was when @MaxTundra first sent this track to us -- D @MaxTundra #TimsTwitterListeningParty" data-datetime="9:37 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354906388577873923"
+                 data-text="This is my attempt at @flyinglotus-esque drum programming. #TimsTwitterListeningParty" data-datetime="9:37 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354906257367445504"
+                 data-text="@LlSTENlNG_PARTY â€œWhatever Happened to Yazzâ€ still wondering... 
+-C
+#TimsTwitterListeningParty" data-datetime="9:36 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354906161254961161"
+                 data-text="WHATEVER HAPPENED TO YAZZ?: Something my dad would ask my sister regularly throughout the 00s. (Anyone know?) #TimsTwitterListeningParty" data-datetime="9:36 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354906022301880322"
+                 data-text="Total WOW! Song To A Succulent. Total genius from @MaxTundra @Daphne_Celeste ðŸ¤˜ðŸ¤˜" data-datetime="9:35 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354905846317281287"
+                 data-text="This one was aspirational for me.  Kinda made me feel like I could hang out with Dame Judi Dench @MaxTundra #TimsTwitterListeningParty" data-datetime="9:35 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354905722086166535"
+                 data-text="@Daphne_Celeste @POTUS I like to think we all played a part!" data-datetime="9:34 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354905620999262227"
+                 data-text="@LlSTENlNG_PARTY At the time of recording â€œSong to a Succulentâ€ I had 78 houseplants. -C
+#TimsTwitterListeningParty" data-datetime="9:34 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354905444263858178"
+                 data-text="SONG TO A SUCCULENT: Probably the only \"slow jam\" I\'ve ever recorded. (Apart, perhaps, from the \"zoning out to a DVD menu\" half-time section of Until We Die on Parallax Error Beheads You.) #TimsTwitterListeningParty https://t.co/0RzA86MEBI" data-datetime="9:33 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354905351511011343"
+                 data-text="No more Dakota Pipeline, yay!  Was it us or @POTUS? - D @MaxTundra #TimsTwitterListeningParty" data-datetime="9:33 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354905275078234112"
+                 data-text="@LlSTENlNG_PARTY Singing in Japanese is way easier than singing to a backwards beat ðŸ˜‚ -C
+#TimsTwitterListeningParty" data-datetime="9:32 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354905169549533185"
+                 data-text="Wow -- this one was INSANE to record -- we had to do it double-time -- or faster?!? @MaxTundra #TimsTwitterListeningParty" data-datetime="9:32 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354905114843230210"
+                 data-text="@LlSTENlNG_PARTY Singing â€œGolden Doldrumsâ€ over a backwards beat, left me in a trance. -C
+#TimsTwitterListeningParty" data-datetime="9:32 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354905044173389829"
+                 data-text="@LlSTENlNG_PARTY â€œTaking Notesâ€ soars and makes me so happy!!! Honestly, I love the imagery and thinking of little pangolins. -C
+#TimsTwitterListeningParty" data-datetime="9:31 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354904968034189312"
+                 data-text="GOLDEN DOLDRUM: The instrumental of this is a song I once pitched for @LittleMix - played backwards! #TimsTwitterListeningParty" data-datetime="9:31 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354904677742227457"
+                 data-text="What I love about @MaxTundra  is all of the surprising, unexpected twists within songs.  I\'m a fangirl -- D #TimsTwitterListeningParty" data-datetime="9:30 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354904653771792388"
+                 data-text="@bluecat67 @Daphne_Celeste @LlSTENlNG_PARTY Too right! https://t.co/xPUlsyzHwK" data-datetime="9:30 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354904413463322628"
+                 data-text="@LlSTENlNG_PARTY â€œTaking Notesâ€ has that super crunchy, crunch! -C
+#TimsTwitterListeningParty" data-datetime="9:29 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fclarapandy%2Fstatus%2F1354904410854457349"
+                 data-text="not gonna lie, @MaxTundra bringing back @Daphne_Celeste was a triumph, what an album, what a live show! and this happened! â¤ï¸ i miss gigs #TimsTwitterListeningParty @Tim_Burgess https://t.co/ABIWNSQL9d https://t.co/TUaUr19sPv" data-datetime="9:29 PM Jan 28, 2021"> 
+                clarapandy            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354904190947106816"
+                 data-text="@LlSTENlNG_PARTY Alarms ðŸ‘½! Created by our dear friend -C
+#TimsTwitterListeningParty https://t.co/agqn5o5pWo" data-datetime="9:28 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354904039092330501"
+                 data-text="TAKING NOTES: Depending on your streaming service of choice, you may have noticed a short gap at the start of this song. On the beautiful LP/CD/MC editions of the album, the segue is seamless. #JustSaying  https://t.co/q2Bq4bYzSP #TimsTwitterListeningParty" data-datetime="9:27 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354903916127916041"
+                 data-text="@karlstanley @MaxTundra Hi!!!!!!!" data-datetime="9:27 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354903813958807553"
+                 data-text="@podcastdoors @MaxTundra Thank you!  -- D xoxo" data-datetime="9:26 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354903646882979845"
+                 data-text="@cat__ryan @maccorcrain Rightly so!" data-datetime="9:26 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354903577362386944"
+                 data-text="@LlSTENlNG_PARTY We shot the video for â€œAlarmsâ€ in a little cabin in upstate NY -C
+#TimsTwitterListeningParty" data-datetime="9:26 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354903561507749890"
+                 data-text="If you haven\'t watched the video for Alarms, I recommend it.  I\'m of course biased, but it was such a fun collaboration with Ces, Abe, @MaxTundra -- D #TimsTwitterListeningParty" data-datetime="9:25 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354903561499529217"
+                 data-text="@KerrieSloper @Daphne_Celeste thank you, Kerrie!" data-datetime="9:25 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354903423276224521"
+                 data-text="@Daphne_Celeste @MaxTundra https://t.co/zgfpV8ccyj" data-datetime="9:25 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354903349783572482"
+                 data-text="@LlSTENlNG_PARTY â€œAlarmsâ€ is out of this world. So we had an alien star in the video as tribute! 
+-C
+#TimsTwitterListeningParty" data-datetime="9:25 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354903118790742018"
+                 data-text="ALARMS: I really think this should have been number one. I guess this might be possible after tonight, right folks? There\'s a baby blue vinyl 7\" of this out there, and a glorious vid directed by lovely genius Abram Seaman at https://t.co/R1x7LAMMW3 #TimsTwitterListeningParty" data-datetime="9:24 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354903111022866433"
+                 data-text="I knew we were kindred spirits when @MaxTundra referenced Twin Peaks -- D #TimsTwitterListeningParty" data-datetime="9:24 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354902859511455746"
+                 data-text="@soozworld @davidshrigley Do it do it do it!" data-datetime="9:23 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354902781883248641"
+                 data-text="ðŸ˜ðŸ˜ðŸ˜ https://t.co/uL4IfjsKCR" data-datetime="9:22 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354902756239290374"
+                 data-text="As far as I know this is the only DACSTW track to have been broadcast on the almighty @BBCR1. Thanks to @gemcairn for playing it on her show way back in 2015! #TimsTwitterListeningParty" data-datetime="9:22 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354902642431053826"
+                 data-text="@Daphne_Celeste @LlSTENlNG_PARTY ahhh no way!" data-datetime="9:22 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354902507705806860"
+                 data-text="I\'m always talking about the harmonies, but @MaxTundra they\'re so awesome to sing -- D #TimsTwitterListeningParty" data-datetime="9:21 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354902455444758528"
+                 data-text="I dreamed the chorus of this song - one of my favourite music-making methods. There\'s an awesome video for this one too, directed by Seaquences. https://t.co/R1x7LAMMW3 #TimsTwitterListeningParty" data-datetime="9:21 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354902379553042435"
+                 data-text="YOU &amp; I ALONE: This was the first one we recorded together and is about 5 years older than the rest of the LP. It seems fitting to have this Twitter listening party, as I first approached @Daphne_Celeste on this very website! #TimsTwitterListeningParty https://t.co/5lcnzlnGt3" data-datetime="9:21 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354902263647657986"
+                 data-text="@LlSTENlNG_PARTY YAIA was the first track @MaxTundra sent over. And we fell in love. ðŸŽ¶ 
+-C
+#TimsTwitterListeningParty" data-datetime="9:20 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354902261865050113"
+                 data-text="We recorded this one so long ago in Bushwick, Brooklyn!  The beginning of our collaboration with @MaxTundra #TimsTwitterListeningParty" data-datetime="9:20 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354902126800084996"
+                 data-text="@LlSTENlNG_PARTY Fun fact. YAIA is the first time Daphne and I recorded with our real voices... you know, not pitched up like baby chipmunks. 
+-C
+#TimsTwitterListeningParty" data-datetime="9:20 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354902123817873408"
+                 data-text="Side Two! #TimsTwitterListeningParty" data-datetime="9:20 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354901982486687744"
+                 data-text="Streamers &amp; CD owners, pause your playback for 30 seconds, while vinyl/cassette owners turn their plasticks over... #TimsTwitterListeningParty https://t.co/Z8mKpPpuZK" data-datetime="9:19 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354901902492839937"
+                 data-text="@corbylad @LlSTENlNG_PARTY ahhh no way! I would love to move in to one of those old Pluto cottages." data-datetime="9:19 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fevilrobotbill%2Fstatus%2F1354901898206339079"
+                 data-text="Joining in @LlSTENlNG_PARTY for Daphne &amp; Celeste Save The World, genuinely the album that has made me smile the most the last few years. I look weird in that ome shot and have my shirt on backwards, oops @Daphne_Celeste @MaxTundra #TimsTwitterListeningParty https://t.co/U9KH7T2u3n" data-datetime="9:19 PM Jan 28, 2021"> 
+                evilrobotbill            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354901645583380484"
+                 data-text="@Daphne_Celeste Ahhhh!!" data-datetime="9:18 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354901582106812418"
+                 data-text="some of the lyrics in this one inspired the Alarms video -- D @MaxTundra #TimsTwitterListeningParty" data-datetime="9:18 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354901573336489985"
+                 data-text="@LlSTENlNG_PARTY Yggdrasilâ€™s should get more name drops on pop tracks. Change my mind. 
+-C
+#TimsTwitterListeningParty" data-datetime="9:18 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354901241512550409"
+                 data-text="@LlSTENlNG_PARTY Paint Can a song about apocalyptic isolation. Sorry, canâ€™t relate. ðŸ™ƒ
+-C
+#TimsTwitterListeningParty" data-datetime="9:16 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354901181605294081"
+                 data-text="PAINT CAN: So called as it contains samples of my pal @Knifeworld sloshing a can of paint around. My fave on the LP. A great slice of everything I\'ve ever tried to achieve with music. The only song ever to include the words \"sassafras\" and \"yggdrasil\". #TimsTwitterListeningParty" data-datetime="9:16 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354901166623256577"
+                 data-text="Same! #TimsTwitterListeningParty https://t.co/YPrs8WSFrB" data-datetime="9:16 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354901009919856645"
+                 data-text="This collaboration was truly one of my faves ever  @MaxTundra #TimsTwitterListeningParty" data-datetime="9:15 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Ftimchipping%2Fstatus%2F1354900955658125313"
+                 data-text="So happy this album brought @Daphne_Celeste back to the UK (thank you @MaxTundra.) This pic is from a balloon-filled show in Leicester. I cried a bit.
+#TimsTwitterListeningParty https://t.co/ZQmuJNPoUN" data-datetime="9:15 PM Jan 28, 2021"> 
+                timchipping            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354900702737408003"
+                 data-text="@LlSTENlNG_PARTY 16 Stars has A LOT of lyrics. 
+-C
+#TimsTwitterListeningParty" data-datetime="9:14 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354900689152077833"
+                 data-text="@Tim_Burgess @MaxTundra Thank you, I love this one! -- D" data-datetime="9:14 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354900600782282758"
+                 data-text="@Daphne_Celeste @MaxTundra 16 Stars is â¤ï¸â¤ï¸â¤ï¸ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="9:14 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354900492728590338"
+                 data-text="@LlSTENlNG_PARTY 16 stars is like a kawaii, space, party dream come true! ðŸ­âœ¨
+-C
+#TimsTwitterListeningParty" data-datetime="9:13 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354900483333365761"
+                 data-text="I started my own record label, @Balatonic, to put this record out. Earlier today I launched a limited edition Balatonic T-shirt - grab yours here. #TimsTwitterListeningParty  https://t.co/0O0cIxgEH6" data-datetime="9:13 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354900391385817091"
+                 data-text="16 STARS: I really put @renoise through its paces on this LP. That\'s the infinitely flexible tracker sequencer I use to make music since ditching the Amiga 500 on which I made the first 3 Tundra LPs. Here\'s a screengrab of 16 Stars during its creation. #TimsTwitterListeningParty https://t.co/Y5kGxDyyMY" data-datetime="9:13 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354900152046256130"
+                 data-text="There\'s an extraordinarily heavy, doom-laden @davidshrigley cover version of this, complete with its own video and limited edition cassette. I think there might be one or two left... https://t.co/xh4EnAoBzb #TimsTwitterListeningParty" data-datetime="9:12 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354900142441320452"
+                 data-text="@Daphne_Celeste @LlSTENlNG_PARTY https://t.co/YQqA2SkW4U" data-datetime="9:12 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354900000292139013"
+                 data-text="@musetheweb @MaxTundra Thank you! :)" data-datetime="9:11 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354899933367840770"
+                 data-text="Myself and @Daphne_Celeste took a magical trip out to Joshua Tree to record the vocals for some of these songs. An inspiring, sacred space. I guess the guy whose place we rented out really liked Jim Morrison, huh? #TimsTwitterListeningParty https://t.co/5ughbOgVyC" data-datetime="9:11 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354899822134833155"
+                 data-text="Loved the harmonies on this one so much, a blast to record and perform with @MaxTundra and Ces -- D #TimsTwitterListeningParty" data-datetime="9:11 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354899454277660681"
+                 data-text="@LlSTENlNG_PARTY â€œA.L.T.Oâ€ is one of my favorite tracks on the album. Honestly itâ€™s Max Tundraâ€™s creative brilliance on full display.
+-C
+#TimsTwitterListeningParty" data-datetime="9:09 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354899426045788164"
+                 data-text="There really was a \"pipeline underneath the ocean blue\" - it is a fascinating story from  WWII times involving decoy bungalows near Dungeness and you can read about it here: https://t.co/u0fo3XJk82 #TimsTwitterListeningParty" data-datetime="9:09 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354899299117768704"
+                 data-text="A.L.T.O.: This song is in two BPMs. The verses are 100BPM and the choruses are 92.5BPM, for extra unsettlement. Steel drums are there because I have always loved the sound of them having played in the steel band at primary school. #TimsTwitterListeningParty" data-datetime="9:09 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354899211691679747"
+                 data-text="@timchipping @timchipping hahaha" data-datetime="9:08 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354899160340852736"
+                 data-text="Probably my favourite lyric on the album right here: \"Sonic simplicity is considerably over-represented/And sub-Dylan balladry was OK before the Fairlight was invented\" All lyrics at https://t.co/AEXluytcnb #TimsTwitterListeningParty" data-datetime="9:08 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354899106137862146"
+                 data-text="Fun fact -- Like U2, we recorded this album in Joshua Tree - D @MaxTundra #TimsTwitterListeningParty" data-datetime="9:08 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354898954245320708"
+                 data-text="I know nothing of music theory, but genius pal @chordslayermaxo made this handy chart if you want to play along with this track and are unfazed by instructions like \"D*(add 2+6)\" and suchlike. #TimsTwitterListeningParty https://t.co/k2UReUvH0q" data-datetime="9:07 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fbacon_on_on%2Fstatus%2F1354898878974275594"
+                 data-text="@Daphne_Celeste @LlSTENlNG_PARTY @MaxTundra Heroes!" data-datetime="9:07 PM Jan 28, 2021"> 
+                bacon_on_on            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354898874037633027"
+                 data-text="The speculation about WHO we\'re talking about here has been fun -- D @MaxTundra #TimsTwitterListeningParty" data-datetime="9:07 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354898826566504448"
+                 data-text="@LlSTENlNG_PARTY Here we are in 2021 and basic buskers still abound ðŸ™ƒ-C
+#TimsTwitterListeningParty" data-datetime="9:07 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354898675613499394"
+                 data-text="@LlSTENlNG_PARTY The lyric video for BB was really cool to create. We threw ice cream on a turntable and snuck in a picture of my dog. -C
+#TimsTwitterListeningParty" data-datetime="9:06 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354898632793845780"
+                 data-text="Hey @MaxTundra @Daphne_Celeste the is ace #TimsTwitterListeningParty https://t.co/mC1phptqot" data-datetime="9:06 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354898408281174019"
+                 data-text="I loved doing this intro, old school D &amp; C -- d @MaxTundra #TimsTwitterListeningParty" data-datetime="9:05 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354898335228973058"
+                 data-text="BB: Yeah, that\'s me doing a moany \"basic busker\" persona at the start. Many assumed the song was about Sheeran, but it\'s more about generic indie lads clogging up the airwaves with the same three chords. #TimsTwitterListeningParty" data-datetime="9:05 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354898188457676804"
+                 data-text="Dance Break!  Celeste blew bubbles live and I made balloon animals -- D @MaxTundra @LlSTENlNG_PARTY #TimsTwitterListeningParty" data-datetime="9:04 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354897958194597891"
+                 data-text="@LlSTENlNG_PARTY Singing â€œSunny Dayâ€ in Japanese was very tricky, not as easy as they make it seem in Japan -C
+#TimsTwitterListeningParty" data-datetime="9:03 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354897949134827522"
+                 data-text="I did an extended disco remix of this tune, so bookmark https://t.co/elKqT6Elk7 and have a boogie later. Also feat. reworkings by @dutchuncles, @chillygonzales and @jilkmusic. #TimsTwitterListeningParty" data-datetime="9:03 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354897610004422659"
+                 data-text="@LlSTENlNG_PARTY â€œSunny Dayâ€ is such a happy vibe. Itâ€™s ironic that we recorded it in a dark garage in the middle of the night . -C 
+#TimsTwitterListeningParty" data-datetime="9:02 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FDaphne_Celeste%2Fstatus%2F1354897598050689030"
+                 data-text="I highly recommend checking out the Japanese version of this one.  Celeste is really good at singing in Japanese @MaxTundra @LlSTENlNG_PARTY #TimsTwitterListeningParty" data-datetime="9:02 PM Jan 28, 2021"> 
+                Daphne_Celeste            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354897566975070212"
+                 data-text="Pop out https://t.co/iJfh22n1KU on a spare tab and you can sing along with the whole elpee. #TimsTwitterListeningParty" data-datetime="9:02 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354897355770892290"
+                 data-text="SUNNY DAY: There\'s a Japanese version of this, with its own dance party arcade video directed by the legendary @danhett - all the vids for this album are at https://t.co/R1x7LAMMW3 so bookmark and enjoy at leisure. #TimsTwitterListeningParty" data-datetime="9:01 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354897215484022787"
+                 data-text="SAVE THE WORLD: Listen carefully in a sec and you will hear the sampled giggle of my son, who had recently been born. Thanks to @IggyPop for making the boy\'s day and playing this one on his @BBC6Music show! #TimsTwitterListeningParty" data-datetime="9:00 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FMaxTundra%2Fstatus%2F1354897061800456196"
+                 data-text="OK, let\'s DO THIS, @Daphne_Celeste! Press play NOW... #TimsTwitterListeningParty https://t.co/Ad2Q3MkkrR" data-datetime="9:00 PM Jan 28, 2021"> 
+                MaxTundra            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1354897057799135237"
+                 data-text="Righto 
+
+Itâ€™s over to @Daphne_Celeste &amp; @MaxTundra for tonightâ€™s @LlSTENlNG_PARTY 
+
+ðŸ™Œ https://t.co/yov1iF0zd7" data-datetime="9:00 PM Jan 28, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
