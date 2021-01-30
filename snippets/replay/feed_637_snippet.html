@@ -1,0 +1,902 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1J8e1dLKVmZbsyxpGa9lGg" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02518f91224cff0d2e9b6d56ef" alt="Sugar Tax" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">OMD</span><br/><span class="sub-colour">Sugar Tax</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(4102091)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1J8e1dLKVmZbsyxpGa9lGg" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_4102091_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 162 tweets from Saturday 30th January 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/OfficialOMD" target="_blank"><img src="https://pbs.twimg.com/profile_images/1233325706370846721/UiHCFogs_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@OfficialOMD</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/stukershaw" target="_blank"><img src="https://pbs.twimg.com/profile_images/1352404819399606273/4g_QHblm_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@stukershaw</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1263179802732830720/ilZChYeS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Sailing On The Seven Seas" data-start="0"
+             data-duration="225" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Pandora's Box" data-start="226"
+             data-duration="249" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Then You Turn Away" data-start="476"
+             data-duration="257" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Speed Of Light" data-start="734"
+             data-duration="269" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Was It Something I Said" data-start="1004"
+             data-duration="269" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Big Town" data-start="1274"
+             data-duration="259" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Call My Name" data-start="1534"
+             data-duration="263" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Apollo XI" data-start="1798"
+             data-duration="253" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Walking On Air" data-start="2052"
+             data-duration="289" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Walk Tall" data-start="2342"
+             data-duration="235" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Neon Lights" data-start="2578"
+             data-duration="259" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="All That Glitters" data-start="2838"
+             data-duration="246" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3085"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851518f91224cff0d2e9b6d56ef" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-162" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-161" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1355621287037698053"
+                 data-text="@Tim_Burgess Ready in Barcelona ðŸŒ´ #TimsTwitterListeningParty @LlSTENlNG_PARTY https://t.co/zqXCA1v4Lb" data-datetime="8:57 PM Jan 30, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-160" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355621192858804235"
+                 data-text="These evenings are little islands of connectivity and joy in difficult times. Please all stay safe, let\'s get out of this and back to live music again! 
+
+All my love, Andy. And once again thanks a million to @Tim_Burgess" data-datetime="8:57 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-159" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355620849915731970"
+                 data-text="Sadly it doesn\'t look like live gigs are coming back any time soon - we\'d love to do another of these!
+
+https://t.co/FVrBqCKaOz" data-datetime="8:56 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-158" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355620737898459141"
+                 data-text="@Wireless_Ade @OfficialOMD Haha!" data-datetime="8:55 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-157" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355620691505274880"
+                 data-text="Thank you Sheryl. Hopefully now you appreciate the passion and emotion poured into the album!
+
+https://t.co/f3POIoY9I1" data-datetime="8:55 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-156" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1355620689735127040"
+                 data-text="@LlSTENlNG_PARTY Arthur and Bryan were once again â€œseeingâ€ the same girl, continuing their ongoing rivalry. Stephanie Knows Who is a jazz waltz, featuring the line aches and pains they clawed your side, a tiger did you said he did." data-datetime="8:55 PM Jan 30, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-155" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1355620629534433284"
+                 data-text="5 minute warning https://t.co/iGG0X6vcXW" data-datetime="8:55 PM Jan 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355620522562875398"
+                 data-text="Nigel always comes to see him when we play live in Bristol where he lives now. Always good to see hime
+
+https://t.co/HsDRi26Ziy" data-datetime="8:54 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355620483140616193"
+                 data-text="Thanks Tim that was a lot of fun! https://t.co/UPpva7iNSy" data-datetime="8:54 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1355620287178530819"
+                 data-text="Yep pleeeez https://t.co/76eOs6k9AY" data-datetime="8:53 PM Jan 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355620254257438721"
+                 data-text="It\'s been great to share an album that (despite its success at the time) sometimes gets overlooked. That\'s what these @LlSTENlNG_PARTY\'s are all about, right?" data-datetime="8:53 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1355620167984812041"
+                 data-text="Thanks so much @OfficialOMD &amp; @stukershaw ðŸ˜ðŸ˜ðŸ˜That was ace x x" data-datetime="8:53 PM Jan 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355619959779561479"
+                 data-text="Sadly the lockdown seems to be still going on. Who knows when we will next play live. Maybe @Tim_Burgess will let us do another of these? It\'s a wonderful way of staying connected." data-datetime="8:52 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355619794293313538"
+                 data-text="Thank you all so much for listening and sharing your thoughts and feelings. One again many many thanks @Tim_Burgess for hosting us." data-datetime="8:51 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355619696482070529"
+                 data-text="Thank you for the comments about this beautiful song - it\'s incredible when your own feeling resonate so strongly with others 
+
+https://t.co/TKSz58lvRR" data-datetime="8:51 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FRLeBonTennant%2Fstatus%2F1355619540646952965"
+                 data-text="This listening party has been brilliant, but has gone by way too quickly! ðŸ˜±ðŸ˜­ Thanks so much @OfficialOMD &amp; @stukershaw for making this Saturday evening wonderful for many OMD fans! ðŸ˜ƒðŸ¥³ðŸ˜ðŸ’™ðŸ’–ðŸ‘
+#TimsTwitterListeningParty" data-datetime="8:50 PM Jan 30, 2021"> 
+                RLeBonTennant            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355619488071299076"
+                 data-text="@soozworld @Tim_Burgess @LlSTENlNG_PARTY Important to close an album with something beautiful!" data-datetime="8:50 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355619482165792772"
+                 data-text="@southernj It was built n 1520 and was creaky as anything. You could feel the whole house move when the wind blew." data-datetime="8:50 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355619271108399110"
+                 data-text="Thank you very much - it\'s a beautiful sad way to end an album which was one of the most difficult things I ever did in my life, working without the original band members. I poured my heart into some of these lyrics
+
+https://t.co/0SMljWmDFd" data-datetime="8:49 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1355619032054046721"
+                 data-text="All That Glitters by @OfficialOMD, doing what a final track on an album should be doing. Hard to say what that is, but this is perfect" data-datetime="8:48 PM Jan 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355618994871554048"
+                 data-text="This song lended itself so beautifully to a full orchestra. To some people it is actually the definitive version now! 
+
+https://t.co/2UeTTrs3QL" data-datetime="8:48 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355618787517755399"
+                 data-text="I was truly terrified of what people would think about me on my own in OMD. My name doesnâ€™t appears anywhere on the recordâ€¦ I was hiding behind the name of the band." data-datetime="8:47 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355618759134863362"
+                 data-text="People have misunderstood the lyric. I am saying that this pain is usually only associated with lovers not band members." data-datetime="8:47 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355618724259225606"
+                 data-text="The album ends with my final painful song about the departure of Paul from the band. Moody chords from @stukershaw.  This song captures my pain for the final time." data-datetime="8:47 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355618687756230661"
+                 data-text="What a great album!" data-datetime="8:47 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355618686221082624"
+                 data-text="Dropping to the F over the Am burnishing it all into a Major7th... unless youâ€™re accompanying on a ukelele- in which case stay on the Am #timstwitterlisteningparty" data-datetime="8:47 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355618684962820098"
+                 data-text="But now feel so proud that between the three of us we set up my favourite, most personally satisfying middle 8 bridge and subsequent linking section of my writing career." data-datetime="8:47 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355618678847451136"
+                 data-text="12 ALL THAT GLITTERS 
+
+This one is wonderful. 
+Lloyd began with a three note major/minor piano sequence. 
+I built it into a verse . 
+Then I went down to the F for the refrain." data-datetime="8:47 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355618640528338953"
+                 data-text="12: ALL THAT GLITTERS" data-datetime="8:47 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355618546290724864"
+                 data-text="It was a great idea. Only downside was that Paul and I had to wait for 2 and half hours before we came off stage before going back on to sing it. Then Mel Gaynor decided that the drummer wanted to sing too ðŸ¤¦ðŸ»â€â™‚ï¸
+
+https://t.co/PCNLqCkZMr" data-datetime="8:47 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355618197861490691"
+                 data-text="Fortunately I was a little more grown up when I met him again - we became friends and I didn\'t ask him about his speakers!
+
+https://t.co/0gyBBVWdjl" data-datetime="8:45 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355618057939464200"
+                 data-text="Copied their drum beat!
+
+https://t.co/X9UyXQDh84" data-datetime="8:45 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355617931133145090"
+                 data-text="I found the fax a few years ago and all the type has faded to nothing! My letter from God is now blank!" data-datetime="8:44 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355617823909957634"
+                 data-text="Asking Kraftwerk for clearance for covering this song was the way I got in touch with Karl Bartos for the first time. He graciously allowed the cover. I kept the fax he sent as it was like a letter from God!" data-datetime="8:44 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355617692049354756"
+                 data-text="11 NEON LIGHTS 
+
+Lovely Kraftwerk cover." data-datetime="8:43 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355617657706446849"
+                 data-text="The single was never released but I loved the track and the Soul II Soul drums pattern. Itâ€™s very dreamy, but in hindsight I should have sung the verses myself for an OMD album." data-datetime="8:43 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355617621945810954"
+                 data-text="(She sang backing vocals with Beverly Reppion on our TV shows)" data-datetime="8:43 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355617590824083458"
+                 data-text="I had a mad idea of doing a single cover version of this song for a label in Liverpool with a girl called Christine Mellor." data-datetime="8:43 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355617542455353344"
+                 data-text="11: NEON LIGHTS" data-datetime="8:43 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355617479339421696"
+                 data-text="Not necessarily but we were aware that dance music was increasingly driving a club audience. Several of the songs were huge club hits in America but we didnt\' have radio hits
+
+https://t.co/bMp5VS1I3m" data-datetime="8:42 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355617256655495175"
+                 data-text="I didn\'t! It was a photograph of dripping oil by Trevor Key. When I saw it I didn\'t know why I loved it but I knew it had to be an album sleeve
+
+https://t.co/ulP7pqGDJ2" data-datetime="8:41 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355617056385859588"
+                 data-text="Happy to open up the younger generation\'s eyes to beautiful music!
+
+https://t.co/ZwQW1Ckygp" data-datetime="8:41 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355616913502699525"
+                 data-text="Half a million
+
+https://t.co/E2TZwrwjTh" data-datetime="8:40 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355616715783204875"
+                 data-text="Great chords by Stuart and bass idea from Lloyd which I interpreted for synth. Haunting backing vocal by Natalie Loates who is Lloydâ€™s partner." data-datetime="8:39 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355616672628015108"
+                 data-text="The lyrics are not autobiographical. Just imagining a broken ending of a beautiful connection." data-datetime="8:39 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355616672422514690"
+                 data-text="Loved creating the pre chorus cadence. Itâ€™s one of my favourite (previously secret) string-modal turnarounds.  A hauntingly beautiful tune throughout." data-datetime="8:39 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355616670413426693"
+                 data-text="10 WALK TALL 
+
+This was another one of his â€œIâ€™ve got this mad ideaâ€  a sample of a boys choir singing over a kraftwerky beat with stylish strings and bass moves conflated with mournful  chorus melody supplied by mine, Lloyd Masset and Natalie Loates from Raw Unltd ." data-datetime="8:39 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355616627623079937"
+                 data-text="Miserere mei Deus by Allegri.  The whole structure of the song is influenced by trying to get a track to have that sample sit on it." data-datetime="8:39 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355616560463966212"
+                 data-text="10: WALK TALL
+
+Who can name the sample?" data-datetime="8:39 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355616284730413060"
+                 data-text="The drop and hold at the end of this song used to be one of my favourite moments live when the vocal came back in" data-datetime="8:38 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355616142291832837"
+                 data-text="No - we have lived there sequentially!
+
+https://t.co/ws4oQjYiel" data-datetime="8:37 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355616078517436420"
+                 data-text="If I can still hit them on Native Daughters I can still do these!
+
+https://t.co/Pbsa69VwQk" data-datetime="8:37 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fqidevrich%2Fstatus%2F1355616009386942468"
+                 data-text="@stukershaw Am7 is my favourite on the uke ðŸ˜†" data-datetime="8:36 PM Jan 30, 2021"> 
+                qidevrich            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355615946698858501"
+                 data-text="There were so many ghosts in that house, Martin says they have all gone now. @stukershaw must have scared them away!
+
+https://t.co/NcMuGN6EpN" data-datetime="8:36 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355615796387573760"
+                 data-text="This album sold over a million in Germany alone. Felt like we lived in Germany for a year doing TV and promo!" data-datetime="8:36 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355615529172684806"
+                 data-text="Andy Richards the producer praised me for a clever use of an Am chord which sustained through the whole sequence perfectly . 
+ A bonus for ukelele players lol #timstwitterlisteningparty" data-datetime="8:35 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355615527088095235"
+                 data-text="Came back a couple days later to find Andy had worked up this wonderful tango-esque piano melody for a new middle section and we both developed up the subsequent link to the last chorus together. Spark was certainly flowing that day. #timstwitterlisteningparty" data-datetime="8:35 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355615525729161220"
+                 data-text="I created the call and answer chords and bell melody which Andy immediately had the vocal for. 
+It needed a bridge/chorus/refrain 
+I offered up a chromatic falling cadence which became the basis for the â€œFootstepsâ€ hook. #timstwitterlisteningparty" data-datetime="8:35 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355615524403687426"
+                 data-text="A gentle touch gave this lovely Rhodes bell sound and harder thumps introduced a trembling tremolo string with what sounds like a small army of mandolin players." data-datetime="8:35 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355615522981871616"
+                 data-text="9 WALKING ON AIR 
+
+Andy has this Statues type beat going with the FYC snare I messed about on the KOTO TREM setting on an M1. It had two contrasting sounds depending how hard or soft you hit the notes." data-datetime="8:35 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355615493026050048"
+                 data-text="This is a song created from having a ghostly experience in my house one night. The same house that Stuart has lived in and Martin still does!" data-datetime="8:34 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355615439188074496"
+                 data-text="Starting with the sound of me smashing bottles in the stone room of the studio. Speaking of Fairlight computers... this track was produced by Andy Richards using his version 3  that cost Â£60k!!! Crazy. It was already obsolete." data-datetime="8:34 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355615347844538376"
+                 data-text="9: WALKING ON AIR" data-datetime="8:34 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355615286364401666"
+                 data-text="Thank you! It was a potentially dangerous decision to make but it mostly worked
+
+https://t.co/vdAwQkYEP4" data-datetime="8:34 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355615080168239111"
+                 data-text="Wouldn\'t it just.....???????? :-)
+
+https://t.co/5niEegj7zx" data-datetime="8:33 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355615007162179587"
+                 data-text="I love @PSB_HQ!
+
+https://t.co/gXleiTYAA0" data-datetime="8:32 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355614853826830338"
+                 data-text="I remember hearing this at the Tomorrowland terrace at Disneyland which blew me away. OMD at Disney!!" data-datetime="8:32 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355614714471047170"
+                 data-text="We used a lot of samples on Dazzle Ships but this was a new generation of sampling technology which allowed us to do more
+
+https://t.co/3uHlQss8WM" data-datetime="8:31 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355614470794600459"
+                 data-text="These days it seems very slow and long winded to do this but at the time it was revolutionary to run so may triggered samples.   The track sounds very early 90s techno now but I have a soft spot for it." data-datetime="8:30 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355614428717318147"
+                 data-text="This system was a cheap replacement for our Fairlight sampler that we bought for an astonishing Â£24K" data-datetime="8:30 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355614414444048388"
+                 data-text="Born of me finding an old vinyl album in a junk shop of recordings from the moon mission. All the samples are lifted from the record and spun in from the AKAI sampler for the old Atari ST24 computer." data-datetime="8:30 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355614410182717440"
+                 data-text="Loads of fun. Something phallic about  â€œ...365 feet of gleaming white equipment being pushed up through the blue skies of Floridaâ€" data-datetime="8:30 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355614408299442187"
+                 data-text="We argued for hours over the timing of the middle 8 â€œone small step for manâ€ duet of samples until it ended up that tiny bit wonky and somehow more meaningful than the â€œOne... ..giantleap...formankindâ€ sample. #timstwitterlisteningparty" data-datetime="8:30 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355614406353285124"
+                 data-text="8 APOLLO XI 
+
+Andy had this crazy idea. 
+There was this old vinyl recording of the highlights from the Apollo XII moon landing. He set the demo up pretty much as it sounds." data-datetime="8:30 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355614369682509829"
+                 data-text="8: APOLLO XI" data-datetime="8:30 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355614318625247235"
+                 data-text="Thank you for all the positive comments. This was a v difficult and nervous album to make. I\'m still very proud of the songs. And thanks to @stukershaw for all his emotional and musical support" data-datetime="8:30 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613974377672708"
+                 data-text="Difficult and emotional process for him. To be honest some of them are still not his babies, but he\'s a good sport
+
+https://t.co/tr32JWNS5d" data-datetime="8:28 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613830454374406"
+                 data-text="Guess we\'ll be playing for 8 hours every night then! 
+
+https://t.co/PcZDJHmEan" data-datetime="8:28 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613725462568965"
+                 data-text="Paul is a great musician and melody writer - but he doesn\'t write them all! :-)
+
+https://t.co/a9o4idN4vf" data-datetime="8:27 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613590338887686"
+                 data-text="It did and it was a great relief after I\'d borrowed so much money off Virgin to continue! Haha
+
+https://t.co/5rIi91Tr9e" data-datetime="8:27 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613470478249991"
+                 data-text="I liked Nigel\'s extra playing he did live so we thought we\'d add it to the single release
+
+https://t.co/W4vN1Y0upz" data-datetime="8:26 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613311728033793"
+                 data-text="Peter Saville tells me that â€œYou say we go too far, I say Iâ€™ll take my carâ€ is his favourite OMD lyric!" data-datetime="8:26 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613274864291845"
+                 data-text="The 7â€ version had Nigel Ipinson playing his crazy live House piano more prominently." data-datetime="8:26 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355613267272589313"
+                 data-text="Macca is great at what he does naturally and I thought I had all the answers harmonically but over all he taught me more about how to songwrite than anyone else." data-datetime="8:26 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355613266093993986"
+                 data-text="He worked my ass so hard chords-wise. It was a great process. I offered up everything I had and threw most of my craziest changes at it. 
+The middle 8 is genius btw." data-datetime="8:26 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355613264873402370"
+                 data-text="We came up with two intros for Call My Name. After much discussion we kind of went with them both together at once anyway." data-datetime="8:26 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355613263304806402"
+                 data-text="I started with an M1 piano sound and came up with the melody section riff. 
+Andy and I went section by section creating a new sequence of chords and ended up with something that clearly inspired The Killersâ€™ song â€œHumanâ€." data-datetime="8:26 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355613261559967748"
+                 data-text="7 CALL MY NAME
+
+One of us said â€œYou know what? We should do a house trackâ€ -how we laughed. 
+Then one of us actually programmed a house beat on the HR16, and an Akai sampler and then cycled it." data-datetime="8:26 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613239699263491"
+                 data-text="Another song where the lyrics are me processing the collapse of the band. This was a hit single in Germany." data-datetime="8:25 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613201648349186"
+                 data-text="7: CALL MY NAME" data-datetime="8:25 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355613122351009793"
+                 data-text="It\'s truly amazing and we are blessed that we have returned and people still resonate with what we do. Thank you all. 
+
+https://t.co/A4aOZhdLfR" data-datetime="8:25 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355612902422704141"
+                 data-text="@spiceee Yes - promise!" data-datetime="8:24 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355612724613537794"
+                 data-text="You need to play the game more confidently and cleverly. You\'d have got more out of it, would have been better respected and more successful.
+
+https://t.co/r84Gm3m31Z" data-datetime="8:23 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355612547471323136"
+                 data-text="It\'s 30 years ago, I can be honest now. I was hurting like hell and very frightened.
+
+https://t.co/RmFNtnrjfO" data-datetime="8:23 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355612353488969729"
+                 data-text="@YouriLeGod @Tim_Burgess @LlSTENlNG_PARTY We\'ve done one! Check @LlSTENlNG_PARTY website to play back." data-datetime="8:22 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355612318667862016"
+                 data-text="â€œSending letters to Paris from the Empire State, taking pictures from the topâ€
+My other favourite lyric. 
+ Also that terrrrrible oboe synth solo. Took days to try and make it sound like a real oboe. Thereâ€™s a lot of dreams that wonâ€™t come true. 
+
+#timstwitterlisteningparty" data-datetime="8:22 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355612317535395842"
+                 data-text="Classic song. 
+Love this one, about coming of age in the music industry. 
+I totally identify with it. 
+
+#timstwitterlisteningparty" data-datetime="8:22 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355612315970895874"
+                 data-text="6 BIG TOWN 
+
+Meow 
+Thereâ€™s that Roland D50 again. Like a cat ðŸˆ on a back wall 
+M1 Choir 
+Yamaha TX piano eights
+Oberheim OBX bass 
+Fluttery drums from the Alesis HR16 drum machine." data-datetime="8:22 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355612200552050688"
+                 data-text="Referencing NYC as the Big Town metaphor for life in the business. 
+
+That little Alesis drum box working overtime." data-datetime="8:21 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355612159431094272"
+                 data-text="Inspired by thinking about my life in the music industry. All I had known since I was 19 yrs old and fearful of this being the end." data-datetime="8:21 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355612088782221313"
+                 data-text="6: BIG TOWN" data-datetime="8:21 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355611876000993282"
+                 data-text="I was terrified to be on my own so I hid behind the corporate logo
+
+https://t.co/i8ktQVpSd9" data-datetime="8:20 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355611792362401797"
+                 data-text="Programmed by me (+ probably @stukershaw too!)
+
+https://t.co/X1Da9GYJ62" data-datetime="8:20 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355611570424979462"
+                 data-text="It will definitely happen. Promise! 
+
+https://t.co/IVB2nrWr2E" data-datetime="8:19 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355611438790934534"
+                 data-text="Ha!
+
+https://t.co/peOIrfFCcq" data-datetime="8:18 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355611187816361984"
+                 data-text="Thank you. We probably should! 
+
+https://t.co/6uIFBLgtda" data-datetime="8:17 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355611089376055298"
+                 data-text="â€œDonâ€™t you dare to phone me, 
+Donâ€™t you even have me on your mindâ€ 
+The themes of pain and separation set against Andyâ€™s desire to carry on are especially strong in this one. 
+Still in my top 5 of all songs written, by anyone, ever. 
+
+#timstwitterlisteningparty" data-datetime="8:17 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355611088306503693"
+                 data-text="The middle section was me playing with chromatic cadences to create an awkward moment which could with few classy flourishes lead back to the glorious  tortured chorus vocal. Wonderful 
+
+#timstwitterlisteningparty" data-datetime="8:17 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355611087241158660"
+                 data-text="A simple 3 chord song became an epic. 
+The middle staccato section is so early 90s. For me it frames the image of proto-britpop Oasis baggies dancing in Wigan. 
+Good times!" data-datetime="8:17 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355611085315973122"
+                 data-text="We worked on the soaring string synths, the structure, chords and cheeky middle 8. Andy drew the best out of me and made me work so hard to help create what turned out to be an absolute gem. Andyâ€™s plaintiff vocal nailed the urgent lyrics so well. 
+
+#timstwitterlisteningparty" data-datetime="8:17 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355611083264970752"
+                 data-text="5 WAS IT SOMETHING I SAID
+
+Andy had a three chord nugget with a strong melodic pattern and most of the main elements. I was there one afternoon and I helped over the next few days to carefully put it all together. 
+
+#timstwitterlisteningparty" data-datetime="8:17 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355611062108901378"
+                 data-text="I was hurting. 
+
+Love the fade of the music that exposes my voice at the end." data-datetime="8:17 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355611024561475585"
+                 data-text="I just cried my heart out into the lyrics making oblique references to Paul, his wife, Mal and Mart and myself." data-datetime="8:17 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355610980839993351"
+                 data-text="Gorgeous chord adaptation on my original simple idea from Stuart on the Korg M1 were a huge inspiration." data-datetime="8:16 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355610942256590854"
+                 data-text="This is one of the songs that I wrote about the break up of the band. It was so hard to imagine being in OMD without Paul, Mart and Malcolm as we had done everything together for 10 years." data-datetime="8:16 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355610904147197952"
+                 data-text="5: WAS IT SOMETHING I SAID" data-datetime="8:16 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355610690258612227"
+                 data-text="The amazing Beverley Reppium sang backing vocals on the album
+
+https://t.co/gChRZXoEjL" data-datetime="8:15 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355610455444779010"
+                 data-text="You\'re not alone - should have been a single! 
+https://t.co/p3xZbJ9DQK" data-datetime="8:14 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355610169418407937"
+                 data-text="4 SPEED OF LIGHT 
+
+Andy had this High Energy Song. I did a few fiddly bits and drum stuff and helped to voice the climbs into the chorus. And that weird melody section before the outro choruses smacks of my shoddy work to be honest. Lol ðŸ˜‚" data-datetime="8:13 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355610142704857089"
+                 data-text="Don\'t believe everything on Google!
+
+https://t.co/UUoYG6gTSP" data-datetime="8:13 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355609991504388096"
+                 data-text="It was and should have been. We probably could have released 6 singles in Germany!
+
+https://t.co/Y2Xsfuq4N4" data-datetime="8:13 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355609886978138113"
+                 data-text="threw in a Bert Baccarat vamping piano and light playful string riff and cadence which led to the two note riff Lloyd came up with for the verse. Andy started singing the verse and it all came together organically after that." data-datetime="8:12 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355609834922647557"
+                 data-text="The feather hitting the ground refers to the fact that a feather and cannon ball fall at the same speed in a vacuum." data-datetime="8:12 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355609798289584128"
+                 data-text="I had the title but no idea how to write about it. In typical fashion I started using scientific phrases as metaphors." data-datetime="8:12 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1355609775220944897"
+                 data-text="Forgot quite how brilliant this @OfficialOMD album is" data-datetime="8:12 PM Jan 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355609727682670597"
+                 data-text="4: SPEED OF LIGHT" data-datetime="8:11 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355609727066124289"
+                 data-text="The Roland D50 gave the spiky filtered synth rhythm keyboard sound!
+Controlling the excitable filters editing the midi events through Steinberg Pro 24 software using an Atari STE as the computer mainframe was, new exciting and challenging.
+
+#timstwitterlisteningparty" data-datetime="8:11 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355609623114510337"
+                 data-text="It\'s 30 years ago!! I don\'t remember!!
+
+https://t.co/tQqyQrH57W" data-datetime="8:11 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355609601119498240"
+                 data-text="Not Trueâ€ bit was cos I sampled the voice and repeated it by hand like n-n-n-nineteen. We made a sexy drop section and a lovely string riff to climb out of it. 
+
+#timstwitterlisteningparty" data-datetime="8:11 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Filgatopando%2Fstatus%2F1355609557704310786"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess @OfficialOMD https://t.co/r7A2Y6rEkP" data-datetime="8:11 PM Jan 30, 2021"> 
+                ilgatopando            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355609443384381442"
+                 data-text="managed to help Andy tease a song from it by providing a fertile chordal landscape. Loads of little string moves and all the time Lloyds groove sustained it.. The middle section came easily and set the tone for a powerful vocal performance. 
+
+#timstwitterlisteningparty" data-datetime="8:10 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355609422043738113"
+                 data-text="Well I\'m not funky!!
+
+https://t.co/xIqYKODmt2" data-datetime="8:10 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355609243139907590"
+                 data-text="We were trying to break from the 80s and beat a path for a new sound OMD for the 90s.
+I wrote a modal motif over Andy and Lloydâ€™s rhythm and bass track.
+They were both trying to out-do each other on how funky they were!
+They both won. 
+
+#timstwitterlisteningparty" data-datetime="8:10 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355609090790141958"
+                 data-text="3 THEN U TURN AWAY
+
+Andy had a fabulously exciting Emulator Emu II sampler on which heâ€™d made this wonderful Roland 808 tight kik drum sound.
+Mixed with HR16 hats and a 909 snare the beat was pure soul to soul. 
+
+#timstwitterlisteningparty" data-datetime="8:09 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355609028135628807"
+                 data-text="Welcome back! It\'s a good album :-)
+
+https://t.co/oZMl2zzLwn" data-datetime="8:09 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355608891342675973"
+                 data-text="Stuart and Lloyd got the groove sorted beautifully on this song." data-datetime="8:08 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355608857146437634"
+                 data-text="I couldnâ€™t believe it! I discover that her mother worked in the art shop where I got my Louise prints framed! I was in a long term relationship at the time so nothing every happened but I wrote the song about imagining what could have." data-datetime="8:08 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1355608818051395591"
+                 data-text="ðŸ”¥ðŸ”¥ðŸ”¥Panodoraâ€™s Box by @OfficialOMD ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="8:08 PM Jan 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355608808169627649"
+                 data-text="Before Pandoraâ€™s Box was released I was in the Flying Picket club in Liverpool and this amazing looking girl with a Brookâ€™s bob haircut comes up to me and
+says â€œ I want to talk to you about Louise Brooks" data-datetime="8:08 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355608775613415428"
+                 data-text="Shame really as it kind of spoiled a great song for me. Everyone loves it so just shows what I know! Lol 
+
+#timstwitterlisteningparty" data-datetime="8:08 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355608749285797894"
+                 data-text="3: THEN YOU TURN AWAY" data-datetime="8:08 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355608693451214849"
+                 data-text="I just need to get fascinated - though I often use them as metaphors 
+
+https://t.co/ApNlnRCXht" data-datetime="8:07 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355608515524616193"
+                 data-text="Using the footage cost us precisely $5,000 - bargain!
+
+https://t.co/kwgkj2Zlxq" data-datetime="8:07 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355608464165400587"
+                 data-text="Much prefer the album version to the single." data-datetime="8:06 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355608271411961859"
+                 data-text="They just thought a silent movie actress wouldn\'t be cool in a new video
+
+https://t.co/SsOAPh3NRJ" data-datetime="8:06 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355608246833336320"
+                 data-text="2 PANDORAS 
+Did lots of programming, drums and keys on this Fiddly bits and glissandos. Then went to hear it after Phil and Andy â€œproduced it upâ€ and it sounded like there were two backing tracks trying to fight each other to a compromise." data-datetime="8:06 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355608068927729667"
+                 data-text="It\'s unbelievable that the record label didn\'t want us to use Louise in the music video of a song about her!" data-datetime="8:05 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355607967849132035"
+                 data-text="No - to my memory it was released not long after she passed away 
+
+https://t.co/o7HtchqPd5" data-datetime="8:05 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355607767118180358"
+                 data-text="Against the wishes of the US label the video featured the original footage of Louise from the Film Pandoraâ€™s Box. Canâ€™t imagine it ever being any other way.. stupid label!" data-datetime="8:04 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355607721479958532"
+                 data-text="I had been trying write a song about silent movie actress Louise Brooks for ages . This is the penultimate version as the single had a new drum and bass arrangement provided by Griffith, Segal, and Anderson." data-datetime="8:04 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355607680811999234"
+                 data-text="2: PANDORA\'S BOX" data-datetime="8:03 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355607576315105281"
+                 data-text="Hambi who owned the studio I bought managed @stukershaw\'s band and introduced me!
+
+https://t.co/XPhH8U2LLO" data-datetime="8:03 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355607404294123520"
+                 data-text="Cant remember what the bass sound was on. Probably the Oberheim OBX Matrix. 
+It was a 1U rack unit with great synth sounds. We considered it like a database of bass. awesome. 
+
+#timstwitterlisteningparty" data-datetime="8:02 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355607350602838020"
+                 data-text="As soon as the album was finished we did the 12\" of SOTSS and I actually loved the groove on it 
+
+https://t.co/HWFu5cR3Cx" data-datetime="8:02 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1355607245569069056"
+                 data-text="RT @LlSTENlNG_PARTY: Let us know whereabouts in the world you are for our Sugar Tax @OfficialOMD @LlSTENlNG_PARTY 
+
+Shout up https://t.co/6â€¦" data-datetime="8:02 PM Jan 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355607181006143489"
+                 data-text="Strangely I wrote the drums and @stukershaw did the keyboards!
+
+https://t.co/urOvhvMJ2q" data-datetime="8:01 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355606978349981696"
+                 data-text="I then requested a middle 8 riff which he duly supplied. He left after 30 minutes and that was the blueprint for a hit! ðŸ˜ƒ" data-datetime="8:01 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355606904203055106"
+                 data-text="Just then Stuart @stukershaw arrived and I asked him what to do in the gaps in the verse. He wrote the piano refrain from the top of his head, and suggested a chord pattern for a possible chorus." data-datetime="8:00 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fstukershaw%2Fstatus%2F1355606896363843591"
+                 data-text="1 SOTSS
+
+Andy had drums and a bass groove 
+Walking up from town 
+The Toms and triplet 12s hihat were from an Alesis HR16 drum machine.
+
+#timstwitterlisteningparty" data-datetime="8:00 PM Jan 30, 2021"> 
+                stukershaw            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355606814537244672"
+                 data-text="I had gone out of my writing room in the centre of Liverpool to buy some stationery and started singing a drum pattern. I ran straight back and starting programming on my little Alesis drum box, blocked in two chords and got a lyric idea immediately." data-datetime="8:00 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1355606765841342466"
+                 data-text="1: SAILING ON THE SEVEN SEAS" data-datetime="8:00 PM Jan 30, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1355606732291117056"
+                 data-text="#TimsTwitterListeningParty 
+
+Time to hand over to Andy (tweeting from @OfficialOMD) &amp; @stukershaw 
+
+ðŸ™ŒðŸ”¥ https://t.co/zDz4sYUBOo" data-datetime="8:00 PM Jan 30, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
