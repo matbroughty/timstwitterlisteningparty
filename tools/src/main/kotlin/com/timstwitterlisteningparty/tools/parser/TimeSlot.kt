@@ -54,7 +54,10 @@ data class TimeSlot(val dateStr: String = "?",
                     var spotifyYear: String = "", // year album released
                     @CsvBindByPosition(position = 11)
                     @CsvBindByName(column = "listening-party-number")
-                    var listeningPartyNumber: String = "" // twitter listening party number
+                    var listeningPartyNumber: String = "", // twitter listening party number
+                    @CsvBindByPosition(position = 12)
+                    @CsvBindByName(column = "spotify-img-link-large")
+                    var spotifyImgLinkLarge: String = "" // link to album artwork 640/640
 
 ) {
 
@@ -166,6 +169,21 @@ data class TimeSlot(val dateStr: String = "?",
    */
   fun isActuallySpotifyLink(): Boolean {
     return spotifyLink.contains("spotify")
+  }
+
+  /**
+   * Is it not only a spotify link but a spotify album link as opposed to
+   * an artist or single
+   */
+  private fun isActuallySpotifyAlbumLink(): Boolean {
+    return isActuallySpotifyLink() && spotifyLink.contains("album")
+  }
+
+  /**
+   * Get the spotify album link id - if it is
+   */
+  fun getSpotifyAlbumId(): String {
+    return if (isActuallySpotifyAlbumLink()) spotifyLink.substringAfterLast("/") else ""
   }
 
   /**

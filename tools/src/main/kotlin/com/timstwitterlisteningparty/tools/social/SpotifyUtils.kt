@@ -100,6 +100,29 @@ class SpotifyUtils {
     return null
   }
 
+  fun searchByAlbumId(albumId: String, spotifyApiParam: SpotifyApi? = null) :Album?{
+
+    try{
+
+      val spotifyApi = spotifyApiParam ?: getSpotify()
+
+      val album = spotifyApi.getAlbum(albumId)
+      val searchRequest = album.build().execute()
+      logger.info("Album {$searchRequest.name}")
+      searchRequest.images.forEach {
+        logger.info("height is $it.height width is ${it.width} and url = ${it.url}")
+      }
+
+      return searchRequest.toAlbum()
+
+    }catch(e : Exception){
+      logger.warn("Error:  ${e.localizedMessage}", e)
+    }
+
+    return null
+  }
+
+
   private fun buildQuery(artist: String, album: String): String {
     return "album:${album.trim()} artist:${artist.trim()}"
   }
@@ -125,8 +148,12 @@ class SpotifyUtils {
 }
 
 fun AlbumSimplified.toAlbum(): Album {
-  return Album(spotifyLink = externalUrls.externalUrls["spotify"], imgLink = images[1].url, smallImgLink = images[2].url, spotifyId = id, releaseDate = releaseDate, albumName = name, year = releaseDate)
+  return Album(spotifyLink = externalUrls.externalUrls["spotify"], largeImgLink = images[0].url, mediumImgLink = images[1].url, smallImgLink = images[2].url, spotifyId = id, releaseDate = releaseDate, albumName = name, year = releaseDate)
 }
 
-data class Album(val spotifyLink: String?, val imgLink: String, val smallImgLink: String, val spotifyId: String, val releaseDate: String, val albumName: String, val year:String)
+fun com.wrapper.spotify.model_objects.specification.Album.toAlbum(): Album {
+  return Album(spotifyLink =  externalUrls.externalUrls["spotify"], largeImgLink = images[0].url, mediumImgLink = images[1].url, smallImgLink = images[2].url, spotifyId = id, releaseDate = releaseDate, albumName = name, year = releaseDate)
+}
+
+data class Album(val spotifyLink: String?, val largeImgLink : String, val mediumImgLink: String, val smallImgLink: String, val spotifyId: String, val releaseDate: String, val albumName: String, val year:String)
 

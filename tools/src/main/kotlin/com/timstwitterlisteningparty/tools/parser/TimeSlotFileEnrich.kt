@@ -3,6 +3,7 @@ package com.timstwitterlisteningparty.tools.parser
 import com.opencsv.CSVWriter
 import com.opencsv.bean.CsvToBeanBuilder
 import com.opencsv.bean.StatefulBeanToCsvBuilder
+import com.timstwitterlisteningparty.tools.social.Album
 import com.timstwitterlisteningparty.tools.social.SpotifyUtils
 import com.timstwitterlisteningparty.tools.social.TweetUtils
 import org.jsoup.Jsoup
@@ -37,21 +38,31 @@ class TimeSlotFileEnrich {
         val album = SpotifyUtils().findAlbum(it.band, it.album)
         if (album != null) {
           logger.info("found album $album")
-          it.spotifyImgLink = album.imgLink
+          it.spotifyImgLink = album.mediumImgLink
           it.spotifyImgLinkSmall = album.smallImgLink
+          it.spotifyImgLinkLarge = album.largeImgLink
           it.spotifyLink = album.spotifyLink.toString()
           it.spotifyYear = album.year
         } else {
           logger.warn("Could not find album for $it")
         }
       }
-      // update those without small image that do have a spotify large image
-      if (it.spotifyImgLinkSmall.isEmpty() && it.spotifyImgLink.contains("i.scdn.co")) {
-        val album = SpotifyUtils().findAlbum(it.band, it.album)
+      // update those without small or large image that do have a spotify medium image
+      if ((it.spotifyImgLinkSmall.isEmpty() || it.spotifyImgLinkLarge.isEmpty()) && it.spotifyImgLink.contains("i.scdn.co")) {
+        val albumId = it.getSpotifyAlbumId()
+        logger.info("Spotify Album Id $albumId for album ${it.album} and band ${it.band}")
+        val album : Album? = if(albumId.isEmpty()) {
+          SpotifyUtils().findAlbum(it.band, it.album)
+        }else{
+          SpotifyUtils().searchByAlbumId(albumId)
+        }
         if (album != null) {
           it.spotifyImgLinkSmall = album.smallImgLink
+          it.spotifyImgLinkLarge = album.largeImgLink
         } else {
-          logger.warn("Could not find album for $it so no small image")
+          logger.warn("Could not find album for $it so small and large image copied from medium image")
+          it.spotifyImgLinkSmall = it.spotifyImgLink
+          it.spotifyImgLinkLarge = it.spotifyImgLink
         }
       }
 
@@ -80,7 +91,6 @@ class TimeSlotFileEnrich {
         }
 
       }
-
 
     }
 
@@ -113,6 +123,10 @@ class TimeSlotFileEnrich {
     }
 
     return writer.toString()
+  }
+
+  override fun equals(other: Any?): Boolean {
+    return super.equals(other)
   }
 
   private fun addListeningPartyNumber(it: TimeSlot, counter :AtomicInteger) {

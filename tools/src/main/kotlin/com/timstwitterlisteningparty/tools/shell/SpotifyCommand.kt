@@ -17,7 +17,18 @@ class SpotifyCommand {
 
     if (album != null){
       logger.info("Album href is ${album.spotifyLink} " +
-        "and ${album.albumName} and images = ${album.imgLink} and release ${album.releaseDate} and id ${album.spotifyId}")
+        "and ${album.albumName} and images = ${album.mediumImgLink} and release ${album.releaseDate} and id ${album.spotifyId}")
+    }
+    return album.toString()
+  }
+
+
+  @ShellMethod("finds an album on spotify with the album id")
+  fun spotifyAlbumById(@ShellOption("-I", "--albumId") albumId: String): String? {
+    val album = SpotifyUtils().searchByAlbumId(albumId)
+
+    if (album != null){
+      logger.info("Album name is $album ")
     }
     return album.toString()
   }

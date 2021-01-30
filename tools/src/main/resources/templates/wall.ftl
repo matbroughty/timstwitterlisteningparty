@@ -156,7 +156,7 @@
             <a href="${slot.replayLink}" target="_blank">
               <img class="img-fluid"
                       <#if fullSize >
-                        src="${slot.spotifyImgLink}"
+                        src="${slot.spotifyImgLinkLarge}"
                       <#else>
                         src="${slot.spotifyImgLinkSmall}"
                       </#if>
