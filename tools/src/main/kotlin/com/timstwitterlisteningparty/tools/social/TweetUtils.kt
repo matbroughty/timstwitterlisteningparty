@@ -91,6 +91,7 @@ class TweetUtils {
       return "$replayLink page doesn't exist yet"
     }
     logger.info("tweeting-replay-msg for replay $replayLink")
+    //return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty")
     return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty #ttlp${timeSlot.listeningPartyNumber}")
   }
 

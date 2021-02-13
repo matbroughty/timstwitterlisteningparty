@@ -288,11 +288,5 @@ data class TimeSlot(val dateStr: String = "?",
     return listeningPartyNumber.isNotBlank() && listeningPartyNumber != "-1"
   }
 
-  /**
-   * Iron maiden bodge to fix ttlp number to 666.  Remove after Feb 12th
-   */
-  fun maiden(): String {
-    return (listeningPartyNumber.toInt() - 1).toString()
-  }
 
 }
