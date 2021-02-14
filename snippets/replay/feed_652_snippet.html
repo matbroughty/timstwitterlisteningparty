@@ -1,0 +1,380 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/36UBSvMuqK8r7WYialQrLV" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02a44333f2b91b35cbde87d19e" alt="Love" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Love</span><br/><span class="sub-colour">Love</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(181019)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/36UBSvMuqK8r7WYialQrLV" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_181019_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 41 tweets from Sunday 14th February 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/johnnysecho" target="_blank"><img src="https://pbs.twimg.com/profile_images/891397493803569152/cVWk-c1U_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@johnnysecho</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1357670243766837249/tWOOSNjS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/blankprofile.png'"><br/>@LlSTENlNG_PARTY</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="My Little Red Book - Stereo Version" data-start="0"
+             data-duration="150" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Can't Explain - Stereo Version" data-start="151"
+             data-duration="159" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="A Message to Pretty - Stereo Version" data-start="311"
+             data-duration="193" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="My Flash on You - Stereo Version" data-start="505"
+             data-duration="127" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Softly to Me - Stereo Version" data-start="633"
+             data-duration="170" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="No Matter What You Do - Stereo Version" data-start="804"
+             data-duration="165" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Emotions - Stereo Version" data-start="970"
+             data-duration="120" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="You I'll Be Following - Stereo Version" data-start="1091"
+             data-duration="144" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Gazing - Stereo Version" data-start="1236"
+             data-duration="160" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Hey Joe - Stereo Version" data-start="1397"
+             data-duration="160" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Signed D.C. - Stereo Version" data-start="1558"
+             data-duration="165" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Colored Balls Falling - Stereo Version" data-start="1724"
+             data-duration="113" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Mushroom Clouds - Stereo Version" data-start="1838"
+             data-duration="144" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="And More - Stereo Version" data-start="1983"
+             data-duration="177" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="Number 14 - Stereo" data-start="2161"
+             data-duration="103" style="display:none"></div>
+                <div id="track-16" class="track-list"
+             data-name="Signed D.C. - Alternate Stereo Mix" data-start="2265"
+             data-duration="169" style="display:none"></div>
+                        <div id="track-17" class="track-list"
+                     data-name="Finished" data-start="2435"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851a44333f2b91b35cbde87d19e" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-41" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FMissTrudyAnn%2Fstatus%2F1361070191770300418"
+                 data-text="@LlSTENlNG_PARTY @soozworld 53rd in a row for me!! All documented in my party log bookðŸ¤“" data-datetime="9:49 PM Feb 14, 2021"> 
+                MissTrudyAnn            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361070165522227200"
+                 data-text="#TimsTwitterListeningParty
+We recorded the first LOVE album, live in studio, mistakes were left In, otherwise we would\'ve had to do it again." data-datetime="9:49 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1361069991286747148"
+                 data-text="@anfieldjon @johnnysecho https://t.co/KC1pRzGZVI" data-datetime="9:49 PM Feb 14, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1361069747828383747"
+                 data-text="@LlSTENlNG_PARTY @soozworld Me ðŸ˜‰" data-datetime="9:48 PM Feb 14, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="121000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1361069524494266377"
+                 data-text="Happy 50th!
+Anyone else got a list of which listening parties they did? Aside from @soozworld who has done all 672 so far! https://t.co/u1ytZ1w7mk" data-datetime="9:47 PM Feb 14, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1361069017784549379"
+                 data-text="@GrahamGouldman Hey GG, give us a quick follow ; )" data-datetime="9:45 PM Feb 14, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361068520683958273"
+                 data-text="#TimsTwitterListeningParty
+This entire album was recorded live with no overdubs on a two Track Ampex recorder." data-datetime="9:43 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361068171168387073"
+                 data-text="#TimsTwitterListeningParty
+That\'s Arthur and me pretending to be choir boys on Mushroom clouds. We did it in one take." data-datetime="9:41 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FMrNormanBlake1%2Fstatus%2F1361067914779103232"
+                 data-text="@LlSTENlNG_PARTY Glasgow. First time they toured Forever Changes. Started the set with Little Red Book. Arthur Lee hitting the tambourine. Baby Lemonade nailing the music. That was quite good :-)" data-datetime="9:40 PM Feb 14, 2021"> 
+                MrNormanBlake1            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361067740564389888"
+                 data-text="@nickscalera Semie Mosely of \"Mosrite\" guitars  made that double neck  for me, The twelve string neck refused to stay in tune." data-datetime="9:40 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="140000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1361067544426250247"
+                 data-text="Big love to @johnnysecho x x" data-datetime="9:39 PM Feb 14, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361066954539237378"
+                 data-text="#TimsTwitterListeningParty 
+The actual words are those sung by Bryan on the first LOVE album. I will delve into the topic in more detail in my book. Stay tuned." data-datetime="9:37 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1361066808816644096"
+                 data-text="RT @Tim_Burgess: I think every Scouse ladâ€™s older brother/sister  had a copy of Forever Changes. Loving Love is a Liverpudlian rite of passâ€¦" data-datetime="9:36 PM Feb 14, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361066768844742656"
+                 data-text="#TimsTwitterListeningParty 
+The actual words to \"Hey Joe\" are those sung by Bryan on the first LOVE album. I will delve into the topic in more detail in my book. Stay tuned." data-datetime="9:36 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1361066760879890433"
+                 data-text="RT @Tim_Burgess: I think every Scouse ladâ€™s older brother/sister  had a copy of Forever Changes. Loving Love is a Liverpudlian rite of passâ€¦" data-datetime="9:36 PM Feb 14, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1361066584475918338"
+                 data-text="RT @LlSTENlNG_PARTY: Favourite ever Love live show??? https://t.co/zy2tDv8RSl" data-datetime="9:35 PM Feb 14, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1361066507703304201"
+                 data-text="RT @LlSTENlNG_PARTY: Favourite ever Love live show??? https://t.co/zy2tDv8RSl" data-datetime="9:35 PM Feb 14, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="104000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361066439524818944"
+                 data-text="#TimsTwitterListeningParty 
+Hey Joe, has a storied and controversial provenance, Bob Lee of the Leaves asked me for the words, suspicious of his motives, I made up entirely different words, which they, and many others have repeated." data-datetime="9:35 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361066005926088704"
+                 data-text="#TimsTwitterListeningParty
+You I\'ll Be Following, was a song about weed, written by Arthur Lee, It was one of only a couple of Songs Arthur played on." data-datetime="9:33 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="195000" data-url="https%3A%2F%2Ftwitter.com%2FAileenJardine%2Fstatus%2F1361065845066240002"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY @johnnysecho 
+A little of Johnny - A Message to Pretty at the Brudenell
+#TimsTwitterListeningParty https://t.co/W3B37h4zCR" data-datetime="9:32 PM Feb 14, 2021"> 
+                AileenJardine            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="154000" data-url="https%3A%2F%2Ftwitter.com%2FDuglasTStewart%2Fstatus%2F1361065026883383298"
+                 data-text="@Tim_Burgess #TimsTwitterListeningParty Interstellar Overdrive by Pink Floyd was based on a jam around My Little Red Book." data-datetime="9:29 PM Feb 14, 2021"> 
+                DuglasTStewart            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="111000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361064379580440579"
+                 data-text="#TimsTwitterListeningParty 
+Emotions is still used as a lead-in on several radio stations. Not bad for a song written by a twelve-year-old." data-datetime="9:26 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1361063914612662285"
+                 data-text="Beautiful posters promoting Love at San Francisco\'s Fillmore and Avalon Ballrooms, including a bill featuring The (American) Charlatans! #TimsTwitterListeningParty @Tim_Burgess @johnnysecho https://t.co/D6d1NUZqZ6" data-datetime="9:24 PM Feb 14, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="286000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1361063544331112453"
+                 data-text="Johnnyâ€™s turn now #TimsTwitterListeningParty" data-datetime="9:23 PM Feb 14, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1361062341509599238"
+                 data-text="The photos on the cover of Love\'s debut LP were taken in the garden of the mansion where the band lived at the time. \"The Castle\" was in the Hollywood Hills and had previously been owned by Bela Lugosi. #TimsTwitterListeningParty @Tim_Burgess @johnnysecho https://t.co/yGTRXlM0H9" data-datetime="9:18 PM Feb 14, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="125000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361062306424127489"
+                 data-text="#TimsTwitterListeningParty 
+Emotions, AKA Lonely Guitar, was an instrumental written by me when I was twelve, it was also used as the soundtrack for the movie \"Medium Cool.\" It paid for my first house..." data-datetime="9:18 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="172000" data-url="https%3A%2F%2Ftwitter.com%2F_Bands_FC%2Fstatus%2F1361061782484361224"
+                 data-text="#TimsTwitterListeningParty https://t.co/HtRQnr0YV2" data-datetime="9:16 PM Feb 14, 2021"> 
+                _Bands_FC            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="175000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361061058425708544"
+                 data-text="#TimsTwitterListeningParty 
+Softly To Me was one of my favorite songs from the first LOVE album, written by Bryan Maclean." data-datetime="9:13 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="160000" data-url="https%3A%2F%2Ftwitter.com%2Fjulesmason27%2Fstatus%2F1361060324762415107"
+                 data-text="@LlSTENlNG_PARTY https://t.co/7EEqBQrveh" data-datetime="9:10 PM Feb 14, 2021"> 
+                julesmason27            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1361059653472419842"
+                 data-text="Love on stage in Bido Litoâ€™s in Hollywood, late 1965, shortly before the release of their debut LP. Fab photos by Chuck Boyd #TimsTwitterListeningParty @Tim_Burgess @johnnysecho https://t.co/KGl9LdhldJ" data-datetime="9:08 PM Feb 14, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361059565450657798"
+                 data-text="#TimsTwitterListeningParty 
+My Flash On You was about an encounter Arthur had with a couple of cops in Hollywood who would always park outside of the club we played at regularly, called \"Bido Lito\'s.\"" data-datetime="9:07 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="135000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1361059460979052545"
+                 data-text="Anyone at the @LlSTENlNG_PARTY hearing Love by Love for the very first time? https://t.co/sY7aDO5eq7" data-datetime="9:07 PM Feb 14, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1361058896333389826"
+                 data-text="RT @LlSTENlNG_PARTY: Checking in who has Love by Love on vinyl for the @LlSTENlNG_PARTY https://t.co/BmAowvOykg" data-datetime="9:05 PM Feb 14, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361058894877876225"
+                 data-text="#TimsTwitterListeningParty 
+Message To Pretty was written by Arthur Lee, for his girlfriend Anita Billings whom he referred to as \"Pretty.\"" data-datetime="9:05 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1361058687192858634"
+                 data-text="@LlSTENlNG_PARTY Original 1966 UK pressing picked up at a record fair in the mid 80s - sounds amazing https://t.co/BsBajaJHZK" data-datetime="9:04 PM Feb 14, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="190000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1361058612668432384"
+                 data-text="Total love for My Little Red Book by  Love https://t.co/K8V5QvYawQ" data-datetime="9:03 PM Feb 14, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1361057816346263553"
+                 data-text="Handing over to @johnnysecho https://t.co/dAx05PVfdJ" data-datetime="9:00 PM Feb 14, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361057702802169858"
+                 data-text="#TimsTwitterListeningParty 
+Can\'t Explain, was \"written\" by John Fleckenstein and me, we borrowed a bit from the Stones, but they didn\'t mind, they returned the favor with Goin Home, and She\'s A Rainbow." data-datetime="9:00 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="104000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1361057407028375554"
+                 data-text="RT @LlSTENlNG_PARTY: Tuesday February 16th
+8pm (U.K. time)
+
+@PillowQueens will be our guests at a @LlSTENlNG_PARTY featuring their ace debuâ€¦" data-datetime="8:59 PM Feb 14, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361056968899653632"
+                 data-text="#TimsTwitterListeningParty
+I went home and tried to play My Little Red Book from memory and got much of it wrong, I.e. the words and most of the chords. Burt wasn\'t pleased with the way we rewrote his song until the royalty checks started pouring in." data-datetime="8:57 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Fjohnnysecho%2Fstatus%2F1361056667228508162"
+                 data-text="#TimsTwitterListeningParty# 
+Arthur Lee and I saw the movie \"What\'s New Pussycat\" and were enamored with a song from the soundtrack called, My Little Red Book, by Burt Bacharach." data-datetime="8:56 PM Feb 14, 2021"> 
+                johnnysecho            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
