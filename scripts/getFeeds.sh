@@ -235,6 +235,19 @@ do
         curl "${REMOTE_PATH}/img/feed_${i}_small.png" > $thumbnail
         addtogit $image
         addtogit $thumbnail
+
+        # Store twitter profile images on server
+        echo ++++++++++ Fetching profile images for feed $i
+        curl "${REMOTE_PATH}/updateImages.php?id=${i}" >/dev/null
+        allUsers=`curl "${REMOTE_PATH}/partyUsers.php?id=${i}"`
+        IFS=',' read -r -a users <<< "$allUsers"
+        for user in "${users[@]}"
+        do
+            echo ++++++++++ Fetching profile image for ${user}
+            profileImg=${LOCAL_PATH}/img/profile/${user}.jpg
+            curl "${REMOTE_PATH}/../img/profile/${user}.jpg" > $profileImg
+            addtogit $profileImg
+        done
     fi
 done
 
