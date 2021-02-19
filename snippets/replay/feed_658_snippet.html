@@ -1,0 +1,611 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3AgEwBev3Hb78O74pu4xVM" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e028f9f6d1f4d5514214cfdd741" alt="Time 'n' Place" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Kero Kero Bonito</span><br/><span class="sub-colour">Time 'n' Place</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(5261263)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3AgEwBev3Hb78O74pu4xVM" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_5261263_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 126 tweets from Friday 19th February 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/KeroKeroBonito" target="_blank"><img src="https://pbs.twimg.com/profile_images/1170956612812460032/jVKujcn__normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/KeroKeroBonito.jpg'"><br/>@KeroKeroBonito</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Outside" data-start="0"
+             data-duration="111" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Time Today" data-start="112"
+             data-duration="131" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Only Acting" data-start="244"
+             data-duration="229" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Flyway" data-start="474"
+             data-duration="118" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Dump" data-start="593"
+             data-duration="181" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Make Believe" data-start="775"
+             data-duration="207" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Dear Future Self" data-start="983"
+             data-duration="166" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Visiting Hours" data-start="1150"
+             data-duration="145" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="If I'd Known" data-start="1296"
+             data-duration="163" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Sometimes" data-start="1460"
+             data-duration="121" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Swimming" data-start="1582"
+             data-duration="199" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Rest Stop" data-start="1782"
+             data-duration="202" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="1985"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048518f9f6d1f4d5514214cfdd741" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-126" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1362863503539920902"
+                 data-text="That was off the scale amazing ðŸ˜» https://t.co/MBb8dii1TN" data-datetime="8:35 PM Feb 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1362863154439606284"
+                 data-text="WOW!! That was â¤ï¸â¤ï¸â¤ï¸
+Thanks @KeroKeroBonito https://t.co/tTxsNLvG3w" data-datetime="8:34 PM Feb 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862838281289735"
+                 data-text="Thank you so much @Tim_Burgess\' @LlSTENlNG_PARTY for having us!!! #timstwitterlisteningparty" data-datetime="8:33 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862805096017923"
+                 data-text="Our mailing list is the first place we\'ll announce whatever we do next: https://t.co/0w89IColw6 #timstwitterlisteningparty" data-datetime="8:33 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862763895365636"
+                 data-text="If you want to hear more from us like this, check out TOTEP, \"The Open Road\" (the b-side to \"Swimming\") and the Civilisation I EP, which takes T\'n\'P\'s hardware-only approach into a lost world junk art-electronica realm. #timstwitterlisteningparty" data-datetime="8:32 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862710950678531"
+                 data-text="At the end, all that\'s left is Sarah singing alone, only in one channel, disembodied in the void. Has your home listening setup broken? \"As the trumpets echo round/You don\'t wanna be a-\". And so concludes Time \'n\' Place. #timstwitterlisteningparty" data-datetime="8:32 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862599629647877"
+                 data-text="We created Sarah\'s vocals here by actually recording a very simple fake mainstream pop song in the style of Take That, Coldplay etc. - the vocal was then isolated and placed in this nightmare junk noise quagmire, completely recontextualising it. #timstwitterlisteningparty" data-datetime="8:32 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862509393399816"
+                 data-text="Sarah\'s vocals here have been the subject of much fan speculation. We won\'t comment on those except to say that the imagery is obviously apocalyptic. Was she just calling at a rest stop mid-drive, or is this something else? #timstwitterlisteningparty" data-datetime="8:31 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862444423561216"
+                 data-text="We wanted to end this album with an impenetrable mess, instead of a poignant semantic statement, because that\'s what all of the experiences that make up T\'n\'P - and our lives - amount to when viewed at once. How you plot a way through it is up to you. #timstwitterlisteningparty" data-datetime="8:31 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862404133130249"
+                 data-text="We also used a telephone pickup coil (one of our secret weapons across T\'n\'P), a recording of an N64 crashing Gus made years ago, odd speech through our lo-fi samplers, home keyboards programmed to sound like they were malfunctioning, a Game Boy, etc. #timstwitterlisteningparty" data-datetime="8:31 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862374068363271"
+                 data-text="We used a range of techniques here. If you listen very closely you might hear a snippet of the most underrated KKB song, \"Build It Up\". Anthony Lim, who mixed the record, used unusual stereo field plug-ins for a totally disorienting effect. #timstwitterlisteningparty" data-datetime="8:31 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862293936128003"
+                 data-text="Jenny\'s also back here, making noise on Press Play\'s EMS Synthi A. This was recorded as an alternate option for the noise in \"Outside\", but slotted in mysteriously well here instead, with that song\'s noise already taken care of. #timstwitterlisteningparty" data-datetime="8:31 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862260083961856"
+                 data-text="The chords here were written on keyboard. To record them, James played each chord for a while with Gus holding down extra notes on the fretboard as they were so weird. We put the chords through different effects, then edited and layered them together. #timstwitterlisteningparty" data-datetime="8:30 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862147072589827"
+                 data-text="Gus came up with the title \"Rest Stop\" while landing in Madrid for a @djkanewest show and knew it had to be saved for this song. Writing KKB songs is often a process of matching themes/titles and musical ideas that go well with each other. #timstwitterlisteningparty" data-datetime="8:30 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862095004536832"
+                 data-text="Gus wrote the chords for this section very late at night, around 3 AM, on his own in a studio in Beverly Grove in Los Angeles (when he was meant to be finishing our cover of Oasis\' \"Rock \'n Roll Star\" for @DEEKRecordings\' Covered in Gloria compilation). #timstwitterlisteningparty" data-datetime="8:30 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362862034669469704"
+                 data-text="\"Rest Stop\" closes T\'n\'P. Its first half is another sketch, this time of a deserted motorway service station \"at the edge of the atlas\". It\'s an allegory for moments where we find ourselves at a crossroads, with no option but to make peace with chaos. #timstwitterlisteningparty" data-datetime="8:30 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861870928064521"
+                 data-text="The ending of \"Swimming\" is a synth string chord sampled on a Yamaha VSS-200. Such lo-fi samplers are amazing for making any sound terrifying and broken. The same sampler, jankily playing back a sound based on a sampled piano note, opens \"Rest Stop\". #timstwitterlisteningparty" data-datetime="8:29 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861816221757445"
+                 data-text="The night before the video shoot, Jamie and Sarah hung out on Weymouth Beach. Their call time was around 6 AM so the crew could chase Sarah around rugged terrain with cameras and a drone in maximum sunlight; @HeinzJunkins didn\'t even need a wetsuit. #timstwitterlisteningparty" data-datetime="8:29 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861741592506373"
+                 data-text="@HeinzJunkins returned again to make the beautiful video for \"Swimming\", the last one to be made for a T\'n\'P song. It was filmed around the Isle of Portland near Weymouth and features numerous landmarks in the area. #timstwitterlisteningparty https://t.co/1GYJXeTeiF" data-datetime="8:28 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861660101349378"
+                 data-text="The relationships between these different tropes are personal to us; they may seem obscure, but make total sense in our heads. We started to use the album title as an adjective when describing references - as in, \"that\'s very Time \'n\' Place\". #timstwitterlisteningparty" data-datetime="8:28 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861619441729539"
+                 data-text="T\'n\'P\'s combination of styles from guitar pop history reflected our approach to making a band-based record in 2018. T\'n\'P is our response to all of guitar music history and - though there is still great guitar music being made - KKB\'s memorial to it. #timstwitterlisteningparty" data-datetime="8:28 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861538315546624"
+                 data-text="Musically \"Swimming\" is a tribute to the classic, distinctive songwriting of @yuming_official, which is by turns comforting, sad and stirring. We explored various musical vocabularies from across pop history on T\'n\'P - mixing up the memories again. #timstwitterlisteningparty" data-datetime="8:28 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861473073139713"
+                 data-text="\"After many years had passed/Hoping I would find the path/I arrived at the start\" - this is a reference to \"The One True Path\", a song from TOTEP that explored the idea that life is a singular experience formed by all its chaotic, disparate elements. #timstwitterlisteningparty" data-datetime="8:27 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1362861389824618496"
+                 data-text="&amp; Swimming too https://t.co/1yzWxNlyEb" data-datetime="8:27 PM Feb 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861333599895556"
+                 data-text="This is the first and so far only KKB song to use a real piano, played by Gus at Press Play. The chorus was the initial idea that sparked this song, except the original lyrics were \"Bubbles/Pop easily\" instead of \"Swimming/Across the sea\". #timstwitterlisteningparty" data-datetime="8:27 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861274745495552"
+                 data-text="\"I could feel the detritus lifting/And I moved like I knew that I was free again/Then before thinking I ventured out/Swimming\" - the novel sensation of swimming for the first time, and letting the sea wash the sand away, or coming to terms with oneself? #timstwitterlisteningparty" data-datetime="8:27 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861209943478274"
+                 data-text="\"Mama led me by the hand/\'Til the grit stuck with the damp/And the foam fizzed adrift/When we both strode in\" - \"Swimming\" is about seeing your relationships and journey through life as an adult via a visit to a beach you first saw as a child. #timstwitterlisteningparty" data-datetime="8:26 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362861055479865349"
+                 data-text="The talking you hear at the end of \"Sometimes\" is chat from the recording session, which we kept in true T\'n\'P fashion. Then we\'re abruptly brought into \"Swimming\", which was released as the last single from T\'n\'P in March 2019. #timstwitterlisteningparty" data-datetime="8:26 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860959258263557"
+                 data-text="\"Sometimes\" is a song Gus and George (who actually sings on the track) used to jam at secondary school together. Again, we were dragging experiences from our personal histories into the irrational memory vortex of Time \'n\' Place. #timstwitterlisteningparty" data-datetime="8:25 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860932884488199"
+                 data-text="It was a really hot day, but The Sometimes Singers were fabulous and kept going for it. We tried multiple versions, including one with live claps (didn\'t work) and one as dementedly cheery as possible (which ended up being the take we used). #timstwitterlisteningparty" data-datetime="8:25 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860788055162883"
+                 data-text="\"But just round the corner/The sun\'s looking dapper/And Lady Luck\'s his date\" - \"Sometimes\" pays homage to campy bittersweet pop classics like \"Raindrops Keep Falling On My Head\" and \"Smile\", which become devastating/freakish in the right/wrong context. #timstwitterlisteningparty" data-datetime="8:25 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1362860719717437440"
+                 data-text="â¤ï¸ðŸ”¥Somtimes by @KeroKeroBonito ðŸ”¥â¤ï¸" data-datetime="8:24 PM Feb 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860692072710146"
+                 data-text="This recording was later overdubbed with Casios at home in Logic. Then, this was bounced out of Logic and recorded to cassette tape. On T\'n\'P, processes flow in both directions - analogue recordings augmented digitally are nonsensically corrupted again. #timstwitterlisteningparty" data-datetime="8:24 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860649907425282"
+                 data-text="To cut this song, James, Sarah and The Sometimes Singers performed it live in the studio, conducted by Gus and recorded by Andy Ramsay. There\'s a short clip of this session in KKB Life, a film we put together of footage taken during the T\'n\'P era. #timstwitterlisteningparty https://t.co/2U3l17Oz1X" data-datetime="8:24 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860563278278656"
+                 data-text="For the next song, \"Sometimes\", Sarah is joined on vocals by The Sometimes Singers, a group of musical collaborators from our childhood up to 2018: @oscar_scheller (again), @boenyeah (again), George (@gaupton), Yasmin Leigh and Gus\' sister Aggie. #timstwitterlisteningparty" data-datetime="8:24 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860479480291337"
+                 data-text="This is Jamie\'s first rap on a KKB track. Jamie: \"I had a good go at the \"If Iâ€™d Known\" verse and it werenâ€™t working so I remember just smashing it out in one go almost angrily with a friend silently on their laptop on the sofa in the background.\" #timstwitterlisteningparty" data-datetime="8:23 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860339025616897"
+                 data-text="In mixing up all these eras and recording processes, we were exploring humanity\'s nostalgia for different stages of memory and media, acknowledging its irrationality and instead seeing if we could make something interesting by embracing the mess. #timstwitterlisteningparty" data-datetime="8:23 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860207144120327"
+                 data-text="This amazing guitar solo was improvised by James in one take for the song\'s demo in 2017. We tried more later but none matched this. There are sounds from five stages on T\'n\'P: ancient files, demos, band sessions, home production and studio overdubs. #timstwitterlisteningparty" data-datetime="8:22 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860101074374661"
+                 data-text="Press Play Studios is almost directly opposite the flat Jamie lived in on Ilderton Road in Bermondsey (and next to DIY Space for London) during the making of T\'n\'P. Jamie remembers waving from his front room at Gus leaving the studio late most nights. #timstwitterlisteningparty" data-datetime="8:22 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362860040303108100"
+                 data-text="We recorded the band parts for T\'n\'P and TOTEP in a five-day session at Press Play Studios, run by Andy Ramsay (who plays drums for @stereolabgroop). Jamie played an EKO Violin Bass (new model) and an old Fender Mustang Short Scale across the album. #timstwitterlisteningparty" data-datetime="8:22 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859986423083011"
+                 data-text="This was the first song we cut for T\'n\'P. T\'n\'P\'s band parts were recorded by the amazing Jimmy Robertson; we picked him because he engineered Late of the Pier\'s \"Fantasy Black Channel\", whose phat-sounding collagic mentalism greatly inspired T\'n\'P. #timstwitterlisteningparty" data-datetime="8:21 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859940780646404"
+                 data-text="\"Looking back I ponder all the possibilities/That I had sat right in front of me/Every one an optional decision giving birth/To a dedicated universe\" - this song refracts personal reflection through the existentially wide lens of multiverse theory. #timstwitterlisteningparty" data-datetime="8:21 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859885994598404"
+                 data-text="This is \"If I\'d Known\", written primarily by Jamie. The chords were informed by Randy Newman while the scream you just heard opening the track - made by Jamie himself - was \"inspired by Prince\". #timstwitterlisteningparty" data-datetime="8:21 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859784853217280"
+                 data-text="Gus: \"Just before the album came out, my mum came up to my room crying her eyes out. She said \"Gus, I\'ve just realised what \"Visiting Hours\" is about.\" We hugged it out. We played the song at our Electric Ballroom show with mum and dad in the audience.\" #timstwitterlisteningparty" data-datetime="8:21 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859692066799621"
+                 data-text="\"Visiting Hours\" is one of several T\'n\'P-era KKB songs that sketches out a specific scene in its lyrics (like \"Dump\" and \"Cinema\" from TOTEP). We wanted to explore the modern suburban British experience that makes us through its physical georgraphy. #timstwitterlisteningparty" data-datetime="8:20 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859626790854656"
+                 data-text="\"I\'ve been thinking about you coming home/I was asking them when but they don\'t know\" - despite being cheery on the surface, the lyrics of this song imply a hellish nightmare. The doctors don\'t know when he can go home because it\'s too serious to say. #timstwitterlisteningparty" data-datetime="8:20 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859580959690759"
+                 data-text="This is one of the few KKB songs Gus also provides backing vocals for. The Parakeets\' \"ooh-hoo-hoo!\" you just heard is inspired by the vocalisations in \'60s girl group songs. #timstwitterlisteningparty" data-datetime="8:20 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859486461968387"
+                 data-text="Gus\' aunt came down from Scotland just in case. After Gus was working on the \"Visiting Hours\" instrumental she mentioned that she\'d \"liked the sound of that music you were working on earlier\". It was then that Gus decided what this song should be about. #timstwitterlisteningparty" data-datetime="8:19 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859430275145728"
+                 data-text="\"VH\" courts the sick euphoria of seeing a relative in an HDU, happy the worst was avoided but still traumatised, and matched by the patient\'s giddy neurological state, which can be deeply disturbing. @russelldavies63\'s It\'s a Sin portrays this well. #timstwitterlisteningparty" data-datetime="8:19 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859376105684992"
+                 data-text="The type of trauma Gus\' dad suffered is fatal in 50%-90% of cases; only 20%-30% recover brain function. Our hopes were low and we didn\'t know what would happen. He is still alive thanks to the wizardry of doctors and nurses at King\'s College Hospital. #timstwitterlisteningparty" data-datetime="8:19 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859337971023875"
+                 data-text="\"I remember you said you were after yoghurt so I brought two\" - this song\'s lyrics are based on real conversations Gus\' mum had with his dad as he was in hospital recovering from a serious brain injury. He craved yoghurt in his disoriented state. #timstwitterlisteningparty" data-datetime="8:19 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859270283395083"
+                 data-text="Here\'s \"Visiting Hours\". The music is based on an old idea Gus wrote for a friend\'s birthday using a Saisho MK 800, a shonky home keyboard (you can virtually hear the electrical components while playing it). It provides the bassline and some melodies. #timstwitterlisteningparty" data-datetime="8:19 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859213580566529"
+                 data-text="To create this ending, the string ensemble players held their last notes for a long time. Then, in production, these notes were loaded into separate samplers in Logic and pitch bent out of tune with each other. Another analogue vs. digital process! #timstwitterlisteningparty" data-datetime="8:18 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859125873512448"
+                 data-text="But that\'s not all - then The Parakeets join in. They absolutely smashed these harmonies, including a very swish a cappella bar. This is one of our favourite moments in the KKB discography. #timstwitterlisteningparty" data-datetime="8:18 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859068222799875"
+                 data-text="...is handed to a real string \"ensemble\", played by Cindy Foster, Greta Mutlu and Alex Plant-Smith! @boenyeah created the string arrangement here from chords we gave him. Our newfound confidence and resources let us attempt more ambitious techniques. #timstwitterlisteningparty" data-datetime="8:18 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362859008038699010"
+                 data-text="This is the only T\'n\'P song James doesn\'t play on. Instead, the first two minutes of the song rely on our collection of old MIDI modules (including the Roland SC-55 and Kawai PHm) for a dusty fake ensemble flavour, while the last chorus... #timstwitterlisteningparty" data-datetime="8:18 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858932608335872"
+                 data-text="Sarah made the artwork by arranging a load of found objects, including a photo taken in an old-school Post Office passport photo booth, and scanning the result. The scanner shows the mess at a level of detail you can almost touch - a human souvenir. #timstwitterlisteningparty" data-datetime="8:17 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858895081955333"
+                 data-text="\"You\'ll find enclosed a passport photograph/The headlines and a railcard/It\'s funny how physical us humans are\" - the second verse describes a time capsule left for the future protagonist. The same time capsule forms the cover art of T\'n\'P. #timstwitterlisteningparty" data-datetime="8:17 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858789091880960"
+                 data-text="This is another song based on an idea that had been waiting for the right moment. Gus wrote the verse chords and melody in his head walking down Cowgate in Edinburgh, and sung it to himself for the whole train journey home that day to not forget it. #timstwitterlisteningparty" data-datetime="8:17 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858705096695823"
+                 data-text="\"No-one knows where they really want to go/Why we always stay inside and now it snows\" - the latter line references the casual climate anxiety that informs our interpretation of the weather, as we hopelessly guess what it means for the future. #timstwitterlisteningparty" data-datetime="8:16 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858601921077252"
+                 data-text="The \"doo\" vocal keyboard sound is from a Casio CTK-700. Gus played the same type of keyboard on the tours for Time \'n\' Place. #timstwitterlisteningparty" data-datetime="8:16 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858569465528322"
+                 data-text="We flip the record onto side two, which begins with \"Dear Future Self\". This song takes the form of a letter to the protagonist\'s future self, checking in on them and offering an \"update\" (from the past) like a time-bending personal salutation. #timstwitterlisteningparty" data-datetime="8:16 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858456705826816"
+                 data-text="To make the weird synth sound effects here, Gus programmed quasi-automated patches on the Bass Station II that \"played themselves\", let them do their thing and edited out the best bits. #timstwitterlisteningparty" data-datetime="8:15 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858338132836353"
+                 data-text="Sarah came up with this synth riff as we rehearsed this song for our 5-piece band\'s debut shows at DIY Space for London in April 2018. It\'s played on the DX7 and Alpha Juno layered twice each. The intro to \"It\'s Bugsnax!\" uses the same DX7 patch! #timstwitterlisteningparty" data-datetime="8:15 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858192846389256"
+                 data-text="The video was largely filmed above a vintage emporium in Bristol. The bird toy with a rotating head became a fixture of our live shows afterwards, perching on top of Sarah\'s keyboard. #timstwitterlisteningparty" data-datetime="8:14 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362858111686631438"
+                 data-text="This is the one pop punk bit that stayed. We\'re quite proud of the songwriting in this section, but surprising moments like this made \"Make Believe\" one of the harder T\'n\'P tracks to learn to play live. #timstwitterlisteningparty" data-datetime="8:14 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857993566621697"
+                 data-text="@HeinzJunkins returned to direct the video for \"Make Believe\". As with the other T\'n\'P videos, shots were filmed on a range of cameras including film, VHS, DV, a drone and old webcams - again reflecting the arbitrariness of nostalgia for different media #timstwitterlisteningparty https://t.co/Usab1284IS" data-datetime="8:14 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857922175320066"
+                 data-text="Most of the chorus was written the next day, on a plane journey taking us from Cleveland via Chicago to our next show at the University of Washington in Seattle. #timstwitterlisteningparty" data-datetime="8:13 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857884518920192"
+                 data-text="The idea that started \"Make Believe\" - the verse bassline - was written in our makeshift backstage at Oberlin College when we played there in 2017. Gus recorded a demo on his phone that night in his room at the Red Roof Inn and Suites in Elyria, Ohio. #timstwitterlisteningparty" data-datetime="8:13 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857840969408512"
+                 data-text="It was partially inspired by an article (that we can no longer find) about a woman who never got out of bed to live her real life because her daydream life was so much more vivid. She could imagine - and feel - anything she wanted. #timstwitterlisteningparty" data-datetime="8:13 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857757762813954"
+                 data-text="\"Make Believe\" is about human experiences that traverse the boundaries of perceived reality, like sleep paralysis, lucid dreaming and maladaptive daydreaming, and their place vis a vis the real world we have to face. #timstwitterlisteningparty" data-datetime="8:13 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857726246871045"
+                 data-text="The synth figure here was initially written for electric guitar, and the song was going to have a pop-punky arrangement. Driven by organ and acoustic guitar instead, it feels to us like Prefab Sprout meets Stereolab meets \"Stuck In the Middle With You\". #timstwitterlisteningparty" data-datetime="8:12 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857691882938371"
+                 data-text="That backwards bell transition - which like many on the album doesn\'t work so well on platforms with loading time between songs - brings us to \"Make Believe\", released as a single a week before T\'n\'P came out. #timstwitterlisteningparty" data-datetime="8:12 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857592377212928"
+                 data-text="The slowed-down field recording you can hear here has actually been playing throughout the entire track; another example of the mysterious, detailed, messy textures we created with hardware and left in to purposefully muddy the water. #timstwitterlisteningparty" data-datetime="8:12 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857384071340032"
+                 data-text="An early version of this song was titled \"Pericoronitis\", with lyrics addressing the affliction of the same name, suffered by young adults everywhere as their wisdom teeth emerge. It was inspired by a series of painful bouts we experienced. #timstwitterlisteningparty" data-datetime="8:11 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857299300278282"
+                 data-text="\"Everybody\'s collage stacking up the wall/When the sun is out the scent gets pretty tall\" - it\'s arresting seeing everyone\'s rubbish piled high and shunted by heavy machinery. When it gets hot in summer, you can smell the dump from Gus\' family house. #timstwitterlisteningparty" data-datetime="8:11 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857217268015105"
+                 data-text="We were going for a desolate Wild West vibe with the tremolo bend guitar chords here. #timstwitterlisteningparty" data-datetime="8:10 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857069553078272"
+                 data-text="A place where (often sentimental) junk is disposed of lines up nicely with T\'n\'P\'s themes. The dump has a uniquely strange atmosphere; it\'s one of the few places where we confront the freakish reality behind our comfortable, largely virtual lifestyles #timstwitterlisteningparty" data-datetime="8:10 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362857020202835970"
+                 data-text="This song\'s creation started with these verse chords, which are played on a very lo-fi Casio DM-100 sampler using a long note sung into the onboard mic. #timstwitterlisteningparty" data-datetime="8:10 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856978595332101"
+                 data-text="\"Dump\" is about Waldo Depot Waste Disposal Site in Bromley. Bromley and the British suburbs in general are T\'n\'P\'s locus - it\'s a personal album and the suburbs, with their silent potential and aspirational/comfortable tension, are a huge part of us. #timstwitterlisteningparty" data-datetime="8:09 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856940276219909"
+                 data-text="That anti-transition takes us into \"Dump\". Gus mindlessly plays the same one-bar drum pattern for the entire song. We were interested in arbitrary human processes like this; something a computer could do easily but in an ever-so-slightly different way. #timstwitterlisteningparty" data-datetime="8:09 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856833338245124"
+                 data-text="No parakeets were harmed in the making of the \"Flyway\" video. It was filmed by Jamie in London\'s St James\'s Park, where parakeets are known to congregate. #timstwitterlisteningparty https://t.co/lBXpbUhx6r" data-datetime="8:09 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856773514915840"
+                 data-text="That said, \"Flyway\" is a good example of our keyboard-heavy approach to rock production, expanding the palette of a guitar band via our experience with synthesisers. A Roland Alpha Juno provides chords and countermelodies throughout the track. #timstwitterlisteningparty" data-datetime="8:09 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1362856755529662469"
+                 data-text="@lamaraba @LlSTENlNG_PARTY @KeroKeroBonito ðŸ‘‹" data-datetime="8:09 PM Feb 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856739830435841"
+                 data-text="The guitar, bass and drums for both this song and \"Outside\" were recorded live in the studio together rather than overdubbed, with synths and vocals added later. The raw energy we could conjure with this method was unthinkable before our band setup. #timstwitterlisteningparty" data-datetime="8:09 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856696343908355"
+                 data-text="The Parakeets deliver some amazing harmonies in this song. No prizes for guessing what they were named after. #timstwitterlisteningparty" data-datetime="8:08 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856574553841670"
+                 data-text="\"Flyway\" references the green parakeets living in London. The lyrics were written in virtually one go on a bench in Church House Gardens in Bromley (they are the \"gardens that ripple in the water\" mentioned in the song) while watching parakeets there. #timstwitterlisteningparty" data-datetime="8:08 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856498884395014"
+                 data-text="\"A flock across my window/Gone when I look around/Until the sun gets longer/They\'re getting out of town\" - a flyway is a migratory route used by birds. We thought people might call this song \"Flyaway\" with an \'a\', but thankfully that didn\'t happen much. #timstwitterlisteningparty" data-datetime="8:08 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856441154048006"
+                 data-text="That stuttering sound is the same snare that opens \"You Know How It Is\", the song that follows \"Only Acting\" on TOTEP. But this isn\'t TOTEP anymore, this is Time \'n\' Place - and here\'s \"Flyway\". #timstwitterlisteningparty" data-datetime="8:07 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856360568881159"
+                 data-text="To have our cake and eat it, we chickened out and made a radio edit of \"Only Acting\" that finishes the key change chorus normally; you\'ll find this on the \"Only Acting\" single. You can pick your favourite, but it\'s not complete without the noise. #timstwitterlisteningparty" data-datetime="8:07 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856320571957259"
+                 data-text="The idea is that you can\'t put \"Only Acting\" on a playlist because this section will ruin the whole thing; it\'s an anti-playlist song. It\'s also a tribute to @MerzbowOfficial and @RussellHaswell, who simply rock harder and louder than anyone. #timstwitterlisteningparty" data-datetime="8:07 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856259968520194"
+                 data-text="There was a sense around this time that the music industry was leading artists to make safe musical decisions to fit on playlists, thus curtailing pop music\'s expression. With this section, we kicked against that in the simplest way we could think of. #timstwitterlisteningparty" data-datetime="8:07 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856226766413832"
+                 data-text="The meta joke about song structure here (completely destroying a perfectly good key change chorus) is partially a response to \"poptimist\" thought in alternative music, which risks celebrating banal corporate gestures at face value. #timstwitterlisteningparty" data-datetime="8:06 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856126291804163"
+                 data-text="We were worried that our fans would feel abandoned, but we were also scared of performing our roles from the previous five years for the rest of our lives. \"Only Acting\" isn\'t a repudiation of KKB\'s history, but it does ask: \"who is the real KKB?\" #timstwitterlisteningparty" data-datetime="8:06 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856084738834434"
+                 data-text="Directors Homer and Farley nailed the \"Only Acting\" video, which presented KKB-as-indie band to the world. Filmed at a local performing arts centre, Sarah listened to sad songs on repeat to achieve the correct countenance for the final shot. #timstwitterlisteningparty https://t.co/RqOfhicrVR" data-datetime="8:06 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362856005047115779"
+                 data-text="Gus wrote this guitar solo and James completely nailed it. #timstwitterlisteningparty" data-datetime="8:06 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855957034917891"
+                 data-text="There are also lots of stray guitar notes, electrical noises and other audio detritus just left in unedited. This generates a chaotic, tangible texture that we couldn\'t have dreamt of using only software, and we were really excited to explore it. #timstwitterlisteningparty" data-datetime="8:05 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Flamaraba%2Fstatus%2F1362855932355616770"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess @KeroKeroBonito Berlin  hi errbody. Miss yâ€™all" data-datetime="8:05 PM Feb 19, 2021"> 
+                lamaraba            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855917193150472"
+                 data-text="There are all kinds of sounds here: James\' guitar feedback self-oscillating, a Novation Bass Station II patch messed with using the Roland SP-404\'s DJFX Looper, Sarah (recording herself alone in Gus\' living room for maximum terrifying effect), etc. #timstwitterlisteningparty" data-datetime="8:05 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855814290149385"
+                 data-text="\"Only Acting\" and a few other songs from this era were written using a new technique for us: singing melodies over just basslines rather than over chords. This encouraged tonal ambiguity in the melodies that led us to use chords we wouldn\'t normally. #timstwitterlisteningparty" data-datetime="8:05 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855777397055496"
+                 data-text="...right THERE! The day before we released \"Only Acting\" felt like Christmas - we\'d never been so excited to release something before; we didn\'t know how people would react but we knew it\'d be interesting. To our surprise, people were up for the ride. #timstwitterlisteningparty" data-datetime="8:05 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855709306724353"
+                 data-text="What you hear now is, via James, the first time a real guitar had ever appeared on a KKB song. \"Only Acting\" was chosen as the first T\'n\'P single because it set familiar KKB hallmarks (the first verse) starkly against the sound world we would enter... #timstwitterlisteningparty" data-datetime="8:04 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FHeinzJunkins%2Fstatus%2F1362855667418202115"
+                 data-text="Loved directing this video. Some photos from the KKB \'Time Today\' shoot #kerokerobonito #TimsListeningParty @KeroKeroBonito @LlSTENlNG_PARTY @Tim_Burgess https://t.co/We5fQae32f" data-datetime="8:04 PM Feb 19, 2021"> 
+                HeinzJunkins            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855630642511874"
+                 data-text="Though released separately, TOTEP and T\'n\'P come from the same pool of tracks, written and recorded simultaneously. We always knew what was going where; TOTEP was inspired by Citrus\' brief, bizarre EPs, which leave you with more questions than answers. #timstwitterlisteningparty" data-datetime="8:04 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855571884552194"
+                 data-text="\"Only Acting\" also appeared on TOTEP, a four-track EP which came out a week after \"Only Acting\" and introduced our new band sound. Some mis-pressings of TOTEP read \"The One True EP\" on the spine; this is an error and isn\'t what the title stands for! #timstwitterlisteningparty https://t.co/XDBStTmR2h" data-datetime="8:04 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855516746244096"
+                 data-text="\"When I step onto the stage/See the curtain raise/I\'m apparent/I\'ve got someone to play\" - this song explores, via theatre, the mindfuck of performing a public role tied to your authentic self (i.e. pop music) and navigating the boundaries between them. #timstwitterlisteningparty" data-datetime="8:04 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855478036955141"
+                 data-text="Here\'s \"Only Acting\", which opened the T\'n\'P campaign back in February 2018 (three years ago yesterday). The drums you hear are from a Fujiha F-8000, a very weird (since broken) keyboard that also appeared on \"Park Song\" and @djkanewest\'s \"Good Price\". #timstwitterlisteningparty" data-datetime="8:04 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1362855417227919362"
+                 data-text="@LlSTENlNG_PARTY @KeroKeroBonito â€˜The studioâ€™ ; )" data-datetime="8:03 PM Feb 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855386869608461"
+                 data-text="Many songs on T\'n\'P, like \"Time Today\", use short structures that incorporate hooks but eschew the formality of verse/chorus/bridge pop songwriting. We\'d explored that on our last album and wanted to avoid going through the motions as many pop songs do. #timstwitterlisteningparty" data-datetime="8:03 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855289825992706"
+                 data-text="\"But dawn still greets my windowpanes/And as long as I shall/Wake up in the morning/I got plans\" - a defiant note. As long as my eyes open in the mornings (dawn is light, windowpanes are eyes), i.e. I\'m alive, I\'m going to try to do something or other. #timstwitterlisteningparty" data-datetime="8:03 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855224420007947"
+                 data-text="\"Time Today\" was the second single heralding T\'n\'P, released in May 2018 (T\'n\'P came out in October 2018). The amazing video by @HeinzJunkins was made in Bristol and at the childhood home of Thomas the Tank Engine creator Rev. W. Awdry in Wiltshire. #timstwitterlisteningparty https://t.co/uTgjSgWThZ" data-datetime="8:03 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855175329882113"
+                 data-text="The drum machine loop and organ chords throughout the song come from a Casiotone 701. The bones of \"Time Today\" were written on this same keyboard as soon as it had been brought home from the British Heart Foundation shop in Bromley, many years ago. #timstwitterlisteningparty" data-datetime="8:02 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1362855129867825157"
+                 data-text="Please let @KeroKeroBonito know where you are around the world for our Time â€˜nâ€™ Place @LlSTENlNG_PARTY 
+
+We know the time. You tell us the place ; ) https://t.co/Hqu25022GD" data-datetime="8:02 PM Feb 19, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855092848906240"
+                 data-text="We reach the meat of the lyrics. \"I got so much more to say/I got books and tapes and canvas bearing the weight\" - the existential inertia of the new day extends to the protagonist\'s entire life, powered by a fear of death and recorded, not lived. #timstwitterlisteningparty" data-datetime="8:02 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362855058380062721"
+                 data-text="You just heard the first appearance in the KKB discography of the Roland MT-32 preset Glasses put through a ton of reverb. This combo, normally playing two notes an octave apart, has since appeared in everything from \"Dump\" to \"It\'s Bugsnax!\". #timstwitterlisteningparty" data-datetime="8:02 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854976503099397"
+                 data-text="\"I got so much time today/I got hopes and dreams and plans all yet to be made\" - this song is written from the perspective of someone who rarely wakes up early, but has today. There\'s positivity for the day ahead, but dread at not knowing what to do. #timstwitterlisteningparty" data-datetime="8:02 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854927123505156"
+                 data-text="Into the second track: \"Time Today\". This is Gus\' favourite. The little blips you hear were inspired by the sounds of hospital diagnostic equipment (e.g. heart rate monitors); innocuous primitive-digital tones that take on a horrific weight in context. #timstwitterlisteningparty" data-datetime="8:01 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854818142965760"
+                 data-text="This part, described by @tnm___ as being \"like youâ€™ve gone from spinning in space to being dropped unceremoniously in a jazz lounge\", introduces The Parakeets (@Cecilebelieve, @oscar_scheller and Z from @cryingband), who do backing vocals across T\'n\'P. #timstwitterlisteningparty" data-datetime="8:01 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854763495309314"
+                 data-text="This stuttering vocal was achieved with digital fx; every sound on T\'n\'P is from hardware, though they were transformed by digital and analogue processes, reflecting the effect of combining various junk media (like inkjet printing an iPhone 5 photo). #timstwitterlisteningparty" data-datetime="8:01 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854675452682243"
+                 data-text="Our band setup led us to explore this noisy territory, which was new to KKB. For most of T\'n\'P, we recorded guitar, bass and drums in a studio and added everything else at home; Jamie, Gus and James learnt the songs over numerous 10-hour rehearsals. #timstwitterlisteningparty" data-datetime="8:00 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854620649897994"
+                 data-text="Unusually for a KKB song, \"Outside\" was composed for its purpose: to open an album. We normally come up with ideas and let them develop however sounds best, but here we tried to design an exciting first track. We opened most shows in 2018-19 with it. #timstwitterlisteningparty" data-datetime="8:00 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854566564405248"
+                 data-text="\"I think I smell the rain again/I see the leaves getting dewy/They\'re breathing\" - this song describes the vivid sensation of being caught in the elements after being inside for a long time. It\'s an acknowledgement of physicality (a major T\'n\'P theme). #timstwitterlisteningparty" data-datetime="8:00 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854522989785094"
+                 data-text="James Rowland (@Flat_Earth_Mom) - who plays on every T\'n\'P track bar one - is on guitar, and Jennifer Walton (@jnnfrwltn) provides synth noise on this song. James and Jenny joined us on the tours for T\'n\'P, playing guitar and drums/synths respectively. #timstwitterlisteningparty https://t.co/qiaaDgpeqC" data-datetime="8:00 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1362854507907076098"
+                 data-text="#TimsTwitterListeningParty
+
+Time to get started 
+
+Say hello to @KeroKeroBonito 
+
+Theyâ€™re in charge at the @LlSTENlNG_PARTY for the next thirty two minutes and fifty nine minutes https://t.co/D74VkjAq40" data-datetime="8:00 PM Feb 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854474528735232"
+                 data-text="We begin Time \'n\' Place with cable noise and a count-in to \"Outside\". We wanted to make a statement with this opener; this is punk-ish guitar thrash instead of our familiar digital pop rap style. That\'s Sarah on vocals, Jamie on bass and Gus on drums. #timstwitterlisteningparty" data-datetime="8:00 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FKeroKeroBonito%2Fstatus%2F1362854346023702532"
+                 data-text="Welcome to Tim\'s Twitter Listening Party for our 2018 album Time \'n\' Place. #timstwitterlisteningparty https://t.co/ESXxHW31DX" data-datetime="7:59 PM Feb 19, 2021"> 
+                KeroKeroBonito            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
