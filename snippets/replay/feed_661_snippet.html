@@ -1,0 +1,549 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1oaizO8iiUmLHhcYZYjnJy" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02067481459b9ff941a011a3b9" alt="Now't Like The Eighties" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Lancashire Hotpots</span><br/><span class="sub-colour">Now't Like The Eighties</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(416768)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1oaizO8iiUmLHhcYZYjnJy" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_416768_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 106 tweets from Sunday 21st February 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/thehotpots" target="_blank"><img src="https://pbs.twimg.com/profile_images/1212714462211387392/-t6OOfRQ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/thehotpots.jpg'"><br/>@thehotpots</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1357670243766837249/tWOOSNjS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Last Can Blues" data-start="0"
+             data-duration="172" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Do the Dad Dance" data-start="173"
+             data-duration="199" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Egg, Sausage, Chips & Beans" data-start="373"
+             data-duration="178" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Don't Put Your Granny on the Internet" data-start="552"
+             data-duration="188" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="6784" data-start="741"
+             data-duration="138" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Black Friday" data-start="880"
+             data-duration="99" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="My Pianist" data-start="980"
+             data-duration="131" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Fussy Eater" data-start="1112"
+             data-duration="134" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="It's a Barmcake" data-start="1247"
+             data-duration="140" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Lancashire's for Me" data-start="1388"
+             data-duration="153" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Stop in the Name of Fudge" data-start="1542"
+             data-duration="204" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Dibnah" data-start="1747"
+             data-duration="274" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Do the Dad Dance - 12 Inch Mix" data-start="2022"
+             data-duration="310" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="What's up Hun?" data-start="2333"
+             data-duration="154" style="display:none"></div>
+                        <div id="track-15" class="track-list"
+                     data-name="Finished" data-start="2488"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851067481459b9ff941a011a3b9" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-106" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363545733438316547"
+                 data-text="@JonathanWood3 I donâ€™t think my knees could pull off those sorts of moves these days" data-datetime="5:46 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363545593264689153"
+                 data-text="@GaryTwisted @Tim_Burgess @LlSTENlNG_PARTY Too many carry ons at a young age https://t.co/PUMnguM5iy" data-datetime="5:46 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363545301445976066"
+                 data-text="@soozworld Either that or weâ€™ll get the @poundshopboys on the case" data-datetime="5:45 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363545159900798976"
+                 data-text="@empiresend @LlSTENlNG_PARTY Iâ€™ll never diss the king of double denim" data-datetime="5:44 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363545039662628866"
+                 data-text="@DavidSBrook https://t.co/stI8Sic8o8" data-datetime="5:44 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544947484426247"
+                 data-text="@theclarehand @LlSTENlNG_PARTY He was in one of those Steve McQueen things on bbc1 a few weeks back ðŸ‘" data-datetime="5:43 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544794073554957"
+                 data-text="@TB99037537 Give in!" data-datetime="5:43 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544757012676608"
+                 data-text="@wjpotter Thatâ€™s the best bit!!!" data-datetime="5:42 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1363544685248196608"
+                 data-text="RT @LlSTENlNG_PARTY: Check on @JustWatch where to find Up for our Watching / @LlSTENlNG_PARTY with @m_giacchino https://t.co/Bcg8gOSeS9 httâ€¦" data-datetime="5:42 PM Feb 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544683989913602"
+                 data-text="@n1cnac89 Leave it!!!!" data-datetime="5:42 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544655741206528"
+                 data-text="@chasingfunshine https://t.co/BaorINcxMz" data-datetime="5:42 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1363544647243599873"
+                 data-text="RT @LlSTENlNG_PARTY: Check on @JustWatch where to find Up for our Watching / @LlSTENlNG_PARTY with @m_giacchino https://t.co/Bcg8gOSeS9 httâ€¦" data-datetime="5:42 PM Feb 21, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544568537501703"
+                 data-text="@vicky_shipley Leave it!" data-datetime="5:42 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544467194716164"
+                 data-text="@blackpooljane You start with the gags and work backwards ðŸ˜‰" data-datetime="5:41 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544332150706176"
+                 data-text="@Budtheweiser ðŸ˜‚" data-datetime="5:41 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544304535371778"
+                 data-text="@blackpooljane It lasts forever!!!" data-datetime="5:41 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363544245026643969"
+                 data-text="@garyjohnwilde @LlSTENlNG_PARTY Itâ€™s like a little finger these days!" data-datetime="5:40 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543981754380292"
+                 data-text="@Greyingbeard79 Cheers David...one of our finest" data-datetime="5:39 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543918411931648"
+                 data-text="@IanTheInventor Blocked and reported" data-datetime="5:39 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543860564135937"
+                 data-text="@SteveStevekn Leave it!" data-datetime="5:39 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543819283742725"
+                 data-text="@mclaren_jenny Written and recorded really quickly as well" data-datetime="5:39 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543672126586880"
+                 data-text="@SarahAkehurst ðŸ˜‚ðŸ˜‚" data-datetime="5:38 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543641197862914"
+                 data-text="@MartinClark32 Listening back then...it was hitting me" data-datetime="5:38 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543552689602570"
+                 data-text="@JBbeardedScruff Theyâ€™re ace...loads of delay...soo good" data-datetime="5:38 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543455809630208"
+                 data-text="@KrisWhoTweets Correct!" data-datetime="5:37 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543385605349377"
+                 data-text="@ellibin Foolish!!!" data-datetime="5:37 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543349521711104"
+                 data-text="@GreggBulman Wouldnâ€™t it just...9 months time I reckon" data-datetime="5:37 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543273680289792"
+                 data-text="@Merc1526 Wrong!!! ðŸ˜‚ https://t.co/2YctkzhFgC" data-datetime="5:37 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1363543149625376768"
+                 data-text="Big thanks to @thehotpots ðŸ¤˜ðŸ¤˜" data-datetime="5:36 PM Feb 21, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363543115781570565"
+                 data-text="@ByHisOwnPetard @LlSTENlNG_PARTY @MikeReadUK #chartfax" data-datetime="5:36 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="121000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363542931731283977"
+                 data-text="@WilloCrew @KendalCalling Cheers Will...thereâ€™s a lot of deep cuts youâ€™ll enjoy ðŸ‘" data-datetime="5:35 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363542420105879555"
+                 data-text="Thatâ€™s it. Thanks for hanging around.  Want to listen to some more Hotpots, hereâ€™s a great playlist with some of our other favourite songs on #TimsListeningParty cheers for @LlSTENlNG_PARTY for having us. x
+https://t.co/mDvgGo4NrE https://t.co/WZaPLr7kMn" data-datetime="5:33 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363542293022724098"
+                 data-text="totes emosh!!! #timstwitterlisteningparty https://t.co/NTgXXWXNff" data-datetime="5:33 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363542104253857799"
+                 data-text="I think we should play this one live more! #timstwitterlisteningparty" data-datetime="5:32 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541992362409989"
+                 data-text="HOOKY (ish) #timstwitterlisteningparty" data-datetime="5:31 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541930571948034"
+                 data-text="For a small band like us we had a great experience.  Any time you can steal the last Cadburyâ€™s Creme Egg from Hannah from S Club 7 in the green room is a great day. #timstwitterlisteningparty https://t.co/akV9UZEHzN" data-datetime="5:31 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541834182582276"
+                 data-text="We were hoping to visit BBC Television Centre for the filming and hobnob with the stars, instead the TV studios were on the top floor of a shopping centre in North London. Thems is the breaks #timstwitterlisteningparty https://t.co/dsPu4WgPoH" data-datetime="5:31 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541716083556354"
+                 data-text="We were lucky enough to play this live on BBC2 on Easter Monday 2016 after one of the producers heard our song being played on @shaunwkeavenyâ€™s @BBC6Music show.  #CheersShaun #KeepUpTheWork #timstwitterlisteningparty https://t.co/du9oa4q8hx" data-datetime="5:30 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541578590130177"
+                 data-text="The guitar effect that sounds a bit like The Edge from U2 is achieved using an e-bow which vibrates the strings without you touching them. #ethereal #timstwitterlisteningparty https://t.co/owQcE38vux" data-datetime="5:30 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541490019020806"
+                 data-text="To chronicle a man who knocked down factory chimneys, we did this song in the style of something released on Factory records.  These songs arenâ€™t thrown together you know. #timstwitterlisteningparty https://t.co/nDyMN8FBQY" data-datetime="5:29 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541362487005187"
+                 data-text="The subtext here is that we live in a post-industrial society and Fredâ€™s passing signifies the end of a generation of men who toiled with their hands. #timstwitterlisteningparty https://t.co/UFd6XUWfkf" data-datetime="5:29 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541283424370690"
+                 data-text="Comedy band doing serious songs? We can pull it off. Welcome to Dibnah. #timstwitterlisteningparty https://t.co/25qU4v1Cps" data-datetime="5:29 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541199391498242"
+                 data-text="Things that are normally blurted out at the beginning or end of songs are normally adlibs from Bernard.  This one was quite unexpected. #timstwitterlisteningparty https://t.co/reQV3IBNN7" data-datetime="5:28 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363541011457331206"
+                 data-text="The song features a fab solo from Keyboard player Billy Mac.  No timing correction needed inside the computer, I think he took one or two goes and he was done. #timstwitterlisteningparty https://t.co/6W0z9eha5A" data-datetime="5:28 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363540765444632576"
+                 data-text="Seriously, where do these people get off!!! #timstwitterlisteningparty https://t.co/pYXd7XSRGL" data-datetime="5:27 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363540655390220289"
+                 data-text="FALSETTO! #timstwitterlisteningparty" data-datetime="5:26 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fkennybody%2Fstatus%2F1363540599761231878"
+                 data-text="Not to blow my own trumpet, but I really like the bit at the end of the video where I throw a barm at the camera as it actually got stuck in the camera which was quite amusing at the time. I guess you had to be there! #TimsTwitterListeningParty https://t.co/8CpG0BQs10" data-datetime="5:26 PM Feb 21, 2021"> 
+                kennybody            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363540556597649408"
+                 data-text="Thereâ€™s nothing more that riles the UK populace than the reducing the size (but not the price) of chocolate bars.  If Bob Dylan were in his twenties in 2021...these are the types of protest songs heâ€™s be singing.  Trust me. #timstwitterlisteningparty https://t.co/i22dUAz2kY" data-datetime="5:26 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363540421452959749"
+                 data-text="Skipping through the popular 80â€™s genres we now find ourselves stopping at â€˜hair metalâ€™. #timstwitterlisteningparty https://t.co/txIc2ZXkPH" data-datetime="5:25 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363540323914436608"
+                 data-text="The title works in two ways. There really was nothing to match the 80s...and this sounds nothing like 80s music.  Both bases covered #TimsListeningParty" data-datetime="5:25 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363540271376531461"
+                 data-text="INTERLUDE: The cover for the NOWâ€™T Like The 80â€™s was based on NOW Thatâ€™s What I Call Music 3. #timstwitterlisteningparty https://t.co/djE8hQBTef" data-datetime="5:25 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363540138446446595"
+                 data-text="Lancashireâ€™s For Me is the only Hotpots song to feature a vocoder.  Loves me a vocoder I do, too much Kraftwerk at an early age. #timstwitterlisteningparty https://t.co/bAcdzK1VRj" data-datetime="5:24 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363540021790330882"
+                 data-text="Particularly proud of the line â€˜If youâ€™re from Yorkshire...it must be tortureâ€™ #TimsListeningParty #bantz" data-datetime="5:24 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363539980002467841"
+                 data-text="We wrote this song to celebrate Lancashire day which is held on 27th November each year. #timstwitterlisteningparty https://t.co/kfPMMBXNxq" data-datetime="5:23 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363539882107432965"
+                 data-text="To keep with the 80â€™s theme, LFM has the honour of having the worldâ€™s first Teletext music video, stunningly created by @illarterate #timstwitterlisteningparty https://t.co/SAnL6ho4ga" data-datetime="5:23 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363539773730742275"
+                 data-text="Time for a bit of electropop with a bit of a nod towards messrs Clarke &amp; Bell, itâ€™s Lancashireâ€™s For Me. #timstwitterlisteningparty https://t.co/pWYlhewVeY" data-datetime="5:23 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363539565563281409"
+                 data-text="The greenscreen video for this was filmed in a freezing outbuilding with an overheating camera.  All barmcakes used during filming were humanely disposed of after the shoot. #timstwitterlisteningparty https://t.co/0ShVEpDMce" data-datetime="5:22 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363539450756812800"
+                 data-text="This song features steel drums.  If youâ€™re writing a song and it needs a pep...trust me, steel drums is the way to go.  Us and Jamie XX know the score.  #timstwitterlisteningparty https://t.co/kFaywxmtl8" data-datetime="5:21 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363539375926214662"
+                 data-text="So yes, designing a cheesy song which challenges peopleâ€™s preexisting naming terms of bread products is a great way to generate a bit of interest online.  Weâ€™re quite ruthless in the marketing stakes. #timstwitterlisteningparty https://t.co/nCvOU89vM9" data-datetime="5:21 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363539282288390144"
+                 data-text="Itâ€™s A Barmcake is, in essence, musical clickbait.  And as we all know, clickbait works! #TimsListeningParty https://t.co/pnpcQWkOeh" data-datetime="5:21 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363539205566197760"
+                 data-text="How to you start an argument?  THIS ðŸ‘‡  #timstwitterlisteningparty https://t.co/FtR9QdjRNl" data-datetime="5:20 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363539098452000770"
+                 data-text="The â€˜mouth trumpetsâ€™ are a direct nod towards Seaside Rendezvous from Queenâ€™s A Night At The Opera. #timstwitterlisteningparty https://t.co/kz5ZXjP3QO" data-datetime="5:20 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538962111946763"
+                 data-text="We have to say that @kennybody was very generous in the making of this video allowing us to tease his eating foibles. And force broccoli on him   #timstwitterlisteningparty https://t.co/XO9dfNt1wp" data-datetime="5:19 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538868167979009"
+                 data-text="Bit of an 8 bit #chiptune vibe to this one so thereâ€™s a few Nintendoesque sound effects thrown in for good measure #timstwitterlisteningparty https://t.co/tLJb5XMnpz" data-datetime="5:19 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538761569681414"
+                 data-text="We have two fussy eaters in the band Kenny and Billy.  This song was inspired after being on tour and having to wait for their burgers being cooked to order just so they didnâ€™t have mayonnaise on. #timstwitterlisteningparty" data-datetime="5:19 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538666967154694"
+                 data-text="Everyone knows a fussy eater...so we thought weâ€™d strike a chord with this one #timstwitterlisteningparty https://t.co/g3wxJN9rwm" data-datetime="5:18 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fm_giacchino%2Fstatus%2F1363538660138754048"
+                 data-text="Looking forward to watching UP with all of you today! I\'ll be tweeting along as we do and I\'ll try and answer as many questions as I can. \"See\" ya soon! 10am Los Angeles time and 6pm London Time. https://t.co/OiopKyoSJB" data-datetime="5:18 PM Feb 21, 2021"> 
+                m_giacchino            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538579813720068"
+                 data-text="An actual mention for the Pet Shop Boys on this as well...on an 80s album they deserve one.  #timstwitterlisteningparty https://t.co/BqjVGftZLq" data-datetime="5:18 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538416512753667"
+                 data-text="Always a pleasure to have the words â€˜bopshowaddywaddyâ€™ in a song.  Doesnâ€™t happen enough if you ask me. https://t.co/xFgsVUI0d1" data-datetime="5:17 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538277115002882"
+                 data-text="Thatâ€™s me singing BTW (Dickie).  We try and have one song per album sung by another member of the band so that when we play live, lead singer Bernard can leave the stage for a couple of mins for a pie and a pint. #timstwitterlisteningparty" data-datetime="5:17 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538193442865153"
+                 data-text="This is one of our innuendo songs...itâ€™s an easy way for a gag but a long established music hall tradition. #timstwitterlisteningparty" data-datetime="5:16 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538146517004288"
+                 data-text="Who was the biggest UK singles chart act of the 1980â€™s.  Have a guess?  Thatâ€™s right itâ€™s Shakin Stevens!  So a homage to Shaky is in order. #timstwitterlisteningparty https://t.co/uOYjnkSRE0" data-datetime="5:16 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363538021338013701"
+                 data-text="As well as being an accomplished producer, John is also guitarist with @MerryHell_band If you like your folk rock...you should check â€˜em out #TimsListeningParty https://t.co/bEnBntIDyx" data-datetime="5:16 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363537962508640260"
+                 data-text="The rip roaring guitar solo was kindly played by producer John Kettle. â€œIâ€™ve done that exact same solo on at least another three songsâ€.  I wonder which songs they were??? #TimsListeningParty https://t.co/VrFkUwWd5n" data-datetime="5:15 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363537902504927234"
+                 data-text="This bit here features what I call the â€˜Happy Daysâ€™ claps which we also used on the original version of Chippy Tea #RecyclingRubbishWorks #timstwitterlisteningparty https://t.co/LnUwYQSAxP" data-datetime="5:15 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363537752529190913"
+                 data-text="You canâ€™t beat a bit of garage rock can you.  Weâ€™ve never done this live...weâ€™ll have to rectify that soon. If weâ€™re ever allowed to gig again. #TimsListeningParty https://t.co/vO4yCKf4Ly" data-datetime="5:15 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363537669578489857"
+                 data-text="Remember those heady days of 2014 when we watched those Black Friday videos of American Walmarts turning into WWE wresting rings.  That inspired this one. #timstwitterlisteningparty https://t.co/w3nAb3FIfz" data-datetime="5:14 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363537564913827844"
+                 data-text="Hereâ€™s a Spotify playlist with about 40 Eighties songs which feature the SARAHH sound on it https://t.co/vZvNzcXK5X #TimsListeningParty" data-datetime="5:14 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363537515190312965"
+                 data-text="The familiar â€˜oohâ€™ sound on this song is the â€˜SARAHHâ€™ patch from the Fairlight CMI, the popular sampler first established in 1979.  We don;t just throw this thing together you know #timstwitterlisteningparty https://t.co/WJoQ77TI5i" data-datetime="5:14 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363537393672982533"
+                 data-text="Musically, the demo for this one sounded a little bit like @billybragg. Perhaps it still does a bit??? #timstwitterlisteningparty" data-datetime="5:13 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363537202513408002"
+                 data-text="Bernard uses the entirety of the song to explain that his system of safely remembering his password isâ€¦.by singing it loudly as he approaches the cashpoint. #timstwitterlisteningparty https://t.co/lag6S6DH9E" data-datetime="5:12 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363537089946615809"
+                 data-text="6784 deals with the fact that we have a perplexing number of PIN numbers and passwords we have to remember in our everyday life. Putting memorable things in songs helps to remember them. Thatâ€™s a scientific fact  #timstwitterlisteningparty https://t.co/bMm5cdcaRz" data-datetime="5:12 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363536948325924865"
+                 data-text="In September 2009 Dave briefly retired from the band. Not long after, itâ€™s rumoured that there was a Chas &amp; Dave gig in St Helens with the poster on the door stating â€˜Appearing Soon: Chas &amp; Dave (not original Dave)â€™ #timstwitterlisteningparty https://t.co/L86JFVT5af" data-datetime="5:11 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363536739957149698"
+                 data-text="Chas &amp; Dave went on to inspire our 2018 album Singalonga Knees Up Jamboree #timstwitterlisteningparty https://t.co/5GibL5gCLK" data-datetime="5:11 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363536585887789060"
+                 data-text="We supported Chas &amp; Dave once in Liverpool but we never got a picture of us both together so hereâ€™s a photo of a @kennybody and our two drumkits instead! #timstwitterlisteningparty https://t.co/EY1bjpEcHR" data-datetime="5:10 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363536471295148033"
+                 data-text="One of the â€œyou wouldnâ€™tsâ€ that never got used was â€œYou wouldnâ€™t mix cross plys with radialsâ€ which was a 1970s reference too obscure even for us #TimsListeningParty https://t.co/PxhwAkPya1" data-datetime="5:10 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363536390563233797"
+                 data-text="This is our nod to a group who had massive success and 5 top 40 hits in the 1980s...thatâ€™s right, itâ€™s Chas &amp; Dave #timstwitterlisteningparty https://t.co/7xqdXZWVy5" data-datetime="5:09 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363536279321907200"
+                 data-text="Anyone who has recently had to guide an elderly relative on using Zoom or Messenger during lockdown working will sympathise with this one.  Welcome to Donâ€™t Put Your Granny On The Internet #timstwitterlisteningparty https://t.co/VP2f3AVL9r" data-datetime="5:09 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363536100233478145"
+                 data-text="Here it is in full effect at @kendalcalling people just canâ€™t help themselves. You tap into something very special when you come up with something like this #timstwitterlisteningparty https://t.co/LeIE8NG4rS" data-datetime="5:08 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363535965118152704"
+                 data-text="The cowbell or agogÃ´ pattern in the breakdown section is a subtle nod to the cowbells on Always On My Mind from @petshopboys, the greatest Christmas number one evs. #FightMe #timstwitterlisteningparty https://t.co/d7ok1TzaiI" data-datetime="5:08 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363535837082828805"
+                 data-text="When first played live in 2016 before the album had come out Bernard told the crowd â€˜youâ€™ve never heard it before, but you already know itâ€™.  They were singing along by the second chorus.  #timstwitterlisteningparty" data-datetime="5:07 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363535760478134272"
+                 data-text="Youâ€™ll be familiar with the tune from the kidâ€™s ditty Heads Shoulders Knees &amp; Toes, Heads &amp; Tails (the 80â€™s children\'s show with Derek Griffiths) and an 1980s Country Life butter advert #timstwitterlisteningparty https://t.co/9hbe12k3O7" data-datetime="5:07 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363535646724341761"
+                 data-text="Itâ€™s based on \"There Is a Tavern in the Town\", a traditional folk song, which first appeared in the 1883 edition of William H. Hill\'s Student Songs #ThanksWikipedia #timstwitterlisteningparty https://t.co/ZmEVQ1cJn5" data-datetime="5:06 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363535531431366656"
+                 data-text="Speaking of firm live favourites, Egg Sausage Chips &amp; Beans is our second most popular song after Chippy Tea #timstwitterlisteningparty https://t.co/9sU5xZyWsu" data-datetime="5:06 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363535321229627394"
+                 data-text="We normally play this one during our encores and it goes OFF! Dad Dance...a true Hotpots classic.  @KendalCalling #timstwitterlisteningparty https://t.co/lxwoBsdLDf" data-datetime="5:05 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363535142162169858"
+                 data-text="The second chorus is a double length to the first, an act of self sabotage if Iâ€™m honest.  Itâ€™s too many moves to properly remember but I think youâ€™ve got to stretch your audience. Literally in this case.#timstwitterlisteningparty" data-datetime="5:04 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363535020368011265"
+                 data-text="After recording our producer John Kettle said heâ€™d recorded funk bands that didnâ€™t produce as much funk as this #timstwitterlisteningparty" data-datetime="5:04 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363534906215845902"
+                 data-text=".@BernardThresher came up with a list of possible actions that a tipsy dad would do on the dancefloor which were then refined.  There was originally a â€˜kickâ€™ in the chorus but that was removed as we didnâ€™t want to injuries at gigs #timstwitterlisteningparty https://t.co/FCwuuafO6Y" data-datetime="5:03 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363534758513422338"
+                 data-text="Weâ€™ve found that audiences like to let themselves go and participate in our shows so â€˜Do The Dad Dance was written to allow them to get involved #TimsListeningParty https://t.co/NXZzWZf0yU" data-datetime="5:03 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363534598983061509"
+                 data-text="â€˜A load of Bolsâ€™ might be a cheap gag but it was too good to miss. #TimsListeningParty https://t.co/iIRIkjQ4XR" data-datetime="5:02 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363534503692664837"
+                 data-text="Everyone has a bottle of Baileyâ€™s or CuraÃ§ao thatâ€™s been in their house for longer than they care to mention.  You always say youâ€™ll drink them at Christmas, but you never do do you #TimsListeningParty" data-datetime="5:02 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363534361874882570"
+                 data-text="Rather than do an album full of Juno synths and Linn Drum machines, we decided to cover as many diff styles of 80s music as possible.  This is our little recreation of something that you might have found in The Blue Brothers #TimsListeningParty https://t.co/Z71Y9MKxN0" data-datetime="5:01 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363534219335581696"
+                 data-text="@BernardThresher BVs were recorded in the control room #TimsListeningParty" data-datetime="5:01 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363534134405136385"
+                 data-text="Our albums tend to be themed and as we all love 80s music (who doesnâ€™t) we decided an 80â€™s album was in order #TimsListeningParty https://t.co/0lDwHRTBTx" data-datetime="5:00 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fthehotpots%2Fstatus%2F1363533957011234816"
+                 data-text="PRESS PLAY: Welcome to @thehotpots NOWâ€™T Like The 80s, an Eighties inspired album we released in on 3rd Jun 2016.  Hereâ€™s our first song Last Can Blues #TimsListeningParty @LlSTENlNG_PARTY https://t.co/QcX9Fv6n1b" data-datetime="5:00 PM Feb 21, 2021"> 
+                thehotpots            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1363533951722209285"
+                 data-text="Press play. Itâ€™s time for @thehotpots https://t.co/Afv0BHq1vf" data-datetime="5:00 PM Feb 21, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
