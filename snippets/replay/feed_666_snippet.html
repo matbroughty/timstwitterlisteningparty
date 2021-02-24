@@ -1,0 +1,420 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7mueFpE0ElhVLHaxQDtuOB" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0241b7b25a58058e717f7925fd" alt="Only Smith &amp; Burrows Is Good Enough" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Smith &amp; Burrows</span><br/><span class="sub-colour">Only Smith &amp; Burrows Is Good Enough</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7mueFpE0ElhVLHaxQDtuOB" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 60 tweets from Wednesday 24th February 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/smithandburrows" target="_blank"><img src="https://pbs.twimg.com/profile_images/1273978220048678916/L3JxKO_r_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/smithandburrows.jpg'"><br/>@smithandburrows</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/andywburrows" target="_blank"><img src="https://pbs.twimg.com/profile_images/1329564627089432576/RpBnPG_R_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/andywburrows.jpg'"><br/>@andywburrows</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="All The Best Moves" data-start="0"
+             data-duration="203" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Buccaneer Rum Jum" data-start="204"
+             data-duration="246" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Spaghetti" data-start="451"
+             data-duration="190" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Old TV Shows" data-start="642"
+             data-duration="235" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Parliament Hill" data-start="878"
+             data-duration="196" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Bottle Tops" data-start="1075"
+             data-duration="255" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="I Want You Back In My Life" data-start="1331"
+             data-duration="196" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Aimee Move On" data-start="1528"
+             data-duration="244" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Too Late" data-start="1773"
+             data-duration="213" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Straight Up Like A Mohican" data-start="1987"
+             data-duration="209" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2197"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485141b7b25a58058e717f7925fd" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-60" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364691586211266568"
+                 data-text="Yessss Tim! Chavs Forever indeed https://t.co/QuNi5jZMFU" data-datetime="9:40 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1364691573699710978"
+                 data-text="@andywburrows @LlSTENlNG_PARTY MWAH! Love ya x x" data-datetime="9:40 PM Feb 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1364691305205551107"
+                 data-text="Mucho love to my pal and ex bandmate @andywburrows (Chavs forever ðŸ™Œ)
+
+Forza @smithandburrows ðŸ‘Š 
+
+Night all x x" data-datetime="9:38 PM Feb 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364691111470579713"
+                 data-text="@TheAlanJShow It is yes" data-datetime="9:38 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364691072669073412"
+                 data-text="... Shoulda made a longer record #TimsTwitterListeningParty" data-datetime="9:38 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364691056747552771"
+                 data-text="Thanks @Tim_Burgess I think you are amazing - But you know that. Everyone loves @LlSTENlNG_PARTY keeping us all happy. Xxxx" data-datetime="9:37 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364690870822461446"
+                 data-text="â¤ï¸â¤ï¸ #TimsTwitterListeningParty  ðŸ¤ŸðŸ¤Ÿ https://t.co/h7kF1X9SFq" data-datetime="9:37 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364690741923115010"
+                 data-text="That was a total blast. Thank you so so much for having us @LlSTENlNG_PARTY @Tim_Burgess S&amp;B xx" data-datetime="9:36 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364690640085389312"
+                 data-text="Weâ€™ve been Smith &amp; Burrows.... Thankyou for listening you beauties. Stay safe. Big , Big love xxx https://t.co/8m1XrvhldI" data-datetime="9:36 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364690491162447872"
+                 data-text="DRUMS ðŸ¤ŸðŸ¤Ÿ#TimsTwitterListeningParty" data-datetime="9:35 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364690246668070918"
+                 data-text="Bit daft this. I wrote that line yonks ago, when we were on tour in Europe with our Funny Looking Angels album . I was thinking bout punk hairstyles Straight-up like a Mohican. Thatâ€™s what Iâ€™m on about. I think. #timstwitterlisteningparty" data-datetime="9:34 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364690019856842754"
+                 data-text="STRAIGHT UP LIKE A MOHICAN
+This is what Andy looked like when he came up with this song title. Sx #timstwitterlisteningparty https://t.co/y6vG7RXM6W" data-datetime="9:33 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364689726964461569"
+                 data-text="@andywburrows @jacquireking 100%" data-datetime="9:32 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364689635159457800"
+                 data-text="@Tim_Burgess ðŸ™" data-datetime="9:32 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364689602154549248"
+                 data-text="Jacquire King is a legend #TimsTwitterListeningParty  @jacquireking" data-datetime="9:32 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364689455215435776"
+                 data-text="@andywburrows @editorsofficial ðŸ¤ŸðŸ¤Ÿ" data-datetime="9:31 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1364689450375258112"
+                 data-text="ðŸ”¥ðŸ”¥ðŸ”¥Too Late by @smithandburrows ðŸ”¥ðŸ”¥ðŸ”¥
+#TimsTwitterListeningParty" data-datetime="9:31 PM Feb 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364689344951443457"
+                 data-text="Too Late - didnâ€™t use real drums much on this album. But I got to rock out a bit on this one. Adore this song. Tom said it couldâ€™ve been for @editorsofficial Iâ€™m so happy it made it on to our record ðŸ’™ #TimsTwitterListeningParty" data-datetime="9:31 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364689048233795584"
+                 data-text="TOO LATE
+Have you ever heard anyone use â€œEchinaceaâ€ in a song before? Another pop music first for S&amp;B. Sx #timstwitterlisteningparty #popmusicfirsts" data-datetime="9:29 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364688873415147522"
+                 data-text="Hold me #TimsTwitterListeningParty https://t.co/meqOLvHAwY" data-datetime="9:29 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="121000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364688636973903872"
+                 data-text="@smithandburrows #TimsTwitterListeningParty https://t.co/mnenmIRwuw" data-datetime="9:28 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364688130809487367"
+                 data-text="AIMEE MOVE ON
+Hereâ€™s Andy with Aimee, honestly theyâ€™re always bloody fighting. Sx #timstwitterlisteningparty https://t.co/vdGvlYItGx" data-datetime="9:26 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364688059724357636"
+                 data-text="Aimee move on - I love this song. Probably my favourite on the album. Was a bit of a turning point in the early phase of writing - when we demoed it in Tomâ€™s attic, I really felt like making this album might actually become a reality. #timstwitterlisteningparty" data-datetime="9:26 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364687796615729159"
+                 data-text="I want you back in my life - Tennessee Times #timstwitterlisteningparty https://t.co/LmtkUQqMgQ" data-datetime="9:25 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364687790190059522"
+                 data-text="@andywburrows Wearing imagined white suits" data-datetime="9:24 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364687634098978824"
+                 data-text="Tom &amp; I walking home from our fave Franklin bar, one night, along the street we were staying on, both a bit pissed, in our shorts, like a couple of excitable dweebs on a summer holiday, and we were listening back this song singing our hearts out #timstwitterlisteningparty" data-datetime="9:24 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364687318624436226"
+                 data-text="I WANT YOU BACK IN MY LIFE
+We teamed up to play the mandolin part as one musician on this one. I think itâ€™s the first time ever in the history of recorded music this has happened. Sx #timstwitterlisteningparty #popmusicfirsts https://t.co/iWepX4JyZe" data-datetime="9:23 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1364687243353407495"
+                 data-text="So much love for @smithandburrows at the @LlSTENlNG_PARTY tonight" data-datetime="9:22 PM Feb 24, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364686846735888392"
+                 data-text="@LlSTENlNG_PARTY Amazing" data-datetime="9:21 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="116000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364686810685784073"
+                 data-text="@LlSTENlNG_PARTY ðŸ˜‚" data-datetime="9:21 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364686321814487041"
+                 data-text="@andywburrows See. Cool kids = Bros fans" data-datetime="9:19 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364686201760923648"
+                 data-text="BOTTLE TOPS
+Andy talks about how the cool kids attached Grolsh bottle tops to their shoes back in the day. I have no recollection of this, but I know nothing about what is or was cool. Andy however, does. Sx #timstwitterlisteningparty https://t.co/p4uNtoEYIj" data-datetime="9:18 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364686170022678534"
+                 data-text="Bottle Tops - I was writing about when I was super into Bros &amp; The Grolsch bottle tops fans used to wear in their laces - I was a bit too young to be able to get hold of a grolsch bottle, but yeah... this ones for all the brosettes #timstwitterlisteningparty" data-datetime="9:18 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364685929047293960"
+                 data-text="Yeah man https://t.co/0DMvbh1gAc" data-datetime="9:17 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1364685788504539139"
+                 data-text="@smithandburrows Snap https://t.co/GlbiLurQzd" data-datetime="9:17 PM Feb 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364685742853685250"
+                 data-text="This pic taken at P Hill btw xx" data-datetime="9:16 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364685667414990849"
+                 data-text="Parliament Hill - the old days, when we both lived in NW3 ... first time onstage together - 100 club, London. 2010. Singing Blackâ€™s  â€˜wonderful lifeâ€™ #timstwitterlisteningparty https://t.co/WawmysmQw6" data-datetime="9:16 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364685541061644289"
+                 data-text="So hot ... the temp, not the legs. #timstwitterlisteningparty https://t.co/Rble9h9fVn" data-datetime="9:16 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364685297401942018"
+                 data-text="PARLIAMENT HILL
+We like sitting on benches and we like Parliament Hill. Sx #timstwitterlisteningparty https://t.co/VU3FJ54uNn" data-datetime="9:15 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364685075577769987"
+                 data-text="Us on Martyâ€™s porch in Franklin, Tennessee the night before we started recording the album #timstwitterlisteningparty https://t.co/0D4MqlOreH" data-datetime="9:14 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364684583669796873"
+                 data-text="OLD TV SHOW
+Andyâ€™s piano take during the recording of this one is one of the most amazing experiences Iâ€™ve ever had in the studio, just totally beautiful. Talented chap. Unfortunately it didnâ€™t make the A list, despite the pic. Sx #timstwitterlisteningparty https://t.co/DeBNy5vztf" data-datetime="9:12 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364684327003561984"
+                 data-text="Old TV Shows - i wrote this song about my mum and dad breaking up. So it always makes me a bit sad. Tom brought it in to a beautifully more upbeat nostalgic place... Weâ€™ll always all miss Top of the pops right ? #timstwitterlisteningparty" data-datetime="9:11 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364684276810342408"
+                 data-text="Wow #timstwitterlisteningparty https://t.co/OcI0cJZ2Vr" data-datetime="9:11 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1364684225560117248"
+                 data-text="And @GraceMaxwell will be on hand for stories, corrections and general order ; )" data-datetime="9:10 PM Feb 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364684099567378440"
+                 data-text="Old dayyyyssss - first time me and tom performed together on Xfm â€˜08 #timstwitterlisteningparty https://t.co/cTWHxc8r9u" data-datetime="9:10 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364683984953892864"
+                 data-text="ðŸ™ðŸâ¤ï¸ yes Burrows x https://t.co/iTjlT1DnnF" data-datetime="9:09 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364683704031997954"
+                 data-text="Spaghetti - my fave Tom song ever - &amp; my best BeeGees falsetto harmonies  ðŸ  #timstwitterlisteningparty" data-datetime="9:08 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="144000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364683551883550720"
+                 data-text="SPAGHETTI
+I honestly think this is the coolest tune Iâ€™ve ever written. I know many will disagree but fuck em! Sx #timstwitterlisteningparty https://t.co/dZ3KQ7oprz" data-datetime="9:08 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1364682948147089412"
+                 data-text="ðŸ˜ðŸ˜ðŸ˜ https://t.co/SMfhsWqcam" data-datetime="9:05 PM Feb 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364682732899610625"
+                 data-text="Buccaneer Rum Jum - I was watching swashbuckle on CBeebies with my youngest. Wanted our own pirate party, so wrote this to try impress her #timstwitterlisteningparty" data-datetime="9:04 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364682657238568961"
+                 data-text="BUCCANEER RUM JUM
+Andy has described this tune to me as a Pirate Party. Iâ€™m still not quite sure what I think about that. Sx #timstwitterlisteningparty
+ï¿¼ https://t.co/cdTJJdWswv" data-datetime="9:04 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1364682356209115136"
+                 data-text="Please let @smithandburrows know where you are in the world, so that @andywburrows can put some pins on his map https://t.co/JDax8oylKq" data-datetime="9:03 PM Feb 24, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364682349791879177"
+                 data-text="@andywburrows ðŸ˜‚" data-datetime="9:03 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364682202588581891"
+                 data-text="video was Smithâ€™s - early-lockdown so there werenâ€™t many options other than making a home made one - being a proper rockstar, lip-sync &amp; dancing to the track at nuts-high-speed came natural to Tom.Took me â€˜bout 193 attempts to even get through the song #timstwitterlisteningparty" data-datetime="9:02 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364682178291003394"
+                 data-text="ðŸ¤ŸðŸ¤Ÿ https://t.co/uubJm4rzhi" data-datetime="9:02 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364682046254309389"
+                 data-text="ALL THE BEST MOVES (maybe watch that clip later! Ha) Sx #timstwitterlisteningparty" data-datetime="9:02 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fandywburrows%2Fstatus%2F1364681887483125760"
+                 data-text="All the best moves.  It all starts with this. Every song #timstwitterlisteningparty https://t.co/fFuju9158q" data-datetime="9:01 PM Feb 24, 2021"> 
+                andywburrows            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fsmithandburrows%2Fstatus%2F1364681828465057795"
+                 data-text="ALL THE BEST MOVES
+When gigs was real, Andy supported Editors &amp; I jumped on with him to play this tune ... this particular YT clip is the first time ever (I think) anyone heard this outside of our inner circle of sacred trust: https://t.co/ub8shd6eSB #timstwitterlisteningparty" data-datetime="9:01 PM Feb 24, 2021"> 
+                smithandburrows            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1364681686747906049"
+                 data-text="What a start. All The Best Moves by @smithandburrows is â¤ï¸â¤ï¸â¤ï¸â¤ï¸â¤ï¸" data-datetime="9:00 PM Feb 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1364681542757457923"
+                 data-text="Say hello to 
+
+Tom Smith (tweeting from @smithandburrows) and the one and only @andywburrows himself
+
+Press play / drop the needle on the record 
+
+Letâ€™s get started... https://t.co/aIGloyfAux" data-datetime="9:00 PM Feb 24, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
