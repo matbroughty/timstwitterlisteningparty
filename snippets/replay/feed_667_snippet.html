@@ -1,0 +1,836 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7a6DbfLdir3tz1U8xmCzaM" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02ee6a4143d98b1d2a7544195e" alt="As The Love Continues" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Mogwai</span><br/><span class="sub-colour">As The Love Continues</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(70202)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7a6DbfLdir3tz1U8xmCzaM" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_70202_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 173 tweets from Thursday 25th February 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/plasmatron" target="_blank"><img src="https://pbs.twimg.com/profile_images/914828153826283520/Nakm3DgP_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/plasmatron.jpg'"><br/>@plasmatron</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/DasGiftBerlin" target="_blank"><img src="https://pbs.twimg.com/profile_images/3686546897/6cd227c1fe37377ec4a8b7d0b5fd1e43_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/DasGiftBerlin.jpg'"><br/>@DasGiftBerlin</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/mogwaiband" target="_blank"><img src="https://pbs.twimg.com/profile_images/1321784881949646848/xGGEVq_J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/mogwaiband.jpg'"><br/>@mogwaiband</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="To The Bin My Friend, Tonight We Vacate Earth" data-start="0"
+             data-duration="309" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Here We, Here We, Here We Go Forever" data-start="310"
+             data-duration="285" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Dry Fantasy" data-start="596"
+             data-duration="310" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Ritchie Sacramento" data-start="907"
+             data-duration="252" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Drive The Nail" data-start="1160"
+             data-duration="434" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Fuck Off Money" data-start="1595"
+             data-duration="353" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Ceiling Granny" data-start="1949"
+             data-duration="238" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Midnight Flit" data-start="2188"
+             data-duration="368" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Pat Stains" data-start="2557"
+             data-duration="415" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Supposedly, We Were Nightmares" data-start="2973"
+             data-duration="276" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="It's What I Want To Do, Mum" data-start="3250"
+             data-duration="443" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="3694"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851ee6a4143d98b1d2a7544195e" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-173" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-172" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365060276362629122"
+                 data-text="RT @Tim_Burgess: I miss hearing the sound of plastic pint pots being crushed underfoot, as everyone leaves a gig" data-datetime="10:05 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-171" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365060250295013383"
+                 data-text="Itâ€™s been a mad emotional week. We genuinely had no idea that this was going to happen and to see all the love, support and encouragement from other musicians, friends and fans has been amazing. We love you all #Mogwai4Number1 #TimsTwitterListeningParty" data-datetime="10:04 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-170" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365060130035884034"
+                 data-text="@mogwaiband @LlSTENlNG_PARTY A total pleasure! A fantastic night x x" data-datetime="10:04 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-169" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FIain_Jenks%2Fstatus%2F1365060120519016448"
+                 data-text="People of earth! Go and buy the new Mogwai album!
+It\'s epic. It\'s immense. It\'s fantastic.
+You can thank me later.
+#Mogwai4Number1" data-datetime="10:04 PM Feb 25, 2021"> 
+                Iain_Jenks            </div>
+                        <div id="tweet-feed-168" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365059903723868170"
+                 data-text="@Tim_Burgess @mogwaiband @plasmatron Cheers Tim!" data-datetime="10:03 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-167" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365059860358979600"
+                 data-text="Thanks for listening and taking part everyone and thanks to @Tim_Burgess. Again. And thanks so much for your support, it really means a lot to us. Take care, goodnight. 
+ #TimsListeningParty" data-datetime="10:03 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-166" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365059808819372032"
+                 data-text="@crowwoodgrange @estellecostanza no no no" data-datetime="10:03 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-165" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365059675784441857"
+                 data-text="Thank you all so much for that. It was a blast. Weâ€™d really love to be number one tomorrow though so if abgone doesnâ€™t have it or just feels super generous can they get one off iTunes so we can be happy old men â¤ï¸ #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="10:02 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-164" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365059643995787268"
+                 data-text="Love and thanks to everyone who joined us on that trip and for @mogwaiband @plasmatron &amp; @DasGiftBerlin for captaining the ship. It was beautiful x x" data-datetime="10:02 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-163" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365059270841147398"
+                 data-text="Thanks everyone for listening to that pish for a whole hour.
+See you in your nightmares
+x
+#TimsTwitterListeningParty" data-datetime="10:01 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-162" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365059227950153732"
+                 data-text="@mogwaiband â¤ï¸" data-datetime="10:00 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-161" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365059103605870598"
+                 data-text="@mogwaiband @plasmatron Lol" data-datetime="10:00 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-160" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365059102964088833"
+                 data-text="https://t.co/pEm8l5ceHh" data-datetime="10:00 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-159" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365059000857993219"
+                 data-text="@plasmatron Phaser" data-datetime="10:00 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-158" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365058904686817283"
+                 data-text="@cichlisuite_ Nah, thatâ€™s fine as is" data-datetime="9:59 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-157" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365058872126414848"
+                 data-text="@plasmatron Youâ€™re so kind, darling" data-datetime="9:59 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-156" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365058849787564032"
+                 data-text="BIg MUFF #TimsListeningParty #Mogwai4Number1 https://t.co/3rVL8V1lx1" data-datetime="9:59 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-155" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365058643666812931"
+                 data-text="Iâ€™m the next Rick wakeman. Believe #TimsListeningParty #AsTheLoveContinues  #Mogwai4Number1 https://t.co/plmtdWQYaC" data-datetime="9:58 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fxave586%2Fstatus%2F1365058582853615616"
+                 data-text="Loud bass alert ! @mogwai #Mogwai4Number1 #AsTheLoveContinues #TimsTwitterListeningParty https://t.co/KiQ18I1hmg" data-datetime="9:58 PM Feb 25, 2021"> 
+                xave586            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fpault1888%2Fstatus%2F1365058469162811398"
+                 data-text="â€œItâ€™s What I Wantâ€¦â€. This is just classic Mogwai. Itâ€™s like a mini greatest hits wrapped up in nearly 8 minutes of brilliance. Like a welcome summary of all the greatest bits from the preceding hour of music. Itâ€™s fucking adorable. #TimsTwitterListeningParty #Mogwai4Number1" data-datetime="9:57 PM Feb 25, 2021"> 
+                pault1888            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365058446727479303"
+                 data-text="RT @Tim_Burgess: Sending love to anyone who might need it just now. Music can help us through x x" data-datetime="9:57 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365058389487796229"
+                 data-text="@estellecostanza Iâ€™ll text you" data-datetime="9:57 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365058135107452932"
+                 data-text="This is true! It was part of the pedal nonsense that we often indulge in. #TimsListeningParty https://t.co/fZk7Td0M7A" data-datetime="9:56 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365058110960852998"
+                 data-text="@estellecostanza hmmm" data-datetime="9:56 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fscifisteven%2Fstatus%2F1365058029100683264"
+                 data-text="Get this baby over the line folks. https://t.co/gY0kgu0G1u" data-datetime="9:56 PM Feb 25, 2021"> 
+                scifisteven            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365057997647601666"
+                 data-text="My wife calls this Mogwaiâ€™s James Bond theme song #TimsTwitterListeningParty" data-datetime="9:56 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365057988550090756"
+                 data-text="Stuart made up most of my synth parts so it gave me some EASY TIMES in the studio. Itâ€™s a great tune to end the album with. A distorted piano (early spoiler soz). Yas!
+#TimsTwitterListeningParty" data-datetime="9:56 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365057886855045123"
+                 data-text="@estellecostanza NOT ON HERE. Never. Next time i see you. It\'s dark" data-datetime="9:55 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365057796379729925"
+                 data-text="@PMJawn @GlasgowTramway Aye! Great night" data-datetime="9:55 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365057740402532352"
+                 data-text="Itâ€™s What I Want To Do Mum
+
+This was another one that weâ€™d abandoned and Dave told us to work on it more. Barry says the riff sounds like a Bond theme. Like the first song I always thought this sounded like the end of the album. #TimsListeningParty #Mogwai4Number1" data-datetime="9:55 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365057575046291462"
+                 data-text="Itâ€™s What I Want To Do Mum - Stuart used to play the chords to this at the end of gigs and I think I said to him, you should make a song up with them. He did and I love it. Itâ€™s well James Bondy and really fun to play.
+#TimsTwitterListeningParty" data-datetime="9:54 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365057509610950660"
+                 data-text="@Rabbhaw @LlSTENlNG_PARTY @mogwaiband Of course. And a sense of humour too ðŸ¤˜â¤ï¸" data-datetime="9:54 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365057508545593350"
+                 data-text="@BelleVazquez13 Interzone" data-datetime="9:54 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365057396427677703"
+                 data-text="@evilcrawlingi Big muff!" data-datetime="9:53 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365057295302950920"
+                 data-text="I nicked a wee thing from a Steve Gadd drumbeat and combined it with my best Stephen Morris impression. Great fun to play. #TimsTwitterListeningParty" data-datetime="9:53 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365057282048991241"
+                 data-text="@estellecostanza Cubicle 3 in Toilet 8 at Gate fuckin hell" data-datetime="9:53 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365057122363392003"
+                 data-text="@MichaelDaly64 @GlasgowTramway True!" data-datetime="9:52 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365057072245731330"
+                 data-text="@illyandbarri OB-6 this time! that sequencer is great fun" data-datetime="9:52 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fstevemcmahon13%2Fstatus%2F1365057064284872711"
+                 data-text="Isn\'t it fucking brilliant that, in this exact moment, so many folk around the world are all basking in the glory of @mogwaiband\'s stunning As The Love Continues with @Tim_Burgess &amp; @plasmatron &amp; @DasGiftBerlin &amp; #TimsTwitterListeningParty  #Mogwai #Mogwai4Number1" data-datetime="9:52 PM Feb 25, 2021"> 
+                stevemcmahon13            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365057034127835140"
+                 data-text="Love Martinâ€™s drums on this #TimsListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:52 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365056854808756226"
+                 data-text="@estellecostanza NOT EVEN" data-datetime="9:51 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365056731278106625"
+                 data-text="This turned out a bit different from how it was at Stuart\'s demo stage and i really like how you could have a wee dance to it. Fridmann added local TV samples of Covid discussions or something
+#TimsTwitterListeningParty" data-datetime="9:51 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365056588655038466"
+                 data-text="Supposedly, We Were Nightmares
+
+The demo for this was called JD as I was trying to make it sound like Joy Division (my favourite band). There a drum dynth pedal in there somewhere as well as a recording of the Covid advice line from where Dave stays. #TimsListeningParty" data-datetime="9:50 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fgazmac01%2Fstatus%2F1365056586553638913"
+                 data-text="@LlSTENlNG_PARTY they have all smashed their phones" data-datetime="9:50 PM Feb 25, 2021"> 
+                gazmac01            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365056565426937856"
+                 data-text="My Shame-ona!!
+#TimsTwitterListeningParty" data-datetime="9:50 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fluthersvolvo%2Fstatus%2F1365056444802957317"
+                 data-text="#TimsTwitterListeningParty
+@plasmatron @DasGiftBerlin @mogwaiband 
+Supposedly, We Were Nightmares: gorgeous track
+
+This is the audio equivalent of soaring through an open road in Glencoe in a stolen XR3i." data-datetime="9:49 PM Feb 25, 2021"> 
+                luthersvolvo            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365056405661773824"
+                 data-text="Supposedly, We Were Nightmares - Named after me and my guitar tech being wrecked in Vancouver airport on the way home after a big tour. Sorry everyone. 
+#TimsTwitterListeningParty" data-datetime="9:49 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365056403031928837"
+                 data-text="When we did the @GlasgowTramway show I realised I hadnâ€™t played guitar standing up for a year. This but was hard and I had to sit down ðŸ˜‚ #TimsListeningParty" data-datetime="9:49 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365055949787066370"
+                 data-text="@colin_stetson going ham #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:47 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365055776730005510"
+                 data-text="Loud bit klaxon #TimsTwitterListeningParty" data-datetime="9:47 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FAlexBoyd%2Fstatus%2F1365055287313498123"
+                 data-text="@plasmatron @colin_stetson I knew it. Pat Smear approves. #TimsTwitterListeningParty #Mogwai4Number1 https://t.co/rZIFB9NblR" data-datetime="9:45 PM Feb 25, 2021"> 
+                AlexBoyd            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365055203997810692"
+                 data-text="That sax stuff reminds me of philip glass sort of, but sounds like synths. A BASTARD to count, being in 9/4. Help me.
+#TimsTwitterListeningParty" data-datetime="9:44 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365055150180732939"
+                 data-text="ðŸ˜‚ #TimsTwitterListeningParty #Mogwai4Number1 https://t.co/OmUUIaLVIG" data-datetime="9:44 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FDeeNorton1973%2Fstatus%2F1365055120816431107"
+                 data-text="@plasmatron Product recall. https://t.co/B74MqlbiDi" data-datetime="9:44 PM Feb 25, 2021"> 
+                DeeNorton1973            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365054920295129089"
+                 data-text="Pat Stains.
+
+Barry thought this was what Pat Smear was called. Kind of understandableâ€¦Itâ€™s in a mad time signature which is weird as I wrote it and can usually only count to 4. @colin_stetson â€˜s voice and saxophone is incredible. #TimsTwitterListeningParty #Mogwai4Number1" data-datetime="9:43 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365054859016249346"
+                 data-text="(squeaky drum pedal adds character)" data-datetime="9:43 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FM8J7H%2Fstatus%2F1365054783602765839"
+                 data-text="Pat Stains - play this loud. Another one that builds gradually and just takes off. Love this song. 
+
+#TimsTwitterListeningParty" data-datetime="9:43 PM Feb 25, 2021"> 
+                M8J7H            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365054712098263044"
+                 data-text="Pat Stains - I was really concerned with a very fruity minor to major piano bit in this tune but looks like it turned out good in the end. I thought Pat Smear was called Pat Stains ðŸ˜Ž
+#TimsTwitterListeningParty" data-datetime="9:42 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365054697917341707"
+                 data-text="Retweet please ; ) #TimsTwitterListeningPartyÂ  
+@mogwaiband #Mogwai4Number1 #TimsTwitterListeningPartyÂ  
+@mogwaiband #Mogwai4Number1 #TimsTwitterListeningPartyÂ  
+@mogwaiband #Mogwai4Number1 #TimsTwitterListeningPartyÂ  
+@mogwaiband #Mogwai4Number1 #TimsTwitterListeningParty" data-datetime="9:42 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FCastlevonDoom%2Fstatus%2F1365054610461913091"
+                 data-text="@plasmatron Funny fact about the strings. They were due to finish at 1800. They literally put down all their instruments in the middle of a take and stopped playing.  It was very eastern." data-datetime="9:42 PM Feb 25, 2021"> 
+                CastlevonDoom            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365054571329036290"
+                 data-text="@cichlisuite_ if they live in one suitcase then aye" data-datetime="9:42 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365054494174826497"
+                 data-text="It means to move house in the middle of the night.  #TimsTwitterListeningParty #Mogwai4Number1 #AsTheLoveContinues https://t.co/dRbJWicwrk" data-datetime="9:42 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fgshawisme%2Fstatus%2F1365054409961574405"
+                 data-text="Midnight Flit is just epic, the strings, the drums, the build &lt;chefs kiss&gt; #Mogwai4Number1 #TimsTwitterListeningParty" data-datetime="9:41 PM Feb 25, 2021"> 
+                gshawisme            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1365054250787758086"
+                 data-text="Uh oh @mogwaiband https://t.co/dxPFIcEGnz" data-datetime="9:41 PM Feb 25, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365054236380311554"
+                 data-text="Thank you Atticus @nineinchnails for this. Itâ€™s incredible. #TimsTwitterListeningParty #Mogwai4Number1 #AsTheLoveContinues" data-datetime="9:41 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365054011083268097"
+                 data-text="@jetfury @BeakBristol We fixed mine on protools 
+#TimsTwitterListeningParty" data-datetime="9:40 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365053978631888906"
+                 data-text="Shit soz #TimsTwitterListeningParty https://t.co/ydtkGUuwju" data-datetime="9:40 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Felisaelektra%2Fstatus%2F1365053928975593472"
+                 data-text="Fun fact @plasmatron accidentally called Midnight Flit â€˜Midnight Clitâ€™ the other day 
+
+#TimsTwitterListeningParty 
+#Mogwai4Number1" data-datetime="9:39 PM Feb 25, 2021"> 
+                elisaelektra            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fdebiandahin%2Fstatus%2F1365053890627072003"
+                 data-text="@plasmatron This is my favourite. Its a trip â¤ majestic AF ðŸ™Œ #TimsTwitterListeningParty #Mogwai" data-datetime="9:39 PM Feb 25, 2021"> 
+                debiandahin            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365053859480170500"
+                 data-text="@PMJawn nope" data-datetime="9:39 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365053855189368834"
+                 data-text="Just tweeting to say that this is something amazing. All of us around the world with @mogwaiband @plasmatron and @DasGiftBerlin totally bossing it â¤ï¸â¤ï¸ðŸ”¥ðŸ”¥#TimsTwitterListeningParty" data-datetime="9:39 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365053792677486594"
+                 data-text="@estellecostanza @DasGiftBerlin Practice. Obvz" data-datetime="9:39 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365053744031948801"
+                 data-text="I wish you could hear just the string part on its own as well. It\'s unreal. 
+#TimsTwitterListeningParty" data-datetime="9:39 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365053536745234435"
+                 data-text="Drums on this track definitely influenced by @BeakBristol @jetfury  #TimsTwitterListeningParty" data-datetime="9:38 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365053506923737098"
+                 data-text="We asked Atticus Ross to put some strings on and he also added some synth stuff too. Itâ€™s a big one. Keeps getting louder innit.
+#TimsTwitterListeningParty" data-datetime="9:38 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365053381845397510"
+                 data-text="@mogwaiband ENTIRE MIX lols" data-datetime="9:37 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365053198826938372"
+                 data-text="@DasGiftBerlin I thought it was Stuartâ€™s guitar ðŸ˜‚
+#TimsTwitterListeningParty" data-datetime="9:36 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365053170448293893"
+                 data-text="Midnight Flit
+
+I canâ€™t believe how epic this ended up. Atticus really went to town on the additional parts. The strings were played in Budapest and recorded in Glasgow with direction from Los Angeles. Futuristic af" data-datetime="9:36 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365053145731194880"
+                 data-text="Midnight Flit - I had just got a Moog DFAM drum machine and went to town with it. Kept the chords simple with the hope that weâ€™d just layer a lot of different parts later. I love Martinâ€™s drum part on this.
+#TimsTwitterListeningParty" data-datetime="9:36 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365052931653926921"
+                 data-text="You should have seen our faces when we heard the phaser on Dave\'s mix. 
+#TimsTwitterListeningParty" data-datetime="9:35 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365052866449334274"
+                 data-text="Accidental Pixies note coming up. NOW. #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:35 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fhownicearechips%2Fstatus%2F1365052814578380804"
+                 data-text="@plasmatron https://t.co/h65DEb20yy" data-datetime="9:35 PM Feb 25, 2021"> 
+                hownicearechips            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365052678695452674"
+                 data-text="Dom wrote this song and decided to slow it down as it sounded too much like the Smashing Pumkins. Dave speeded it back up ðŸ˜‚ #TimsTwitterListeningParty" data-datetime="9:34 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365052616447770633"
+                 data-text="Yes. This is meant to sound like big country.  #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:34 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365052578174763018"
+                 data-text="You can tell when Dom has written a song because i can\'t play it very well and should not be allowed a guitar or whatever you call it
+#TimsTwitterListeningParty" data-datetime="9:34 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fiamjurassicmark%2Fstatus%2F1365052498038452225"
+                 data-text="\"Ceiling Granny\". 
+
+#TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1 https://t.co/iXVz5ZVn8l" data-datetime="9:34 PM Feb 25, 2021"> 
+                iamjurassicmark            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fgraham_habben%2Fstatus%2F1365052435337785345"
+                 data-text="#TimsTwitterListeningParty https://t.co/2nHOhuDSFM" data-datetime="9:33 PM Feb 25, 2021"> 
+                graham_habben            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365052345365585921"
+                 data-text="The most @mogwaiband place to be https://t.co/ULpfW90Qvh" data-datetime="9:33 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365052217372344321"
+                 data-text="Ceiling Granny
+
+The title comes from the scariest bit in Exorcist 3. It was originally a lot slower but Dave encouraged us to play it faster. This is as fast as we can play. Better abandon that Slayer covers album. #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:33 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fplacid_casual75%2Fstatus%2F1365052198791507968"
+                 data-text="ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿
+
+THE CAMPAIGN TO MAKE CEILING GRANNY THE NEW NATIONAL ANTHEM OF" data-datetime="9:33 PM Feb 25, 2021"> 
+                placid_casual75            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365052165753085955"
+                 data-text="https://t.co/cr1Cbc3kxL" data-datetime="9:32 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365052137995177989"
+                 data-text="Ceiling Granny - Dave liked this but wanted it MUCH faster so it felt a bit Benny Hill at the time but does make sense now. Named after the Exorcist III lady on the ceiling. Terror. Domâ€™s tune hitting some Pumpkins levels.
+#TimsTwitterListeningParty" data-datetime="9:32 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365051946307100675"
+                 data-text="THIS https://t.co/i4Kl5ddLcJ" data-datetime="9:32 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1365051926145040386"
+                 data-text="#TimsTwitterListeningPartyÂ  Post Punk Floyd Â© 
+@mogwaiband" data-datetime="9:31 PM Feb 25, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365051905135771656"
+                 data-text="@platonic_youth Yep" data-datetime="9:31 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365051873468760067"
+                 data-text="@DasGiftBerlin Iâ€™m just daft https://t.co/J8bfjvuqoc" data-datetime="9:31 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365051728408829955"
+                 data-text="@risky_iom That works too" data-datetime="9:31 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365051632623497218"
+                 data-text="@plasmatron @LlSTENlNG_PARTY @mogwaiband HAHAHA" data-datetime="9:30 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365051587891253252"
+                 data-text="@LlSTENlNG_PARTY @mogwaiband @DasGiftBerlin Losing to Rangers!!!!! The story of this season ðŸ˜… #TimsTwitterListeningParty" data-datetime="9:30 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365051582111449088"
+                 data-text="@dianogah Take this and fuck off. Hi Andy ðŸ‘‹" data-datetime="9:30 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365051580442169347"
+                 data-text="@plasmatron i didn\'t like the start. that vino you have is wreck the hoose juice" data-datetime="9:30 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365051319040491522"
+                 data-text="The second half is pretty much as we recorded it the first time but much bigger sounding. It has so much going on at the end and is layered like a Tunnock\'s Caramel Wafer
+#TimsTwitterListeningParty" data-datetime="9:29 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365051300954705922"
+                 data-text="@DasGiftBerlin You knows it â¤ï¸" data-datetime="9:29 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365051224756793351"
+                 data-text="@shemboar yeah" data-datetime="9:29 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365051187154796544"
+                 data-text="@_TheJMan23 fuck all" data-datetime="9:28 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365051184692797442"
+                 data-text="The title means money required so that someone fucks off. Not a large fuck off amount of money. If that makes sense. #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:28 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365051076374839307"
+                 data-text="The samples at the beginning sound like a toilet being flushed so, result
+#TimsTwitterListeningParty" data-datetime="9:28 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365050903829622784"
+                 data-text="Fuck Off Money
+
+This song is one of the rare ones that rolled over from another record. We recorded it for ECS but Barry didnâ€™t like end and wrote a new one. Iâ€™m so glad he did as it turned out great. #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:27 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1365050859613286402"
+                 data-text="Buy the new @mogwaiband album for only Â£4.99 Buy the new @mogwaiband album for only Â£4.99 Buy the new @mogwaiband album for only Â£4.99 Buy the new @mogwaiband album for only Â£4.99 As the Love Continues by Mogwai https://t.co/oYcwPfRUkn https://t.co/sXlf5LGB7I" data-datetime="9:27 PM Feb 25, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365050818769125376"
+                 data-text="@plasmatron HAHAHAHA jesus christ" data-datetime="9:27 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365050633758334983"
+                 data-text="That twinkly guitar sound is my H9 pedal that @DasGiftBerlin has to operate for me. #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:26 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365050611771854850"
+                 data-text="Fuck Off Money - We never nailed the original of this for the last album so I rewrote the whole first section with a new vocoder part and synth arpeggios. 
+#TimsTwitterListeningParty" data-datetime="9:26 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365050360096845830"
+                 data-text="#Mogwai4Number1 https://t.co/gXTNLtVpDF" data-datetime="9:25 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365050139065245696"
+                 data-text="@Luxington Canny wait to play it live. Itâ€™s really enjoyable" data-datetime="9:24 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365049795853889538"
+                 data-text="@plasmatron @mogwaiband (i think it was that dream i had at vada for the name btw)" data-datetime="9:23 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365049668917465095"
+                 data-text="@DasGiftBerlin @mogwaiband Iâ€™ve just said Leo made it up. Senility rules!" data-datetime="9:22 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365049439388393474"
+                 data-text="I should add, not many things make me smile.  #TimsTwitterListeningParty" data-datetime="9:22 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365049436951437314"
+                 data-text="Was fun to begin using a whammy bar. Kind of new to me. Wheeeeee
+#TimsTwitterListeningParty" data-datetime="9:22 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365049394085695493"
+                 data-text="@PMJawn @DasGiftBerlin Yes! Tainted love!!!" data-datetime="9:21 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365049316868562947"
+                 data-text="@LlSTENlNG_PARTY @DasGiftBerlin Yasssss" data-datetime="9:21 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365049265945522182"
+                 data-text="I think this is my favourite tune on the record. I love Barryâ€™s guitar in this, makes me smile automatically #TimsTwitterListeningParty" data-datetime="9:21 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365049212925317120"
+                 data-text="@SparkyIC It\'s ridic" data-datetime="9:21 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365049200594018317"
+                 data-text="@blueskiesecho @BNastanovich Cheers!" data-datetime="9:21 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365049167752519682"
+                 data-text="Drive The Nail
+
+Iâ€™m so glad Barry came up with this. Itâ€™s going to beyond heavy when we eventually get back to gigs. The title I think came from a fictional band made up by Martinâ€™s wee boy Leo. #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:20 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1365049021677658112"
+                 data-text="Hey @plasmatron &amp; @DasGiftBerlin - weâ€™re moving on up https://t.co/B9bdANYzHY" data-datetime="9:20 PM Feb 25, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365048987544412173"
+                 data-text="Itâ€™s influenced by (gulps!) â€œWurmâ€ by Yes. I knowâ€¦â€¦i am deeply sorry.
+The name comes from a dream I had when we were in England recording the album. Nonsense.
+#TimsTwitterListeningParty" data-datetime="9:20 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365048822418833415"
+                 data-text="Disappear in the sun #TimsTwitterListeningParty https://t.co/TpzEs6Iof5" data-datetime="9:19 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365048775740452868"
+                 data-text="Drive The Nail - Always good to get a loop of something and then write over that. It gets you going. The guitar is tuned weird because Iâ€™m not so good a player in standard tuning. It went through so many rewrites until it worked.
+#TimsTwitterListeningParty" data-datetime="9:19 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365048597318955008"
+                 data-text="I honed my vocal harmony skills singing along with EVERYTHING on car rides to and from practice with @DasGiftBerlin until he betrayed us all by abandoning Scotland ðŸ˜‚ #TimsTwitterListeningParty #ast #Mogwai4Number1" data-datetime="9:18 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365048457455689732"
+                 data-text="@AlisonGildedALM Barry and Stuart are doing such a great job #TimsTwitterListeningParty" data-datetime="9:18 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365048424144502788"
+                 data-text="OOH MIDDLE 8. INSANITY" data-datetime="9:18 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365048392435593223"
+                 data-text="â¤ï¸Ritchie Sacramentoâ¤ï¸@mogwaiband" data-datetime="9:17 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365048241516122117"
+                 data-text="When I came up with the mad delay sound at the start for the demo I knew Iâ€™d never replicate it again so I took a photo of the pedal. Possibly the most organised and sensible thing  Iâ€™ve ever done. #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:17 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365048180442824707"
+                 data-text="Uh oh. We have lift off @mogwaiband https://t.co/2qhzrm2YAJ" data-datetime="9:17 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365048109680754698"
+                 data-text="@BelleVazquez13 in the sun" data-datetime="9:16 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365047983193137157"
+                 data-text="Ritchie Sacramento
+
+This was inspired by a post from @BNastanovich  on Dave Bermans birthday about him chucking a shovel at a sports car when they were students. He said â€œRise, Crystal Spearâ€ as he did it. I thought it was beautiful and truly inspiring.
+Dave Berman forever." data-datetime="9:16 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365047775881289730"
+                 data-text="Ritchie Sacramento - This is my favourite ever song that Stuart has sung on. It keeps reminding me of Always The Sun by The Stranglers and I love playing it at the few rehearsals, even though they make me sing backing vocals
+#TimsTwitterListeningParty" data-datetime="9:15 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365047730096201735"
+                 data-text="@estellecostanza HA" data-datetime="9:15 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FAnnekaNoir%2Fstatus%2F1365047712555569154"
+                 data-text="@Tim_Burgess @mogwaiband @plasmatron @DasGiftBerlin https://t.co/f1u6pDjPe3" data-datetime="9:15 PM Feb 25, 2021"> 
+                AnnekaNoir            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365047475753672704"
+                 data-text="@estellecostanza what a memory you have" data-datetime="9:14 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365047429553397761"
+                 data-text="@inremotepart @mogwaiband Yeah" data-datetime="9:14 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365047368060723209"
+                 data-text="My original guitar part was basically Enjoy The Silence by Depeche Mode. I think Dave wisely chopped it in two.  #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1" data-datetime="9:13 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Festellecostanza%2Fstatus%2F1365047281838415872"
+                 data-text="When I was first in the studio with Mogwai, Barry sat down at Bosendorfer grand piano and knocked off â€˜Night They Drove Old Dixie Down.â€™ Later Braithwaite did same with gtr solo from â€˜Another Girl Another Planet.â€™ I said â€˜oh you *can* play. Is the drone stuff just for the weans?â€™ https://t.co/5hyHPGtz6c" data-datetime="9:13 PM Feb 25, 2021"> 
+                estellecostanza            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365047195393798144"
+                 data-text="@MrsRF Hiya ðŸ‘‹" data-datetime="9:13 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365047071041089539"
+                 data-text="@peterbschmidt aye" data-datetime="9:12 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365046977059258393"
+                 data-text="@DasGiftBerlin Beautiful man" data-datetime="9:12 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1365046905143705606"
+                 data-text="Retweeeet! #Mogwai4Number1 #TimsTwitterListeningParty 
+@mogwaiband #Mogwai4Number1 #TimsTwitterListeningParty 
+@mogwaiband #Mogwai4Number1 #TimsTwitterListeningParty 
+@mogwaiband #Mogwai4Number1 #TimsTwitterListeningParty 
+@mogwaiband #Mogwai4Number1 #TimsTwitterListeningParty" data-datetime="9:11 PM Feb 25, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365046891801694213"
+                 data-text="The name comes from me asking if we should keep the guitar effects off for this tune but stuart said â€œI could fuck off with my Dry Fantasyâ€
+#TimsTwitterListeningParty" data-datetime="9:11 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365046821379313673"
+                 data-text="Dry Fantasy
+
+So happy that this was the first song people heard. Really loved the video by @vajpower truly psychedelic. The title comes from a conversation about using less reverb. I told @DasGiftBerlin that I wanted nothing to do with his Dry Fantasy. #TimsTwitterListeningParty" data-datetime="9:11 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365046759165227009"
+                 data-text="It takes influence from loads of the electronic music I was listening to at the time, like Konx Om Pax. Thereâ€™s a good bit of drum machine programming too which I like to enhance what genius drummer Martin is playing.
+#TimsTwitterListeningParty" data-datetime="9:11 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365046466436284417"
+                 data-text="Dry Fantasy - This is the other mellotron piano song but with tonnes of hardware and soft synths all layered heavily. The main tune is basically the synth that was used in BladeRunner. 
+#TimsTwitterListeningParty" data-datetime="9:10 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365046297275809795"
+                 data-text="Massive Bowie Low influence. Bowie Forever. #AsTheLoveContinues #TimsTwitterListeningParty #Mogwai4Number1" data-datetime="9:09 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365046160784846850"
+                 data-text="@geo4065 Itâ€™s a drum machine at the start. Dave Fridmann works loads on the drum sounds which usually means me hitting individual drums for bloody hours. Worth it though." data-datetime="9:09 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FRoffeyDave%2Fstatus%2F1365046021315780608"
+                 data-text="@Tim_Burgess @mogwaiband @plasmatron @DasGiftBerlin https://t.co/uIVPWtbzJv" data-datetime="9:08 PM Feb 25, 2021"> 
+                RoffeyDave            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365046018824413188"
+                 data-text="Television guitar solo ðŸŽ¸ #AsTheLoveContinues #TimsTwitterListeningParty #Mogwai4Number1" data-datetime="9:08 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365045984900825088"
+                 data-text="@estellecostanza HAHAHAHA" data-datetime="9:08 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365045891204345856"
+                 data-text="The lyrics are indecipherable but fuck it. Here they are. I was going for Bowie / 2001 A Space Odyssey energy.  #TimsTwitterListeningParty #AsTheLoveContinues #Mogwai4Number1 https://t.co/F4GqwtlUi3" data-datetime="9:07 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365045656218460170"
+                 data-text="It was like the Associates \"Party Fears Two\" piano part but shitter" data-datetime="9:07 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365045566263226369"
+                 data-text="The daft drum machine is from my original demo. The vocals are through a broken vocoder guitar pedal. We did them properly but Dave liked the fucked up sound from the demo and I re-recorded it in my house with the shit pedal and that was used #TimsTwitterListeningParty" data-datetime="9:06 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fclaire3638%2Fstatus%2F1365045512517398528"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY @mogwaiband @plasmatron @DasGiftBerlin https://t.co/yYB0GkBczl" data-datetime="9:06 PM Feb 25, 2021"> 
+                claire3638            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365045426886500356"
+                 data-text="Here we, Here We, Here We Go Forever - 
+I did have a laugh when I heard the drum machine on the demo and Iâ€™ve grown to love it. 
+I tried to get the weird/funny sounding Mellotron Piano on a few of the songs and this is one of them. FACTS TIME
+#TimsTwitterListeningParty" data-datetime="9:06 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365045241359699969"
+                 data-text="@Phil_nothing @DasGiftBerlin Hi!" data-datetime="9:05 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365045054642016258"
+                 data-text="@karolynprg âœŠðŸ¼" data-datetime="9:04 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365045020743655435"
+                 data-text="@elisaelektra #ben4number1" data-datetime="9:04 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365044907988164609"
+                 data-text="@estellecostanza It was your cup and yer maws bag etc" data-datetime="9:04 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365044829458227210"
+                 data-text="This always sounded to me like it would be the album opener. The bass and drums were recorded at a way faster speed and slowed down which is why they sound so huge.  #AsTheLoveContinues #TimsTwitterListeningParty #Mogwai4Number1" data-datetime="9:03 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365044808260157441"
+                 data-text="I always love these.
+This @mogwaiband as a gif please
+
+#TimsTwitterListeningParty 
+@plasmatron @DasGiftBerlin https://t.co/vkOPhQnill" data-datetime="9:03 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fmogwaiband%2Fstatus%2F1365044613338329088"
+                 data-text="@DasGiftBerlin Or with my drums" data-datetime="9:02 PM Feb 25, 2021"> 
+                mogwaiband            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1365044533273190402"
+                 data-text="To The Bin My Friend, Tonight We Vacate Earth
+
+The voice at the start is our good pal @BlanckMass . Ben talks in his sleep and records it. Other hits of his include â€œIan Brady The Musicalâ€ and â€œShipmsn On Iceâ€ he has a KILLER new record out TOMORROW #TimsTwitterListeningParty" data-datetime="9:02 PM Feb 25, 2021"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365044451987648522"
+                 data-text="The second half of the song, I fancied a go at dream-pop, though Iâ€™m not sure I pulled that off. Itâ€™s full of 80s style synth sounds and sequences that took me FAR too long to get in time with the music.
+#TimsTwitterListeningParty" data-datetime="9:02 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365044286748844033"
+                 data-text="We recorded and played this at a much higher speed and key and then slowed it right down to normal again to make the drums sound weird.
+#TimsTwitterListeningParty" data-datetime="9:01 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FDasGiftBerlin%2Fstatus%2F1365043997706756107"
+                 data-text="To The Bin My Friend - WELL HELLO EVERYONE!
+Anyway. Onwards. 
+The first part of this song was influenced a lot by the Neu 75 album, especially â€œLeb Wohlâ€ and maybe a slowed down version of â€œIsiâ€. 
+#TimsTwitterListeningParty" data-datetime="9:00 PM Feb 25, 2021"> 
+                DasGiftBerlin            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365043910733672450"
+                 data-text="Letâ€™s do this together! 
+
+Good to have you here 
+
+Over to you @mogwaiband @DasGiftBerlin &amp; @plasmatron 
+
+Itâ€™s all yours 
+
+ ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ ðŸ¦Š ðŸ”¥ ðŸ™Œ https://t.co/GRwntTrcn5" data-datetime="9:00 PM Feb 25, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
