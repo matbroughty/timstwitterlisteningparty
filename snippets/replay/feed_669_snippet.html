@@ -1,0 +1,576 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3bouQtY9H1DP39yxqHuFf8" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02a3bc94f95c99c3ad2f40740a" alt="Organisation" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">OMD</span><br/><span class="sub-colour">Organisation</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(187508)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3bouQtY9H1DP39yxqHuFf8" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_187508_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 96 tweets from Saturday 27th February 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/OfficialOMD" target="_blank"><img src="https://pbs.twimg.com/profile_images/1233325706370846721/UiHCFogs_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/OfficialOMD.jpg'"><br/>@OfficialOMD</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Enola Gay - Remastered" data-start="0"
+             data-duration="213" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="2nd Thought - 2003 Digital Remaster" data-start="214"
+             data-duration="255" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="VCL XI - 2003 Digital Remaster" data-start="470"
+             data-duration="230" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Motion And Heart - 2003 Digital Remaster" data-start="701"
+             data-duration="196" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Statues - 2003 Digital Remaster" data-start="898"
+             data-duration="270" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="The Misunderstanding - 2003 Digital Remaster" data-start="1169"
+             data-duration="295" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="The More I See You - 2003 Digital Remaster" data-start="1465"
+             data-duration="251" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Promise - Remastered" data-start="1717"
+             data-duration="291" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Stanlow - 2003 Digital Remaster" data-start="2009"
+             data-duration="400" style="display:none"></div>
+                        <div id="track-10" class="track-list"
+                     data-name="Finished" data-start="2410"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851a3bc94f95c99c3ad2f40740a" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-96" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="159000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365765109923143686"
+                 data-text="Thank you all for listening along. Thanks @Tim_Burgess for inviting us to do another one. The debate now starts for which one to do! Debut album?" data-datetime="8:45 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365764444496818179"
+                 data-text="Should we have put it on the album?!" data-datetime="8:43 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365764437957869572"
+                 data-text="Absolutely! Letâ€™s get it sorted x x x https://t.co/F814rJLIIX" data-datetime="8:43 PM Feb 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365764385772298250"
+                 data-text="Yeah - it did that on my iTunes too! https://t.co/XiLe1U9Ar2" data-datetime="8:42 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365763900063567873"
+                 data-text="Thank you all. Once again many thanks to @Tim_Burgess for hosting. Can we do a sixth one before lockdown ends Tim?" data-datetime="8:41 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365763751669084167"
+                 data-text="Wow, where does the time go?!" data-datetime="8:40 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365763706039263233"
+                 data-text="It gave us a confidence to be a little more grandiose and elegant. 
+
+https://t.co/AsaTX91w4G" data-datetime="8:40 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365763652276654084"
+                 data-text="Thanks as ever @OfficialOMD https://t.co/fEkhPn6v0X" data-datetime="8:40 PM Feb 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365763529853304834"
+                 data-text="It\'s a lot easier to drive past one than live near one. They stink but look good when you\'re in your car
+
+https://t.co/gqTuadkwWh" data-datetime="8:39 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365763368401985544"
+                 data-text="8 finished songs
+
+https://t.co/EbPIhmWtqo" data-datetime="8:38 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1365763349586341890"
+                 data-text="OMD\'s Organisation at number 41 on the NME writers\' chart of the best LPs of 1980 #TimsTwitterListeningParty @OfficialOMD @LlSTENlNG_PARTY @Tim_Burgess Here\'s a playlist of the top singles https://t.co/uVnCExehY2 https://t.co/8eoUvTzhjs" data-datetime="8:38 PM Feb 27, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1365763282016043016"
+                 data-text="#TimsTwitterListeningParty https://t.co/PSbVJFdRMV" data-datetime="8:38 PM Feb 27, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365763081868083203"
+                 data-text="Thank you. Always a crazy idea to open shows with it 40 years ago. Was logical to do it again 40 years later
+
+https://t.co/LI3OowsbqE" data-datetime="8:37 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762941421826048"
+                 data-text="Thank you. It\'s nice that you have had an opportunity to grow to love them!
+
+https://t.co/phF6Z1wPHH" data-datetime="8:37 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762772408143874"
+                 data-text="Peter and I worked very closely on sleeves. He enjoyed the fact I had an artistic background and that we could discuss and resonate together
+
+https://t.co/MNTktbGqqC" data-datetime="8:36 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365762654418141191"
+                 data-text="#TimsTwitterListeningParty 
+Fun Fact: When I worked at ICI, I used to hum this @OfficialOMD whenever I had to call anyone at Stanlow Refinery https://t.co/MusYXqeJcr" data-datetime="8:36 PM Feb 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762604367511555"
+                 data-text="He\'s busy breastfeeding with his new baby!
+
+https://t.co/vOWcZRFK5q" data-datetime="8:35 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762473559810050"
+                 data-text="Yes.
+
+https://t.co/QOIt5gxwPM" data-datetime="8:35 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762369633333250"
+                 data-text="out of tune?! https://t.co/89RM6Zd1G5" data-datetime="8:34 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762218835529737"
+                 data-text="Peter Saville and I really bonded over this track as he always loved the industrial monster sitting in itâ€™s rural idyll with gantry lights twinkling in the night. He used to drive past it all the time on his way from Manchester to his parentâ€™s house in Wales." data-datetime="8:34 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762176133320704"
+                 data-text="The intro and outro are a recording of a compressor machine that I made in the refinery, but slowed it down to give more grandeur." data-datetime="8:34 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762146630516740"
+                 data-text="My father and sister both worked there, but more importantly it was very literally the beacon (the flaming gas impurity burn chimney) that announced we were less than half an hour from home as we returned from gigs all over the country in the early hours of the morning." data-datetime="8:34 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762131531091977"
+                 data-text="There were several connections to Stanlow oil refinery." data-datetime="8:34 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365762033484980225"
+                 data-text="TRACK 9 - STANLOW" data-datetime="8:33 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365761890035650560"
+                 data-text="Paul only ever writes about the women in his life" data-datetime="8:33 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365761801569370112"
+                 data-text="Love! 
+
+https://t.co/SuEIBrjlB9" data-datetime="8:32 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365761715439337473"
+                 data-text="Does he sing out of tune like Paul?!?! ðŸ˜‚
+
+https://t.co/4vXttvuh6K" data-datetime="8:32 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365761401655074816"
+                 data-text="Nah! Paul would only ever work one day a year!!
+
+https://t.co/pwAdjAG0Sw" data-datetime="8:31 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1365761399960580096"
+                 data-text="\"Believe me Paul, everyone\'s going to be walking around like this in 40 years time\" #TimsTwitterListeningParty @OfficialOMD @LlSTENlNG_PARTY  OMD press photo from 1980 https://t.co/WQ2p8M6vKB" data-datetime="8:31 PM Feb 27, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365761276467675142"
+                 data-text="Paul was absolutely TERRIFIED to sing solo on stage. He hated it. It\'s taken him 40 years to stop crapping himself!
+
+https://t.co/cCDRsa43Bb" data-datetime="8:30 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365761047412543490"
+                 data-text="Of course! By The xx. We also have a still xx cover up our sleeves that you haven\'t heard... https://t.co/9OL6M4UrSC" data-datetime="8:29 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365760916747284480"
+                 data-text="Typically, I tried to changed the feel of a sweet Paul tune by playing the eerie synth screams across the background to make it a bit edgier. Great bass line that I think Paul wrote." data-datetime="8:29 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365760890524626947"
+                 data-text="The first ever song written by Paul only.  He finally came back to the studio after Maureen went home to USA and wrote a song about how much he missed her. The reference to â€œ You can dance until we meet againâ€ is because she was a ballet dancer at the ABT New York." data-datetime="8:29 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365760863186149376"
+                 data-text="Firstly - HAPPY BIRTHDAY PAUL HUMPHREYS!!! 61 today..." data-datetime="8:28 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365760784979144709"
+                 data-text="TRACK 8 - PROMISE" data-datetime="8:28 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365760583765798912"
+                 data-text="No. We have covered Velvet Underground and Kraftwerk. We don\'t do many though
+
+https://t.co/jJW8NJWXwM" data-datetime="8:27 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365760381780647944"
+                 data-text="This song is patently at the lower end of my register. Fake baritone!" data-datetime="8:27 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365760239006609415"
+                 data-text="@OfficialOMD Definitely the right thing! It stands up really well" data-datetime="8:26 PM Feb 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365759980436131840"
+                 data-text="WHAT a picture!!!! https://t.co/PDbeRA3Xu5" data-datetime="8:25 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365759902430490627"
+                 data-text="We couldnâ€™t stop laughing but actually rather liked what we had done. As we could never write different lyrics after this we just left it as it was!  Still not sure I we did the right thing? :-)" data-datetime="8:25 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365759846742597632"
+                 data-text="Paul and I had the backing track of synths, Rototoms and bass. For a laugh I started singing the words to The More I see You, the old musical film song" data-datetime="8:24 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365759804745129986"
+                 data-text="TRACK 7 - THE MORE I SEE YOU" data-datetime="8:24 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365759750093299715"
+                 data-text="How did we manage to get such beautiful synth sounds out of such cheap crap?!" data-datetime="8:24 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365759577661313029"
+                 data-text="No - can\'t see it being a hit somehow!
+
+https://t.co/ZaiCKUY9Zg" data-datetime="8:23 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365759452679397386"
+                 data-text="Yes absolutely! No sequencer, no MIDI, no computers!
+
+https://t.co/WMOozeMAK2" data-datetime="8:23 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365759285892968456"
+                 data-text="Where were you in 1980?!
+
+https://t.co/xeropYO0yT" data-datetime="8:22 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365759022922661895"
+                 data-text="I refer back to my comments about the bass guitar. It was designed to be scary and gothic. Glad it worked!
+
+https://t.co/vgLBcn0mxU" data-datetime="8:21 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365758852730392581"
+                 data-text="Thank you Gary, this is what makes making music so powerful. Something we made touches a memory for eternity https://t.co/Ed9EXNNtme" data-datetime="8:20 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365758651969994752"
+                 data-text="The lyrics are totally meaningless. Just collected phrases like a Bowie cut up and delivered in Eno style as on the Tiger Mountain album. We debated long and hard about leaving off the last line after â€œclose itâ€  which was â€œvery quietlyâ€.. as you can hear, we left it out!" data-datetime="8:20 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365758627722715139"
+                 data-text="An old song from the days of The ID. We totally transformed the intro to create the gothic mood. All of the sounds you hear are me gently rubbing the bass strings through deep echo and harmonizer. Then scratching the strings with a pick through even more monstrous reverb!" data-datetime="8:20 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365758597288837121"
+                 data-text="TRACK 6 - THE MISUNDERSTANDING" data-datetime="8:19 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365758449020264448"
+                 data-text="Now you can hear the Elgam organ all on its own!" data-datetime="8:19 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365758376735625219"
+                 data-text="We will pause after this one for vinyl lovers turning over" data-datetime="8:19 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365758201887678464"
+                 data-text="We weren\'t planning for it to sound great 41 years later but many of the tracks do hold up because they are imbued with genuine feeling and desire
+
+https://t.co/xfJ1XkoFfx" data-datetime="8:18 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365758057133834246"
+                 data-text="Local library and even the main library in Liverpool. I did my deep research!
+
+https://t.co/ipdXpUpqgr" data-datetime="8:17 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365757640815575042"
+                 data-text="It was great to bring it back on the last tour. I believe we will keep playing it from time to time after we tour. Also perfect after Maid to give me a rest!
+
+https://t.co/crBRPyGqnp" data-datetime="8:16 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365757464000487427"
+                 data-text="One more song created on the old Elgam organ. It had a built in bass and chord accompaniment. The whole song was written using this, you clearly hear it at the beginning and end of the song." data-datetime="8:15 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365757437467312130"
+                 data-text="The lyrics are about Ian Curtis and his death. â€œThe way you movedâ€ is because he danced similarly to me onstage in those days. Also  Peter Saville had shown me the image of the funerary statues for the Closer album months before the release and that is where the title came from." data-datetime="8:15 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365757403111829516"
+                 data-text="TRACK 5 - STATUES" data-datetime="8:15 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365757365354721290"
+                 data-text="In some ways yes. The problem was I was such a bag of nerves that I seldom allowed myself to enjoy things
+
+https://t.co/d6sTOnus6D" data-datetime="8:15 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365757196563337218"
+                 data-text="If I can play it on a keyboard anyone can!
+
+https://t.co/SkEy0U14vB" data-datetime="8:14 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365757086265712648"
+                 data-text="Anything\'s an improvement on that name!
+
+https://t.co/fHcXLrjlL6" data-datetime="8:13 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365756986428645376"
+                 data-text="Busy doing what we\'re not entirely sure!
+
+https://t.co/LMRNM2Kwla" data-datetime="8:13 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fmotionandheart_%2Fstatus%2F1365756782807830528"
+                 data-text="@OfficialOMD Motion and Heart so good there is a fan site names after it ;)" data-datetime="8:12 PM Feb 27, 2021"> 
+                motionandheart_            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365756722380431368"
+                 data-text="We tried a re-record of the song with Mal (@realMalHolmes) paying drums as a possible single candidate but didnâ€™t feel that it was strong enough to follow Enola Gay." data-datetime="8:12 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365756675957927938"
+                 data-text="I then researched 1940s fashion and culture for the lyrics like the geek that I am. This is where the phrases â€œMake do and Mendâ€ and â€œ New Paris trendâ€ come from." data-datetime="8:12 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365756635906519041"
+                 data-text="Another song begun by myself when Paul was building! My fingers accidentally slipped on the old Elgam organ and I discovered that I had created a sort of 1940s swing chord pattern. This gave the idea for the whole style." data-datetime="8:12 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365756583662276610"
+                 data-text="TRACK 4 - Motion And Heart" data-datetime="8:11 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365756514942738438"
+                 data-text="Basically we were trying hard to make synthesizers acceptably bright and popular. Playing with Joy Division made us realise there is nothing wrong with melancholy 
+
+https://t.co/lqMqrWfxvA" data-datetime="8:11 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365756243541979136"
+                 data-text="Love Andyâ€™s vocals on VCL XI" data-datetime="8:10 PM Feb 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365756160763117569"
+                 data-text="Same with the song Navigation too" data-datetime="8:10 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365756124088197126"
+                 data-text="Yes - I\'m just mouthing nonsense!!
+
+https://t.co/WxXpUKvgua" data-datetime="8:10 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365756043255558147"
+                 data-text="We never really were a band because we didn\'t dare to come out of Paul\'s back room. When we did we decided we needed a bonkers name. Boy did we choose one!
+
+https://t.co/ytFbbteJRn" data-datetime="8:09 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365755882802413571"
+                 data-text="There\'s two...! Does that make a Russian doll?!
+
+https://t.co/aUbODvH9iU" data-datetime="8:09 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365755629428736000"
+                 data-text="I love the sound of my bass on this track. Also the piano was such fun to play we just loaded the studio piano with chains and metal lying on the strings. Sounded great but ruined the tuning for the rest of the session.. fortunately we didnâ€™t need it again." data-datetime="8:08 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365755599145869315"
+                 data-text="This derives it title from a valve displayed on the back of the Radio-Activity album cover by Kraftwerk .. and for the pedants.. yes we changed the 11 to Roman numerals.. This name was originally what Paul and I called ourselves as a writing duo." data-datetime="8:08 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365755565461364739"
+                 data-text="TRACK 3 - VCL XI" data-datetime="8:07 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1365755482544209922"
+                 data-text="Any @LlSTENlNG_PARTY attendees hearing Organisation by @OfficialOMD for the first time???" data-datetime="8:07 PM Feb 27, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365755032981934090"
+                 data-text="I was hand-firing an old drum machine super fast that just made a very fast clicking sound
+
+https://t.co/JglKF4hnOd" data-datetime="8:05 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754859199291400"
+                 data-text="I don\'t believe we\'ve ever done it live. Perhaps we should.
+
+https://t.co/MEmkoJ3YxD" data-datetime="8:05 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754758888366086"
+                 data-text="Peter Saville chose it as he thought the album was quite dark https://t.co/Tl8aBwG8Ej" data-datetime="8:04 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754647319871490"
+                 data-text="This is one of my favourite songs that we have ever recorded. It chimes with my melancholy." data-datetime="8:04 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754632975364099"
+                 data-text="We had some new keyboards and this was me exploring the Prophet 5. Also, it is a typical linear Andy song. Written onto tape and constantly repeating without a change of chord pattern, just musical elements introduced and removed." data-datetime="8:04 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754590315110400"
+                 data-text="The second of three songs written only by myself on the album. Paul had met Maureen in May 1980 and didnâ€™t come to the studio as often as I did any more." data-datetime="8:04 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754559235305474"
+                 data-text="TRACH 2 - 2nd Thought" data-datetime="8:03 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754507662143495"
+                 data-text="Music always comes first
+
+https://t.co/tXC0HwGvHO" data-datetime="8:03 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754395770687489"
+                 data-text="Neither could I! Nor he
+
+https://t.co/HphwZHIJSR" data-datetime="8:03 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754145454632968"
+                 data-text="Love this!
+
+https://t.co/l2pz4soP9d" data-datetime="8:02 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365754075392995336"
+                 data-text="There was also controversy in the band. Paul Humphreys (and Paul Collister the manager) didn\'t want it releasing as they thought it was cheesy!" data-datetime="8:02 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365753931335401474"
+                 data-text="Absolutely. I had to defend myself by saying it wasn\'t as weird as naming the plane after your mother
+
+https://t.co/XShR1Ujaii" data-datetime="8:01 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365753766440558599"
+                 data-text="Number 1 in France and Italy for 3 months. It helped get us out of jail when we sang it to an Italian police inspector when they thought that we were Red Brigade Terrorists!!" data-datetime="8:00 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365753736606474243"
+                 data-text="I wrote it on my own as Paul was forced to take work placement to keep his dole money.  I was writing it at his house whilst he was in the rain carrying bricks and cement at the local outdoor swimming pool. Poor boy!" data-datetime="8:00 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365753704016666625"
+                 data-text="Is there anything left to say about this song?  I will try." data-datetime="8:00 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365753666804801541"
+                 data-text="What. A. Start!" data-datetime="8:00 PM Feb 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FOfficialOMD%2Fstatus%2F1365753655216009221"
+                 data-text="TRACK 1 - ENOLA GAY" data-datetime="8:00 PM Feb 27, 2021"> 
+                OfficialOMD            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1365753582792962054"
+                 data-text="Letâ€™s go
+
+Handing over to Andy McCluskey - one of our favourite @LlSTENlNG_PARTY hosts
+
+Start the engines @OfficialOMD https://t.co/Sl1yRmjrBX" data-datetime="8:00 PM Feb 27, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
