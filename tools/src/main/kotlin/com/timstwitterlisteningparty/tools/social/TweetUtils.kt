@@ -83,6 +83,36 @@ class TweetUtils {
     return anniversaryToTweet
   }
 
+  fun tweetYearlyAnniversary(timeSlots: List<TimeSlot> = emptyList(), logOnly: Boolean = false): Boolean {
+    val now = MonthDay.from(LocalDate.now())
+    var yearlyAnniversaryToTweet = false
+    val timeSlotList = if (timeSlots.isEmpty()) TimeSlotReader().timeSlots else timeSlots
+    timeSlotList
+      .asSequence()
+      .filter { it.isoDate.year != LocalDate.now().year } // not this year
+      .filter { it.tweeters.isNotEmpty() } // not a silent party
+      .filter { !it.is1970() } // not scheduled
+      .filter { it.hasReplay() } // needs a replay as we include that on tweet
+      .filter {
+        now == MonthDay.of(it.isoDate.month, it.isoDate.dayOfMonth)
+      }
+      .toList()
+      .forEach {
+        yearlyAnniversaryToTweet = true
+        logger.info("found a yearly anniversary for $it")
+        val yearsAgo = LocalDate.now().year - it.isoDate.year
+        val years = if (yearsAgo == 1) "year" else "years"
+        val msg = "$yearsAgo $years ago today we had a listening party for ${it.album} by ${it.band}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
+        if (logOnly) {
+          logger.info(msg)
+        } else {
+          logger.info("tweet--yearly-anniversary $msg")
+          tweet(msg)
+        }
+      }
+    return yearlyAnniversaryToTweet
+  }
+
   fun tweetReplay(timeSlot: TimeSlot, replayLink: String): String {
     if (timeSlot.tweeterList().isEmpty()) {
       return "no band/artist to tweet replay"
@@ -207,4 +237,6 @@ class TweetUtils {
   fun addToCollection(tweetIds: List<String>, collectionId: String) {
     getTwittered().collectionsCurate(collectionId, tweetIds)
   }
+
+
 }

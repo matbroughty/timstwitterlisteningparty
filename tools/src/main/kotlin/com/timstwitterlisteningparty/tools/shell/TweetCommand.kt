@@ -46,6 +46,11 @@ class TweetCommand {
       "${TweetUtils().tweetAnniversary(logOnly = logOnly.toBoolean())}"
   }
 
+  @ShellMethod("Tweet any yearly twiiter anniversaries based on iso date for listening party date in the time-slot-data.csv")
+  fun tweetYearlyAnniversary(@ShellOption("-L", "--log") logOnly: String): String {
+    return "tweet anniversary - anything to tweet = " +
+      "${TweetUtils().tweetYearlyAnniversary(logOnly = logOnly.toBoolean())}"
+  }
 
 
   private fun findTimeSlot(replayId: String): TimeSlot? {
