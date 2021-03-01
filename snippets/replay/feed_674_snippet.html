@@ -1,0 +1,614 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5Y0ydH2toHiVrqs9UQ78zH" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e028d3787b23aba980f880fea3b" alt="Uwch Gopa'r Mynydd" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Yucatan</span><br/><span class="sub-colour">Uwch Gopa'r Mynydd</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(11429)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5Y0ydH2toHiVrqs9UQ78zH" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_11429_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 68 tweets from Monday 1st March 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Yucatanambyth" target="_blank"><img src="https://pbs.twimg.com/profile_images/1356177634204508163/H--Pbjlu_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Yucatanambyth.jpg'"><br/>@Yucatanambyth</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1357670243766837249/tWOOSNjS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Ffin" data-start="0"
+             data-duration="307" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Cwm Llwm" data-start="308"
+             data-duration="466" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Word Song" data-start="775"
+             data-duration="281" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Halen Daear a S?n y Môr" data-start="1057"
+             data-duration="292" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Ochenaid" data-start="1350"
+             data-duration="385" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Llyn Tawelwch" data-start="1736"
+             data-duration="330" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Angharad" data-start="2067"
+             data-duration="245" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Uwch Gopa'r Mynydd" data-start="2313"
+             data-duration="414" style="display:none"></div>
+                        <div id="track-9" class="track-list"
+                     data-name="Finished" data-start="2728"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048518d3787b23aba980f880fea3b" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-68" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="239000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1366505869870059522"
+                 data-text="@Yucatanambyth @LlSTENlNG_PARTY @Tim_Burgess @listening_party Thank you â­ï¸â­ï¸â­ï¸â­ï¸â­ï¸ ðŸ™ Gonna be playing this vinyl a lot in Barcelona this Spring â˜€ï¸ðŸŒ´â˜€ï¸" data-datetime="9:49 PM Mar 1, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366504865724301316"
+                 data-text="Thatâ€™s it folks! Thanks SO much to @Tim_Burgess for inviting us to take part in tonightâ€™s @LISTENING_PARTY, and to Nick for being a legend! Massive privilege for us.
+
+Nos da.
+
+#TimsTwitterListeningParty 
+Prynu/Buy https://t.co/N2KvW5c02r" data-datetime="9:45 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366504863430029317"
+                 data-text="Dyna ni ddiwedd yr albwm! Diolch o galon i @Tim_Burgess am y gwahoddiad, ac i Nick am y cymorth. Braint enfawr!
+
+Nos da.
+
+#TimsTwitterListeningParty 
+Prynu/Buy https://t.co/N2KvW5c02r" data-datetime="9:45 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366504810829271042"
+                 data-text="We love introducing people to new favourite bands and we love it when you support the artists by buying their records. So much love for @Yucatanambyth tonight https://t.co/r6DHy3WBg7" data-datetime="9:45 PM Mar 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366504497284075523"
+                 data-text="PÅµar, Al!
+
+Shout out Alex @xandermorrison (left) who joined the band shortly after we finished the album, and has been part of our lineup since then.
+
+Photo credit: @Sal_GigJunkie https://t.co/1kxqVV1yaV" data-datetime="9:43 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366504492582260737"
+                 data-text="Diolch i @Tim_Burgess am y cyfle i chwaraâ€™ ar lwyfan #TimPeaks Diner yn y gwyliau uchod!
+
+#TimsTwitterListeningParty" data-datetime="9:43 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366504489230950400"
+                 data-text="Weâ€™ve performed this album on the Tim Peaks Diner stage in many festivals - @IsleOfWightFest, @KendalCalling, @Electric_Fields, @Festivalnumber6, Liverpool @SoundCity, @CottonCFest ... Thanks for having us!
+
+Photo credits: @Sal_GigJunkie @ellibin
+
+#TimsTwitterListeningParty https://t.co/2ajTwFN6vS" data-datetime="9:43 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366504185492078594"
+                 data-text="Cafodd yr albwm ei ryddhau ym Mehefin 2015 drwy label y band, Recordiau Coll, aâ€™i dosbarthu gan Republic of Music. Prynwch gopi isod...
+
+https://t.co/N2KvW5c02r
+
+#TimsTwitterListeningParty" data-datetime="9:42 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366504183323627526"
+                 data-text="The album was (finally!) released on June 22nd, 2015 through Recordiau Coll, and distributed by @ROMBrighton. Copies available here...
+
+https://t.co/N2KvW5c02r
+
+#TimsTwitterListeningParty
+
+â¬‡ï¸" data-datetime="9:42 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366503956197826560"
+                 data-text="ðŸ”¥ðŸ”¥ðŸ”¥â¤ï¸â¤ï¸â¤ï¸ https://t.co/Wl5KEuB5x4" data-datetime="9:41 PM Mar 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366503822126944270"
+                 data-text="Aeth Dil, Gwyn a Rob Allen @wordsandstories Ã¢ stwff ffrydio wi-fi i ben yr Wyddfa i ddarlleduâ€™r albwm am wythnos cyn ei rhyddhau.
+
+#TimsTwitterListeningParty
+Prynu/Buy https://t.co/N2KvW5c02r" data-datetime="9:41 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366503816884088838"
+                 data-text="Dil, Gwyn, and Rob Allen @wordsandstories took wi-fi steaming equipment to the summit of Mount Snowdon, to broadcast the album for a week before the release date - and it confused many hikers and holidaymakers ðŸ“¡
+
+#TimsTwitterListeningParty
+Prynu/Buy https://t.co/N2KvW5c02r
+
+â¬‡ï¸ https://t.co/0HeTWE70j9" data-datetime="9:41 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="112000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1366503791185584128"
+                 data-text="@LlSTENlNG_PARTY @Yucatanambyth Thank you @LlSTENlNG_PARTY for bringing this into my life ðŸ™Œ @Yucatanambyth â¤ï¸ https://t.co/wWW7Y0qBWe" data-datetime="9:41 PM Mar 1, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366503318441385984"
+                 data-text="â€œAc iâ€™r rhai Ã¢ chotiau blew, aâ€™r rhai Ã¢ phlu aâ€™r rhai syâ€™n nofioâ€™r dyfroeddâ€
+
+â€œAnd for those with fur coats, those with feathers and those who swim the watersâ€
+
+#TimsTwitterListeningParty" data-datetime="9:39 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366503316809777169"
+                 data-text="8. UWCH GOPAâ€™R MYNYDD (ABOVE THE MOUNTAIN SUMMIT)
+
+Homage to all creation and living life. Iwanâ€™s fav song off the album. Notice him at the end warming up his drum kit, which was accidentally recorded, then included in the song outro.
+
+#TimsTwitterListeningParty
+
+â¬‡ï¸" data-datetime="9:39 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366502966316969991"
+                 data-text="Cafodd 6 o ganeuon yr albwm eu defnyddio ar drac sain â€˜Donâ€™t Take Me Homeâ€™ âš½âš½âš½
+
+Big thanks to Jonny Owen for featuring 6 of the albumâ€™s song on the soundtrack to â€˜Donâ€™t Take Me Homeâ€™ ðŸ´ó §ó ¢ó ·ó ¬ó ³ó ¿
+
+#TimsTwitterListeningParty https://t.co/pt0i7fkMjA" data-datetime="9:37 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fkay_aye_ar_kay%2Fstatus%2F1366502826663370752"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess @Yucatanambyth I\'m so happy that so many more people are discovering @Yucatanambyth right now" data-datetime="9:37 PM Mar 1, 2021"> 
+                kay_aye_ar_kay            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366502673424523265"
+                 data-text="A mwy... https://t.co/FgdwCaOiVx" data-datetime="9:36 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366502660585709571"
+                 data-text="Ni oedd un oâ€™r bandia dwytha i recordio yn y stiwdio cyn iddi gau. Dyma fwy o luniauâ€¦
+
+We were one of the last bands to record at Bryn Derwen before it shut its doors for the last time. Here are some more photosâ€¦
+
+#TimsTwitterListeningParty
+Prynu/Buy https://t.co/N2KvW5c02r
+
+â¬‡ï¸ https://t.co/eyLUApreBo" data-datetime="9:36 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366502608802893824"
+                 data-text="Tim Peaks (the tall tower with the grey dome) at @Portmeirion - where @Yucatanambyth played a few times as part of the much missed @festivalnumber6 https://t.co/zVw75Btwr3" data-datetime="9:36 PM Mar 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1366502423930540044"
+                 data-text="I did not know @Yucatanambyth before tonightâ€™s @LlSTENlNG_PARTY Wrongs are being righted (vinyl ðŸ™‹â€â™‚ï¸) #TimsTwitterListeningParty https://t.co/6WbUHeYfcB" data-datetime="9:35 PM Mar 1, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366502110657929217"
+                 data-text="7. ANGHARAD
+
+â€œClyw awel dawel nos, cau llygaid wrth gofleidioâ€™n glos, hudol, hudol fyd yw hwn, sugno, sugno maeth oâ€™r breichiau hyn...â€
+
+Overwhelming love of life and love.
+
+#TimsTwitterListeningParty
+Prynu/Buy https://t.co/N2KvW5c02r" data-datetime="9:34 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366501716145889284"
+                 data-text="Aeth amser ar goll i rhywle. Daethon ni nÃ´l iâ€™n coed yn y Gwanwyn 2014, a recordio bach mwy. Traâ€™r oedd Iwan i ffwrdd, recordiodd Theston Jones y darn dryms ar gyfer Llyn Tawelwch.
+
+#TimsTwitterListeningParty" data-datetime="9:32 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="133000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366501710806548486"
+                 data-text="We lost track of time, and then regained consciousness in Spring 2014, and recorded some more overdubs.
+
+While Iwan was away our mate @ThestonJones recorded the drums for Llyn Tawelwch.
+
+#TimsTwitterListeningParty
+https://t.co/N2KvW5c02r
+
+â¬‡ï¸ https://t.co/ZGJGjcqJxV" data-datetime="9:32 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366501152834134021"
+                 data-text="Yr unig gÃ¢n oâ€™r albwm \'da ni erioed wedi ei chwaraeâ€™n fyw
+
+The only song from the album that weâ€™ve never played live.
+
+#TimsTwitterListeningParty 
+Prynu/Buy https://t.co/N2KvW5c02r" data-datetime="9:30 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366501150820827140"
+                 data-text="The tone bed heard through most of this song was created by drawing a cello bow against the bars of a vibraphoneâ€¦
+
+#TimsTwitterListeningParty
+
+â¬‡ï¸ https://t.co/ftzNSY6dHz" data-datetime="9:30 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="104000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366500764894527488"
+                 data-text="6. LLYN TAWELWCH (LAKE OF SILENCE)
+
+In 1965, the Welsh community of Capel Celyn, where people had lived, worked and died for generations was drowned to create a reservoir.
+
+Am foddi Capel Celyn aâ€™r ysbrydion syâ€™n byw heddiw yn Llyn Tryweryn.
+
+#TimsTwitterListeningParty https://t.co/AaE7eGgyxN" data-datetime="9:29 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="116000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366500328544288770"
+                 data-text="Ar glawr yr albwm mae llun o Manuela, gwraig Dilwyn, yn 8 oed.
+
+The albumâ€™s cover features Manuela, Dilwynâ€™s wife, aged 8. Inserts include a snowy wintery mountain in Bethesda and Chwarel Dorothea superimposed with an overview plan of Stonehenge.
+
+#TimsTwitterListeningParty https://t.co/6MWdpISYIb" data-datetime="9:27 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366499841598185479"
+                 data-text="This one made album of the week in the @IrishTimes ðŸ’ª
+
+Fe gawson ni Albwm yr Wythnos yn yr Irish Times!
+
+https://t.co/GGVgIjcn1T
+
+#TimsTwitterListeningParty" data-datetime="9:25 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366499829728305158"
+                 data-text="RT @bellytheband: @LlSTENlNG_PARTY tweet!" data-datetime="9:25 PM Mar 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2FdollyblueMC%2Fstatus%2F1366499655073292294"
+                 data-text="@LlSTENlNG_PARTY @Yucatanambyth  @Tim_Burgess 
+
+#TimsTwitterListeningParty https://t.co/Ly0snXBH9N" data-datetime="9:24 PM Mar 1, 2021"> 
+                dollyblueMC            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366499319554191361"
+                 data-text="5. OCHENAID (SIGH)
+
+â€œOchenaid, ochenaid, ochenaid, cymryd saib rhwng pob un anadl...â€
+
+Silent fireworks.
+
+#TimsTwitterListeningParty
+Prynu/Buy https://t.co/N2KvW5c02r" data-datetime="9:23 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="116000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366499171004518408"
+                 data-text="ðŸ’” https://t.co/bWO9ye4Ror" data-datetime="9:22 PM Mar 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366498684297490435"
+                 data-text="Dyma Iwan, ein diweddar ffrind a drymiwr, yn recordioâ€™r darnau iâ€™r albwm. Iwan recordiodd y darnau gloc i gyd hefyd. 
+
+This is our late drummer, pal and all-round top guy Iwan, laying down some tracks. Iwan also recorded the glockenspiel parts.
+
+#TimsTwitterListeningParty https://t.co/ep8iJtN5bx" data-datetime="9:20 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366498564088750084"
+                 data-text="Take the chance if you ever get to see @Yucatanambyth play live - maybe take the chance if you ever get to see any band play live : /" data-datetime="9:20 PM Mar 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366498274941804544"
+                 data-text="The string and brass arrangements were written by our very own @OsianHowells, and recorded by Gwenno Roberts
+
+Osian ni ddaru ysgrifennu llinynnau a chyrn yr albwm, a @GwennoMel chwaraeodd y llinynnau - diolch Gwenji! X
+
+#TimsTwitterListeningParty" data-datetime="9:19 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366498271166930947"
+                 data-text="Diolch i hogiau Band Deiniolen am ddod draw iâ€™r stiwdio i recordio\'r darnau cyrn i ni
+
+Big shout out to Deiniolen Silver Band for venturing over the mountain to Bryn Derwen to record the brass parts for the album @DeiniolenBand @uriensionh.
+
+#TimsTwitterListeningParty
+
+â¬‡ï¸ https://t.co/1JSU0NyJP3" data-datetime="9:19 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366498216850694145"
+                 data-text="@kay_aye_ar_kay Miss you x" data-datetime="9:18 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366497973287403525"
+                 data-text="4. HALEN DAEAR A SÅ´N Y MÃ”R
+(THE SALT OF THE EARTH AND THE SOUND OF THE SEA)
+
+A song written for the time when Eryri was overrun by wolves, bears and Celtic overlords.
+
+â€œTi a fi yn groes iâ€™r graen, Halen daear a sÅµn y mÃ´r yn fy nghlust...â€
+
+#TimsTwitterListeningParty" data-datetime="9:17 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366497521468596228"
+                 data-text="We returned to Bryn Derwen in August 2012 to record more vocals and other bits
+
+Dyma ni yn Mryn Derwen yn Awst 2012 yn recordio mwy
+
+#TimsTwitterListeningParty
+Prynu/Buy https://t.co/N2KvW5c02r https://t.co/hiD4msu0vh" data-datetime="9:16 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366497172112424975"
+                 data-text="Word Song by @Yucatanambyth is one of the most heartbreakingly beautiful tracks ever recorded" data-datetime="9:14 PM Mar 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fblochert%2Fstatus%2F1366496928767221760"
+                 data-text="@LlSTENlNG_PARTY @Yucatanambyth A bit of a drab morning in Melbourne, this is lovely music though! https://t.co/dU0LiO55VO" data-datetime="9:13 PM Mar 1, 2021"> 
+                blochert            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366496899285585925"
+                 data-text="...about how fragile language can be, also how we are responsible for each word we use. Words have constructive as well as destructive powers.
+
+#TimsTwitterListeningParty
+Prynu/Buy https://t.co/N2KvW5c02r" data-datetime="9:13 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366496897301643268"
+                 data-text="3. WORD SONG
+
+Mae ieithoedd yn fregus, a geiriau yn medru bod yn hallt a dinistriol.
+
+â€œWords they fly through air, feathered just like birdsâ€¦â€
+
+#TimsTwitterListeningParty
+
+â¬‡ï¸" data-datetime="9:13 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="259000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366496826313031682"
+                 data-text="Anyone at the @LlSTENlNG_PARTY hearing @Yucatanambyth for the first time??" data-datetime="9:13 PM Mar 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366495741754146818"
+                 data-text="Working with Dave on the mixing and production was @TomLoffman. Great guy - we\'ve worked with him on a few things after the album as well. We donâ€™t have a photo of Tom in action, but hereâ€™s a photo of a dolphin.
+
+#TimsTwitterListeningParty
+Prynu/Buy https://t.co/N2KvW5c02r https://t.co/bicMpWQuFm" data-datetime="9:09 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366495732920954891"
+                 data-text="Da ni isio diolch yn ofnadwy i @davidwrench AKA Dafydd Spanar am ei gampwaith wrth gynhyrchuâ€™r albwm. ðŸ‘Š
+
+The album was recorded and produced by Dave Wrench. After recording, Dave joined the band for a short tour of Poland, playing keys and guitar.
+
+#TimsTwitterListeningParty
+
+â¬‡ï¸ https://t.co/LJ2h67Rwxt" data-datetime="9:09 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366495636128993283"
+                 data-text="â¤ï¸ðŸ´ó §ó ¢ó ·ó ¬ó ³ó ¿ Cwm Llwm by @Yucatanambyth ðŸ´ó §ó ¢ó ·ó ¬ó ³ó ¿â¤ï¸" data-datetime="9:08 PM Mar 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366495412723593240"
+                 data-text="@LlSTENlNG_PARTY @Yucatanambyth Norfolk ðŸ¤˜" data-datetime="9:07 PM Mar 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fsawatkiss%2Fstatus%2F1366495341583941645"
+                 data-text="@LlSTENlNG_PARTY @Yucatanambyth Liverpool physically but my heart is in Harlech x" data-datetime="9:07 PM Mar 1, 2021"> 
+                sawatkiss            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366495288073072642"
+                 data-text="Lots of shows with @Yucatanambyth https://t.co/OVqGtJneMc" data-datetime="9:07 PM Mar 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366495169865019396"
+                 data-text="Cwm Llwm - ysbryd direidus roc a rÃ´l pobl o gefndiroedd gwledig. Maeâ€™r diafol yn fy ngwaed er nad ydwi o Nashville...?
+
+#TimsTwitterListeningParty
+Prynu/Buy https://t.co/N2KvW5c02r" data-datetime="9:06 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366495168170450945"
+                 data-text="Devilish tendencies found in an unusual place. Song about the mischievous spirit of rock and roll of people from alternative backgrounds.
+
+â€œEmyn iâ€™r diafol, ac fi yw dy angel, mewn hedd ar fy nghwmwl, a dwiâ€™n gweld y cwblâ€¦â€
+
+#TimsTwitterListeningParty
+
+â¬‡ï¸" data-datetime="9:06 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366494846328963083"
+                 data-text="Cwm Llwm was the only complete song we had when we got to the studio. The rest were all just a basic shell - shabby demos recorded on a mandolin, ukulele and a toy keyboardâ€¦ none of these instruments ended up on the album!
+
+#TimsTwitterListeningParty" data-datetime="9:05 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366494837185331201"
+                 data-text="2. CWM LLWM (BLEAK VALLEY)
+
+Hon oedd yn unig gÃ¢n oedd yn gyflawn cyn mynd iâ€™r stiwdio. Roedd y lleill i gyd yn syniadau bras iawn oâ€™r caneuon gorffenedig.
+
+#TimsTwitterListeningParty
+
+â¬‡ï¸ https://t.co/rwWYTwGbb3" data-datetime="9:05 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fmountainromps%2Fstatus%2F1366494409269903361"
+                 data-text="@LlSTENlNG_PARTY ðŸ´ó §ó ¢ó ·ó ¬ó ³ó ¿ðŸ˜ðŸ´ó §ó ¢ó ·ó ¬ó ³ó ¿ https://t.co/q34cijuehT" data-datetime="9:03 PM Mar 1, 2021"> 
+                mountainromps            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366494316068286481"
+                 data-text="Let us know whereabouts you are in the world for our @Yucatanambyth @LlSTENlNG_PARTY 
+
+Shout up https://t.co/aJypYwifUL" data-datetime="9:03 PM Mar 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366494255980687360"
+                 data-text="Cafodd y rhan fwya oâ€™r albwm Uwch Gopaâ€™r Mynydd ei recordioâ€™n stiwdio Bryn Derwen, ger Bethesda. Ddaru ni gychwyn recordio Gorffennaf 2012 - tair mlynedd cyn ei ryddhau!
+
+#TimsTwitterListeningParty https://t.co/N2KvW5c02r" data-datetime="9:03 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366494253736730629"
+                 data-text="We recorded most of the album at the legendary but now defunct Bryn Derwen studio, near Bethesda. We started recording in July 2012 - three years before its release! ðŸ™ˆ
+
+#TimsTwitterListeningParty" data-datetime="9:03 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366493967148331020"
+                 data-text="ðŸ”¥ðŸ´ó §ó ¢ó ·ó ¬ó ³ó ¿@Yucatanambyth https://t.co/fAmhUE0CHn" data-datetime="9:02 PM Mar 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fshayman1975%2Fstatus%2F1366493940854185984"
+                 data-text="@LlSTENlNG_PARTY @Yucatanambyth https://t.co/tUwlYaMahK" data-datetime="9:01 PM Mar 1, 2021"> 
+                shayman1975            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366493831001239564"
+                 data-text="#TimsTwitterListeningParty https://t.co/sS2vgImsHp" data-datetime="9:01 PM Mar 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366493809039794180"
+                 data-text="A song about love, loss and the human destructive force.
+
+â€œMi garaf hi, ac mi garith hi fi yn Ã´l, pob haen, pob graen, pob sylwad gwael...â€
+
+#TimsTwitterListeningParty" data-datetime="9:01 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366493807441772560"
+                 data-text="1. FFIN (FRONTIER)
+
+Y ffin rhwng bywyd, marwolaeth, dyn a natur, a sut mae pobl yn gwthio ffiniau natur heb ddeall beth fydd yr effaith. Maeâ€™r diweddglo hefyd yn deyrnged i dad Dilwyn.
+
+#TimsTwitterListeningParty" data-datetime="9:01 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366493742761394178"
+                 data-text="RT @Yucatanambyth: https://t.co/vvHly49Nzo
+
+https://t.co/WhhUT9nDYM
+
+https://t.co/zrsLkSffdB
+
+Prynu/Buy https://t.co/N2KvW5c02r" data-datetime="9:01 PM Mar 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366493728458817540"
+                 data-text="RT @Yucatanambyth: Barod am #TimsTwitterListeningParty am 9 oâ€™r gloch? Ffrydiwch yr albwm yn fan hyn er mwyn cymryd rhan...
+
+Getting readyâ€¦" data-datetime="9:01 PM Mar 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FYucatanambyth%2Fstatus%2F1366493532836532225"
+                 data-text="Noswaith dda! Da ni wedi cael gwahoddiad heno i hel atgofion am ein halbwm Uwch Gopaâ€™r Mynydd. Gobeithio newch chi fwynhau! Ffwrdd Ã¢ ni.
+
+Good evening #TimsTwitterListeningParty! Weâ€™re here tonight to share stories about our album Uwch Gopaâ€™r Mynydd. Hope you enjoy. Here we goâ€¦ https://t.co/J6LHBQiI7n" data-datetime="9:00 PM Mar 1, 2021"> 
+                Yucatanambyth            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366493476205043721"
+                 data-text="Over to you @Yucatanambyth ðŸ´ó §ó ¢ó ·ó ¬ó ³ó ¿ 
+
+Press play / Drop the needle on the record https://t.co/FPJrcUDcgJ" data-datetime="9:00 PM Mar 1, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
