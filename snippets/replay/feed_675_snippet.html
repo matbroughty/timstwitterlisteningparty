@@ -1,0 +1,694 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5HcWWCxjb8qvOsUhJNJqOy" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0275a8be61035d955c272c0a21" alt="Star" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Belly</span><br/><span class="sub-colour">Star</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(478375)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5HcWWCxjb8qvOsUhJNJqOy" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_478375_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 107 tweets from Tuesday 2nd March 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/bellytheband" target="_blank"><img src="https://pbs.twimg.com/profile_images/1326527653990391810/1bY0v2iJ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/bellytheband.jpg'"><br/>@bellytheband</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/disappearingdrs" target="_blank"><img src="https://pbs.twimg.com/profile_images/1316060901766688768/8yov7D9o_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/disappearingdrs.jpg'"><br/>@disappearingdrs</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/TanyaDonelly" target="_blank"><img src="https://pbs.twimg.com/profile_images/1328922840444391426/lpGEt5bx_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/TanyaDonelly.jpg'"><br/>@TanyaDonelly</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Someone to Die For" data-start="0"
+             data-duration="124" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Angel" data-start="125"
+             data-duration="178" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Dusted" data-start="304"
+             data-duration="168" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Every Word" data-start="473"
+             data-duration="213" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Gepetto" data-start="687"
+             data-duration="204" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Witch" data-start="892"
+             data-duration="95" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Slow Dog" data-start="988"
+             data-duration="242" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Low Red Moon" data-start="1231"
+             data-duration="331" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Feed the Tree" data-start="1563"
+             data-duration="209" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Full Moon, Empty Heart" data-start="1773"
+             data-duration="181" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="White Belly" data-start="1955"
+             data-duration="215" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Untogether" data-start="2171"
+             data-duration="283" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Star" data-start="2455"
+             data-duration="86" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="Sad Dress" data-start="2542"
+             data-duration="225" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="Stay" data-start="2768"
+             data-duration="296" style="display:none"></div>
+                        <div id="track-16" class="track-list"
+                     data-name="Finished" data-start="3065"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485175a8be61035d955c272c0a21" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-107" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366869357914120193"
+                 data-text="In lieu of shouting for an encore, letâ€™s all ask @bellytheband @TanyaDonelly &amp; @disappearingdrs back for another @LlSTENlNG_PARTY some time. That one was off the scale" data-datetime="9:53 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366869174144892928"
+                 data-text="@bellytheband ðŸ’”â¤ï¸" data-datetime="9:53 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366868958851330050"
+                 data-text="Wow!!! @bellytheband @TanyaDonelly @disappearingdrs - that was beyond amazing ðŸ¤˜ðŸ¤˜ðŸ¤˜ https://t.co/OuvFhXWkGy" data-datetime="9:52 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366868635495632901"
+                 data-text="Thanks for listening everyone! It went by too fast!   And THANKS @Tim_Burgess !!  â¤ï¸ðŸ§¡ðŸ’›ðŸ’šðŸ’™ðŸ’œðŸ–¤ðŸ¤Ž
+#TimsTwitterListeningParty" data-datetime="9:50 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366868613970411529"
+                 data-text="@gshawisme @Tim_Burgess @TanyaDonelly @disappearingdrs i think that could be arranged......chris g" data-datetime="9:50 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366868531896320001"
+                 data-text="Stay- We were so fortunate to tour with another little band called the Cranberries and Delores joined us one night â¤ï¸â¤ï¸â¤ï¸ #TimsTwitterlisteningparty https://t.co/JWZqXqjTZK" data-datetime="9:50 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366868404955729923"
+                 data-text="@mysugarspun @LlSTENlNG_PARTY now thats CLASSY ! chris" data-datetime="9:49 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366868271174156291"
+                 data-text="Stay
+My album favorite, maybe? Came out fast and whole-cloth when written, but it changes every time we play it. Itâ€™s always at the end of the set and I love looking down and seeing it waiting there at the bottom of the list. Good old friend.
+#TimsTwitterListeningParty" data-datetime="9:49 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366868072007671816"
+                 data-text="@bellytheband @LlSTENlNG_PARTY â¤ï¸" data-datetime="9:48 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366867864897150978"
+                 data-text="@bellytheband it was really really hot...
+here\'s the thing- that picture is from the stage INSIDE the hold of a cargo ship!" data-datetime="9:47 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366867861277401090"
+                 data-text="This tweet just made me realise how much Iâ€™m missing live music https://t.co/xsweFQVMa1" data-datetime="9:47 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366867620650180611"
+                 data-text="Hey everyone! The drinks are on @bellytheband. Whatâ€™re you having??? https://t.co/7pAEmxdqUx" data-datetime="9:46 PM Mar 2, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366867594297409539"
+                 data-text="Stay
+This became our set-closer 4 a long time, ending in a long squall of fdback, delay &amp; maxed-out fx pedals. Weâ€™d walk off stage 1 by 1, leaving our instruments howling.  then stage crew would come out &amp; unceremoniously switch everythng offâ€¦
+#TimsTwitterListeningParty" data-datetime="9:46 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366867484704468999"
+                 data-text="STAY Chris: one of the all time great set closers. There were nights when we would drag this one out for what seemed like days...
+#bellytheband
+#TimsTwitterListeningParty" data-datetime="9:46 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366867330781876229"
+                 data-text="@Tim_Burgess @TanyaDonelly @disappearingdrs @LlSTENlNG_PARTY I love you Tim (again) xo gfg" data-datetime="9:45 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366867205472858122"
+                 data-text="Sad Dress
+I love this one, and loved playing it in our practice space (still do, at home) but it always seemed to get away from us live. A hard one to recover once the wheels start coming off.Â 
+#TimsTwitterListeningParty" data-datetime="9:45 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366867110178287616"
+                 data-text="Hereâ€™s a super handsome pic of Tom on stage of venue Cargo 92 - a ship in Nantes, France made to look like a city street. Just because (sorry Tom ðŸ¥°) gfg https://t.co/vCSw0a4tHF" data-datetime="9:44 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366866646200168448"
+                 data-text="Sad Dress
+We used to call this one the â€˜sea shantyâ€™ (waltz time sig)â€¦.. If we ever play live again maybe we need 2 revive it 2 capitalize on the sea shanty craze!
+#TimsTwitterListeningParty" data-datetime="9:42 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366866636691636224"
+                 data-text="My randomly timed but obligatory tweet to say how brilliant it is to listen to this record with everyone around the world. Sending love to @bellytheband @TanyaDonelly &amp; @disappearingdrs for such a fantastic album and @LlSTENlNG_PARTY x x x" data-datetime="9:42 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366866530290577415"
+                 data-text="#TimsTwitterListeningParty 
+Fort Apache holiday party (photos: manager Gary Smith and father Richard Donelly) https://t.co/kpAiBfY3Dg" data-datetime="9:42 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366866285552885761"
+                 data-text="Untogether. Makes me cry every night. We toured with a little band called Radiohead and sometimes Thom came out and sang with Tanya. Swoon. xo gfg (with Velocity Girl!) https://t.co/Ab1ZFqvTmR" data-datetime="9:41 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366866278422638601"
+                 data-text="Star
+Canâ€™t remmbr why we didnâ€™t do this as a band originally- maybe just didnâ€™t have time? but eventually we did as a b-side (itâ€™s included in the upcoming BEES 2x lp collection!)
+#TimsTwitterListeningParty" data-datetime="9:41 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366866021475377156"
+                 data-text="Chris -STAR- CD long box! Remember them, with a couple polaroids from an early band shoot (photographer unknown)
+#bellytheband
+#TimsTwitterListeningParty https://t.co/9GnflXBw2D" data-datetime="9:40 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366866009685114887"
+                 data-text="â€œsour mashâ€ ðŸ˜‚
+Untogether
+Three true stories with one common ending.Â 
+(guest bvâ€™s by Chick Graning)
+#TimsTwitterListeningParty" data-datetime="9:40 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="111000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366865615789707270"
+                 data-text="White Belly. Love Fredâ€™s bass in this one too. Love singing the round b/v live xo gfg - gfg" data-datetime="9:38 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366865148670078976"
+                 data-text="Untogether
+At the time we recâ€™d this I felt a little hokey &amp; self-conscious playing slide, which is why I made a joke &amp; said â€˜sour-mashâ€™â€¦.. Well, we were in Tennessee, so it made sense @ the time..... sorta
+#TimsTwitterListeningParty" data-datetime="9:37 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="113000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366865058622550019"
+                 data-text="@agnetha666 chris- well... THANK YOU" data-datetime="9:36 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366864583080747013"
+                 data-text="#Chris- Star Tour with RadioHead. Stage shots and cafeteria style dining at a venue that looked like a high school somewhere in Texas. 
+#Radiohead
+#bellytheband
+#TimsTwitterListeningParty https://t.co/X6uLY634Tg" data-datetime="9:34 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366864564319621123"
+                 data-text="White Belly
+Co-written with Fred while we were both in TMuses. Kim Deal played some guitar on the original demo. Another live favorite of mine. 
+#TimsTwitterListeningParty" data-datetime="9:34 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366864297805103114"
+                 data-text="Full Moon I love Fredâ€™s bass on this one! That bridge as Tom says - glory. Tom wrote additional  harmonies for he and I to sing there now when we perform live. â¤ï¸gfg" data-datetime="9:33 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366864268218560512"
+                 data-text="White Belly
+1 of my faves..
+I have a vague recollection that this might have been the 1st song we every tried to play together as a band, rehearsing in the basement of the Traderâ€™s Cove guitar shop in Newport, RI.
+#TimsTwitterListeningParty" data-datetime="9:33 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366863903595130880"
+                 data-text="Full Moon, Empty Heart
+FM,EH became a dark horse singalong live, and it still slays me when everyone joins on the long high note. Gives me goosebumps.Â â¤ï¸Â 
+This one was almost Muses, then almost Breeders, before landing. 
+#TimsTwitterListeningParty" data-datetime="9:32 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366863892153044995"
+                 data-text="Chris- Backstage after our final show with Velocity Girl. I think this was at the Cats Cradle- with Archie, Sarah, Jim, Kelly and Brian. I think Mac from Superchunk is in there too. 
+#VelocityGirl
+#CatsCradle
+#Superchunk
+#bellytheband
+#TimsTwitterListeningParty https://t.co/CGOroCamCm" data-datetime="9:32 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366863809424609286"
+                 data-text="RT @Tim_Burgess: Shout up where you are for @LlSTENlNG_PARTY number SEVEN HUNDRED! With special guests @bellytheband 
+
+What country // cityâ€¦" data-datetime="9:31 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366863736510812161"
+                 data-text="@disappearingdrs @LlSTENlNG_PARTY LOVE IT!" data-datetime="9:31 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366863473603448835"
+                 data-text="Feed the Tree opened the world up for the band with so many opportunities to play great places like THE ARSENIO HALL SHOW ðŸ¥° xo gfg #TimsTwitterListeningParty https://t.co/Wgcfb1jOdr" data-datetime="9:30 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366863441403785221"
+                 data-text="Full Moon
+1 of my faves- really dramatic arrangement &amp; I love the bridge. A lot of fun live when the whole audience sings â€˜woo-hoo-oh-hooâ€¦â€™
+#TimsTwitterListeningParty" data-datetime="9:30 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366863362689269761"
+                 data-text="FULL MOON Chris: loved recording this one. We used a kettle drum to add to the kick and tom parts, and cowbell and old rusty pipe for percussion. Late very hot nights -dizzy fun in the nashville studio.
+#bellytheband
+#TracyChisolm
+#TimsTwitterListeningParty" data-datetime="9:29 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366863269781266438"
+                 data-text="and it\'s not even like anyone can even tell it\'s a wah....." data-datetime="9:29 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366863136452734978"
+                 data-text="Feed the Tree
+The tree song. ðŸŒ³ Probably the one that changed the most in the studio with Gil, and it came in under the wire. I sang the third verse minutes after writing it.Â 
+#TimsTwitterListeningParty" data-datetime="9:29 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366863046648475651"
+                 data-text="again FYI we also did an â€˜acousticâ€™ version of FTT this past winter- itâ€™s up on bandcamp-
+
+https://t.co/Zm0xpqpNMd
+
+#TimsTwitterListeningParty" data-datetime="9:28 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1366862952603787264"
+                 data-text="The glorious Feed The Tree at number nine on the NME writersâ€™ chart of the best singles of 1993 ðŸŒ³#TimsTwitterListeningParty @bellytheband @Tim_Burgess @LlSTENlNG_PARTY Hereâ€™s a playlist recreating the Top 50
+https://t.co/0wMIVrdsJT https://t.co/0oHRYS7oh2" data-datetime="9:28 PM Mar 2, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366862853471416321"
+                 data-text="Chris - Original  V23 Acetates generated by Chris Bigg  for-T-shirt  and package designs with hand drawn notes #ChrisBigg
+#V23
+#bellytheband
+#TimsTwitterListeningParty https://t.co/bm5M7QgyyS" data-datetime="9:27 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366862847985213452"
+                 data-text="the 1 thing I donâ€™t like about FTT, itâ€™s the only song I use a wah pedal on, but itâ€™s the â€˜hitâ€™ so I always have 2 drag this big pedal around for that 1 part live..!
+#TimsTwitterListeningParty" data-datetime="9:27 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366862544649015299"
+                 data-text="Feed the Tree
+The HIT! ðŸ˜œ
+Kinda ironic that a tune about fidelity &amp; death might be the â€˜sunniestâ€™ sounding track on the record! 
+#TimsTwitterListeningParty" data-datetime="9:26 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366862491976949762"
+                 data-text="Oh my! Feed TheðŸŒ²" data-datetime="9:26 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366862456631476226"
+                 data-text="FEED THE TREE Chris: As it was considered to be the single front runner from the get go, surprisingly this was a really fun and easy song to record. We finished the drums in very few takes.  Gil was pleased, it felt like a triumph!
+#bellytheband
+#TimsTwitterListeningParty" data-datetime="9:26 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366862308069228544"
+                 data-text="Low Red Moon - when I heard the demo I said I have never heard anything so original and glorious xo gfg So fun to play live. https://t.co/IuJ9A19Y8n" data-datetime="9:25 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366862204918718465"
+                 data-text="@TanyaDonelly https://t.co/tnFT76gXs5" data-datetime="9:25 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366862068763271174"
+                 data-text="Chris - Original Chris Bigg Feed The Tree -T-shirt design with hand drawn notes and directions
+#ChrisBigg
+#V23
+#bellytheband
+#TimsTwitterListeningParty https://t.co/Gu3HkkWwoN" data-datetime="9:24 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366861748305821711"
+                 data-text="Low Red Moon
+A happy recording memory ~ Tom playing this organ part. He wasnâ€™t wearing a cloak, but I choose to remember it that way. One of the Nashville batch, and it was a blistering hot day, which you can almost hear.
+#TimsTwitterListeningParty" data-datetime="9:23 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366861678432948224"
+                 data-text="Anyone at the @LlSTENlNG_PARTY hearing Star by @bellytheband, all the way through for the first time ever?? https://t.co/YlSW6SWSIS" data-datetime="9:23 PM Mar 2, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366861401411715074"
+                 data-text="Chris- Original outtake Michael Levine print from the shoot done for Star. 
+#MichaelLevine
+#bellytheband
+#TimsTwitterListeningParty https://t.co/GntCuCo995" data-datetime="9:22 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366861366242459659"
+                 data-text="Really a simple tune, but so dramatic and so fun to play live
+#TimsTwitterListeningParty" data-datetime="9:21 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366861164404211719"
+                 data-text="Low Red Moon
+I tried my best 2 channel Terry Jones when recâ€™ding the organ part for this (it was very late at nightâ€¦  ) 
+#TimsTwitterListeningParty https://t.co/fo0OFR8ggh" data-datetime="9:21 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366860930466906113"
+                 data-text="Chris- Original Michael Levine print from the shoot done for Star.
+#MichaelLevine
+#bellytheband
+#TimsTwitterListeningParty https://t.co/HLd0f8gTBW" data-datetime="9:20 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366860814938963970"
+                 data-text="Slow Dog. The fan gfg speaking here-this fucking tune so great- the prechorus alone to DIE FOR Guaranteed to do this to a crowd (RFK Stadium â€˜93 or 94 - are you there?!) https://t.co/xJsAhk4jMO" data-datetime="9:19 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366860780415639553"
+                 data-text="Slow Dog
+My kidsâ€™ favorite when they were little. I donâ€™t think they were listening very closely.
+#TimsTwitterListeningParty https://t.co/NauaH3xCxy" data-datetime="9:19 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366860598584233984"
+                 data-text="Chris- Original Michael Levine print from the shoot done for Star.
+#Michael Levine
+#bellytheband
+#TimsTwitterListeningParty https://t.co/jejj34kbtI" data-datetime="9:18 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366860467306696706"
+                 data-text="@bellytheband \"a bit luuuuumpy, innit...?\"" data-datetime="9:18 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366860413175029763"
+                 data-text="â­ï¸ â­ï¸ â­ï¸ â­ï¸ â­ï¸ https://t.co/PuPbvOvR9S" data-datetime="9:18 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366860289971470337"
+                 data-text="I wish I could remember exactly how we got the weird almost-mouth harp sound in the pre-châ€¦ Iâ€™m 99% sure itâ€™s just fx pedals, but Iâ€™ve never been able 2 really duplicate it..
+#TimsTwitterListeningParty" data-datetime="9:17 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366860222569074695"
+                 data-text="SLOW DOG: Chris: Stopped counting at 100 takes on this song. Most didn\'t make it past the 1 min mark.we put ice buckets next to my throne. Gil would tip his head back to look at the ceiling, I knew I blew it. ITS TOO LUMPY!!!
+#GilNorton
+#bellytheband
+#TimsTwitterListeningParty" data-datetime="9:17 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366860110618898433"
+                 data-text="SlowDog
+I thnk Chrisâ€™ hands were bleeding by the time we got basics recâ€™d on this- that relentless choo-choo train shuffle beat in the ch is a bitch &amp; Gil was a drum taskmstr..
+#TimsTwitterListeningParty" data-datetime="9:17 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366860052561330177"
+                 data-text="#TimsTwitterListeningParty https://t.co/4EggFvSZhQ" data-datetime="9:16 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366859878413856781"
+                 data-text="@LlSTENlNG_PARTY @TanyaDonelly @disappearingdrs I love you Tim xo gfg" data-datetime="9:16 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366859842649022472"
+                 data-text="Witch
+(She is me.)
+#TimsTwitterListeningParty" data-datetime="9:15 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366859828786782208"
+                 data-text="@LlSTENlNG_PARTY @bellytheband @TanyaDonelly @disappearingdrs Yes it is!" data-datetime="9:15 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366859745047556099"
+                 data-text="Witch
+I think we were wrkng on this when Shania Twain &amp; Garth Brooks came in to recâ€™d vox 4 a duet in the nxt rm (the â€˜fancyâ€™ 1)â€¦ (they were both really nice)
+#TimsTwitterListeningParty" data-datetime="9:15 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366859735874560003"
+                 data-text="Wow @bellytheband @TanyaDonelly @disappearingdrs - this is fricking amazing. Right, everyone???" data-datetime="9:15 PM Mar 2, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366859558241660930"
+                 data-text="Gepetto. Oh shit.  My second show with the band. Crazy House Liverpool. Did I mention I won the lottery when they asked me to join?! Photo: TM Dave Evans  xo gfg https://t.co/9T5BcerKYx" data-datetime="9:14 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366859469024595978"
+                 data-text="GEPETTO Chris: GIL ALWAYS RANTED ABOUT DAVE LOVERINGâ€¦ â€œwhy canâ€™t you play more like Dave Lovering!â€  trust me if I could play more like Dave Lovering I would!
+#davelovering
+#GilNorton
+#thepixies
+#bellytheband
+#TimsTwitterListeningParty" data-datetime="9:14 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366859460883415040"
+                 data-text="ðŸ˜those drums, that guitar ðŸ˜" data-datetime="9:14 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366859448384442375"
+                 data-text="GepettoÂ 
+The stage shakes when we do this one live, from audience + me and GfG jumping ~ never fails to make me a little giddy, tbh. Also, nowâ€™s as good a time as any to acknowledge my misspelling of Geppetto. Itâ€™s two Pâ€™s.
+#TimsTwitterListeningParty" data-datetime="9:14 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366859100953456643"
+                 data-text="GEPETTO Chris: At first I hated working with Gil, it was soul crushing, he was used to working with far more experienced studio drummers. This session really taught me so much,  I will always recall those lessons when Iâ€™m playing.
+#GilNorton
+#bellytheband
+#TimsTwitterListening" data-datetime="9:12 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366858986708951048"
+                 data-text="The studio had bdrms on the top flr. 1 night there was a ruckus in the bk alley- some1 scaled the wall &amp; was trying 2 break in thrgh the room Fred was in. I guess Lvrpool was a little â€˜roughâ€™ at the time..
+#TimsTwitterListeningParty" data-datetime="9:12 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366858857239183364"
+                 data-text="#TimsTwitterListeningParty https://t.co/frNMTucNh3" data-datetime="9:12 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366858802134454272"
+                 data-text="HARMONIES â¤ï¸ gfg
+(We should revive this one) #TimsTwitterListeningParty" data-datetime="9:11 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366858765409075205"
+                 data-text="Gepetto
+We did the 4 Gil-prod sngs in Lvrpool @ a swanky â€˜residentialâ€™ studio. Had a grt canteen/bar. Dodgy(I thnk) was also recdng &amp; we got drnk with them 1 night. Seem to remmbr Front242 and Ian Broudie passng thruâ€¦
+#TimsTwitterListeningParty" data-datetime="9:11 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366858758375243781"
+                 data-text="@LlSTENlNG_PARTY EVERY WORD Chris: I love how crazy this song is. Tracy LA laid back guy.  He was really responsive to experimenting and sonic weirdness.  good example of the playful darkness that Tanya does so well.
+#bellytheband
+#TracyChisolm
+#TimsTwitterListeningParty" data-datetime="9:11 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366858519492845568"
+                 data-text="Every Word
+This one is a weirdo! Said with love. Proud of the sequencing ~ we sure werenâ€™t trying to trick anyone into sticking around. The thereminy vocal that doubles the lead was spontaneous ~I could see Tracey Chisholm laughing in the control room. #TimsTwitterListeningParty" data-datetime="9:10 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366858316996096003"
+                 data-text="@LlSTENlNG_PARTY https://t.co/d4QaJBdecl" data-datetime="9:09 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366858210938912769"
+                 data-text="Always loved Tanya\'s guitar/vocal lead double on this. And the slowed-tape outro
+#TimsTwitterListeningParty" data-datetime="9:09 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366857972551462917"
+                 data-text="Dusted. Oh man this tune ðŸ¤Ÿdrop D Love to play the intro with Chris xo gfg #TimsTwitterListeningParty" data-datetime="9:08 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366857947528183809"
+                 data-text="The day b4 we finshâ€™d recâ€™d in Nash my car stereo &amp; almost all tapes got stolen. I bought a chp Walkman &amp; did the 15h+ overnight drive back 2 RI w/just Frankâ€™s Wild Years &amp; # Of The Beast cassettes for companyâ€¦ it was a long weird drive.
+#TimsTwitterListeningParty" data-datetime="9:08 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1366857770406981637"
+                 data-text="Star at number five on the NME writersâ€™ chart of the best albums of 1993 #TimsTwitterListeningParty @bellytheband @TanyaDonelly @Tim_Burgess @LlSTENlNG_PARTY â­ï¸ â­ï¸ â­ï¸ â­ï¸ â­ï¸ https://t.co/XGjK54iYK0" data-datetime="9:07 PM Mar 2, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366857709472124928"
+                 data-text="@LlSTENlNG_PARTY DUSTED Chris: First of the Gil Norton tracks.he a taskmaster.  he would lecture me about timing and playing with a click track- this was recorded before digital editing, a \'perfect\' take was the goal.  
+#GilNorton
+#bellytheband
+#TimsTwitterListeningParty" data-datetime="9:07 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366857643940274176"
+                 data-text="YES!!! @bellytheband sounding ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="9:07 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366857567910191105"
+                 data-text="FYI we did an â€˜acoustic-y 2020â€™ vers of Dusted last December- itâ€™s on bandcamp for anyone interested- #TimsTwitterListeningParty
+
+https://t.co/fQMlxAESpC" data-datetime="9:06 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366857309696241671"
+                 data-text="DustedÂ 
+A live favorite of mine ~ Gailâ€™s and Chrisâ€™s (extended) intro interactions, Tomâ€™s waves of feedback, and then everyone slams in. Love the harmonies on this one too. Deeply sad song, but a joy to play.Â 
+#TimsTwitterListeningParty" data-datetime="9:05 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366857295590789123"
+                 data-text="Gil really had us break things down &amp; put em back together &amp; I remember thinking, â€˜So THIS is what a producer does...!â€™
+#TimsTwitterListeningParty" data-datetime="9:05 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366857241563967488"
+                 data-text="Angel. Hey G4As! Gfg here (Chris and I are sharing Belly) Iâ€™m listening along firstly as a fan of the record (the amazing Fred Abong played on the record ðŸ˜!) and subsequently as a band member who won the lottery when they asked me to join ðŸ¤© #timstwitterlisteningparty https://t.co/SLWtXz9sdv" data-datetime="9:05 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fbellytheband%2Fstatus%2F1366857220168835074"
+                 data-text="@LlSTENlNG_PARTY ANGEL: Chris: At the time I was listening to a lot of Echo and the Bunnymen when we were tweaking the drum parts, I always thought this song had a nice dose of that influence.
+#bellytheband
+TracyChisolm
+#TimsTwitterListeningParty" data-datetime="9:05 PM Mar 2, 2021"> 
+                bellytheband            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366857188883517442"
+                 data-text="Dusted
+1st of the 4 recâ€™d w/ Gil Norton in Liverpool. We did a week of pre-prod in London B4 going in the studio, playing songs ovr &amp; ovr frm 9-5 in a reh space (then spending the eve in the pubâ€¦) #TimsTwitterListeningParty" data-datetime="9:05 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366856977146650625"
+                 data-text="@rbrwr it was my poor-man\'s faux Gretsch..." data-datetime="9:04 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366856906799783940"
+                 data-text="Fave song by @bellytheband???" data-datetime="9:04 PM Mar 2, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366856901850521601"
+                 data-text="@McGuireDavid yup, though now it\'s set up for slide..." data-datetime="9:04 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366856783290118145"
+                 data-text="#TimsTwitterListeningParty 
+(love playing these double Angel leads with Tom) 
+
+HFStival â€˜93  (photos: Richard Donelly) https://t.co/A7HicMI3zx" data-datetime="9:03 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366856729686913032"
+                 data-text="Most of Star was recâ€™d in Nashville @ a studio owned by Roy Clark (had seen better days, but we thgt it was grt). Is everyone aware Nashville has the wrldâ€™s ONLY full-sz replica of the Parthenon!? 
+#TimsTwitterListeningParty" data-datetime="9:03 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366856412752658436"
+                 data-text="Angel
+A fun 1 to recd &amp; 2 play. Always made me think of Echo &amp; the Bunnymen w/ the 1/2-steps and the 12-strng/sitar mashup gtr sounds and the tom-tom parts. #TimsTwitterListeningParty" data-datetime="9:02 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366856173178265601"
+                 data-text="1 gtr was weird semi-hllw â€˜prototypeâ€™ the Gibs guys said was junk, but I thought it was kinda cool lkng &amp; ended up using a lot. @ end of recâ€™dng I convinced thm 2 sell it 2 me ($300 I think) Was my main gtr 4 a long time.
+#TimsTwitterListeningParty" data-datetime="9:01 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fdisappearingdrs%2Fstatus%2F1366856040483061765"
+                 data-text="Someone to Die For
+T had a Gibson endorsemnt when we made Star, &amp; we got borrow some gtrs frm the Nashville â€˜showrmâ€™ to rcd with. I remember the 1 we used on this was a weird 12-str sorta â€˜fakeâ€™ acoustic thing, but it sounded cool. #TimsTwitterListeningParty" data-datetime="9:00 PM Mar 2, 2021"> 
+                disappearingdrs            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366855968093593600"
+                 data-text="Hello from Boston! 
+Someone to die for:
+As delicate as it is, I was *mad* when I wrote this pretty ditty. I think we set the tone leading off with this one...
+#TimsTwitterListeningParty" data-datetime="9:00 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366855845351477250"
+                 data-text="Drop the needle on the record // press play // start streaming 
+
+Join us
+
+Handing over to @bellytheband (from where Chris and Gail will be tweeting) @TanyaDonelly and Tom (@disappearingdrs) 
+
+Going in! ðŸ¤˜ðŸ”¥ https://t.co/6mZ3jqtBhN" data-datetime="9:00 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FTanyaDonelly%2Fstatus%2F1366855422657892361"
+                 data-text="Counting down... @bellytheband @disappearingdrs #TimsTwitterListeningParty" data-datetime="8:58 PM Mar 2, 2021"> 
+                TanyaDonelly            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="150000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1366855294622588937"
+                 data-text="Listening Party number 700 starting in two minutes - with special guests @bellytheband https://t.co/OT3mbIFDXv" data-datetime="8:57 PM Mar 2, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1366854662855536640"
+                 data-text="RT @gerardwood: @LlSTENlNG_PARTY @Tim_Burgess @bellytheband Vinyl from the day of release for me... https://t.co/aqH98ar0R2" data-datetime="8:55 PM Mar 2, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
