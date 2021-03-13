@@ -43,7 +43,7 @@ class CollectionsHtmlPagesCreator {
           pageMap.add(Pair(pageFileName, htmlStr.toString()))
         }
       } catch (e: Exception) {
-        logger.warn("issue writing collection file for TimeSlot $it")
+        logger.warn("issue writing collection file for TimeSlot $it", e)
       }
     }
 
