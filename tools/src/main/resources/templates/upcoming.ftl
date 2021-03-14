@@ -1,34 +1,38 @@
 <script>
   $(function () {
     $('[data-toggle="tooltip"]').tooltip();
+  });
 
+  $(".tztooltip").hover(function () {
     const format = 'Do MMM, h:mma';
     const local = moment.tz.guess();
-    var times = document.getElementsByClassName('tztooltip');
-
-    Array.from(times).forEach(function(item, index){
-      var id =  item.getAttribute('data-id');
-      var timezoneDiv = document.getElementById('timezone-' + id);
-      var dateTime = item.getAttribute('data-dt');
-      var date = dateTime.substr(0, 10);
-      var time = dateTime.substr(11);
-      var a = moment.tz(date + ' ' + time, "Europe/London");
-      var disp = '<table class="tztooltip-table"><th><b>' +
-          local + '</b><br/>' + a.tz(local).format(format) + '</th>' +
-          '<tr><td><b>Los Angeles</b><br/>' + a.tz("America/Los_Angeles").format(format) + '</td></tr>' +
-          '<tr><td><b>New York</b><br/>' + a.tz("America/New_York").format(format) + '</td></tr>' +
-          '<tr><td><b>Rio de Janeiro</b><br/>' + a.tz("America/Sao_Paulo").format(format) + '</td></tr>' +
-          '<tr><td><b>Berlin</b><br/>' + a.tz("Europe/Berlin").format(format) + '</td></tr>' +
-          '<tr><td><b>Johannesburg</b><br/>' + a.tz("Africa/Johannesburg").format(format) + '</td></tr>' +
-          '<tr><td><b>Moscow</b><br/>' + a.tz("Europe/Moscow").format(format) + '</td></tr>' +
-          '<tr><td><b>New Delhi</b><br/>' + a.tz("Asia/Kolkata").format(format) + '</td></tr>' +
-          '<tr><td><b>Tokyo</b><br/>' + a.tz("Asia/Tokyo").format(format) + '</td></tr>' +
-          '<tr><td><b>Sydney</b><br/>' + a.tz("Australia/Sydney").format(format) + '</td></tr>' +
-          '</table>';
-      timezoneDiv.innerHTML = disp;
-    });
-  })
+    var item = this;
+    var id = item.getAttribute('data-id');
+    var timezoneDiv = document.getElementById('timezone-' + id);
+    var dateTime = item.getAttribute('data-dt');
+    var date = dateTime.substr(0, 10);
+    var time = dateTime.substr(11);
+    var a = moment.tz(date + ' ' + time, "Europe/London");
+    var disp = '<table class="tztooltip-table"><th><b>' +
+        local + '</b><br/>' + a.tz(local).format(format) + '</th>' +
+        '<tr><td><b>Los Angeles</b><br/>' + a.tz("America/Los_Angeles").format(format)
+        + '</td></tr>' +
+        '<tr><td><b>New York</b><br/>' + a.tz("America/New_York").format(format) + '</td></tr>' +
+        '<tr><td><b>Rio de Janeiro</b><br/>' + a.tz("America/Sao_Paulo").format(format)
+        + '</td></tr>' +
+        '<tr><td><b>Berlin</b><br/>' + a.tz("Europe/Berlin").format(format) + '</td></tr>' +
+        '<tr><td><b>Johannesburg</b><br/>' + a.tz("Africa/Johannesburg").format(format)
+        + '</td></tr>' +
+        '<tr><td><b>Moscow</b><br/>' + a.tz("Europe/Moscow").format(format) + '</td></tr>' +
+        '<tr><td><b>New Delhi</b><br/>' + a.tz("Asia/Kolkata").format(format) + '</td></tr>' +
+        '<tr><td><b>Tokyo</b><br/>' + a.tz("Asia/Tokyo").format(format) + '</td></tr>' +
+        '<tr><td><b>Sydney</b><br/>' + a.tz("Australia/Sydney").format(format) + '</td></tr>' +
+        '</table>';
+    timezoneDiv.innerHTML = disp;
+  });
 </script>
+
+
 <section class="post">
   <div class="container-fluid">
     <#assign hr = "">
@@ -72,9 +76,11 @@
                      style="width:80px;height:80px;"></a><br>
 
               <hr style="width:80px;margin-left:0;">
-              <span data-id="${slot.listeningPartyNumber}" data-dt="${slot.isoDate}" class="tztooltip"
+              <span data-id="${slot.listeningPartyNumber}" data-dt="${slot.isoDate}"
+                    class="tztooltip"
                     data-direction="bottom">
-                <span class="tztooltip__initiator">${slot.timeDisplayString()}<sup> ${slot.amPmDisplayString()}</sup>
+                <span
+                    class="tztooltip__initiator">${slot.timeDisplayString()}<sup> ${slot.amPmDisplayString()}</sup>
                 </span>
                 <span id="timezone-${slot.listeningPartyNumber}" class="tztooltip__item">
                 </span>
