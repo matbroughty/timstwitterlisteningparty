@@ -1,0 +1,407 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1TVAry32PwJgCCu8EXcUrj" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02c5b691f38d312d28c398a6f0" alt="Only Magic" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Tom Sanders</span><br/><span class="sub-colour">Only Magic</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1TVAry32PwJgCCu8EXcUrj" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 57 tweets from Sunday 21st March 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/tomsandersmusic" target="_blank"><img src="https://pbs.twimg.com/profile_images/1270034883675643904/2hLp4D12_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/tomsandersmusic.jpg'"><br/>@tomsandersmusic</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/moshimoshimusic" target="_blank"><img src="https://pbs.twimg.com/profile_images/1247841244992032770/xsrfMwkH_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/moshimoshimusic.jpg'"><br/>@moshimoshimusic</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Most Of The Time" data-start="0"
+             data-duration="266" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Fly For A While" data-start="267"
+             data-duration="240" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Lonesome High" data-start="508"
+             data-duration="231" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Baby All You've Got" data-start="740"
+             data-duration="322" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Touch Down" data-start="1063"
+             data-duration="200" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Distant Light" data-start="1264"
+             data-duration="241" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Little Human" data-start="1506"
+             data-duration="213" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Tom Quixote" data-start="1720"
+             data-duration="228" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Spanish Flat" data-start="1949"
+             data-duration="248" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="It's Only Magic" data-start="2198"
+             data-duration="215" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2414"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851c5b691f38d312d28c398a6f0" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-57" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="158000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1373722269160251398"
+                 data-text="Thereâ€™s now a world clock feature on the schedule over on our website ðŸŒ https://t.co/bXWJ6plXPO
+
+Youâ€™re welcome https://t.co/gLFj7viyu8" data-datetime="7:44 PM Mar 21, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373721608037228552"
+                 data-text="Thank you @tomsandersmusic â€“ that was magic! More brilliantness coming up at 8pm - @albertinesargesâ€™ The Sticky Fingers! 
+
+https://t.co/p8qaN88r3J
+
+#timstwitterlisteningparty https://t.co/cv5pzM22lD" data-datetime="7:42 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1373721492463226888"
+                 data-text="That was ace. Thanks @tomsandersmusic ðŸ¤˜ðŸ”¥" data-datetime="7:41 PM Mar 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373721443750514695"
+                 data-text="@tomsandersmusic Thanks Tom. I really enjoyed that. Perfect substitute for a beer in the Rochester Castle." data-datetime="7:41 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373721292067778577"
+                 data-text="@tomsandersmusic oh and there is a remix album coming... and another special thing too..." data-datetime="7:40 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373721288087322626"
+                 data-text="@tomsandersmusic Thank you @tomsandersmusic! ðŸ˜" data-datetime="7:40 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373721188866867202"
+                 data-text="@tomsandersmusic that was lush" data-datetime="7:40 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="114000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373721023489654797"
+                 data-text="Great to have been part of this, thanks @moshimoshimusic for their great support. Thanks for listening, and to everyone who bought my album. #timstwitterlisteningparty" data-datetime="7:39 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373720547910111233"
+                 data-text="A song about vampiresâ€¦ 4am uber tripsâ€¦ feeling like prince Philip in his recent paparazzi shot #timstwitterlisteningparty" data-datetime="7:37 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373720361666289670"
+                 data-text="IT\'S ONLY MAGIC - last song! thanks everyone!! #timstwitterlisteningparty" data-datetime="7:37 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373719981184184324"
+                 data-text="Tech talk: I made a cool sound for the chorus that sounds like a harmonium by sampling some piano chords, cutting of the attack of the note then assigning them to playing the chords via midi. #timstwitterlisteningparty" data-datetime="7:35 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373719819917389826"
+                 data-text="@tomsandersmusic always loved this one. Itâ€™s like being taken for a walk down lower clapton road" data-datetime="7:35 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373719814997434371"
+                 data-text="Every time I pass the flat Iâ€™m filled with great memories from another time, feels like another world.  After I wrote the song I found out that my friend Antonio whose flat it was had died from Covid. I was devastated and itâ€™s totally changed the song #timstwitterlisteningparty" data-datetime="7:35 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="232000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373719629193953283"
+                 data-text="SPANISH FLAT
+I wanted to write a really simple song about something small. My early days of moving to London, no responsibilities, just  hedonism. Iâ€™d often go with my friend Sergio to â€˜the Spanish flatâ€™  where a bunch of our Spanish friends lived. #timstwitterlisteningparty" data-datetime="7:34 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373718654379044866"
+                 data-text="The lyric about the tiger is do with the flight/flight response thingâ€¦ how we are genetically programmed to react to threats that no longer exist (like tigers) so we freak out about other stuff. #timstwitterlisteningparty" data-datetime="7:30 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373718576142684167"
+                 data-text="Thanks everyone who\'s leaving nice comments etc. I don\'t have time/understand how to reply.. i never use twitter!! #timstwitterlisteningparty" data-datetime="7:30 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373718444567359504"
+                 data-text="There was a lot of little experimental stuff like that on this record that I really enjoyed, even if it doesnâ€™t exactly sound like an experimental albumâ€¦ itâ€™s all about the process. #timstwitterlisteningparty" data-datetime="7:29 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373718334563364866"
+                 data-text="TOM QUIXOTE
+Lots of people asked me what the instrument was that plays a little solo at the beginning. Its just my mouth/vocal, sampled and played on the keyboard. I really loved it, sounded like a weird trumpet. #timstwitterlisteningparty" data-datetime="7:29 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373717961027026947"
+                 data-text="I kind of wrote it as a note to my daughter, who I was imagining giving some life advice to. But itâ€™s equally a note to myself. Kind of saying get over it, pull yourself together! #timstwitterlisteningparty" data-datetime="7:27 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373717800917819397"
+                 data-text="Iâ€™m actually really proud of this song from a technical point of viewâ€¦ and also that I managed to say something meaningful. ; ) #timstwitterlisteningparty" data-datetime="7:27 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="137000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373717727467204612"
+                 data-text="LITTLE HUMAN 
+Some songs just take bloody ages to come together and this was one of them! I did many re-writes until I came with an arrangement and lyric that I was happy with #timstwitterlisteningparty" data-datetime="7:26 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373717155376721921"
+                 data-text="I really like to play this live (only done a couple of streaming shows) but this song stands up just fine on its own with only me and a guitar. #timstwitterlisteningparty" data-datetime="7:24 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373716913134653441"
+                 data-text="@tomsandersmusic You should write with @KTTunstall" data-datetime="7:23 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1373716849783934976"
+                 data-text="ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥Distant Light by @tomsandersmusic ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="7:23 PM Mar 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373716585823764482"
+                 data-text="Big shout to Marco Spaggiari who mixed this and some of the other tracks on the record. I think he did a great job. I never met him but hope to one day. #timstwitterlisteningparty" data-datetime="7:22 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373716510292725763"
+                 data-text="DISTANT LIGHT
+Being a lockdown record  - maybe itâ€™s subconscious but some of the themes tend to be about emerging from bleakness into something better, more colourful. This is definitely one of those #timstwitterlisteningparty" data-datetime="7:21 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373716193203396609"
+                 data-text="I think this song has the same chord cycle throughout - very unusual for me! Iâ€™m pre-programmed to change chords in the chorusâ€¦ something Iâ€™m trying to stop doing for the sake of it. #timstwitterlisteningparty" data-datetime="7:20 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373715960809537536"
+                 data-text="In my head, this was originally a really upbeat song, kind of like an American rock vibe. Something Springsteen-esque.  Then it felt a bit out of place so I turned it on itâ€™s head and it came out like this. #timstwitterlisteningparty" data-datetime="7:19 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373715879528120320"
+                 data-text="Iâ€™m also glad to have a couple of tracks like this that I think lend a different flavour (little or no guitar, mostly just programmed stuff) #timstwitterlisteningparty" data-datetime="7:19 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373715478292672514"
+                 data-text="TOUCHDOWN 
+I think this is my personal favourite on the album. I always tried to keep production super simple on the whole record but this song in particular is very pared back. #timstwitterlisteningparty" data-datetime="7:17 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="143000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373715331227774977"
+                 data-text="This outro was a random improvised thing... really happy with it though! #timstwitterlisteningparty" data-datetime="7:17 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373714732801269760"
+                 data-text="He ruined the song forever. (Kidding) #timstwitterlisteningparty" data-datetime="7:14 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373714641147285505"
+                 data-text="I bumped into a friend in the street the other day who said he really enjoyed the record. He said he loved the one that sounded like â€˜Live and let dieâ€™ by Wings. I was confused for a while till I understood the opening chords are a bit   reminiscent. #timstwitterlisteningparty" data-datetime="7:14 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373714364512022534"
+                 data-text="I think Itâ€™s a theme most of us can relate to: wanting to have best of both worlds, wanting to have what other people have, spending most of the time thinking about what we want instead of what we have. #timstwitterlisteningparty" data-datetime="7:13 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373714230222938112"
+                 data-text="BABY ALL YOUâ€™VE GOT
+This song really seemed to resonate with people when I first played it.  I think cos of the piano hook, and also the lyrical theme. It kind of kicked off the whole idea of making a solo record. https://t.co/1g2T21ySgK" data-datetime="7:12 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373714105194930179"
+                 data-text="That long sustained string note in the chorusâ€¦ I often try and get that in a song. It a section while also gluing it all together. (See: walk on the wild side- Lou Reed)  #timstwitterlisteningparty" data-datetime="7:12 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373713841222258689"
+                 data-text="The lyric â€˜people need peopleâ€™ Iâ€™ve since heard in another song. I often have to remind myself that people need people. Someone once said â€˜no man is an islandâ€™. (It was none other than the metaphysical poet John Donne 1572 - 1631) #timstwitterlisteningparty" data-datetime="7:11 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373713474321276929"
+                 data-text="Again, I was playing with that curious mix of fun tropical vibes but quite a sad lyrical theme. #timstwitterlisteningparty" data-datetime="7:09 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373713338782343169"
+                 data-text="LONESOME HIGH
+This songs about getting something you so badly want, but losing everything in the process. Fun huh? #timstwitterlisteningparty" data-datetime="7:09 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373713230607040512"
+                 data-text="#timstwitterlisteningparty Maybe cos I wanted the words to resonate and be real, but also for them to fit rhythmically and to sing well. I enjoy trying to get both of those things working, itâ€™s a hard balancing act." data-datetime="7:08 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373713121165066250"
+                 data-text="#timstwitterlisteningparty" data-datetime="7:08 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373713084653711367"
+                 data-text="#timstwitterlisteningparty" data-datetime="7:08 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373713042354155520"
+                 data-text="#timstwitterlisteningparty" data-datetime="7:08 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373712979057852419"
+                 data-text="#timstwitterlisteningparty
+I spent ages on lyrics for this record. That part always take me a long time, but this in particular was a tricky album to write, lyrically." data-datetime="7:07 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373712966751817731"
+                 data-text="@tomsandersmusic Itâ€™s like you are whispering in my ear" data-datetime="7:07 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373712698383417348"
+                 data-text="#timstwitterlisteningparty Vocal is crazy loud on this song. Not sure how that happened. Thereâ€™s always something on every record that I wanna go back and fix! No more tweaking now though!!" data-datetime="7:06 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373712631270346753"
+                 data-text="This album... I\'m never sure if it brings me up or down #timstwitterlisteningparty" data-datetime="7:06 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373712427871789057"
+                 data-text="i HAD to sing it. No choice" data-datetime="7:05 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373712313321193479"
+                 data-text="FLY FOR A WHILE
+As with many of these songs, I never had any intention of singing it myself. Iâ€™d just written them but didn\'t know who for. But the more I worked on the arrangement and the lyrics, the more personal it became until I realised i had to sing it" data-datetime="7:05 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373711927206117377"
+                 data-text="I haven\'t listened to these songs for a long time... they\'re better than I thought. Bit sad though" data-datetime="7:03 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373711715758657537"
+                 data-text="(proud of this solo)" data-datetime="7:02 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373711488976846853"
+                 data-text="Song math chatter: I was quite pleased with the melodic hook of â€˜most of the timeâ€™ and then how the chorus jumps from major to minor. I guess its unusual for a chorus to change to minor but I like the juxtaposition of the sad music with the playful lyric." data-datetime="7:01 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1373711273679011845"
+                 data-text="@tomsandersmusic @LlSTENlNG_PARTY ðŸ‘‹" data-datetime="7:01 PM Mar 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373711233917018113"
+                 data-text="MOST OF THE TIME.
+I wasnâ€™t sure about starting the album with this song. I wanted something more upbeat but then realised this wasnâ€™t exactly an upbeat record." data-datetime="7:00 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Ftomsandersmusic%2Fstatus%2F1373711087649107968"
+                 data-text="#timstwitterlisteningparty I\'m pressing play NOW" data-datetime="7:00 PM Mar 21, 2021"> 
+                tomsandersmusic            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373711075074527236"
+                 data-text="@tomsandersmusic Hi Tom! ðŸ‘€" data-datetime="7:00 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1373711027402067975"
+                 data-text="Next up in our @moshimoshimusic @LlSTENlNG_PARTY Sunday itâ€™s @tomsandersmusic 
+
+Press play https://t.co/ZTm7v6sRf8" data-datetime="7:00 PM Mar 21, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

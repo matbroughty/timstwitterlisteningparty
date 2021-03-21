@@ -1,0 +1,534 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5sPPReBnEf9tuuRLxGf0Me" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02d5969d696eef116df4c290c7" alt="Sausage Studio Sessions" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Nix</span><br/><span class="sub-colour">Sausage Studio Sessions</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(5072398)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5sPPReBnEf9tuuRLxGf0Me" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_5072398_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 84 tweets from Sunday 21st March 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/TheNixBand" target="_blank"><img src="https://pbs.twimg.com/profile_images/1307757147845992448/xR6wZqG1_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/TheNixBand.jpg'"><br/>@TheNixBand</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/moshimoshimusic" target="_blank"><img src="https://pbs.twimg.com/profile_images/1247841244992032770/xsrfMwkH_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/moshimoshimusic.jpg'"><br/>@moshimoshimusic</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Shoemonk" data-start="0"
+             data-duration="216" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Highest" data-start="217"
+             data-duration="192" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="The Drop" data-start="410"
+             data-duration="166" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Colours" data-start="577"
+             data-duration="192" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Valentina" data-start="770"
+             data-duration="246" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Don't Roll Your Eyes At Me" data-start="1017"
+             data-duration="238" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Until Now, All Is Well" data-start="1256"
+             data-duration="239" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Nix" data-start="1496"
+             data-duration="69" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="The Strangest Thing" data-start="1566"
+             data-duration="191" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Full Fathom Five" data-start="1758"
+             data-duration="194" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Loose Noose" data-start="1953"
+             data-duration="173" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Hyena" data-start="2127"
+             data-duration="204" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="2332"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851d5969d696eef116df4c290c7" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-84" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fpaulbanks202%2Fstatus%2F1373691256161902594"
+                 data-text="@Tim_Burgess @moshimoshimusic @LlSTENlNG_PARTY @TheNixBand That was ace , my Spotify radio has decided to play it again as well , itâ€™s currently replaying Untill Now All Is Well ðŸ˜€ðŸŽµ" data-datetime="5:41 PM Mar 21, 2021"> 
+                paulbanks202            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Flucylloyd43%2Fstatus%2F1373691090801455110"
+                 data-text="@TheNixBand Thanks ðŸ’šgreat album ðŸ‘" data-datetime="5:40 PM Mar 21, 2021"> 
+                lucylloyd43            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fitsviktory%2Fstatus%2F1373691063186165765"
+                 data-text="thanks @TheNixBand ðŸ’–
+
+#timstwitterlisteningparty" data-datetime="5:40 PM Mar 21, 2021"> 
+                itsviktory            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373691056827547664"
+                 data-text="Thanks Nick and Seb â€“ @TheNixBand\'s Sausage Studio Sessions sounded pretty damn brilliant! 
+
+A dinner break now and then @tomsandersmusic\'s Only Magic at 7pm! See you then!
+
+#timstwitterlisteningparty https://t.co/FTtDr4myPM" data-datetime="5:40 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373690993007026178"
+                 data-text="@TheNixBand Itâ€™s been a real pleasure. Michael x" data-datetime="5:40 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1373690947196882945"
+                 data-text="@TheNixBand Top work, first time listener but it wonâ€™t be the last! Love to you and yours x
+#TimsTwitterListeningParty" data-datetime="5:40 PM Mar 21, 2021"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373690922609864706"
+                 data-text="We came in peace and left a wound.
+Seb signing out. Peace and Love x
+#TimsTwitterListeningParty" data-datetime="5:40 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FGaryTwisted%2Fstatus%2F1373690907040620546"
+                 data-text="What a great album and one that will definitely reveal more the more you listen to it.  Really loved it.  thank you so much.  Stay safe
+
+@TheNixBand, @moshimoshimusic, @Tim_Burgess, @LlSTENlNG_PARTY #TimsTwitterListeningParty" data-datetime="5:40 PM Mar 21, 2021"> 
+                GaryTwisted            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373690877412016134"
+                 data-text="@Tim_Burgess @moshimoshimusic @LlSTENlNG_PARTY Thanks Tim!!! It was our pleasure!!!!" data-datetime="5:40 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1373690773254848512"
+                 data-text="Huuuuuge thanks to our second @moshimoshimusic @LlSTENlNG_PARTY guests of the day: @TheNixBand https://t.co/QbTRxMrsA0" data-datetime="5:39 PM Mar 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373690758268653569"
+                 data-text="thanks Tim! #timstwitterlisteningparty" data-datetime="5:39 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fmartinlrix%2Fstatus%2F1373690712022253578"
+                 data-text="More #TimsTwitterListeningParty brilliance from @TheNixBand ðŸ‘ðŸ¼ðŸ‘ðŸ¼" data-datetime="5:39 PM Mar 21, 2021"> 
+                martinlrix            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373690588520939524"
+                 data-text="and thatâ€™s it from our album. We released it right in the middle of the craziness. beginning of November.  Would love to play the songs live sometime soon. See yâ€™all there if youâ€™re into it. peace and love 
+nick and seb#timstwitterlisteningparty" data-datetime="5:38 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373690542245175303"
+                 data-text="in the name of The Nix, thanks for tuning in #TimsTwitterListeningParty" data-datetime="5:38 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1373690434946498564"
+                 data-text="Top ðŸ” record @TheNixBand #TimsTwitterListeningParty https://t.co/9Z0mftWRxA" data-datetime="5:38 PM Mar 21, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373690404411936777"
+                 data-text="Again! 
+Still not heard it enough I guess
+#timstwitterlisteningparty" data-datetime="5:38 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373690233154367491"
+                 data-text="the last song already?  
+#timstwitterlisteningparty" data-datetime="5:37 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373690098471026701"
+                 data-text="Hyena  
+Manuela my wife writes the strangest lyrics. One of the reasons I love her so much. Nick
+#timstwitterlisteningparty" data-datetime="5:36 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373690020796698626"
+                 data-text="boy" data-datetime="5:36 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373689967566852096"
+                 data-text="@TheNixBand thank you!! Letâ€™s get some more music out. A trailer load of bangers on this one. maybe it will be the sound of summer 2021 x" data-datetime="5:36 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373689830127894529"
+                 data-text="@TheNixBand ðŸ¥°" data-datetime="5:35 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373689786318385152"
+                 data-text="Angry! Grrr  
+#timstwitterlisteningparty" data-datetime="5:35 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373689723156320264"
+                 data-text="Seb and Nick flipping rapping on this one. 
+#timstwitterlisteningparty" data-datetime="5:35 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373689542184697865"
+                 data-text="thanks for everything Moshi Moshi!  
+#timstwitterlisteningparty" data-datetime="5:34 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373689463344357378"
+                 data-text="bigging up Andy, bigging up Vula #TimsTwitterListeningParty" data-datetime="5:34 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373689378636234760"
+                 data-text="Andy Knowles giving it to us again. 
+and Vula Malingaâ€™s back on this as well. 
+#timstwitterlisteningparty" data-datetime="5:34 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373689164173086720"
+                 data-text="Yamaha Electon in all its glory #TimsTwitterListeningParty" data-datetime="5:33 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FBlowelowe%2Fstatus%2F1373689109470978056"
+                 data-text="@TheNixBand @moshimoshimusic @Tim_Burgess  @LlSTENlNG_PARTY @bloodwizrd Sounding sweeeeeet so far ðŸ˜ŽðŸ™âœŒï¸â¤ï¸ https://t.co/7o33GTaz5T" data-datetime="5:33 PM Mar 21, 2021"> 
+                Blowelowe            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373688868759875587"
+                 data-text="a song for all the poor kids that lost one or maybe even both their parents in the mediterranean. 
+#timstwitterlisteningparty" data-datetime="5:32 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FGaryTwisted%2Fstatus%2F1373688761888997377"
+                 data-text="What a wonderfully diverse album this is.  loving it
+
+@TheNixBand, @moshimoshimusic, @Tim_Burgess, @LlSTENlNG_PARTY #TimsTwitterListeningParty" data-datetime="5:31 PM Mar 21, 2021"> 
+                GaryTwisted            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373688591377907714"
+                 data-text="Full Fathom Five
+ok now this really is an oldest friend. Philipp Plessmann. Growing up in Rockâ€™n Roll heaven with Philipp.
+Weâ€™ve gone a bit soft but the psychedelics never leave. 
+#timstwitterlisteningparty" data-datetime="5:30 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373688377627844608"
+                 data-text="No posing for Seb, there\'s an album to be done" data-datetime="5:30 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373688346132766721"
+                 data-text="Canâ€™t wait to see you again soon sista!
+#timstwitterlisteningparty" data-datetime="5:29 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373688196094124033"
+                 data-text="seb\'s mixing inside while we\'re posing" data-datetime="5:29 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373688092851322881"
+                 data-text="outside sausage studios https://t.co/SF2936sJSv" data-datetime="5:28 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373687991932178440"
+                 data-text="@GreenSeagull1 ðŸ¥°ðŸ¥°" data-datetime="5:28 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FGreenSeagull1%2Fstatus%2F1373687776391139336"
+                 data-text="@TheNixBand Miss these Sausage studio recording nights/ parties  Sarah xx ðŸŽ‰ ðŸ˜† https://t.co/0Q0koh3vqC" data-datetime="5:27 PM Mar 21, 2021"> 
+                GreenSeagull1            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373687694019137538"
+                 data-text="KT about to join us #TimsTwitterListeningParty" data-datetime="5:27 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373687678630236160"
+                 data-text="Strangest Thing
+after producing her album,  our fav Scottish singer agreed to do a version of one of the songs for our album. KT Tunstall! what a musician. What a treat. 
+#timstwitterlisteningparty" data-datetime="5:27 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnecoconut%2Fstatus%2F1373687538246950914"
+                 data-text="ä»Šã¯å…ƒFranz Ferdinandã®Nickã®æ–°ã—ã„ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆThe Nixã®dubã‚¢ãƒ«ãƒãƒ Sausage Studio Sessionsã‚’è´ã„ã¦ã‚‹ã€‚Laetitia (Sadier)å§ã•ã‚“ã‚‚ãƒœãƒ¼ã‚«ãƒ«ã§å‚åŠ ã—ãŸã“ã®æ›²ã¯é¦´æŸ“ã¿ã‚ã‚‹(*à¸…ÌË˜à¸…Ì€*)âœ¨
+
+https://t.co/imNMbfuPvQ
+
+#TimsTwitterListeningParty" data-datetime="5:26 PM Mar 21, 2021"> 
+                necoconut            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373687486048784384"
+                 data-text="my son\'s heart beat from inside the womb. Seb #TimsTwitterListeningParty" data-datetime="5:26 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373687357325578244"
+                 data-text="Nix 
+the title song! take it all in. thumbs up to Nix from me. see you soon. Miss you. 
+#timstwitterlisteningparty" data-datetime="5:26 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373687322865238018"
+                 data-text="Our mate Wolfi saxing it up #TimsTwitterListeningParty" data-datetime="5:25 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Flucidparade%2Fstatus%2F1373687256410693632"
+                 data-text="mood:
+
+ #timstwitterlisteningparty https://t.co/rBU6pdrjMR" data-datetime="5:25 PM Mar 21, 2021"> 
+                lucidparade            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373687198768332800"
+                 data-text="shout out to wolfi schlick the bass klarinett solo" data-datetime="5:25 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373686919071170563"
+                 data-text="itâ€™s also a tribute to Christian Burkart from the Krautrockband Embryo and Mal Waldron, Billy holidayâ€™s pianist who I had the honour of doing a tour with once. RIP
+#timstwitterlisteningparty" data-datetime="5:24 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373686799692926979"
+                 data-text="Laetitia boss #TimsTwitterListeningParty" data-datetime="5:23 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fmartinlrix%2Fstatus%2F1373686741085913095"
+                 data-text="I am so chilled right now, writing this tweet is an effort. @TheNixBand @LlSTENlNG_PARTY #timstwitterlisteningparty" data-datetime="5:23 PM Mar 21, 2021"> 
+                martinlrix            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373686549796249602"
+                 data-text="Until now all is well. 
+we met Laetitia Sadier at the Manuela gigs we did around London and she agreed to sing on one of our songs. What an honour! 
+#timstwitterlisteningparty" data-datetime="5:22 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373686403767357447"
+                 data-text="aha. and now for some Jazzzzz" data-datetime="5:22 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373686218597208064"
+                 data-text="this is me and Seb in one. haha. freaks https://t.co/0qtZBQMYlA" data-datetime="5:21 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1373685780187611136"
+                 data-text="Yeah, in love with this album.  Might take it to meet my parents and everything. @TheNixBand #TimsTwitterListeningParty" data-datetime="5:19 PM Mar 21, 2021"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373685718879469569"
+                 data-text="Is he channeling Bowie from the other side? I think so. 
+#timstwitterlisteningparty" data-datetime="5:19 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373685620506255364"
+                 data-text="again nice mixing seb! x" data-datetime="5:19 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373685518941237250"
+                 data-text="David came to the studio as a tuba player and left as a singer. #TimsTwitterListeningParty" data-datetime="5:18 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373685410753343490"
+                 data-text="donâ€™t roll your eyes at me. 
+written by one of my oldest friends and the drummer on the whole record Max Weissenfeld. and sung by the unbelievable David Aird. I couldnâ€™t believe it when he started singing. 
+#timstwitterlisteningparty" data-datetime="5:18 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="185000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373685375244324866"
+                 data-text="taking it down a notch now #TimsTwitterListeningParty" data-datetime="5:18 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373684596936704003"
+                 data-text="Probably the chillest song on the album. 
+#timstwitterlisteningparty" data-datetime="5:15 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373684544541495296"
+                 data-text="@liwrites ðŸ˜ž" data-datetime="5:14 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373684440430485506"
+                 data-text="Valentina, 
+here another feature of Khloe Anna whoâ€™s just been making a video for this gem. I love the electro dub vibe. oh yeah. video coming soon. 
+#timstwitterlisteningparty" data-datetime="5:14 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373684115950743556"
+                 data-text="and here\'s a pic of my pigs https://t.co/eP2ucgyA4q" data-datetime="5:13 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fmoshimoshimusic%2Fstatus%2F1373683958307811333"
+                 data-text="@TheNixBand Def a great video. It sounded quite potty the time I heard this song, I was so square back then. Reminds me of Family of God. Stephen" data-datetime="5:12 PM Mar 21, 2021"> 
+                moshimoshimusic            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373683629205901321"
+                 data-text="probably the bizzarest video. based in an alpine climbing centre during mega lockdown. A family affair with my sister shooting the video. 
+#timstwitterlisteningparty" data-datetime="5:11 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1373683624135036931"
+                 data-text="This is a BLOODY CHUFFING GOOD ALBUM THANKYOUVERYMUCH @TheNixBand #TimsTwitterListeningParty" data-datetime="5:11 PM Mar 21, 2021"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373683569617420293"
+                 data-text="a family affair coming up #TimsTwitterListeningParty" data-datetime="5:10 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373683537119940615"
+                 data-text="Colours 
+kids in New York style street funk. Thatâ€™s what I thought it sounded like anyway. Andy Knowles writes the bizzarest of lyrics and itâ€™s my own Vito and Valentina stepping up the cuteness. 
+#timstwitterlisteningparty" data-datetime="5:10 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1373683499379666944"
+                 data-text="Hey @Markgatiss @susannareid100 @jonsnowC4 @GaryLineker &amp; @NickyAACampbell - these lowlifes are sharing our pics with their creepy anti vaxx followers. Had some weird threats. They definitely need to get gone. Sorry to interrupt your day. Tim x x" data-datetime="5:10 PM Mar 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373683338448408577"
+                 data-text="the video a wink to Daft Punk. we Salute you" data-datetime="5:10 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373683220538126339"
+                 data-text="my favourite video to go with it. #timstwitterlisteningparty" data-datetime="5:09 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373683022365667329"
+                 data-text="Sheâ€™s tuned in. It made me even do a sort of rap. imagine that! Nick #timstwitterlisteningparty" data-datetime="5:08 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373682896087711744"
+                 data-text="THE DROP #TimsTwitterListeningParty" data-datetime="5:08 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373682826193862661"
+                 data-text="The Drop
+Khloe Anna singing is a delight. She is one of the most exiting singers and performers out of London in the last few years. Easy." data-datetime="5:08 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373682621457268738"
+                 data-text="kwamie https://t.co/iX0Vd4NJ1n" data-datetime="5:07 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373682547390025730"
+                 data-text="dubbing it up. FIYA #TimsTwitterListeningParty" data-datetime="5:06 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373682378930065423"
+                 data-text="Nice mixing Seb! Nick
+#timstwitterlisteningparty" data-datetime="5:06 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373682258599641092"
+                 data-text="Farfisa bass sound. Watch your bass bins #TimsTwitterListeningParty" data-datetime="5:05 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373682053250711555"
+                 data-text="The Highest 
+Seb and me giving our best from our nights out in Tottenham. written by the brilliant Kwamie Liv and Sergio Acosta from the band Zoe from Mexico City. #timstwitterlisteningparty" data-datetime="5:04 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373681792780267525"
+                 data-text="underwear modelling #TimsTwitterListeningParty" data-datetime="5:03 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373681755287355394"
+                 data-text="It was just some underwear modelling. Lyrics by Alexander Ragnew, my partner in crime for Box Codax. Heâ€™s still lurking there somewhere in the shadows making me laugh everytime he pops up. 
+#timstwitterlisteningparty" data-datetime="5:03 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373681611376619520"
+                 data-text="booooom Seb logging in #TimsTwitterListeningParty" data-datetime="5:03 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373681557735608320"
+                 data-text="Shoemonk
+Our fav hackney singer Vula Malinga showing how itâ€™s done. 
+written with a bit of my heroes â€œDe la Soulâ€ in mind. nick
+ #timstwitterlisteningparty" data-datetime="5:02 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fmartinlrix%2Fstatus%2F1373681355024896002"
+                 data-text="Round two. #TimsTwitterListeningParty https://t.co/uoN1qzkGE6" data-datetime="5:02 PM Mar 21, 2021"> 
+                martinlrix            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FTheNixBand%2Fstatus%2F1373681223625740297"
+                 data-text="hey ho enjoy our album x x nick #timstwitterlisteningparty" data-datetime="5:01 PM Mar 21, 2021"> 
+                TheNixBand            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1373680960370311172"
+                 data-text="Time for @TheNixBand @LlSTENlNG_PARTY https://t.co/LXHUY9cHOT" data-datetime="5:00 PM Mar 21, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
