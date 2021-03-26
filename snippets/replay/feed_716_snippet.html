@@ -1,0 +1,425 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4Nm70S10yK8rL4xzlt9HuW" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02bd4e6602a24fe9e7492b5d2d" alt="New Age Steppers" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">New Age Steppers</span><br/><span class="sub-colour">New Age Steppers</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4Nm70S10yK8rL4xzlt9HuW" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 61 tweets from Friday 26th March 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/onusound" target="_blank"><img src="https://pbs.twimg.com/profile_images/1118872196011761664/QWgbAq9M_normal.png" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/onusound.jpg'"><br/>@onusound</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/_markstewart" target="_blank"><img src="https://pbs.twimg.com/profile_images/1292823224355622913/vwFyGMvz_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/_markstewart.jpg'"><br/>@_markstewart</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Fade Away" data-start="0"
+             data-duration="336" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Radial Drill" data-start="337"
+             data-duration="271" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="State Assembly" data-start="609"
+             data-duration="380" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Crazy Dreams And High Ideals" data-start="990"
+             data-duration="345" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Abderhamane's Demise" data-start="1336"
+             data-duration="230" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Animal Space" data-start="1567"
+             data-duration="341" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Love Forever" data-start="1909"
+             data-duration="445" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Private Armies" data-start="2355"
+             data-duration="291" style="display:none"></div>
+                        <div id="track-9" class="track-list"
+                     data-name="Finished" data-start="2647"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851bd4e6602a24fe9e7492b5d2d" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-61" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375550382311620613"
+                 data-text="Influences â¦@LlSTENlNG_PARTYâ© â¦@onusoundâ© https://t.co/XR3iWQw1Hq" data-datetime="8:49 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375550096683769857"
+                 data-text="Thatâ€™s me@timslistening party https://t.co/yTwKrzGb5S" data-datetime="8:47 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375549993612886016"
+                 data-text="@jrbinks @LlSTENlNG_PARTY Adrian says thanks Jethro" data-datetime="8:47 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375549681779015681"
+                 data-text="â¦@LlSTENlNG_PARTYâ© https://t.co/G3pH5ZFuUB" data-datetime="8:46 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1375549671104479235"
+                 data-text="Biiiig thanks to Adrian @onusound Sherwood and @_markstewart 
+
+Such a brilliant @LlSTENlNG_PARTY" data-datetime="8:46 PM Mar 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375549367084408835"
+                 data-text="RIP the Great Ari Up.
+
+(Taken by Masataka Ishida) https://t.co/B8BBRnoVrI" data-datetime="8:45 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375549233588273158"
+                 data-text="What a funny, great, raw, naive, charming album." data-datetime="8:44 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="143000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375549164189274112"
+                 data-text="Viv is very much a New Age Stepper. Most of all those involved knew each other because of her.
+It was like an odd family of people you maybe wouldn\'t expect to be in a room together ...but music sorts that.
+This track still sounds unique.
+#TimsTwitterListeningParty" data-datetime="8:44 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375548563724320775"
+                 data-text="This track Viv basically got recorded on a P.I L. session . I mixed the vocal version for her and she kindly let me use the dub version to complete the album.
+#TimsTwitterListeningParty" data-datetime="8:41 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375548177479307265"
+                 data-text="\"Private Armies\". Respect &amp; thanks to \'Punk Prof\' - Viv Goldman. Viv &amp; I were friends &amp; she really helped me w/ early support &amp; encouragement going back to \"Starship Africa\" &amp; also introduced me to many non reggae folk...#TimsTwitterListeningParty" data-datetime="8:40 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375547770413711360"
+                 data-text="Ari screams towards the end of both \"Love Forever\" &amp; \"Fade Away\", the character she adds on both deliveries, she makes the songs her own. It\'s a very difficult ask to sing those songs &amp; hearing them they are absolutely oozing amongst everything else.. 
+#TimsTwitterListeningParty" data-datetime="8:38 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375547756358553612"
+                 data-text="the new new age â¦@onusoundâ© â¦@LlSTENlNG_PARTYâ© https://t.co/A3dJkf4Htf" data-datetime="8:38 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375547446688948228"
+                 data-text="Ari and tess â¦@LlSTENlNG_PARTYâ© https://t.co/gOPwBCC50x" data-datetime="8:37 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375547283870253062"
+                 data-text="â¦@onusoundâ© â¦@LlSTENlNG_PARTYâ© https://t.co/7a8AA8aUfw" data-datetime="8:36 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375547244775104518"
+                 data-text="Also on this and all the tracks Bruce Smith plays on, are an ear opener, really refreshing to listen back to ..I love his hi- hat work and relaxed grooves throughout." data-datetime="8:36 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375547060112474113"
+                 data-text="Another stepper me and miss neneh cherry https://t.co/E3YjeczHsm" data-datetime="8:35 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fevergreendazed%2Fstatus%2F1375546920928747528"
+                 data-text="#TimsTwitterListeningParty The @onusound tote bag. For the more discerning music fan https://t.co/WAasVZFiOJ" data-datetime="8:35 PM Mar 26, 2021"> 
+                evergreendazed            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375546799415562243"
+                 data-text="...I am really happy playing this one again. I miss both Ari and Bim so much. #TimsTwitterListeningParty" data-datetime="8:34 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375546719451152386"
+                 data-text="Steve Beresford is a proper musical experimenter, very innovative. He adds such subtle touches &amp; quietly went about gelling this one together. On this Steve\'s musicality make it sparkle &amp; the dub effects still somehow sound timelessâ€¦. #TimsTwitterListeningParty" data-datetime="8:34 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375546371642642434"
+                 data-text="This evenings look@timslisteningparty https://t.co/2Q6ksiJad1" data-datetime="8:33 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375546164662140932"
+                 data-text="\"Love Forever\" - Again, like \"Man Next Door\" and \"Fade Away\", I introduced Ari to this Bim Sherman composition. Ari again loved the song and also became friends with Bim. We went on to record more of his great work. #TimsTwitterListeningParty" data-datetime="8:32 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375545975645868035"
+                 data-text="Charlie Eskimo Fox â¦@onusoundâ© â¦@LlSTENlNG_PARTYâ© https://t.co/JpVsP7tEvo" data-datetime="8:31 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375545876840644616"
+                 data-text="@jrbinks @LlSTENlNG_PARTY Hi brother Jethro, there is a new Tackhead album that we\'re secretly online that is sounding outrageous" data-datetime="8:31 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fjrbinks%2Fstatus%2F1375545593834127370"
+                 data-text="#TimsTwitterListeningParty @LlSTENlNG_PARTY 
+Here\'s Ari with NAS at London Polytechnic May 1981 https://t.co/F5tXayWpRk" data-datetime="8:30 PM Mar 26, 2021"> 
+                jrbinks            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375545480583725065"
+                 data-text="Taken by Kishi Yamamoto https://t.co/33raQWjb8M" data-datetime="8:29 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375545375742963721"
+                 data-text="Hearing this one back after 40 years since recording i have vivid memories of the whole time. Joy. 
+#TimsTwitterListeningParty" data-datetime="8:29 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375545293647847430"
+                 data-text="Viv\'s guitar work on this Version is brilliant. This track is actually a different recording to the one released by the Slits on their \"Animal Space\" issued as the b-side of \"Man Next Door\"....
+#TimsTwitterListeningParty" data-datetime="8:28 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="141000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375544851211620359"
+                 data-text="\"Animal Space\" - This was actually recorded as a Slits session. On the same session we recorded \"Man Next Door\".. Tessa was in hospital and Ari played bass on both. After a quick mix, w this being unused I asked if I could use it towards the NAS record. #TimsTwitterListeningParty" data-datetime="8:27 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375544258237698054"
+                 data-text="Making this was pretty much like \'Radial Drill\' where we were taking a slightly odder approach to the Dub we were into but starting it stripped right down from the off. 
+#TimsTwitterListeningParty" data-datetime="8:24 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375544085407219713"
+                 data-text="Mothmen drummer &amp; friend, Chris Joyce had intro\'d me to the joy of \'blotting paper\' so afterwards I created some LSD induced bits\'n\'pieces.
+#TimsTwitterListeningParty" data-datetime="8:24 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375543983653392388"
+                 data-text="\"Abderhamane\'s Demise\" - Having worked on the 1st Suns of Arqa record this was another attempt at creating a tripped out ultra minimal mood. 
+#TimsTwitterListeningParty" data-datetime="8:23 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375543793806626823"
+                 data-text="I was basically told â€œno way mate, youâ€™ve got to be joking, we will get sued for indecency etc.â€ Iâ€™ve no idea what happened to Mr. Stewartâ€™s enlightened vision for the cover.
+#TimsTwitterListeningParty" data-datetime="8:22 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FjoydivisionBook%2Fstatus%2F1375543759824420866"
+                 data-text="Do you love this bass player? &gt;&gt;&gt;
+Ari Up!
+
+@LlSTENlNG_PARTY
+#NewAgeSteppers
+@onusound
+@_markstewart
+#TimsTwitterListeningParty 
+ðŸ“·me https://t.co/XgvQncicD4" data-datetime="8:22 PM Mar 26, 2021"> 
+                joydivisionBook            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375543677632712705"
+                 data-text="Mark whoâ€™s contribution this song is to the album, also did the original artwork.
+I took it to the distributor, Spartan who I needed to sell it for me. They looked at what Mark had done - the Queen sat on a deckchair drinking a cocktail with her breasts hanging outâ€¦" data-datetime="8:22 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="168000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375543581889413120"
+                 data-text="#timstwitterlisteningparty !" data-datetime="8:22 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375542873492426759"
+                 data-text="Dave is no hypocrite, at least he told me to my face he hated it. A good man." data-datetime="8:19 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375542811739754504"
+                 data-text="As for David Rodigan..across town in Reggae HQ ..well...After \'Starship Africa\' &amp; this track I\'m pretty sure he\'d made his mind up. He really didn\'t like my productions..still respect due. I\'d rather you really don\'t like it than are indifferent." data-datetime="8:18 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375542760124641285"
+                 data-text="I really, really have to thank the great DJ John Peel. He played this and really championed us. Even gave us a session. Great man..great taste. Maximum respectâ€¦." data-datetime="8:18 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375542378812030984"
+                 data-text="What a great song ..and great sentiment .. needs re-recording again!!" data-datetime="8:17 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375542316128165890"
+                 data-text="â€œCrazy Dreams &amp; High Idealsâ€ - Listening back to this I have to smile.. itsâ€™ so raw..I love it. It\'s basically Dan from London Underground on drums, bass guitar &amp; a harmonizer that is \'playing off\' the drums from time to time w/ @_markstewart voice.." data-datetime="8:16 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375542199719460871"
+                 data-text="@joydivisionBook @LlSTENlNG_PARTY @_markstewart yes indeed" data-datetime="8:16 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375541753277734920"
+                 data-text="Taken by Kishi Yamamoto https://t.co/8frQhoh03D" data-datetime="8:14 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375541634637688835"
+                 data-text="I remember I was plodding around trying to play bass..never very good but I loved making b-lines. I so loved the fretless and Georgie wasn\'t too bothered with it so very shortly after this session he sold it to me.
+I later gave it back to him. Unworthy!" data-datetime="8:14 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375541225105817600"
+                 data-text="I guess that was the first time and one of only a few times I recorded a \'jam\' albeit around the b-line." data-datetime="8:12 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375541162036105219"
+                 data-text="I really love the guitar contribution from The Pop Groupâ€™s John Waddington ..its fierce and really tasteful ..John plays like heâ€™s being dubbed in and out.. in fact thereâ€™s almost a call and response between the 4 musiciansâ€¦." data-datetime="8:12 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375540773421252608"
+                 data-text="I\'ve revisited this B -line &amp; mood a little over the years. One of my favourite tracks recorded." data-datetime="8:10 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375540707893608449"
+                 data-text="\"State Assemblyâ€ - At the time like a kind of \'Jazz\' jam. Bass line was sorted using a slinky fretless bass. Bruce started doing cymbals &amp; created a mood that George &amp; Steve just slipped into." data-datetime="8:10 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375540495431110664"
+                 data-text="The Female Dance Troupe \'The Carpets\' used this on some of their stage shows. I used to really like that." data-datetime="8:09 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375540434773106691"
+                 data-text="We made this by track stripping the music from a drum track recorded on Style Scott\'s previous trip to UK, overdubbed George on it &amp; approached it by \'splashing\' sounds on a la Jackson Pollock.. having not heard this album in 30+ years I must say I was cheered to hear it againâ€¦" data-datetime="8:09 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375540283249680384"
+                 data-text="Back in the day â¦@LlSTENlNG_PARTYâ© https://t.co/zbkTazlTPk" data-datetime="8:08 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375540227847118848"
+                 data-text="I really loved working with him but think he thought what I was up to was a bit second rate. Not long ago I heard heâ€™d used the name Nobby Turner instead of his real name on the album sleeve. Apparently he only used that on things he was proud of! Thanks anyway. Good job mate." data-datetime="8:08 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="112000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375540141045993472"
+                 data-text="We worked at Berry Street studio on some of the tracks including this one with the engineer, Dave Hunt. He had done a great job on Creation Rebels, â€˜Starship Africaâ€™ album..." data-datetime="8:08 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375539669887246342"
+                 data-text="\"Radial Drill\" - I used a similar approach here as on the Crytuff Dub albums. Steve Beresford proved perfect for this task. Being a great &amp; experienced musician he had an array of weapons in the shape of kids noise machines/toys &amp; loads of small whistles, bells &amp; musical gadgets." data-datetime="8:06 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375539584507990026"
+                 data-text="@tomckemp52 yes" data-datetime="8:06 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375539310670254084"
+                 data-text="When we went to make the record we invited our friends from the Slits camp Bruce Smith &amp; Steve Beresford and added the great George Oban who had recently left his band Aswad, and along with other members of our kind of extended odd family I tried to cobble together an album..Hah" data-datetime="8:05 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375539117367435264"
+                 data-text="Ari came up w/ the idea of us doing a Slits session which we did.. we recorded the song \"Man next door\" together.. That was another song we played over and over that night. She said we should keep \"Fade Away\" for our own \'project\' and came up with the name New Age Steppers." data-datetime="8:04 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1375538657130602508"
+                 data-text="Anyone at the @LlSTENlNG_PARTY hearing The New Age Steppers for the first time? 
+
+A total masterpiece from @onusound" data-datetime="8:02 PM Mar 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375538622426968066"
+                 data-text="Ari came up w/ the idea of us doing a Slits session which we did.. we recorded the song \"Man next door\" together.. That was another song we played over and over that night. She said we should keep \"Fade Away\" for our own \'project\' and she came up with the name New Age Steppers." data-datetime="8:02 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2F_markstewart%2Fstatus%2F1375538532836605953"
+                 data-text="â¦@LlSTENlNG_PARTYâ© into the new age -we come again https://t.co/7uVNZpeG1X" data-datetime="8:01 PM Mar 26, 2021"> 
+                _markstewart            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fonusound%2Fstatus%2F1375538264120176640"
+                 data-text="\"Fade away\" - Ari was living with her mum Nora who\'s boyfriend was John Lydon.. She invited me to the house in Battersea 1 wkd while they were away &amp; we sat in her room playing loads of my favourite 7\"s &amp; albums. I told her this was my favourite song &amp; she immediately loved it." data-datetime="8:00 PM Mar 26, 2021"> 
+                onusound            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1375538070305525760"
+                 data-text="Over to you @onusound &amp; @_markstewart ðŸ™Œ
+
+#TimsTwitterListeningParty https://t.co/77SLLJQ5rS" data-datetime="8:00 PM Mar 26, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
