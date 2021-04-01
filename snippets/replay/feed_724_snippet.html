@@ -1,0 +1,661 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3gfslPcJfxjaI6CqpDOprR" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02835cf770779f4eb241241901" alt="Swaddling Songs" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Mellow Candle</span><br/><span class="sub-colour">Swaddling Songs</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3gfslPcJfxjaI6CqpDOprR" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 140 tweets from Thursday 1st April 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/MellowCandleOf1" target="_blank"><img src="https://pbs.twimg.com/profile_images/1377525987496357888/KQtHYQ3z_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/MellowCandleOf1.jpg'"><br/>@MellowCandleOf1</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/FoveaHex" target="_blank"><img src="https://pbs.twimg.com/profile_images/1192581747470487559/NliF-AwB_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/FoveaHex.jpg'"><br/>@FoveaHex</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Heaven Heath" data-start="0"
+             data-duration="180" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Sheep Season" data-start="181"
+             data-duration="300" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Silver Song" data-start="482"
+             data-duration="266" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="The Poet and the Witch" data-start="749"
+             data-duration="172" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Messenger Birds" data-start="922"
+             data-duration="219" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Dan The Wing" data-start="1142"
+             data-duration="164" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Reverend Sisters" data-start="1307"
+             data-duration="258" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Break Your Token" data-start="1566"
+             data-duration="146" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Buy Or Beware" data-start="1713"
+             data-duration="185" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Vile Excesses" data-start="1899"
+             data-duration="192" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Lonely Man" data-start="2092"
+             data-duration="269" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Boulders On My Grave" data-start="2362"
+             data-duration="207" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="2570"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851835cf770779f4eb241241901" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-140" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="139000" data-url="https%3A%2F%2Ftwitter.com%2FDefectingGrey%2Fstatus%2F1377724357632532487"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY @FoveaHex 
+Well, that was marvellous and finished way too quickly.
+Thanks Alison &amp; Clodagh. Cheers Tim for hosting.
+I love the album even more now." data-datetime="8:47 PM Apr 1, 2021"> 
+                DefectingGrey            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FEveryRecord%2Fstatus%2F1377723774699732993"
+                 data-text="@MellowCandleOf1 That was amazing! Thank you @MellowCandleOf1 and @Tim_Burgess - fantastic stuff! https://t.co/ETjddEwXhp" data-datetime="8:45 PM Apr 1, 2021"> 
+                EveryRecord            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1377723591026995208"
+                 data-text="@LlSTENlNG_PARTY @MellowCandleOf1 @FoveaHex Massive ðŸ™Œ What a party ðŸŽ‰ #TimsTwitterListeningParty https://t.co/xwWe8oC028" data-datetime="8:44 PM Apr 1, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377723568780349442"
+                 data-text="@LlSTENlNG_PARTY thank you so much for having us Tim!  that was a blast....." data-datetime="8:44 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377723563470376962"
+                 data-text="Thank you so much for joining me here tonight. Whether itâ€™s your first time listening to Swaddling Songs or your hundredth, I hope you enjoyed it as much as I have. Iâ€™ll be here for a little while if you have any questions. xxxx https://t.co/itibQNwrGu" data-datetime="8:44 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377723407270342657"
+                 data-text="My dear old friend Clodagh Simonds has also been busy making beautiful music with @foveahex. More info here: https://t.co/R70gtBc7WT" data-datetime="8:43 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377723349435097089"
+                 data-text="This anthology is a good introduction to some of my music with United Bible Studies, Head South By Weaving, The Owl Service, Firefay, Flibbertigibbet and my solo work: https://t.co/WHS92Gw9wH" data-datetime="8:43 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377723284918259714"
+                 data-text="Loads more on my website too: https://t.co/gA9C4Dhcn0" data-datetime="8:43 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377723243293986816"
+                 data-text="You can hear what Iâ€™ve been up to if you head for my Bandcamp page: https://t.co/rWqOtgCOcx" data-datetime="8:43 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377723164873142277"
+                 data-text="Iâ€™ve never stopped making music. The last 10-15 years have been the most productive of my life. https://t.co/DNTtmsi2WW" data-datetime="8:42 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1377723112888881155"
+                 data-text="And what an ending! Wow. Lost for words" data-datetime="8:42 PM Apr 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377723092877914114"
+                 data-text="my love song to Dublin....... https://t.co/KvknLENlyd" data-datetime="8:42 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377722964175691782"
+                 data-text="Once Mellow Candle was over, Dave and I ran away. Dave was from South Africa so, along with the Mellow Candle cat Boogaloo Oâ€™Fang, we boarded a liner to Cape Town where Dave got a job with the South African Broadcasting Corporation. https://t.co/3srqK4OuZD" data-datetime="8:42 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377722825105154048"
+                 data-text="Hereâ€™s our contract. Not great. 5% to share between band and manager. We stayed in debt for a long time. https://t.co/kfV3EsSFZS" data-datetime="8:41 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377722556287959043"
+                 data-text="Did we used to finish a live set with this one? Probably. I had a lyric book with set lists but it was nicked backstage at a gig with Arthur Brown, he of the half moustache and ability to perform operatic scales. A steamroller of an ending to Swaddling Songs. https://t.co/KH5nRRfX4Q" data-datetime="8:40 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377722406949810184"
+                 data-text="12 â€“ BOULDERS ON MY GRAVE
+A frenetic conclusion! Lilting all the way. The aforementioned Swedish band also made a brave live attempt at what is a challenging song to play &amp; sing. The vocals &amp; rhythm section going hell for leather at the end. Willie is clapping as well he might. https://t.co/OfNCt38LXI" data-datetime="8:39 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377722328340168704"
+                 data-text="ha ha - PRE teenage angst! https://t.co/kfzButky2W" data-datetime="8:39 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1377722270127378433"
+                 data-text="Swaddling Songs is @LlSTENlNG_PARTY number 754 and is undoubtedly one of the best EVER! Take a well earned standing ovation  @MellowCandleOf1 &amp; @FoveaHex https://t.co/tkEPGS9ila" data-datetime="8:39 PM Apr 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FODonnellAlison%2Fstatus%2F1377721936172752903"
+                 data-text="@LlSTENlNG_PARTY Lonely Man from a 12 year old. Hard to beat @FoveaHex" data-datetime="8:38 PM Apr 1, 2021"> 
+                ODonnellAlison            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377721901250969604"
+                 data-text="thanks so much @petepaphides  xxx! https://t.co/a3itOETNHT" data-datetime="8:37 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377721617514659841"
+                 data-text="aaaah Willy!   here we are about 1973..... https://t.co/QBulo1Hj8o https://t.co/wy0CtGLoSn" data-datetime="8:36 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1377721578335698949"
+                 data-text="I donâ€™t want this to end. @MellowCandleOf1 @FoveaHex #TimsTwitterListeningParty" data-datetime="8:36 PM Apr 1, 2021"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FRRelves%2Fstatus%2F1377721549277515776"
+                 data-text="@LlSTENlNG_PARTY @MellowCandleOf1 First time listening tonight. An album that is nearly 50 years old is a completely new discovery for me. That\'s the magic of listening parties though. Really enjoying the album â¤ðŸ‘Œ" data-datetime="8:36 PM Apr 1, 2021"> 
+                RRelves            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FODonnellAlison%2Fstatus%2F1377721497578536964"
+                 data-text="@KateBrower2 @LlSTENlNG_PARTY @MellowCandleOf1 Where did my tambourine and poncho go hmm!?" data-datetime="8:36 PM Apr 1, 2021"> 
+                ODonnellAlison            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377721454586957826"
+                 data-text="I learned a lot of stagecraft in more recent years. I should have been throwing shapes when we did this live but it was uber-cool to stand stock-still back in the day in long dress and beads. https://t.co/vR7xEMYwLW" data-datetime="8:36 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377721332675321858"
+                 data-text="11 â€“ LONELY MAN
+A chance to rock out for all of us. Written when Clodagh was 12. We left folk behind on this track. Pretty mighty actually." data-datetime="8:35 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fpaulbanks202%2Fstatus%2F1377721112625360898"
+                 data-text="@LlSTENlNG_PARTY @MellowCandleOf1 @FoveaHex Barton , Eccles Manchester. By the canal where a Taste Of Honey was filmed ðŸ˜€" data-datetime="8:34 PM Apr 1, 2021"> 
+                paulbanks202            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FAllyDickson74%2Fstatus%2F1377721095831355401"
+                 data-text="@MellowCandleOf1 I remember buying the LP and being really intrigued by that title, as I read the sleeve on the way back from Plastic Passion, off Portobello Road." data-datetime="8:34 PM Apr 1, 2021"> 
+                AllyDickson74            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1377720978567008273"
+                 data-text="@LlSTENlNG_PARTY @MellowCandleOf1 @FoveaHex Listening in Cheltenham - itâ€™s Sheep Season ðŸ‘ https://t.co/hsTsd60dMJ" data-datetime="8:34 PM Apr 1, 2021"> 
+                soozworld            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1377720929292324864"
+                 data-text="Extra special thanks to @petepaphides (@LlSTENlNG_PARTY superhero) for tonight x x" data-datetime="8:34 PM Apr 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmatt_cork%2Fstatus%2F1377720857645219841"
+                 data-text="@LlSTENlNG_PARTY @MellowCandleOf1 Yep. Absolutely loving it! Such a richness to the songâ€™s ðŸ‘ŠðŸ™ x" data-datetime="8:33 PM Apr 1, 2021"> 
+                matt_cork            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377720806126579712"
+                 data-text="This is a receipt from a rehearsal space we hired in Dublin. The guy thought we were called â€œMelody Candlesâ€. Cute. https://t.co/jevYEL219z" data-datetime="8:33 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fstartawinter%2Fstatus%2F1377720800392966145"
+                 data-text="@AllyDickson74 @LlSTENlNG_PARTY @MellowCandleOf1 @FoveaHex Dublin, Ireland - I only heard this album for the first time two years ago and was gobsmacked. Love the pictures with Lizzy." data-datetime="8:33 PM Apr 1, 2021"> 
+                startawinter            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FSuperdrogidge%2Fstatus%2F1377720761159405570"
+                 data-text="@LlSTENlNG_PARTY @MellowCandleOf1 @FoveaHex Loving the listen in a slightly more -arguably- progressive Dublin ðŸ‡®ðŸ‡ª #TimsListeningParty https://t.co/9cVnV9zaB2" data-datetime="8:33 PM Apr 1, 2021"> 
+                Superdrogidge            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1377720730511683584"
+                 data-text="@LlSTENlNG_PARTY @MellowCandleOf1 Nope, this is completely new to me! I like it, itâ€™s almost like a full on rock version of Judee Sill, Karen Dalton and their contemporaries from that time, really enjoying it!" data-datetime="8:33 PM Apr 1, 2021"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377720688027561986"
+                 data-text="If we sound pretty tight, thatâ€™s probably because we would rehearse for six hours a day. In order to sound this tight though, we had to get loose, so in the morning, Frank insisted on making us a big hashpipe, using a rubber tube and various other assorted artefacts." data-datetime="8:33 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377720594406506508"
+                 data-text="Who knows what might have developed if we\'d gone on to a second record? Different from the other tracks but originality was always key." data-datetime="8:32 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FMoysheCandle%2Fstatus%2F1377720562420744192"
+                 data-text="@MellowCandleOf1 Just the best album ever made. Brought to life!" data-datetime="8:32 PM Apr 1, 2021"> 
+                MoysheCandle            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="113000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377720542984290304"
+                 data-text="10 â€“ VILE EXCESSES Maracas â€“ I still have them. I really got into the multi-tracked vocals. A bit of writing from Willie &amp; Dave, their only complete collaborationâ€¦. https://t.co/c1FFtFAT3l" data-datetime="8:32 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMissTrudyAnn%2Fstatus%2F1377720067065049091"
+                 data-text="@LlSTENlNG_PARTY @MellowCandleOf1 Love a bit of Folk Rock now and then yet I\'ve not heard of Mellow Candle before!ðŸ¤·â€â™€ï¸ This is fantastic â¤" data-datetime="8:30 PM Apr 1, 2021"> 
+                MissTrudyAnn            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FODonnellAlison%2Fstatus%2F1377720007178788877"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY Kevin Scott playing piano here and did the string arrangement too. Worked him a lot. A diamond bloke." data-datetime="8:30 PM Apr 1, 2021"> 
+                ODonnellAlison            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377719988153421826"
+                 data-text="â€œRADIO LUXEMBOURG MADE A DREAM COME TRUE FOR THREE SCHOOLGIRLSâ€
+
+Early reviews! https://t.co/rvxZztKdFz" data-datetime="8:30 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FRayKnut%2Fstatus%2F1377719972739289090"
+                 data-text="how good would it have been to have experienced these songs in a live setting? #TimsTwitterListeningParty @MellowCandleOf1" data-datetime="8:30 PM Apr 1, 2021"> 
+                RayKnut            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Frobertsbryn%2Fstatus%2F1377719921409454080"
+                 data-text="Never heard @MellowCandleOf1 before but this album is fantastic #TimsTwitterListeningParty" data-datetime="8:30 PM Apr 1, 2021"> 
+                robertsbryn            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377719779860025351"
+                 data-text="9 â€“ BUY OR BEWARE
+Swedish band, Lost in Rickâ€™s Wardrobe did a live version of this in a tent. Weird seeing what we might have looked like if there had been any film. RTE did a radio recording but the tapes were wiped. Thrashing rhythm guitar in parts. Catchy song from Dave. https://t.co/26qoN1Pm6H" data-datetime="8:29 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1377719754518114309"
+                 data-text="Shout up where you are in the world for our Swaddling Songs @LlSTENlNG_PARTY. @MellowCandleOf1 &amp; @FoveaHex would like to know https://t.co/9wggJnJ6IT" data-datetime="8:29 PM Apr 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmatt_cork%2Fstatus%2F1377719685467275265"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY Favourite so far. Absolutely beautiful ðŸ‘ŠðŸ™ x" data-datetime="8:29 PM Apr 1, 2021"> 
+                matt_cork            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FAndymack%2Fstatus%2F1377719654584573961"
+                 data-text="@MellowCandleOf1 These photographs are wonderful, they really give us a sense of time and place" data-datetime="8:28 PM Apr 1, 2021"> 
+                Andymack            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1377719594153078786"
+                 data-text="@LlSTENlNG_PARTY @MellowCandleOf1 Yes, never heard before and I am livid with myself and the world that this album isnâ€™t seen as an absolute classic by all and sundry!
+
+Sorry, bit blown away by this to be honest." data-datetime="8:28 PM Apr 1, 2021"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FKateBrower2%2Fstatus%2F1377719542902849537"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY Pretty sure I tried to wear that top once..." data-datetime="8:28 PM Apr 1, 2021"> 
+                KateBrower2            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FEveryRecord%2Fstatus%2F1377719496706777091"
+                 data-text="Itâ€™s a high bar, but the commentary from @mellowcandleof1 might be the best story-tell of any of the #timstwitterlisteningparties 
+Fantastic stuff, and what an album! https://t.co/p4hQGoXvhL" data-datetime="8:28 PM Apr 1, 2021"> 
+                EveryRecord            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377719460258254848"
+                 data-text="Wrote this when I was in Rome for a few months, just having left school....... https://t.co/EbxlKmYyfC" data-datetime="8:28 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377719429233061890"
+                 data-text="This is my actual copy of Swaddling Songs. â€œCome down off the ceiling Markâ€ is a reference to our tour manager, who lived with us. https://t.co/sXh0tKM2JU" data-datetime="8:28 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNickiquote%2Fstatus%2F1377719388976087046"
+                 data-text="This is such a good album. Drew the cover last year. #ListeningParty @MellowCandleOf1 @LlSTENlNG_PARTY https://t.co/ugwUpqwxMw" data-datetime="8:27 PM Apr 1, 2021"> 
+                Nickiquote            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377719298173644809"
+                 data-text="In the early days we played relief to a showband once. 5000 people in the ballroom. Confusion and hostile stares were the order of the day. Fans ripped up the seats in Cork." data-datetime="8:27 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377719215264821257"
+                 data-text="8 â€“ BREAK YOUR TOKEN
+Proggy lilting. We were all gutsy as one. Nifty drumming from the late great Mr. Murray. The trickle down ending to such fire and enthusiasm was a perfect antidote." data-datetime="8:27 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FBeathhigh%2Fstatus%2F1377719147082170370"
+                 data-text="@Tim_Burgess @MellowCandleOf1 @LlSTENlNG_PARTY Listening in Edinburgh, Sir Tim! https://t.co/5w97omTi61" data-datetime="8:26 PM Apr 1, 2021"> 
+                Beathhigh            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377719009144094721"
+                 data-text="for anyone interested, thereâ€™s a whole chapter in Colin Harpers book https://t.co/WnryvPu9c8 which is really comprehensive https://t.co/9wvXlxE58H" data-datetime="8:26 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377718729392463874"
+                 data-text="I tried to atone for that several years later with a song called No Meek Chrism, which was very much written as an older, wiser epilogue to Reverend Sisters. You can hear/purchase it here: https://t.co/4e5EFJ8X3f" data-datetime="8:25 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377718672790274053"
+                 data-text="After the album came out, a couple of the nuns who taught us came to my mumâ€™s house to tell her theyâ€™d bought the album and they were so proud of us. I shudder to think what they made of this song, with lines like, As a consequence, I do feel a little guilty about this song." data-datetime="8:25 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377718604196675590"
+                 data-text="Music was our life. The nuns at our convent school were surprisingly supportive. We performed regularly there. I have a lasting memory of the Cusack sisters [Sinead &amp; Sorcha from the acting dynasty] who were also at the school, cheering us during one of our lunch break rehearsals https://t.co/igp6IRgPK6" data-datetime="8:24 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377718499217399811"
+                 data-text="Bittersweet. I come over all sad and nostalgic whenever I hear it. We were so young. https://t.co/fsWsU4w1U9" data-datetime="8:24 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377718410944057344"
+                 data-text="7 â€“ REVEREND SISTERS
+
+Iâ€™m back in the room, back in school when this track unfolds. Superb song from Clodagh. The piano rolls along classically. â€˜All your words and teaching left some imprint on my memoryâ€™ progressed to â€˜Now the veils are lifted from my eyes and I can seeâ€™." data-datetime="8:24 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FMichaelDaly64%2Fstatus%2F1377718375728746497"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY I love the fact that full evening dress was de riguer even for session work. Proper." data-datetime="8:23 PM Apr 1, 2021"> 
+                MichaelDaly64            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377718324264640514"
+                 data-text="Iâ€™ve kept a lot of the outfits. https://t.co/7CGzvI3Q7e" data-datetime="8:23 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FRayKnut%2Fstatus%2F1377718308523417600"
+                 data-text="reverend sisters is glorious #TimsTwitterListeningParty @MellowCandleOf1" data-datetime="8:23 PM Apr 1, 2021"> 
+                RayKnut            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377718258082713607"
+                 data-text="Ok, I think Iâ€™d just read Gormenghast.   Willy loved playing this, it kept this on his toes anyway.  But God, the energy - where did it go?   Oh yes, I was 18 then and Iâ€™m 67 now.   the diddly di thing was partly laziness, I have to be honest, https://t.co/LrsaTckwJh" data-datetime="8:23 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1377718062347075585"
+                 data-text="The most amazing book ever about Swaddling Songs is being written live on twitter right now by @MellowCandleOf1 https://t.co/qpyfLWplwj" data-datetime="8:22 PM Apr 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377718004625125379"
+                 data-text="6 â€“ DAN THE WING
+Headlong rush this song. More ballsy lilting. Richard Coughlan did the demo, struggling with the timing in parts. Fuckinâ€™ Irish music innit! We had a felt dragon that sat on Clodaghâ€™s piano. Always went well on stage. Di diddly di devilish Dan." data-datetime="8:22 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377717868385734663"
+                 data-text="those were grim grim days ..... https://t.co/wimT15tyFx" data-datetime="8:21 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377717836735512579"
+                 data-text="The Breakaways sang on the first single! I remember they were doing their bits from some sort of balcony. We were these little girls, gazing up at these professionals in suits! All very exciting!" data-datetime="8:21 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377717756863332355"
+                 data-text="Another fragment of Mellow Candle pre-history. Here we are taking a break from the sessions for our first single back in 1968. The two guys are part of The Breakaways - Britainâ€™s premier session vocalists at the time! https://t.co/HiVH09Uvgb" data-datetime="8:21 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTimGough9%2Fstatus%2F1377717627561316353"
+                 data-text="Itâ€™s like going to Dublin via Laurel Canyon and thatâ€™s a good ol trip @MellowCandleOf1 #TimsTwitterListeningParty" data-datetime="8:20 PM Apr 1, 2021"> 
+                TimGough9            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377717597655990273"
+                 data-text="We spent 5 yrs paying off a loan for gear we bought in order to rehearse &amp; play gigs.  We borrowed the money from a friend of Daveâ€™s dad in Surrey. We went there once. He had a sauna which was exotic in those days. By the time we paid it back the group had long disbanded. https://t.co/hiGqRzzWoi" data-datetime="8:20 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377717561505251328"
+                 data-text="gorgeousâ€¦â€¦such evocative lyrics.   Think this was the first song you wrote, Alison?   I remember Dave and I remarking on it being a pretty amazing startâ€¦.not that we were surprised! https://t.co/w9grRcVKfV" data-datetime="8:20 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Ftheleftoutsides%2Fstatus%2F1377717347377643524"
+                 data-text="The Poet &amp; the Witch - one of my favourite songs ever!  @MellowCandleOf1 #TimsTwitterListeningParty" data-datetime="8:19 PM Apr 1, 2021"> 
+                theleftoutsides            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1377717259913805831"
+                 data-text="Anyone here good with technology and physics?  Itâ€™s just that I want to travel back in time to see @MellowCandleOf1 live.  Cheers. #TimsTwitterListeningParty" data-datetime="8:19 PM Apr 1, 2021"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1377717088220020739"
+                 data-text="Messenger Birds ðŸŽ¶ @MellowCandleOf1 #TimsTwitterListeningParty https://t.co/dMqGwZnBfw" data-datetime="8:18 PM Apr 1, 2021"> 
+                soozworld            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377717086433259523"
+                 data-text="We had to finance being in Mellow Candle by getting part-time jobs. I worked as a cleaner on Saturdays for a lady called Michaela. She used to start me off with a cup of tea &amp; a jam doughnut. Clodagh &amp; I temped offices too, as did Dave who worked as a proofreader. Glamorous, huh?" data-datetime="8:18 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377717008578576384"
+                 data-text="The Spanish guitar in this photo was brought back from Spain by my father. I wrote Messenger Birds on it. https://t.co/37ZGpmEQ54" data-datetime="8:18 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1377716951993188356"
+                 data-text="Two totally different albums, finding a lot of new fans tonight. I love it when this happens at the @LlSTENlNG_PARTY" data-datetime="8:18 PM Apr 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377716843461378050"
+                 data-text="The wordless ending is one of my best. I have sung the song a few times since but only just about in that key. Iâ€™m not keen to perform Mellow Candle songs. They are sort of sacred. I keep them on a high shelf." data-datetime="8:17 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377716724175343623"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY .... in a way this is me saying I Donâ€™t Do Love Songsâ€¦â€¦ as far as I recall, it was producer Dave Hitchcock who suggested the gulls and waves which we all thought was a stroke of genius." data-datetime="8:17 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377716717976223746"
+                 data-text="5 â€“ MESSENGER BIRDS Beautiful intro. The idea came from an article about a drowned child. Much inspiration came from where we lived. Truly gorgeous scenery. https://t.co/ZQNb25vMPN" data-datetime="8:17 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FODonnellAlison%2Fstatus%2F1377716516536340487"
+                 data-text="@LlSTENlNG_PARTY Fighting back a few tears. Gulp!" data-datetime="8:16 PM Apr 1, 2021"> 
+                ODonnellAlison            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377716402115776512"
+                 data-text="Teenage aaaaaahngst alert!   and a nod to J S Bach.... boy was I glad Alison could reach those high notes, because I sure couldnâ€™t.....!  but wow, the Mellotron was a real treat.... https://t.co/LnRvS1ANTj" data-datetime="8:16 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fwaterpistol49%2Fstatus%2F1377716307966189577"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY Just one of the most beautiful songs ever x" data-datetime="8:15 PM Apr 1, 2021"> 
+                waterpistol49            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377716228672913413"
+                 data-text="I was really nervous in case they actually challenged us about it, and I didnâ€™t want to have to lie." data-datetime="8:15 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377716180039962630"
+                 data-text="(2) Dave and I were in a relationship, but we werenâ€™t married, and we were planning to spend the night in a local B&amp;B. This being Dublin in 1971, we had to put these brass curtain rings on our fingers , so that the B&amp;B owners thought we were married." data-datetime="8:15 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377716104609546246"
+                 data-text="Two other things I remember about that festival: (1) We were jealous of Fairport Convention because they had a crate of beer in their rider! â€¦..." data-datetime="8:14 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377716015337979906"
+                 data-text="A flyer from 1971. We played the same night as Principal Edwardsâ€™ Magic Theatre. I recall watching them &amp; thinking, â€œOooh, stagecraft! I should probably start thinking about that!â€ Before, I\'d just stood with my hands on my hips. Ted would say, â€œYou look like a fishwife Alison!â€ https://t.co/5dTfqTiWxN" data-datetime="8:14 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Flearnandsing%2Fstatus%2F1377715949369966592"
+                 data-text="@MellowCandleOf1 Great interview with Ted https://t.co/KEPzcFv5dV" data-datetime="8:14 PM Apr 1, 2021"> 
+                learnandsing            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1377715895351513095"
+                 data-text="First listen of @MellowCandleOf1 and this is totally enchanting ðŸ™Œ Loving the tweets! @LlSTENlNG_PARTY #TimsTwitterListeningParty https://t.co/wSTMmy8RNh" data-datetime="8:14 PM Apr 1, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377715892172296193"
+                 data-text="â€¦Lilting is a big Irish thing. Thereâ€™s a competition for it at the Fleadh. Somehow we did it without much thought or artifice. The harmonies are pretty lush. Itâ€™s a full-on track which used to sweep us away. https://t.co/mxUOKFOYGY" data-datetime="8:14 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTimGough9%2Fstatus%2F1377715888506482690"
+                 data-text="Such a beautiful voice - this would sit beautifully alongside Weyes Blood @MellowCandleOf1 #TimsTwitterListeningParty" data-datetime="8:13 PM Apr 1, 2021"> 
+                TimGough9            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377715779051851776"
+                 data-text="4 â€“ THE POET AND THE WITCH We all lived near the sea so gulls and waves were a must. Theyâ€™re all over the shop in more recent yearsâ€¦" data-datetime="8:13 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FKateBrower2%2Fstatus%2F1377715626022739970"
+                 data-text="@Birmingham_81 @Michellebwatso3 @LlSTENlNG_PARTY @Tim_Burgess @MellowCandleOf1 My mum is @ODonnellAlison and one of her original copies is knackered but beautiful. She may show a pic of it later! ðŸ¤ž" data-datetime="8:12 PM Apr 1, 2021"> 
+                KateBrower2            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377715583148564489"
+                 data-text="https://t.co/GknIHZVswE" data-datetime="8:12 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1377715557907193858"
+                 data-text="I am so happy Iâ€™m listening to this album.  No clue it existed, now Iâ€™m very glad it does. @MellowCandleOf1 #TimsTwitterListeningParty" data-datetime="8:12 PM Apr 1, 2021"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377715481428234240"
+                 data-text="Acts of kindness were rare and, as a consequence, remembered many decades on. Lindisfarneâ€™s roadie came over to the house with Â£5 worth of food." data-datetime="8:12 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377715414512271364"
+                 data-text="And because there were hardly any offers of live work, we often had to resort to nicking cheese from supermarkets and getting the butcher to give us bacon scraps for free. We furnished our house with items from thrift shops. Such as this Toby Jug from a charity shop in Mill Hill. https://t.co/2bvK5luM6p" data-datetime="8:12 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377715343364390917"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY Sheep Season is a big fave of mine, and unusually a co-write between 3 of us - Dave and I wrote the music and Alison the wordsâ€¦â€¦.." data-datetime="8:11 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1377715284006567943"
+                 data-text="@LoveMy12String @Birmingham_81 @LlSTENlNG_PARTY @MellowCandleOf1 Play or stream the album and the tweets appear as we go - currently on Silver Song" data-datetime="8:11 PM Apr 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FAndymack%2Fstatus%2F1377715223512109067"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY  Swaddling Songs is a relatively recent discovery for me. I can\'t remember if it was @petepaphides or @rocking_bob  that sparked my interest but I\'m eternally grateful." data-datetime="8:11 PM Apr 1, 2021"> 
+                Andymack            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377715204386066432"
+                 data-text="We didnâ€™t make it easy for Ted or ourselves. Ted struggled to find gigs for us. The blend of folk and rock wasnâ€™t to everyoneâ€™s taste. And that was a shame because we werenâ€™t on retainers. We relied on live gigs to pay the rent and buy food!" data-datetime="8:11 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1377715126627885058"
+                 data-text="This tweet alone is better than quite a few music biographies that Iâ€™ve read https://t.co/FfQAK9Xy8e" data-datetime="8:10 PM Apr 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377715105669001217"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY aaaaaaah!!!!!!!   that was some night...." data-datetime="8:10 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377715079857254403"
+                 data-text="Here are Thin Lizzy in 1971 playing an open-air show in Blackrock Park, Dublin. You can just about see me on the far left watching from the sidelines. https://t.co/e2e9CUmeAL" data-datetime="8:10 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377714928241537024"
+                 data-text="Ted also co-managed Thin Lizzy and ran the legendary Rock On records in Camden from 1971. He went on to run Chiswick Records and Ace Records. https://t.co/9wuCyeM71g" data-datetime="8:10 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FFoveaHex%2Fstatus%2F1377714904543674377"
+                 data-text="@MellowCandleOf1 @LlSTENlNG_PARTY a big fave of mine, and unusually a co-write between 3 of us - Dave and I wrote the music and Alison the wordsâ€¦â€¦.." data-datetime="8:10 PM Apr 1, 2021"> 
+                FoveaHex            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377714807663693824"
+                 data-text="We had a manager called Ted Carroll, who moved from Ireland with us. He was something of a rarity. A conscientious, kind-hearted manager. We loved him. I still love Ted now. https://t.co/36YCtwHAHw" data-datetime="8:09 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377714572845518853"
+                 data-text="3 â€“ SILVER SONG The mellotron was such a gift for this album. A heartfelt song but difficult to sing. A gleaming bit of guitar from Dave. Bendy, psych oohs still make me shiver a bit. Dim the lights. https://t.co/qQ7hBBa4EB" data-datetime="8:08 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1377714222377930754"
+                 data-text="This sounds beautiful. @MellowCandleOf1 #TimsTwitterListeningParty https://t.co/EHCggss2Gy" data-datetime="8:07 PM Apr 1, 2021"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377714187057643522"
+                 data-text="Dave &amp; I married in Jan 1972 shortly before our move to London. Same night as our wedding, we opened for Thin Lizzy at The National Stadium (a boxing ring) in Dublin. Daveâ€™s father had given us a bottle of v good champagne which we shared around with us &amp; Lizzy. I got one gulp! https://t.co/8FG0SczAS6" data-datetime="8:07 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FAllyDickson74%2Fstatus%2F1377714127456645129"
+                 data-text="@agnetha666 @LlSTENlNG_PARTY @MellowCandleOf1 Alas, no. That would have been a 10-year head start for me! I first heard of the band when Stephen Malkmus played a cover of â€˜The Poet and the Witchâ€™ at the Highbury Garage in, I think, 2000." data-datetime="8:06 PM Apr 1, 2021"> 
+                AllyDickson74            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377714057785049091"
+                 data-text="The Swaddling Songs lineup: Clodagh SimondsÂ â€“Â lead vocals,Â backing vocals,Â piano,Â harpsichord,Â mellotron; Alison Oâ€™Donnell â€“ lead vocals, backing vocals; Dave Williams â€“Â guitar, backing vocals; Frank Boylan â€“Â bass guitar, backing vocals; William MurrayÂ -Â drums,Â percussion. https://t.co/sHXDgyCqoU" data-datetime="8:06 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377713965254508552"
+                 data-text="The Swaddling Songs lineup: Clodagh SimondsÂ â€“Â lead vocals,Â backing vocals,Â piano,Â harpsichord,Â mellotron; Alison Oâ€™Donnell â€“ lead vocals, backing vocals; Dave Williams â€“Â guitar, backing vocals; Frank Boylan â€“Â bass guitar, backing vocals; William MurrayÂ -Â drums,Â percussion." data-datetime="8:06 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1377713893963923456"
+                 data-text="Wow! This @MellowCandleOf1 @LlSTENlNG_PARTY is ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="8:06 PM Apr 1, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377713886003138562"
+                 data-text="This is what the view from Sunnyfield looks like 49 years later. Good to see the field is still there. 
+https://t.co/h5Z0Z2n5lg" data-datetime="8:06 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377713818382532610"
+                 data-text="I guess the story of Swaddling Songs begins in earnest in 1971. With a new line-up, we secured a deal with Deccaâ€™s hip underground imprint Deram. We all moved to London together and shared a house in Mill Hill. The address was 1 Sunnyfield..." data-datetime="8:05 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377713718415474695"
+                 data-text="2 â€“ SHEEP SEASON Pastoral. I love the instrumental build-up towards the end. Iâ€™m still transported when I hear it. A rare guitar solo from Dave, feisty piano work from Clodagh and a fantastic rhythm section. https://t.co/iVN6sHPuWp" data-datetime="8:05 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FODonnellAlison%2Fstatus%2F1377713622672101380"
+                 data-text="@agnetha666 @LlSTENlNG_PARTY @MellowCandleOf1 Never heard it despite efforts to get hold of a copy." data-datetime="8:04 PM Apr 1, 2021"> 
+                ODonnellAlison            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377713601499308033"
+                 data-text="Suddenly, it was 1968 and we were signed to Simon Napier-Bellâ€™s SNB label. Feelinâ€™ High was our first and only single for SNB. I donâ€™t think any of us had ever been high by this point, but these were the times. https://t.co/mPi69Azsix" data-datetime="8:04 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377713480791420931"
+                 data-text="Suddenly, it was 1968 and we were signed to Simon Napier-Bellâ€™s SNB label. Feelinâ€™ High was our first and only single for SNB. I donâ€™t think any of us had ever been high by this point, but these were the times." data-datetime="8:04 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1377713466941845511"
+                 data-text="Go on, give @MellowCandleof1 a follow. #TimsTwitterListeningParty" data-datetime="8:04 PM Apr 1, 2021"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377713417432264706"
+                 data-text="At the age of 16, we left â€“ with the nunsâ€™ blessing. They just told us there was no point in spending any longer at school, because we had found our path. https://t.co/P5YVuT7v8d" data-datetime="8:04 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FEveryRecord%2Fstatus%2F1377713401674219532"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess *waves hello* https://t.co/rw2pOcH4zB" data-datetime="8:04 PM Apr 1, 2021"> 
+                EveryRecord            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FJonPeake%2Fstatus%2F1377713356296032258"
+                 data-text="@MellowCandleOf1 Messenger Birds one of the most beautiful songs of all time. Thanks for that." data-datetime="8:03 PM Apr 1, 2021"> 
+                JonPeake            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377713327577702402"
+                 data-text="We wanted to look as glamorous and otherworldly as our heroines, so we left the house â€“ Clodagh wearing a Japanese kimono and Iâ€™d found this beautiful coat which dated back to the 1880s. God knows what we must have looked like." data-datetime="8:03 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FEllenMaryHarris%2Fstatus%2F1377713269243273219"
+                 data-text="#TimsTwitterListeningParty with the amazing psychedelic folk of @MellowCandleOf1 https://t.co/BoaE7XAgEn" data-datetime="8:03 PM Apr 1, 2021"> 
+                EllenMaryHarris            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377713088779190278"
+                 data-text="We were obsessed with The Supremes. I remember one time, The Supremes were playing Dublin Adelphi, and Clodagh and I had to go and see them. https://t.co/kdZuFyobzH" data-datetime="8:02 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fkennykerr71%2Fstatus%2F1377713086379986945"
+                 data-text="@Tim_Burgess @MellowCandleOf1 @FoveaHex @LlSTENlNG_PARTY One of the best folk rock albums.. been a fan for many years" data-datetime="8:02 PM Apr 1, 2021"> 
+                kennykerr71            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FAllyDickson74%2Fstatus%2F1377713007891996680"
+                 data-text="@MellowCandleOf1 This second instrumental verse makes my heart soar every time I hear it. #timstwitterlisteningparty" data-datetime="8:02 PM Apr 1, 2021"> 
+                AllyDickson74            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fagnetha666%2Fstatus%2F1377712946546106375"
+                 data-text=". @LlSTENlNG_PARTY @MellowCandleOf1 So, hands up who got into Mellow Candle due to All About Eve\'s cover of \'Silver Song\'?" data-datetime="8:02 PM Apr 1, 2021"> 
+                agnetha666            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377712939914911748"
+                 data-text="We were originally called The Gatecrashers. We wanted to be like the black American girl groups that we so adored: The Supremes, Martha &amp; The Vandellas, The Chiffonsâ€¦." data-datetime="8:02 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377712764433620993"
+                 data-text="Let me tell you a little bit about the early history of the group. The original line-up of the group was myself, Clodagh Simonds and Maria White. We went to Holy Child Convent School in Dublin, which was also where we played our first shows, aged 12. https://t.co/5uOqeJFp1M" data-datetime="8:01 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1377712731772624902"
+                 data-text="Anyone at the @LlSTENlNG_PARTY playing Swaddling Songs on vinyl? https://t.co/o39TXwLrAA" data-datetime="8:01 PM Apr 1, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377712622838104067"
+                 data-text="1 â€“ HEAVEN HEATH. This kind of song comes straight out of convent school. Nonetheless, the nuns bought the album. Slower version than the demo. Harpsichord takes the prize for instrument requiring the most takes. The action is well tricky. Finger cymbals akimbo. Still got them." data-datetime="8:01 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FMellowCandleOf1%2Fstatus%2F1377712463798484993"
+                 data-text="Shall we begin? All set? Letâ€™s goâ€¦ https://t.co/VplM2sgoTg" data-datetime="8:00 PM Apr 1, 2021"> 
+                MellowCandleOf1            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1377712385314676745"
+                 data-text="Handing over Alison (tweeting from @MellowCandleOf1) &amp;  Clodagh
+(A.K.A. @FoveaHex) for our Swaddling Songs @LlSTENlNG_PARTY https://t.co/zCRngrF878" data-datetime="8:00 PM Apr 1, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
