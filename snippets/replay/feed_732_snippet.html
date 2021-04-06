@@ -1,0 +1,587 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1W5dS1oTMTYzai26oowmFT" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02e151ca654585e01d535c4175" alt="Down Time" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Young Galaxy</span><br/><span class="sub-colour">Down Time</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(11027)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1W5dS1oTMTYzai26oowmFT" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_11027_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 122 tweets from Tuesday 6th April 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/younggalaxy" target="_blank"><img src="https://pbs.twimg.com/profile_images/951092098543046657/b29uMmib_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/younggalaxy.jpg'"><br/>@younggalaxy</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Under My Wing" data-start="0"
+             data-duration="365" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Seeing Eye Dog" data-start="366"
+             data-duration="237" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Catch Your Breath" data-start="604"
+             data-duration="277" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Show You the Valley" data-start="882"
+             data-duration="331" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="River" data-start="1214"
+             data-duration="448" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Frontier" data-start="1663"
+             data-duration="541" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Stay for Real" data-start="2205"
+             data-duration="216" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Glowworms" data-start="2422"
+             data-duration="289" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Devotion" data-start="2712"
+             data-duration="371" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Elusive Dream" data-start="3084"
+             data-duration="285" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="3370"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851e151ca654585e01d535c4175" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-122" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379554992005255173"
+                 data-text="@draculasspatula Thereâ€™s always tomorrowâ€™s cry to look forward to" data-datetime="10:01 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379554829761183744"
+                 data-text="@DIreland02 @Tim_Burgess Thank you for joining us!" data-datetime="10:01 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379554772802543623"
+                 data-text="@graham_habben Thank you! The story started very differently, just so you know" data-datetime="10:01 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379554661552820224"
+                 data-text="For those who are curious about the vinyl - you can purchase directly from us on bandcamp https://t.co/xnhgwEJFaX" data-datetime="10:00 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379554551808790535"
+                 data-text="@matt_cork @LlSTENlNG_PARTY Yes, direct through us on Bandcamp is best https://t.co/xnhgwEJFaX" data-datetime="10:00 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379554361521676291"
+                 data-text="@lucylloyd43 Thank you so much for listening â¤ï¸" data-datetime="9:59 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379554314075660292"
+                 data-text="@mrmitchell78 @LlSTENlNG_PARTY Working on it!" data-datetime="9:59 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379554270777860107"
+                 data-text="@MartinaHemmings Thank you so much for listening â¤ï¸" data-datetime="9:59 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379554242856419330"
+                 data-text="@JohnMcgranachan @Tim_Burgess Thank you so much for listening â¤ï¸" data-datetime="9:58 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379553901138051080"
+                 data-text="@Michellebwatso3 @LlSTENlNG_PARTY Thank you for listening!" data-datetime="9:57 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379553811933593605"
+                 data-text="Thank you so much to @Tim_Burgess and @LlSTENlNG_PARTY for having our little ol band along - you made us feel a part of something again â¤ï¸" data-datetime="9:57 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379553557486112774"
+                 data-text="Thank you for everything, those who listened - that was truly a cathartic experience" data-datetime="9:56 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1379553527165517825"
+                 data-text="Huge thanks to @younggalaxy. Happy third birthday to Down Time https://t.co/1j1AsCbQpv" data-datetime="9:56 PM Apr 6, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379553456927748100"
+                 data-text="Wow everyone, Iâ€™m speechless. Luckily Iâ€™m texting all this" data-datetime="9:55 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379553318792523782"
+                 data-text="@stephengershon Just lovely. What great company you are" data-datetime="9:55 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379553257194979331"
+                 data-text="I miss you all so much. What a shit show this all is. But thank the lawd for @LlSTENlNG_PARTY" data-datetime="9:55 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379553094837624839"
+                 data-text="Iâ€™m verklempt" data-datetime="9:54 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379553021764440072"
+                 data-text="@AOManier Yes itâ€™s a regret honestly" data-datetime="9:54 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379552716037500931"
+                 data-text="Another pandemic song? Jeez" data-datetime="9:52 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379552460071665665"
+                 data-text="@RoffeyDave Would so love to come!" data-datetime="9:51 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379552386327396355"
+                 data-text="Elusive Dream - the 1st song we wrote for the record. we were struggling to write, T***p had got elected, tensions with North Korea were high and I couldnâ€™t think straight. Then the lyrics came out one day in about 5 min and I cried like a baby after #TimsTwitterListeningParty https://t.co/IEz8AsJCZO" data-datetime="9:51 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379552350315118592"
+                 data-text="Little known fact, part two - I had a stand in for the Folsom Street show, the much more handsome and talented Raul Campued. Only one of us would dare perform shirtless #TimsTwitterListeningParty https://t.co/4QXxoccSbe" data-datetime="9:51 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379552305670934535"
+                 data-text="@TimGough9 Phwoaaarrr" data-datetime="9:51 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379552204240076802"
+                 data-text="@stephengershon Embrace the churn ðŸ¥´" data-datetime="9:50 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379552072333414402"
+                 data-text="Little known fact, Young Galaxyâ€™s final show was played at the Folsom Street Festival, one of the oldest, greatest, LGBTQ+ festivals in the world - weâ€™ve always felt completely accepted and adopted by the gay community at large and honestly there is no greater honour ðŸŒˆ" data-datetime="9:50 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379551965089267713"
+                 data-text="@mbalashov Cheeky" data-datetime="9:49 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379551922894569473"
+                 data-text="@arimap Ari! Hi old friend! â¤ï¸" data-datetime="9:49 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379551855131365376"
+                 data-text="@MissTrudyAnn Thank you, itâ€™s an honour!" data-datetime="9:49 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379551678568013830"
+                 data-text="@graham_habben @LlSTENlNG_PARTY Love it" data-datetime="9:48 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379551498665914370"
+                 data-text="@TimGough9 There it is!" data-datetime="9:48 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379551337512370182"
+                 data-text="We played maybe 10 live shows for Down Time, seeing as we have two young children. It was an absolute gong show logistically ðŸ˜‚ but for those who want to see what it was like, hereâ€™s some rare footage of the entire LA concert https://t.co/bjTw3rBSr8 #TimsTwitterListeningParty" data-datetime="9:47 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379551281455435778"
+                 data-text="Hereâ€™s the original photo of the first promo picfor Down Time, by the brilliant Richmond Lam, art directed by our amazing friends Adam Sajkowski and FredÃ©rique Gagnon ðŸ’™ #timstwitterlisteningparty https://t.co/hlUtD3OLDt" data-datetime="9:47 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379551193492512768"
+                 data-text="Itâ€™s very strange to host a party right now... Is everyone enjoying themselves?? #TimsTwitterListeningParty" data-datetime="9:46 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379551154191876103"
+                 data-text="@stephengershon Doing it right on the wrong side of town, you are" data-datetime="9:46 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550904458829830"
+                 data-text="@mrmitchell78 Amazing! â¤ï¸" data-datetime="9:45 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550849983254530"
+                 data-text="Devotion - people say weâ€™re an underrated band to me a lot - well if thatâ€™s actually true, then this is definitely an underrated song IMO. It sounds like being in the churn. I like it more now than I did then #TimsTwitterListeningParty" data-datetime="9:45 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550590099984391"
+                 data-text="Gear nerds! Down Time marked our first foray into the world of modular synths, you can hear this modest little set up on Under My Wing, River, and Glowworms https://t.co/bjbwbjENhI" data-datetime="9:44 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550476983762952"
+                 data-text="@matt_cork @LlSTENlNG_PARTY Keep it real!" data-datetime="9:43 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550431492382720"
+                 data-text="Catherine taking pictures during the Down Time sessions, Naturally Iâ€™m hunched over the laptop like a troll #TimsTwitterListeningParty https://t.co/qLoxeLzyWC" data-datetime="9:43 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550368980418562"
+                 data-text="@graham_habben Cheers mate" data-datetime="9:43 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550320460718081"
+                 data-text="@robevs @LlSTENlNG_PARTY Cheers" data-datetime="9:43 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550279167774731"
+                 data-text="@ErnieLon Yeah no mercy here ðŸ˜‚" data-datetime="9:43 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550184917598209"
+                 data-text="Glowworms actually sounds waaayyy better than I thought it did - nice!" data-datetime="9:42 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379550078231269380"
+                 data-text="@soozworld Thank you haha, just rolling with being in a room full of people suddenly - I actually have goosebumps" data-datetime="9:42 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1379549987978289152"
+                 data-text="ðŸŽ¶ Glowworms ðŸ˜@younggalaxy @LlSTENlNG_PARTY #timstwitterlisteningparty https://t.co/LvK4zta6av" data-datetime="9:42 PM Apr 6, 2021"> 
+                soozworld            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549832864489472"
+                 data-text="@Muxley14 @LlSTENlNG_PARTY Thank you for being here, honestly itâ€™s a very real honour!" data-datetime="9:41 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549615847059464"
+                 data-text="Glowworms - this one is about money being the root of all evil, about living to work, about the lie of capitalism. I liked the image of people huddled over their phones on buses and trains during a winter or night time commute, glowworm-like #TimsTwitterListeningParty https://t.co/QTijIdlL7B" data-datetime="9:40 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549539128999936"
+                 data-text="@joolsjm Yes. It is" data-datetime="9:40 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549461370798084"
+                 data-text="@mashupweb â¤ï¸" data-datetime="9:39 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549417154416645"
+                 data-text="Total pandemic song" data-datetime="9:39 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549362087419913"
+                 data-text="This is the first time Iâ€™ve gone out in years" data-datetime="9:39 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549315492888578"
+                 data-text="What are you drinking? You all look lovely tonight. This is all so overwhelming" data-datetime="9:39 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549154951770115"
+                 data-text="@RRelves @robevs â¤ï¸" data-datetime="9:38 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549115894398977"
+                 data-text="@stephengershon @glasvegas Iâ€™ll need to have a word" data-datetime="9:38 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379549031186202629"
+                 data-text="@mrmitchell78 â¤ï¸" data-datetime="9:38 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379548691074256898"
+                 data-text="Stay For Real - kind of the â€˜hitâ€™ of the album, I like the lyrics. Feels very on point during the pandemic. This was the only track that was a hold over from the previous album sessions for Falsework. Dan Lissvik thought it was too â€˜reggaeâ€™ ðŸ¤” #TimsTwitterListeningParty" data-datetime="9:36 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379548643674484736"
+                 data-text="For all the crypto-enthusiasts out there, there is actually an NFT of part of the Frontier video - still available on Foundation https://t.co/8CuKWsN9wR" data-datetime="9:36 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379548566650245121"
+                 data-text="@soozworld It was my attempt at old school catalogue model" data-datetime="9:36 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379548473205403658"
+                 data-text="@mrmitchell78 @LlSTENlNG_PARTY Yes please!" data-datetime="9:36 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379548397921828866"
+                 data-text="@mrmitchell78 Wow" data-datetime="9:35 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379548351729971201"
+                 data-text="@mrmitchell78 More like a sheeeeiiitttt" data-datetime="9:35 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379548284553945092"
+                 data-text="@mrmitchell78 Haha I did a double take when I sent it. GOOD" data-datetime="9:35 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379548125975736322"
+                 data-text="@laetitia_mavrel @LlSTENlNG_PARTY â¤ï¸" data-datetime="9:34 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379548085425176582"
+                 data-text="Oh look itâ€™s the original photo by Richmond Lam from whence the Down Time album cover was taken. Clowning again #timstwitterlisteningparty https://t.co/2EvIxnZO6z" data-datetime="9:34 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379547884316680192"
+                 data-text="@RRelves â¤ï¸" data-datetime="9:33 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1379547743149035524"
+                 data-text="Frontier could be a Martin Gore-sung Ultra-era Depeche Mode song.  This is a very high compliment from me. @younggalaxy #timstwitterlisteningparty" data-datetime="9:33 PM Apr 6, 2021"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FRRelves%2Fstatus%2F1379547734584270853"
+                 data-text="Loving the dreamlike synths on @younggalaxy\'s album.
+#TimsTwitterListeningParty https://t.co/uLJ9OYSE39" data-datetime="9:33 PM Apr 6, 2021"> 
+                RRelves            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379547566782750724"
+                 data-text="Frontier has a video too, we hadnâ€™t made one in two albums. we filmed it in the yoga room of our gym - that wall of ice behind Catherine is where the snow removal trucks dumped the snow all winter long, so it was about 70ft high https://t.co/UgAerqDgnb #TimsTwitterListeningParty" data-datetime="9:32 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379547426164473857"
+                 data-text="Shit https://t.co/yez6jkaWbE" data-datetime="9:31 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379547275307978752"
+                 data-text="So many listeners from The UK and Europe. What a great. Thank you all for joining us and thatâ€™s to @LlSTENlNG_PARTY â¤ï¸" data-datetime="9:31 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379547075155742722"
+                 data-text="Aaron gets us https://t.co/Fs0akjnUpR" data-datetime="9:30 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379546975935340548"
+                 data-text="@johnstruman Haha yes I agree John! Great to see you!!" data-datetime="9:30 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379546823422001152"
+                 data-text="Shout out the Oberheim Matrix 6 that I sold to the weird French businessman synth collector after the album was done that most of the synth sounds were comprised from on Down Time #TimsTwitterListeningParty https://t.co/iBHwE6QcxV" data-datetime="9:29 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnstruman%2Fstatus%2F1379546787376197632"
+                 data-text="@younggalaxy visually this was by far the coolest YG era https://t.co/uIRuOXB7jV" data-datetime="9:29 PM Apr 6, 2021"> 
+                johnstruman            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379546748834750469"
+                 data-text="@soozworld There isnâ€™t! Thatâ€™s all there is, but somewhere in a parallel universe perhaps??" data-datetime="9:29 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379546526125600773"
+                 data-text="I love the ambient intro of Frontier, I did a series of ambient sketches called Ring Road, and one of them worked really nicely with Frontier so we added it #TimsTwitterListeningParty" data-datetime="9:28 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379546440050040834"
+                 data-text="Frontier - this is a very special song to us as well, yes - another â€˜Us vs Themâ€™ song, if you will... definitely had some issues to work out :/ but all is saved by Catherineâ€™s exquisite performance â¤ï¸#timstwitterlisteningparty" data-datetime="9:27 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379546299033354241"
+                 data-text="@mrmitchell78 Oh to dream" data-datetime="9:27 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379546002848428041"
+                 data-text="Me staggering around during the Down Time photo shoot #TimsTwitterListeningParty https://t.co/a2tbfEZV6a" data-datetime="9:26 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379545765912133636"
+                 data-text="@matt_cork @LlSTENlNG_PARTY Merci! â¤ï¸" data-datetime="9:25 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379545654704365577"
+                 data-text="@ciaranc77 @LlSTENlNG_PARTY One of the greatest records" data-datetime="9:24 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379545533996531712"
+                 data-text="@mrmitchell78 On one!!" data-datetime="9:24 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379545418623766528"
+                 data-text="@Michellebwatso3 @LlSTENlNG_PARTY Amazing! Thank you â¤ï¸" data-datetime="9:23 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379545299522367490"
+                 data-text="Want to thank all involved on Down Time, our beloved friend Dan Lissvik, Marcus Paquin, who mixed some of the songs, Adam Sajkowski and FredÃ©rique Gagnon for art design, and Kelly Nunes and Jason Voltaire who designed the live show #TimsTwitterListeningParty" data-datetime="9:23 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379545192072613894"
+                 data-text="@stephengershon @mrmitchell78 Haha I donâ€™t think they know who we are" data-datetime="9:22 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379545050263216128"
+                 data-text="@Peanutpower4 One day â¤ï¸" data-datetime="9:22 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379544832645988356"
+                 data-text="River - clearly we were working out our new found independence, and feelings of isolation from the music industry - River was a call to arms, our attempt at a Primal Scream â€˜Come Togetherâ€™ moment. I think it was the last song we recorded for the album #TimsTwitterListeningParty" data-datetime="9:21 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379544741176561672"
+                 data-text="@DIreland02 Haha" data-datetime="9:21 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379544695102136322"
+                 data-text="@AOManier Weâ€™re surviving mate, hope you are too" data-datetime="9:21 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379544602064084994"
+                 data-text="Phew! This is all happening so fast!" data-datetime="9:20 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379544223297507330"
+                 data-text="@RRelves Yep, I hear you there! Thanks for joining in" data-datetime="9:19 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379544065486770177"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY Lol" data-datetime="9:18 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379543919030120458"
+                 data-text="Itâ€™s funny listening back to Down Time, feels a bit pertinent still with the whole pandemic situation... themes of isolation, post-capitalist breakdown, eras ending... or is it just me?? #TimsTwitterListeningParty" data-datetime="9:17 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379543604495061000"
+                 data-text="@mrmitchell78 Yessss" data-datetime="9:16 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379543566255525889"
+                 data-text="Hereâ€™s our little studio in MontrÃ©al where we made Down Time (that hill in the distance is Mont Royal) #TimsTwitterListeningParty https://t.co/KXWR0jwl6g" data-datetime="9:16 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379543304589692936"
+                 data-text="@claire3638 @LlSTENlNG_PARTY One of my favourite places" data-datetime="9:15 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1379543279608467457"
+                 data-text="@younggalaxy ðŸ™Œ" data-datetime="9:15 PM Apr 6, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1379543237032022016"
+                 data-text="@younggalaxy @LlSTENlNG_PARTY ðŸ˜³" data-datetime="9:15 PM Apr 6, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379543198092103680"
+                 data-text="Show You The Valley - definitely working out my Burial obsession ðŸ¥´ this one is a bit intense, we were really feeling the decision to cut ties with the music industry and go it alone - T***p had just been elected, we were surveying the landscape and imagining an escape" data-datetime="9:15 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379543062876192769"
+                 data-text="Howâ€™s everyone doing?? #timstwitterlisteningparty" data-datetime="9:14 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379542948610764806"
+                 data-text="If you donâ€™t believe that @Tim_Burgess was a boyhood icon of mine, let this picture remove all doubt #TimsTwitterListeningParty https://t.co/xjHyJWoric" data-datetime="9:14 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379542784441475073"
+                 data-text="May I just say, itâ€™s super amazing and surreal to be having a party for our album hosted by one of my boyhood icons @Tim_Burgess - feeling very lucky right now #TimsTwitterListeningParty" data-datetime="9:13 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379542705685037061"
+                 data-text="@TimGough9 A lot... but I let go of some regretfully to pay for others ðŸ˜‚" data-datetime="9:13 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379542605193752577"
+                 data-text="@stephengershon @thedears Woahh welcome!" data-datetime="9:12 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379542532607127552"
+                 data-text="Catherine cried when she finished this vocal - always a good sign" data-datetime="9:12 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379542243472728067"
+                 data-text="@AOManier â¤ï¸" data-datetime="9:11 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379542204788670472"
+                 data-text="Thereâ€™s that lexicon reverb doing the harmony with Catherine - I wonder how that poor guy is doing" data-datetime="9:11 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379542012249145356"
+                 data-text="Catch Your Breath - we were going for Sugarcubes â€˜Birthdayâ€™ elemental feeling on this one, hence the wordless chorus. Lyrics evoking the soul-healing power of the natural world - both of us come from British Columbia, this is a beach I grew up near https://t.co/S6zVVzk8jV" data-datetime="9:10 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379541794850017285"
+                 data-text="Night time record all the way" data-datetime="9:09 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379541687568113665"
+                 data-text="This is a pandemic album I think. Holding on together alone" data-datetime="9:09 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379541442939473922"
+                 data-text="Seeing Eye Dog - I like itâ€™s simplicity. We were going for a bit of a louche King Krule thing a bit with the lyrics Iâ€™d say. Also the â€˜shut downâ€™ drum sound of Drake?? #TimsTwitterListeningParty" data-datetime="9:08 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379541192728317956"
+                 data-text="A little teary over here" data-datetime="9:07 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379541004391448581"
+                 data-text="Seeing Eye Dog - those of you who know us, you know that Catherine and I are married, and itâ€™s very much in the â€˜Us vs The Worldâ€™ tradition we started from the first record... Down Time was our 1st self-release ever, so it is a bit of a self-pep talk #TimsTwitterListeningParty" data-datetime="9:06 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fedenthecat%2Fstatus%2F1379540921860071424"
+                 data-text="happy 3 year album anniversary to my friends ðŸ¥º canâ€™t wait to ride rollercoasters with you in the open air https://t.co/1u0SknImmb" data-datetime="9:06 PM Apr 6, 2021"> 
+                edenthecat            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379540687008493574"
+                 data-text="Love this outro... its doin the hoods up shuffle" data-datetime="9:05 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379540593098031109"
+                 data-text="the song explores themes of post-capitalist desolation, the dulled existence of city suburbs, train platforms in the early morning, lonely night time longings... our brother Dan Lissvik added the beautiful coda, and I still think it is one of our finest collabs with him /3" data-datetime="9:04 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="135000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379540459123531785"
+                 data-text="Incidentally, we were asked to shave 5 seconds off the end of this one so the spotify algorithm would catch it ðŸ™„" data-datetime="9:04 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379539891806158851"
+                 data-text="Itâ€™s worth noting we got this effect unit for an absolute steal because the guy selling it had gotten drunk at a Christmas party, slept with a co-worker, gotten her pregnant, and was being taken for everything by his former wife of 20 years. At least this is what he told me  /2" data-datetime="9:01 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379539651803893762"
+                 data-text="Under My Wing - this is probably one of the songs we are proudest of. We utilized our Lexicon 300L reverb, using the pch/comp setting which created the squelchy resonant sounds on the drums and the pitch effect on Catherineâ€™s voice. Love this effect ðŸ–¤ /1 https://t.co/eJL1u4hgLx" data-datetime="9:00 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379539560175169538"
+                 data-text="Sexy intro. Youâ€™re hooked I can tell" data-datetime="9:00 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fyounggalaxy%2Fstatus%2F1379539463425130503"
+                 data-text="Alright, itâ€™s time to drop the needle on Down Time - first up is Under My Wing  #TimsTwitterListeningParty https://t.co/RBVCSQh1Wm" data-datetime="9:00 PM Apr 6, 2021"> 
+                younggalaxy            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1379539428209754122"
+                 data-text="Itâ€™s time to hand over to @younggalaxy 
+
+#TimsTwitterListeningParty https://t.co/MZLLR2IddO" data-datetime="9:00 PM Apr 6, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
