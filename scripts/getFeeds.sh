@@ -166,6 +166,7 @@ then
     localfile6=${LOCAL_PATH}/snippets/stats.html
     localfile7=${LOCAL_PATH}/snippets/artists_snippet.html
     localfile8=${LOCAL_PATH}/pages/replay/randomiser.html
+    localfile9=${LOCAL_PATH}/snippets/top100_snippet.html
     curl "${REMOTE_PATH}/indexsnip.php?levels=1" -o $localfile1
     verify "$localfile1" "section"
     curl "${REMOTE_PATH}/replaysnip.php?levels=1" -o $localfile2
@@ -176,6 +177,7 @@ then
     verify "$localfile5" "script"
     curl "${REMOTE_PATH}/artistsnip.php" -o $localfile7
     verify "$localfile7" "script"
+    curl "${REMOTE_PATH}/top100.php" -o $localfile9
     curl "${REMOTE_PATH}/randomiser.php" -o $localfile8
     sed "s/\.\.\/snippets\/replay\/feed_.*_snippet.html/\.\.\/snippets\/replay\/feed_list${ids[0]}_snippet.html/" ${LOCAL_PATH}/pages/replay.html >tmp.txt
     mv tmp.txt ${LOCAL_PATH}/pages/replay.html
@@ -198,6 +200,7 @@ then
     addtogit $localfile6
     addtogit $localfile7
     addtogit $localfile8
+    addtogit $localfile9
     addtogit ${LOCAL_PATH}/pages/replay.html
     addtogit ${LOCAL_PATH}/pages/mixtape.html
 
