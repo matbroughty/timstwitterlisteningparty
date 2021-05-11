@@ -114,7 +114,7 @@ class TweetUtils {
     return yearlyAnniversaryToTweet
   }
 
-  fun tweetReplay(timeSlot: TimeSlot, replayLink: String): String {
+  fun tweetReplay(timeSlot: TimeSlot, replayLink: String, logOnly: Boolean = false): String {
     if (timeSlot.tweeterList().isEmpty()) {
       return "no band/artist to tweet replay"
     }
@@ -122,8 +122,17 @@ class TweetUtils {
       return "$replayLink page doesn't exist yet"
     }
     logger.info("tweeting-replay-msg for replay $replayLink")
-    //return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty")
-    return tweet("Replay available ${timeSlot.tweeterList().first()} : ${timeSlot.band} : ${timeSlot.album} at $replayLink #TimsTwitterListeningParty #ttlp${timeSlot.listeningPartyNumber}")
+
+    val msg = "Replay available ${timeSlot.band} : ${timeSlot.album} at $replayLink Tweets from ${timeSlot.buildTweeters(160)} #TimsTwitterListeningParty #ttlp${timeSlot.listeningPartyNumber}"
+
+    if (logOnly) {
+      logger.info(msg)
+    } else {
+      logger.info("tweet-replay $msg")
+      tweet(msg)
+    }
+
+    return msg
   }
 
   /**

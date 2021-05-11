@@ -22,12 +22,11 @@ class TweetCommand {
   }
 
   @ShellMethod("tweets out the replay page for the replayId i.e. https://timstwitterlisteningparty.com/pages/replay/feed_replayId.html ")
-  fun tweetReplay(@ShellOption("-R", "--id") replayId: String): String {
+  fun tweetReplay(@ShellOption("-R", "--id") replayId: String, @ShellOption("-L", "--log") logOnly: String): String {
 
     val timeSlot = findTimeSlot(replayId)
-    val msg: String
-    msg = if (timeSlot != null) {
-      TweetUtils().tweetReplay(timeSlot, timeSlot.replayLink)
+    val msg: String = if (timeSlot != null) {
+      TweetUtils().tweetReplay(timeSlot, timeSlot.replayLink, logOnly = logOnly.toBoolean())
     } else {
       "couldn't find TimeSlot for replayId $replayId - no tweet sent"
     }
