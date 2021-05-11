@@ -84,7 +84,7 @@ class TimeSlotFileEnrich {
         // has main artist/band first which replay doesn't so keep that as first , remove duplicate
         // and remove any double separators as a result of this madness
         val replayTweeters = replayMap[it.hashBandAlbum()]?.twitterIds ?: ""
-        if (replayTweeters.isNotEmpty()) {
+        if (it.hasReplay() && replayTweeters.isNotEmpty()) {
           it.tweeters = "${it.tweeterList().first()}:${replayTweeters.replace(it.tweeterList().first(), "")}".replace("::",":")
         }
 
