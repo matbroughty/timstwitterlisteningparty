@@ -301,9 +301,16 @@ data class TimeSlot(val dateStr: String = "?",
       tweetList.remove("@Tim_Burgess")
     }
 
+    // tweeting from listening party so no point including it unless it was one of the few where
+    // the tweets came from the listening party account
+    if(tweetList.size > 1) {
+      tweetList.remove("@LlSTENlNG_PARTY")
+    }
+
     val tweetString = tweetList.map {
-      if (charCount - it.length > 0) {
-        charCount -= it.length
+      val tweetHandleLength = (it.length + 1)
+      if (charCount - tweetHandleLength > 0) {
+        charCount -= tweetHandleLength
         "$it "
       } else {
         ""

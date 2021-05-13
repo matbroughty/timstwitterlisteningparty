@@ -71,7 +71,7 @@ class TweetUtils {
           if (it.replayLink.isEmpty()) {
             "${it.band} released ${it.album}. ${it.tweeterList().first()} will be hosting an upcoming listening party. ${it.link} #TimsTwitterListeningParty"
           } else {
-            "${it.band} released ${it.album}. You can replay the listening party here ${it.replayLink} Tweets from ${it.buildTweeters(150)} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
+            "${it.band} released ${it.album}. You can replay the listening party here ${it.replayLink} Tweets from ${it.buildTweeters(120)} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
  //           "${it.band} released ${it.album}. You can replay the ${it.tweeterList().first()} listening party here ${it.replayLink} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
           }
         if (logOnly) {
@@ -103,7 +103,7 @@ class TweetUtils {
         logger.info("found a yearly anniversary for $it")
         val yearsAgo = LocalDate.now().year - it.isoDate.year
         val years = if (yearsAgo == 1) "year" else "years"
-        val msg = "$yearsAgo $years ago today we had a listening party for ${it.album} by ${it.band}. You can replay the listening party here ${it.replayLink} Tweets from ${it.buildTweeters(150)} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
+        val msg = "$yearsAgo $years ago today we had a listening party for ${it.album} by ${it.band}. You can replay the listening party here ${it.replayLink} Tweets from ${it.buildTweeters(120)} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
         if (logOnly) {
           logger.info(msg)
         } else {
@@ -123,7 +123,7 @@ class TweetUtils {
     }
     logger.info("tweeting-replay-msg for replay $replayLink")
 
-    val msg = "Replay available ${timeSlot.band} : ${timeSlot.album} at $replayLink Tweets from ${timeSlot.buildTweeters(160)} #TimsTwitterListeningParty #ttlp${timeSlot.listeningPartyNumber}"
+    val msg = "Replay available ${timeSlot.band} : ${timeSlot.album} at $replayLink Tweets from ${timeSlot.buildTweeters(130)} #TimsTwitterListeningParty #ttlp${timeSlot.listeningPartyNumber}"
 
     if (logOnly) {
       logger.info(msg)
