@@ -123,7 +123,7 @@ class TweetUtils {
     }
     logger.info("tweeting-replay-msg for replay $replayLink")
 
-    val msg = "Replay available ${timeSlot.band} : ${timeSlot.album} at $replayLink Tweets from ${timeSlot.buildTweeters(130)} #TimsTwitterListeningParty #ttlp${timeSlot.listeningPartyNumber}"
+    val msg = "${timeSlot.band} : ${timeSlot.album} replay available here $replayLink Tweets from ${timeSlot.buildTweeters(130)} #TimsTwitterListeningParty #ttlp${timeSlot.listeningPartyNumber}"
 
     if (logOnly) {
       logger.info(msg)
