@@ -103,7 +103,7 @@ class TweetUtils {
         logger.info("found a yearly anniversary for $it")
         val yearsAgo = LocalDate.now().year - it.isoDate.year
         val years = if (yearsAgo == 1) "year" else "years"
-        val msg = "$yearsAgo $years ago today we had a listening party for ${it.album} by ${it.band}. You can replay the listening party here ${it.replayLink} Tweets from ${it.buildTweeters(120)} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
+        val msg = "$yearsAgo $years ago today we had a listening party for ${it.album} by ${it.band}. You can find the replay here ${it.replayLink} Tweets from ${it.buildTweeters(130)} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
         if (logOnly) {
           logger.info(msg)
         } else {
