@@ -296,7 +296,7 @@ data class TimeSlot(val dateStr: String = "?",
 
     val tweetList = tweeterList()
     // Only include Tim if his band
-    if (!band.equals("Charlatans", true)
+    if (!band.contains("Charlatans", true)
       && !band.equals("Tim Burgess", true)) {
       tweetList.remove("@Tim_Burgess")
     }
