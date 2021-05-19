@@ -292,7 +292,7 @@ data class TimeSlot(val dateStr: String = "?",
   fun buildTweeters(lengthRemaining: Int): String {
 
     var charCount = lengthRemaining - (this.album.length + this.band.length)
-    logger.info("remaining char count so far $charCount")
+    logger.debug("remaining char count so far $charCount")
 
     val tweetList = tweeterList()
     // Only include Tim if his band
@@ -317,7 +317,7 @@ data class TimeSlot(val dateStr: String = "?",
       }
     }.toList().joinToString(separator = "")
 
-    logger.info("tweeters String = $tweetString")
+    logger.debug("tweeters String = $tweetString")
     return tweetString;
 
   }

@@ -64,7 +64,7 @@ class TweetUtils {
       }
       .toList()
       .forEach {
-        logger.info("found an anniversary for $it")
+        logger.debug("found an anniversary for $it")
         anniversaryToTweet = true
         val releaseDate = LocalDate.parse(it.spotifyYear, DateTimeFormatter.ISO_DATE)
         val msg = "${releaseDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))}. " +
@@ -100,7 +100,7 @@ class TweetUtils {
       .toList()
       .forEach {
         yearlyAnniversaryToTweet = true
-        logger.info("found a yearly anniversary for $it")
+        logger.debug("found a yearly anniversary for $it")
         val yearsAgo = LocalDate.now().year - it.isoDate.year
         val years = if (yearsAgo == 1) "year" else "years"
         val msg = "$yearsAgo $years ago today we had a listening party for ${it.album} by ${it.band}. You can find the replay here ${it.replayLink} Tweets from ${it.buildTweeters(130)} #TimsTwitterListeningParty #ttlp${it.listeningPartyNumber}"
