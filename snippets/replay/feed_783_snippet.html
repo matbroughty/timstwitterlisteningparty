@@ -1,0 +1,551 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/19yUEGYFCaXyuiI9wPZ0fL" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e026383fef0e8409b8e50c083d4" alt="Intruder" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Gary Numan</span><br/><span class="sub-colour">Intruder</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(520156)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/19yUEGYFCaXyuiI9wPZ0fL" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_520156_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 104 tweets from Saturday 22nd May 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/numanofficial" target="_blank"><img src="https://pbs.twimg.com/profile_images/1347511026980450305/ivWZ6bbq_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/numanofficial.jpg'"><br/>@numanofficial</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/AdeFenton" target="_blank"><img src="https://pbs.twimg.com/profile_images/911583973318561792/Cms1gptZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/AdeFenton.jpg'"><br/>@AdeFenton</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Betrayed" data-start="0"
+             data-duration="281" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Gift" data-start="282"
+             data-duration="367" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="I Am Screaming" data-start="650"
+             data-duration="232" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Intruder" data-start="883"
+             data-duration="264" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Is This World Not Enough" data-start="1148"
+             data-duration="324" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="A Black Sun" data-start="1473"
+             data-duration="340" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="The Chosen" data-start="1814"
+             data-duration="283" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="And It Breaks Me Again" data-start="2098"
+             data-duration="285" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Saints and Liars" data-start="2384"
+             data-duration="241" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Now and Forever" data-start="2626"
+             data-duration="357" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="The End of Dragons" data-start="2984"
+             data-duration="312" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="When You Fall" data-start="3297"
+             data-duration="308" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="The End of Dragons - Alt" data-start="3606"
+             data-duration="298" style="display:none"></div>
+                        <div id="track-14" class="track-list"
+                     data-name="Finished" data-start="3905"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048516383fef0e8409b8e50c083d4" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-104" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="306000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396226682059636739"
+                 data-text="@Tim_Burgess @numanofficial Thank you for asking us, Tim. It was great fun :)" data-datetime="10:09 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396225401198895106"
+                 data-text="@screwball0 @numanofficial @AdeFenton ðŸ¤˜ðŸ”¥" data-datetime="10:04 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396225223364595713"
+                 data-text="RT @AdeFenton: Immensely proud and honoured to have produced my fifth album with this man @numanofficial. We hope youâ€™re enjoying Intruderâ€¦" data-datetime="10:03 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396224927615836161"
+                 data-text="An hour well spent in the company of @numanofficial @AdeFenton &amp; Intruder
+
+Big thanks and love to everyone who joined us 
+
+Huge high five to Gary Numan, that was fantastic" data-datetime="10:02 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396224722866688002"
+                 data-text="Thank you everyone for getting involved with this and for buying #Intruder. We\'re very grateful for all of your support. #TimsTwitterListeningParty" data-datetime="10:01 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396224344309837825"
+                 data-text="Thanks everyone. The last few weeks have been very exciting. The reaction to Intruder has been amazing, better than I ever hoped for. I canâ€™t thank you enough. See you on tour. #TimsListeningParty  #Intruder" data-datetime="9:59 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396224224491196418"
+                 data-text="@numanofficial Aww mate, you\'re still my hero. Just a deaf one." data-datetime="9:59 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396223890754609160"
+                 data-text="When your hearing is as bad as mine these days nothing is ever too loud :) #TimsListeningParty #Intruder" data-datetime="9:58 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396223613360123904"
+                 data-text="When You Fall. The end of the track features a screaming synth sound Gary came up with, which I was convinced was way too loud, so we argued about it for a bit, then settled on a minor compromise (in Garyâ€™s favour). Hate to admit it, but he was right. #TimsTwitterListeningParty" data-datetime="9:57 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396223482535501829"
+                 data-text="I put a lot of thought into the running order of an album and it took me some time to decide this should be the last track on the deluxe format. Iâ€™m still not 100% sure itâ€™s placed correctly lyrically, but musically it feels right. #TimsListeningParty #Intruder" data-datetime="9:56 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396223232198463489"
+                 data-text="When You Fall. One of the last tracks we worked on and, for all you geeks out there, featuring lots of sound design we made on the @ArturiaOfficial MiniBrute 2S and PolyBrute. #TimsTwitterListeningParty #Intruder" data-datetime="9:55 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396223093958451203"
+                 data-text="When You Fall. Religion, hatred &amp; prejudice. Another mass shooting (I live in the US), politicians offering their thoughts &amp; prayers &amp; little else. White supremacy torch lit marches, unchristian Christians. Whatâ€™s the planet to make of that? #TimsListeningParty #Intruder" data-datetime="9:55 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396222911686524929"
+                 data-text="ðŸ‘‡ðŸ¤˜ https://t.co/RnetjWrR5n" data-datetime="9:54 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396222800134918148"
+                 data-text="The End Of Dragons. I must mention the @gazelletwin vocals on the piano version of this song, even though it\'s not included in this listening party. They are beyond incredible and I genuinely almost fell off my chair when I first heard them. #TimsTwitterListeningParty #Intruder" data-datetime="9:53 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="171000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396222773534633985"
+                 data-text="Ade and I joke about how we argue but in truth, with Intruder, there were very few disagreements. I have a huge amount of faith and trust in what he does and it is very much a team effort. I lean on his many skills enormously when weâ€™re working on songs. #TimsListeningParty" data-datetime="9:53 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396222056874876930"
+                 data-text="The End Of Dragons.  We really wanted the end of this version of the song to come as a surprise, so we worked on apocalyptic sound design ideas to completely contrast with the fairly gentle vocals. #TimsTwitterListeningParty #Intruder" data-datetime="9:50 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396221893951229957"
+                 data-text="I didnâ€™t give Ade too much to go on with this one, a rather basic demo to be honest, so the credit for the way this has turned out is entirely down to him. Thatâ€™s true of the entire album actually but itâ€™s especially true of this. #TimsListeningParty #Intruder" data-datetime="9:50 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396221841446948865"
+                 data-text="The End Of Dragons. This was also a tricky one to produce. Gary had sent me a demo with just piano and vocals, so we talked about it and decided to do two versions, one which would be very tribal and one which would be more in line with his demo. #TimsTwitterListeningParty" data-datetime="9:50 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396221777584574464"
+                 data-text="The End Of Dragons. I love dragons. I choose to believe they were real. My house is a shrine to dragons. I wanted to draw a parallel between our persecution of dragons &amp; their demise to what weâ€™re doing to the planet. Dragons lost, the Earth wonâ€™t. #TimsListeningParty #Intruder" data-datetime="9:49 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396221437749387265"
+                 data-text="https://t.co/WxVf6TW6bj" data-datetime="9:48 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396221301002543109"
+                 data-text="Brilliant stuff from @numanofficial &amp; @AdeFenton - the â€˜Grumpygateâ€™ tweet made me smile" data-datetime="9:47 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396221222409555969"
+                 data-text="@numanofficial Unbelievable." data-datetime="9:47 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396221023234711552"
+                 data-text="Now And Forever. Youâ€™ll hear that on this track the strings are at the front of the mix, with the synths taking more of a supporting role. #TimsTwitterListeningParty #Intruder" data-datetime="9:46 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396220914925244419"
+                 data-text="Love Raven and Persia in the chorus of this. #TimsListeningParty  #Intruder" data-datetime="9:46 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396220812479303680"
+                 data-text="Now And Forever. Once weâ€™d settled on the direction, we wanted to keep the arrangement fairly simplistic, and for the drum groove to run constantly throughout.  #TimsTwitterListeningParty" data-datetime="9:45 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396220721634836482"
+                 data-text="Great album title right here https://t.co/hKhFsODxCm" data-datetime="9:45 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396220614789275657"
+                 data-text="I didnâ€™t get grumpy. I merely pointed out that it was SHIT!!!!!!!! and needed to be looked at again :) I love the feel of this one. #TimsListeningParty" data-datetime="9:45 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396220482597310466"
+                 data-text="That was a bit depressing. Sorry about that. #TimsListeningParty #Intruder" data-datetime="9:44 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396220444722802692"
+                 data-text="Now And Forever. I fucked this one up a little bit in the first version I sent to Gary. Iâ€™d made it a little too Bladerunner, so he got a bit grumpy and I tried again. As often happens, he was right. #TimsTwitterListeningParty #Intruder" data-datetime="9:44 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396220413835890688"
+                 data-text="The other meaning is where I drift into my fear of death &amp; loss once again. I sometimes watch Gemma when sheâ€™s sleeping &amp; think of the inevitable end for us. Itâ€™s heartbreaking &amp; I write about it because Iâ€™m struggling badly with it. Have been for some time. #TimsListeningParty" data-datetime="9:44 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396220296525500417"
+                 data-text="Now And Forever. Another double meaning lyric. The first is the Earth having a drastic change of heart. Remembering for a moment all the good in humanity, all the remarkable hope it held, it brings back feelings of devotion, but just for a moment. #TimsListeningParty #Intruder" data-datetime="9:43 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396220040593149952"
+                 data-text="@numanofficial And they say nurses have it tough ðŸ™„" data-datetime="9:42 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396219843070857216"
+                 data-text="Although itâ€™s very simple this is one of my favourite verse melodies and lyrics on the album. Gazelle Twin and Persia and Raven sing beautifully on this as well. Gemma doesnâ€™t really like this song. She thinks itâ€™s too jerky :) #TimsListeningParty" data-datetime="9:42 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396219622228168706"
+                 data-text="The video shoot for this was difficult. A weird storm in the desert washed out the last days shooting but the setting, a volcano crater rim, was stunning. Sand and lava rocks made a perfect setting. #TimsListeningParty #Intruder" data-datetime="9:41 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396219556234997765"
+                 data-text="Gazelle Twinâ€™s staggering vocals came really late in the day but Iâ€™m so glad they were added as she took the song to another level, along with Raven &amp; Persiaâ€™s ghostly vocals. This also sounded fantastic performed live on Thursday! #TimsTwitterListeningParty #Intruder" data-datetime="9:40 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396219501532913668"
+                 data-text="Like Now And Forever this song looks at the contradiction that allows people to believe in something fantastical and yet evidence free and at the same time deny something cataclysmic that is undeniably real. #TimsListeningParty" data-datetime="9:40 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396219345299296256"
+                 data-text="Saints And Liars. This was one of the earlier tracks we worked on and came together really quickly. Gary wanted the guitars on the riff to be really thrashy so Steve Harris came to my studio to put some guitar down for it. #TimsTwitterListeningParty #Intruder https://t.co/OoUaEF2k90" data-datetime="9:40 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="188000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396219302756372487"
+                 data-text="Saints And Liars. Also looks at peopleâ€™s willingness to believe in a God, &amp; the corrupting nature of religion, but not see whatâ€™s staring them in the face. Remember, itâ€™s the planet talking. The planet has laughed in the face of God &amp; doesnâ€™t believe. #TimsListeningParty" data-datetime="9:39 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396218510683037703"
+                 data-text="And It Breaks Me Again. I think we both felt that the album needed a track like this so when Gary sent me the demo, I was blown away by the chorus. Definitely one of the most â€˜Numanesqueâ€™ tracks on the album. #TimsTwitterListeningParty #Intruder" data-datetime="9:36 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396218450075430915"
+                 data-text="This is another one of those songs like A Prayer For The Unborn. I canâ€™t let myself think about what the lyrics are about or I get upset and canâ€™t sing. This is my favourite chorus melody on the album by the way. #TimsListeningParty" data-datetime="9:36 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396218267182714884"
+                 data-text="But also, how I feel about the possibility of losing Gemma. Iâ€™m actually haunted by fears of death these days. Of losing the people I love. It stops me sleeping and is beginning to find its way in to many of the things I write. #TimsListeningParty #Intruder" data-datetime="9:35 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396218266008367105"
+                 data-text="And It Breaks Me Again. This was the last song we worked on and I managed to produce it just in time for us to hit our deadline with our mix engineer Nathan Boddy. #TimsTwitterListeningParty #Intruder" data-datetime="9:35 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396218084252438528"
+                 data-text="And It Breaks Me Again. Another double meaning lyric. Firstly the Earth is torn. From being angry &amp; sure that we have to be gone, to a wave of sadness &amp; regret that itâ€™s come to this. Like a loving parent with an ungrateful child grown into a cruel adult. #TimsListeningParty" data-datetime="9:35 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396217672187187201"
+                 data-text="The lyric is perhaps the most direct attempt to explain how incredulous the Earth is that we continue to ignore its many warnings, and how it has washed its hands of us. Once we were The Chosen, but soon we will die, and it will forget we ever existed. #TimsListeningParty" data-datetime="9:33 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396217612212871173"
+                 data-text="@numanofficial I love you." data-datetime="9:33 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396217549767987201"
+                 data-text="Ade added this middle instrumental section. Itâ€™s the most exciting part of the song. #TimsListeningParty  #Intruder" data-datetime="9:32 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396217395434381314"
+                 data-text="The Chosen. Itâ€™s one of my favourite tracks on the album, and to hear it performed live on Thursday for the first time was an incredible experience. #TimsTwitterListeningParty #Intruder https://t.co/H1HEtA2xYO" data-datetime="9:32 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396217135026905089"
+                 data-text="The Chosen.  We changed the arrangement from the demo, originally the instrumental section after the first chorus wasnâ€™t there, but it felt like the perfect place for those layers of insanity to sit. #TimsTwitterListeningParty #Intruder" data-datetime="9:31 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396217119000440835"
+                 data-text="I wanted this to be so huge that it had to get to where you were concerned that it was just too mental. Then it had to be pushed further. Then it would be ready. #TimsListeningParty #Intruder" data-datetime="9:31 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1396216963857326084"
+                 data-text="Favourite ever @numanofficial song???
+#TimsTwitterListeningParty" data-datetime="9:30 PM May 22, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396216963102294018"
+                 data-text="The Chosen. Garyâ€™s instructions for me on this one were for it to keep on giving, layer after layer. Just when you think it canâ€™t get any more insane, another layer of hugeness comes. #TimsTwitterListeningParty #Intruder" data-datetime="9:30 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396216901966118912"
+                 data-text="The Chosen. Probably the most powerful song on the album, certainly the most exciting to play live as we discovered yesterday when we filmed the performance that will be streamed next month.  #TimsListeningParty #Intruder" data-datetime="9:30 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396216559929004032"
+                 data-text="At least I donâ€™t own a Swarmatron. Is that even a real thing??" data-datetime="9:29 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396216354097795075"
+                 data-text="@numanofficial We\'re both odd bods mate, let\'s be honest." data-datetime="9:28 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396216216277168133"
+                 data-text="A Black Sun. For all you geeks out there, we used a software version of the amazing Swarmatron, processed through a @EventideAudio H9. #TimsTwitterListeningParty #Intruder" data-datetime="9:27 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396216069291925505"
+                 data-text="General weirdness? Do you mean me?" data-datetime="9:27 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396215850101792769"
+                 data-text="Unusually for me, I thought it best to keep the drums to the back of the mix, with the vocals, strings and general weirdness to the front. The instrumental section after the first chorus was a late addition to this song. #TimsTwitterListeningParty #Intruder" data-datetime="9:26 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396215835929235456"
+                 data-text="The Earth feels the same way about us. To begin with it wrapped itself around us, giving us everything we needed, loved us without question. Now we ravage it &amp; that love is repaid with ignorance and relentless greed. Love is more than it can bare. #TimsListeningParty #Intruder" data-datetime="9:26 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396215666147954688"
+                 data-text="It looks at the way love changes as we get older, &amp; in another double meaning lyric, how the Earthâ€™s love for us has changed. Love as a child is painless, endless, death doesnâ€™t touch us. As we get older we lose parents, friends &amp; love becomes painful. #TimsListeningParty" data-datetime="9:25 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396215619448721411"
+                 data-text="A Black Sun. The most difficult track on the album to produce. Even on Garyâ€™s demo, we were both concerned that the chorus sounded like a power ballad, and it took me several attempts to get it right. #TimsTwitterListeningParty #Intruder" data-datetime="9:25 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396215461726064645"
+                 data-text="A Black Sun. My daughter Persia wrote this when she was 14. I added the chorus, lyric and vocal melody but everything else is hers. She was writing it for her own album but let me use it for Intruder instead. #TimsListeningParty" data-datetime="9:24 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396215148696805378"
+                 data-text="I see many contradictions between religion &amp; climate change denial. So many willing to believe something for which I see no evidence at all, &amp; yet so unwilling to believe something for which there is a mountain of evidence. This flares up a lot in Intruder. #TimsListeningParty" data-datetime="9:23 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="123000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1396215045554647045"
+                 data-text="There is an unmade amazing film somewhere that Intruder is the soundtrack to #TimsTwitterListeningParty" data-datetime="9:23 PM May 22, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396214525817393157"
+                 data-text="This @numanofficial is ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ ðŸ”¥ðŸ”¥ðŸ”¥(permission granted to use that on a sticker on the sleeve Gary ðŸ¤˜)" data-datetime="9:20 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396214322012073984"
+                 data-text="In this song the Earth points out how we ignore and/or abuse what we have &amp; look forward to something â€˜betterâ€™. Heaven for example. It vents itâ€™s frustration that so many believe in the unbelievable &amp; yet seem blind to the staggering beauty all around us. #TimsListeningParty" data-datetime="9:20 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396214260255051779"
+                 data-text="@numanofficial Semi Pro." data-datetime="9:19 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396214183465717764"
+                 data-text="Is This World Not Enough. This came out of a drum groove weâ€™d been working on together and it took us a while to finally settle on the right arrangement. Definitely one of the heavier tracks on the album. #TimsTwitterListeningParty #Intruder" data-datetime="9:19 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396214114020642818"
+                 data-text="Is This World Not Enough. Okay, Iâ€™ve heard all the James Bond jokes :) The thing is I wrote this when the news was full of the latest Mars mission &amp; so for the Earth to be asking Is This World Not Enough made perfect sense. I forgot the ? on the title though. #TimsListeningParty" data-datetime="9:19 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396213870742708225"
+                 data-text="The album got off to a shaky start actually. I decided to switch from Pro Tools to Logic right at the beginning and that turned into a nightmare and ended up with an entirely new studio. New desk, new everything. It took months to get running again. #TimsListeningParty #Intruder" data-datetime="9:18 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396213832217993218"
+                 data-text="Intruder. Our original idea was to record Richie playing live drums for the album, but Covid meant that wasnâ€™t possible. #TimsTwitterListeningParty #Intruder" data-datetime="9:18 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396213617519964165"
+                 data-text="The first version Iâ€™d sent to Gary wasnâ€™t right, so after hearing the band perform it at Bristol Academy, I thought the way to go would be for the drums to sound live as it was so powerful. #TimsTwitterListeningParty #Intruder" data-datetime="9:17 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396213485495853057"
+                 data-text="Playing this song live on the (R)evolution tour gave me a lot of confidence that the album was heading in the right direction, which seems a bit mad as Iâ€™d only written the one song at that point, but it did. #TimsListeningParty" data-datetime="9:16 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396213244793131008"
+                 data-text="Intruder. Intruder was the first song we worked on, just before Covid hit. Iâ€™d flown over to Garyâ€™s to help set up his new studio and work on ideas for the album. #TimsTwitterListeningParty #Intruder" data-datetime="9:15 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396213183132667905"
+                 data-text="There is a tiny percussion loop in the background that makes an enormous difference to the power of the groove. If itâ€™s even remotely quiet the groove doesnâ€™t work at all and the song drags badly, and yet you barely notice it when itâ€™s there. #TimsListeningParty" data-datetime="9:15 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396212994590351365"
+                 data-text="Intruder. The 1st song I wrote for the album. This one shows the Earth absolutely done with us. It wants to fight back, it wants us to hurt, it wants us gone. All of us. We are the Intruder the album sings about. #TimsListeningParty" data-datetime="9:14 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396212848699846659"
+                 data-text="Quite by accident, Iâ€™d soloâ€™d the drums and vocals in that last chorus and thought it sounded great, before exploding with the kitchen sink into the final chorus. Gary agreed so we went with it. #TimsTwitterListeningParty #Intruder" data-datetime="9:14 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396212699604865028"
+                 data-text="Youâ€™ve probably read elsewhere that the idea for the album came from a poem my daughter Echo wrote when she was 12. The poem is on all the album formats, as it should be. Without it Intruder may never have been made. #TimsListeningParty #Intruder" data-datetime="9:13 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396212589680631812"
+                 data-text="I Am Screaming. From memory, the drums in Garyâ€™s demo were all at half speed, but I felt we should try experimenting with the final chorus ramping up to full speed.  #TimsTwitterListeningParty #Intruder https://t.co/POwPL2dVYS" data-datetime="9:13 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396212237132603395"
+                 data-text="The other meaning is to point out the regret of people that never took a chance, never reached further than their nose. That could have kinder, more honorable, more tolerant. That could have been so much more. How that wastes the one life we have. #TimsListeningParty" data-datetime="9:11 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396212176696791040"
+                 data-text="I Am Screaming. I Am Screaming
+My personal favourite on the album, at the moment anyway. Aside from the heavy use of the CR-78 drum machine and sound design, which I hugely enjoyed experimenting with, I took great care to build upon Garyâ€™s demo version. #TimsTwitterListeningParty" data-datetime="9:11 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396212007884529665"
+                 data-text="I Am Screaming. On some songs on Intruder I tried to write a lyric that would not only express the feelings of the planet but also have another, separate meaning. The Earth is talking about its sadness that we, so self obsessed, are ignoring its screams. #TimsListeningParty" data-datetime="9:10 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396211803408015367"
+                 data-text="This song worked amazingly well live yesterday when we filmed the show that will be streamed on June 17th. Possibly my favourite song on the album (although I do change my mind often). #TimsListeningParty" data-datetime="9:10 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396211672264712194"
+                 data-text="The Gift. It was during the production that Gorkem phoned  from an ambulance and left me a voicemail with the sirens blaring saying Gorkem was unwell. Gorkem and his wife were even talking about recording the Yaybahar even on the way to the hospital #TimsTwitterListeningParty" data-datetime="9:09 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396211321562177539"
+                 data-text="For a long time I hated the verse melody for this, it didnâ€™t feel right at all. I tried dozens of completely different lines, none of which worked any better, &amp; eventually realised this was the right one. Still made lots of small changes before going with it. #TimsListeningParty" data-datetime="9:08 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396211271687618560"
+                 data-text="The Gift. Originally, Gary had intended the choruses to be instrumental with that amazing melody he came up with, but we tried adding the vocal to it pretty late in the day, which worked beautifully. #TimsTwitterListeningParty #Intruder" data-datetime="9:08 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396211087893221379"
+                 data-text="The remarkable Gazelle Twin sings on this as well. Her vocals are as incredible as they are mysterious and haunting. #TimsListeningParty  #Intruder" data-datetime="9:07 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396211050391949313"
+                 data-text="The Gift. ... it was quite tricky to fit in his vast spectrum of wondrous sounds in to the mix, so I had to deconstruct it slightly to make room, especially in the sweeping instrumental section before the second chorus. #TimsTwitterListeningParty" data-datetime="9:07 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396210913607290884"
+                 data-text="On The Gift you can hear the Yaybahar fly. When I first heard Gorkemâ€™s playing on this the hairs on my arms stood up. I sat back in my chair, put out my arms, closed my eyes &amp; just let it wash over me. The solo is possibly my favourite moment on the album. #TimsListeningParty" data-datetime="9:06 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396210847874170889"
+                 data-text="The Gift.This song is one of my favourites and took the longest to perfect. Gary wanted Gorkemâ€™s Yaybahar on this to be at the forefront of the mix, but as Iâ€™d already produced it to an almost complete point whilst Gorkem recovered from appendicitis ... #TimsTwitterListeningParty" data-datetime="9:06 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396210781063155722"
+                 data-text="Yes @numanofficial (and @AdeFenton) - loving this ðŸ¤˜ðŸ”¥" data-datetime="9:06 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396210715644645393"
+                 data-text="@numanofficial You so do coo" data-datetime="9:05 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396210494692864000"
+                 data-text="The Gift. Is about Covid seen as a weapon sent by Earth to fight back against us. It starts by talking about it as a gift, hinting at a danger within it. As it progresses it gets more direct, more angry, with the chorus shouting out its frustration &amp; hurt. #TimsListeningParty" data-datetime="9:04 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396210433367973890"
+                 data-text="@numanofficial ðŸ˜†" data-datetime="9:04 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396210316606943233"
+                 data-text="Iâ€™d like to make it clear that I never coo :)" data-datetime="9:04 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396210046225326085"
+                 data-text="I wasnâ€™t sure whether Gary would be into the unusual drum groove, so it took me a while to build up to sending my first version back to him. I neednâ€™t have worried because he phoned me up cooing over it so that gave me great confidence going forward#TimsTwitterListeningParty" data-datetime="9:03 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396209858903433221"
+                 data-text="My daughters Raven &amp; Persia sing on many of the songs on Intruder, this is the first time they appear. Iâ€™m very lucky to have 2 great singers in the family ðŸ˜ƒ #TimsListeningParty  #Intruder" data-datetime="9:02 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396209646470369284"
+                 data-text="The Yaybahar, which first appears on Betrayed, is a unique acoustic instrument created &amp; played by Turkish musician Gorkem Sen. I believe itâ€™s the only one in the world &amp; itâ€™s a huge honour to have Gorkem perform on Intruder. Youâ€™ll hear it more fully later. #TimsListeningParty" data-datetime="9:01 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FAdeFenton%2Fstatus%2F1396209606637113353"
+                 data-text="Betrayed. What a song. I think this was song two actually, and when Gary sent me the demo it fucking blew me away. It already had a heavy middle eastern feel to it, so this was another obvious one for Gorkem to add his Yaybahar to.  #TimsTwitterListeningParty #Intruder" data-datetime="9:01 PM May 22, 2021"> 
+                AdeFenton            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396209584210075657"
+                 data-text="ðŸ‘‹ https://t.co/CBITKNhOzz" data-datetime="9:01 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396209373433769985"
+                 data-text="Betrayed. Sets up the theme for the entire album. At first we we were young, pure, &amp; the Earth worshipped us, gave us everything we needed. But as our numbers grew so did our greed &amp; arrogance. Now we bring pain &amp; death &amp; the Earth is betrayed. #TimsListeningParty" data-datetime="9:00 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396209342215491584"
+                 data-text="RT @Tim_Burgess: Shout up wherever you are in the world for our @numanofficial #Intruder @LlSTENlNG_PARTY 
+
+Same question to @AdeFenton &amp; Gâ€¦" data-datetime="9:00 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fgazelletwin%2Fstatus%2F1396209329976627203"
+                 data-text="READY @numanofficial @AdeFenton @LlSTENlNG_PARTY #intruder #TimsTwitterListeningParty https://t.co/5uM9lmJ0C4" data-datetime="9:00 PM May 22, 2021"> 
+                gazelletwin            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fnumanofficial%2Fstatus%2F1396209273605079048"
+                 data-text="Hello Tim, hello Everyone, thanks for being a part of this and for your interest in Intruder. #TimsListeningParty #Intruder https://t.co/59om6NXaV2" data-datetime="9:00 PM May 22, 2021"> 
+                numanofficial            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396209273244422145"
+                 data-text="Start the engines
+
+Handing over to @numanofficial &amp; @AdeFenton for our #Intruder @LlSTENlNG_PARTY 
+
+Go! ðŸ¤˜ https://t.co/MBFQuCcZ2I" data-datetime="9:00 PM May 22, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
