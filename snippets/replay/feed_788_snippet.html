@@ -1,0 +1,564 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4vZQ9YjCybgi50w5XEwHJl" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0241f2326f56859027336a54e8" alt="Time Waits For No One" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Cheval Sombre</span><br/><span class="sub-colour">Time Waits For No One</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(598615)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4vZQ9YjCybgi50w5XEwHJl" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_598615_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 98 tweets from Thursday 27th May 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/cheval_sombre" target="_blank"><img src="https://pbs.twimg.com/profile_images/1392918374942904321/yM9UVtni_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/cheval_sombre.jpg'"><br/>@cheval_sombre</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/2020sonicboom" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359251441840455683/yrk20fo2_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/2020sonicboom.jpg'"><br/>@2020sonicboom</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="It's Not Time" data-start="0"
+             data-duration="160" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="California Lament" data-start="161"
+             data-duration="278" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="I Could" data-start="440"
+             data-duration="197" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Time Waits For No One" data-start="638"
+             data-duration="567" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Dreamsong" data-start="1206"
+             data-duration="260" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Had Enough Blues" data-start="1467"
+             data-duration="226" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Been a Lover" data-start="1694"
+             data-duration="181" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Curtain Grove" data-start="1876"
+             data-duration="203" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Hitch a Ride" data-start="2080"
+             data-duration="282" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="No Place to Fall" data-start="2363"
+             data-duration="206" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2570"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485141f2326f56859027336a54e8" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-98" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398003531173580807"
+                 data-text="@lucylloyd43 lucy ~ your kind words are felt this way. thank you!" data-datetime="7:49 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398003309835870211"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY hey tim! xo &amp; thank you!" data-datetime="7:48 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398003238247571459"
+                 data-text="Yes @yungblud! ðŸ¤˜ https://t.co/uMwrk9S5Ld" data-datetime="7:48 PM May 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398003075105931265"
+                 data-text="@graham_habben @Tim_Burgess @LlSTENlNG_PARTY will write you another â€” â€œdays go byâ€ is out tomorrow. thanks graham for being with us" data-datetime="7:48 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398003036786774023"
+                 data-text="@cheval_sombre @LlSTENlNG_PARTY ðŸ¤˜ðŸ”¥" data-datetime="7:47 PM May 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398002831957835782"
+                 data-text="@TrudyAWhite @Tim_Burgess @LlSTENlNG_PARTY hey trudy ~ thatâ€™s good news. the twin lpâ€™s out tomorrow.... thanks for coming!" data-datetime="7:47 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1398002687967440899"
+                 data-text="see u next week for the Days go by party
+
+   thank u Tim . love u buddy  xp
+
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:46 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398002623207424006"
+                 data-text="@SharmanSomerset @Tim_Burgess @LlSTENlNG_PARTY @2020sonicboom big love to YOU." data-datetime="7:46 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398002487119040518"
+                 data-text="Massivo love and thanks to @cheval_sombre &amp; @2020sonicboom ðŸ™" data-datetime="7:45 PM May 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398002447373766658"
+                 data-text="@soozworld @soniccathedral @2020sonicboom @Tim_Burgess @LlSTENlNG_PARTY hey sooz! thanks for hanging.." data-datetime="7:45 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1398002117055500294"
+                 data-text="u can count on me   xp
+
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:44 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398001936364888069"
+                 data-text="@placid_casual75 @mrmitchell78 alan, â€” goodness. thanks." data-datetime="7:43 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1398001892534464516"
+                 data-text="No place to fall pt 2 
+If I can ever make it through this LP with dry eyes till this point ,  at this song I fail ......so deeply moving and so beautiful. everyone so inspired by his work..such a privilege...love u deeply Chris   xpk
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:43 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398001747830923269"
+                 data-text="â€œTime Waits for No Oneâ€â€” perhaps a too often used saying, but damned true. Thank you ever so much for listening. Love to all. &amp; many thanks to you, @Tim_Burgess @LlSTENlNG_PARTY  #TimsTwitterListeningParty https://t.co/qt3jxXE5Po" data-datetime="7:42 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398001716235223047"
+                 data-text="@JohnMcgranachan @LlSTENlNG_PARTY @Tim_Burgess thank you john for hanging out â€”" data-datetime="7:42 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398001544394690574"
+                 data-text="@graham_habben @brittaphillips exact-o" data-datetime="7:41 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398001386877554690"
+                 data-text="The lyric â€œTime sheâ€™s a fast old train/Sheâ€™s here &amp; sheâ€™s gone &amp; she wonâ€™t come againâ€ in many ways perfectly sums up what the entire record is essentially about. #TimsTwitterListeningParty" data-datetime="7:41 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398001306585948160"
+                 data-text="@ravedownradio @LlSTENlNG_PARTY thanks so much rave down!" data-datetime="7:40 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1398001261828624393"
+                 data-text="No Place 
+one of my favourite tracks . Chris always makes covers sound like his own &amp; I think he writes songs himself that seem to sum up some part of love &amp; life that feels like every song is about your life , as much as it about his .
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:40 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398001214269296649"
+                 data-text="@Blowelowe @LlSTENlNG_PARTY thanks arthur â€” the twin lpâ€™s out tomorrow" data-datetime="7:40 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398000929169891335"
+                 data-text="â€œNo Place to Fallâ€ closes the album &amp; is a gift from Townes Van Zandt. James Barone really shines on this one, as @brittaphillipsâ€˜ bass playing weaves a lovely path. Peteâ€™s strings? Sheer gorgeousness. #TimsTwitterListeningParty https://t.co/XKJT5FY5l8" data-datetime="7:39 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398000696637759489"
+                 data-text="@JohnMcgranachan @LlSTENlNG_PARTY @Tim_Burgess hey john!" data-datetime="7:38 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1398000662462484483"
+                 data-text="james barone from beach house reprising my one man band drum.. 
+#TimsTwitterListeningParty  #cheval_sombre" data-datetime="7:38 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398000629298208769"
+                 data-text="@mrmitchell78 yes!" data-datetime="7:38 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398000505973100552"
+                 data-text="@Carolin06925103 @LlSTENlNG_PARTY we got another next week for the twin lp..." data-datetime="7:37 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1398000433365458947"
+                 data-text="hitch pt 2
+.......Its really nice to see them all still here &amp; numbers growing ,  no absentees ....
+ I think we recognised in him something of ourselves ... it\'s been a sustained beautiful connect . 
+
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:37 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398000344286777349"
+                 data-text="That was great, &amp; the first sign of percussion on anything. Just before you two locked me in the freezer to do vocals. Xoxo #TimsTwitterListeningParty https://t.co/Hfy5qAJydz" data-datetime="7:37 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398000211897819138"
+                 data-text="@2020sonicboom !" data-datetime="7:36 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398000152183558147"
+                 data-text="Pete â€“ the vibes on â€œHitch a Rideâ€ remind me of when we did the sessions for the diamond album â€“ 2006?! â€“ at the bakery with Nick, &amp; you drifted over to the kick drum on â€œIâ€™ve Been All Around This World.â€ #TimsTwitterListeningParty" data-datetime="7:36 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1398000070893748226"
+                 data-text="Hitch a Ride -
+ 
+ I noticed since the first LP we made together that Cheval has always had a magnetic attraction to a certain group of people - all generous &amp; keen to be part of his world .....
+
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:36 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1398000053281824775"
+                 data-text="@Carolin06925103 @LlSTENlNG_PARTY thanks for coming over, caz ~" data-datetime="7:36 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397999935388332032"
+                 data-text="James Barone from @BeaccchHoussse got some beautiful, heavy, understated percussion cooking on this one, and what a touch (we donâ€™t often go near a drum kit). Pete sizzles on those guitar flourishes. Recorded near Lisbon. #TimsTwitterListeningParty https://t.co/116k9iRlY0" data-datetime="7:35 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397999859089747971"
+                 data-text="@CraigNews @LlSTENlNG_PARTY @Tim_Burgess craig ~ thank you for
+giving it life!" data-datetime="7:35 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397999765862895621"
+                 data-text="â€œHitch a Rideâ€ is about throwing our hands up &amp; heading into some sunset when it all gets too much. Ever just want to fade away?  #TimsTwitterListeningParty" data-datetime="7:34 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397999520743669766"
+                 data-text="&gt; @inner_strings did an incredible video for â€œCurtain Groveâ€, like a flickering flame dream, starring Holly Dawson. #TimsTwitterListeningParty https://t.co/Ep8sZZ17My" data-datetime="7:33 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397999382134464518"
+                 data-text="It was recorded at my dear friend Darshanâ€™s. #TimsTwitterListeningParty https://t.co/B1HY7AA0lS" data-datetime="7:33 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397999334764027910"
+                 data-text="#TimsTwitterListeningParty #cheval_sombre
+
+pic of us at MGMT\'s Blanker Unsinn in Brooklyn making what became Mad Love lp .Edgar Books is Andrew Van Wyngarden :) https://t.co/YxjjhEELY8" data-datetime="7:33 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397999316963373062"
+                 data-text="Itâ€™s about that lucid moment just before sleep, when things are clear as glass. Between Gillianâ€™s strings, @brittaphillipsâ€™ soft backing vocals, Peteâ€™s light-as-a-feather touch, it really became a sanctuary during those hard winter months. #TimsTwitterListeningParty" data-datetime="7:33 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397999233710571523"
+                 data-text="@Michellebwatso3 @LlSTENlNG_PARTY means more than you could know ~" data-datetime="7:32 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397999060976607232"
+                 data-text="â€œCurtain Groveâ€ was the second single off the album. Matt Saunders (who mastered both lps impeccably) told me early on that this track was one to watch. #TimsTwitterListeningParty" data-datetime="7:32 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397998976113258497"
+                 data-text="@RoffeyDave @LlSTENlNG_PARTY thanks for coming by, dave ~" data-datetime="7:31 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397998797171658752"
+                 data-text="@LlSTENlNG_PARTY thanks all for giving a listen ~" data-datetime="7:31 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397998664820441089"
+                 data-text="(been a lover pt2 ) I tried to translate all of my feelings into the string parts &amp; vocal effects . I don\'t remember how the ghost feedback was created . some days things come out of the aether &amp; that was one of those .... 
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:30 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397998580074487813"
+                 data-text="@RRelves @soniccathedral many many thanks for listening ~" data-datetime="7:30 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397998573791453184"
+                 data-text="Market Square Recordings snuck â€œBeen a Loverâ€ out from Spain on a 7â€ a little while back. #TimsTwitterListeningParty https://t.co/6hriWiREeD" data-datetime="7:30 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397998480795357189"
+                 data-text="memories of mixing &amp; over dubbing mists &amp; cold winter sunlight into the mix .finding it hard to keep my eyes dry as I listened to the emotion  well out into the songs that made me recall long lost loves &amp; far away deeply missed friends 
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:29 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397998421374603264"
+                 data-text="@Michellebwatso3 @LlSTENlNG_PARTY thank you michelle! it took nine years..." data-datetime="7:29 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397998210061381635"
+                 data-text="Simon Nunn did an especially lovely video for it. #TimsTwitterListeningParty https://t.co/QbGVoK9Gzq" data-datetime="7:28 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397998133615939590"
+                 data-text="â€œBeen a Loverâ€ is a worry blues worrying about whatâ€™s going to become of us as Time ravages on. The difficult questions. But then Pete starts shimmering wickedly in between each note &amp; whoa-itâ€™s-allright-again. Recorded near Lisbon.  #TimsTwitterListeningParty" data-datetime="7:28 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397997930133471238"
+                 data-text="had enough blues 
+ I think the wordless vocal parts originally just appeared in one spot , but I felt they were something sort of healing &amp; empathetic , and I wanted to hear them over &amp; over .....
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:27 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397997773266505735"
+                 data-text="@Tim_Burgess @2020sonicboom thanks tim ~" data-datetime="7:26 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1397997733001285636"
+                 data-text="Wow! @cheval_sombre 
+
+Everybody loving this as much as we are?" data-datetime="7:26 PM May 27, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397997618832330756"
+                 data-text="the collage of news announcements at the end of \'had enough blues\' just seemed to echo the sentiments of the song &amp; that feeling of emotional helplessness in the face of the societal dysfunction we are drenched with some days .
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:26 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397997542558912518"
+                 data-text="â€œHad Enough Bluesâ€ was first released on a 7â€ with @FatElvisRecords out of Knoxville, Tennessee, in three different colour versions. #TimsTwitterListeningParty https://t.co/oIlIO4b49l" data-datetime="7:26 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1397997251511951363"
+                 data-text="ðŸ¤˜ðŸ”¥Dreamsong by @cheval_sombre ðŸ¤˜ðŸ”¥
+
+Added amazingness from @2020sonicboom" data-datetime="7:24 PM May 27, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397997239776296960"
+                 data-text="Peteâ€™s culminating sound/word collage at the end is just devastating. And brilliant. #TimsTwitterListeningParty https://t.co/XQtoMGWsS8" data-datetime="7:24 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397997207287209985"
+                 data-text="@RRelves please do ~" data-datetime="7:24 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397997168192020485"
+                 data-text="We did â€œHad Enough Bluesâ€ in Portugal about, well you know â€“ being done with it. @soniccathedral was a bit shocked at the language, but sometimes there truly is only one word for what ails. #TimsTwitterListeningParty" data-datetime="7:24 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397996984255062022"
+                 data-text="@mrmitchell78 yes ~ gillian &amp; yui did them perfectly.." data-datetime="7:23 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397996726515077122"
+                 data-text="...After being asked what key the melody was in (&amp; having no clue) I actually whistled the parts live, which they deftly â€“ &amp; amazingly â€“ translated, pitch perfectly. #TimsTwitterListeningParty https://t.co/GyfYUcyiRC" data-datetime="7:22 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397996649117593601"
+                 data-text="@graham_habben @LlSTENlNG_PARTY thanks graham ~  indeed." data-datetime="7:22 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397996620172644353"
+                 data-text="â€œDreamsongâ€ was recorded in Darshan Jesraniâ€™s Brooklyn studio, @GillianRivers and Yui Kamakari arrived to play strings... #TimsTwitterListeningParty" data-datetime="7:22 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397996479143424004"
+                 data-text="@toadsy_boro thanks jonathan â€” whatâ€™s time anyway?!" data-datetime="7:21 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397996459358834688"
+                 data-text="#TimsTwitterListeningParty  #cheval_sombre https://t.co/wohA5pi9o6" data-datetime="7:21 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397996276315312129"
+                 data-text="Someone made this all too perfect video for it... #TimsTwitterListeningParty https://t.co/igXCOazoEW" data-datetime="7:21 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397996169096273920"
+                 data-text="@grange85 @LlSTENlNG_PARTY hey andy!" data-datetime="7:20 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397996122380115972"
+                 data-text="â€œDreamsongâ€ came from a small collection of compositions I called â€œMiniaturesâ€ â€“ lulling instrumental pieces most likely inspired by exposure to Terry Riley in a music &amp; film library circa 1994. A desire to create repeated, gentle, quiet eternities. #TimsTwitterListeningParty" data-datetime="7:20 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397996020949204998"
+                 data-text="time waits for no-one 
+
+ I reprised the keyboards in this from  It\'s a shame  from his first LP . Harmonia in my mind ....
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:19 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397996004700528644"
+                 data-text="@matt_cork @LlSTENlNG_PARTY drift, matt!" data-datetime="7:19 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397995840942362627"
+                 data-text="@mrmitchell78 can you hook that up? !" data-datetime="7:19 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397995617343918080"
+                 data-text="@mrmitchell78 thanks paul!" data-datetime="7:18 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397995465577279490"
+                 data-text="@VeronaSerena verona ~ that means a great deal â€” thank you." data-datetime="7:17 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397995206818009096"
+                 data-text="@TimGough9 thanks for coming by tim ~" data-datetime="7:16 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397995097116053511"
+                 data-text="These two lps are like twins â€“ essential companion pieces exploring time â€“ experience &amp; innocence. The next lp â€œDays Go Byâ€ takes its title from a lyric in â€œTime Waits for No One.â€ #TimsTwitterListeningParty https://t.co/A7sec6ORF2" data-datetime="7:16 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397995031231934466"
+                 data-text="@WoodPolygon @LlSTENlNG_PARTY thank you for hearing it ~" data-datetime="7:16 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397994893327454211"
+                 data-text="time waits for no one
+#TimsTwitterListeningParty #cheval_sombre https://t.co/IQqqvdUKpv" data-datetime="7:15 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397994751966822404"
+                 data-text="@placid_casual75 @tweetbytheriver how generous of you, alan. hope to play some live your way one day." data-datetime="7:14 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397994586270801930"
+                 data-text="Itâ€™s nearly ten minutes long â€“ the track that is at the center of both lps we released this year. It unfurls like smoke, Pete somehow conjuring an elegant haze, like nothing Iâ€™ve ever heard. #TimsTwitterListeningParty https://t.co/QeINHoTefy" data-datetime="7:14 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397994475939581955"
+                 data-text="@MartinaHemmings thank you ever so much â€” love portugal!" data-datetime="7:13 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397994336982290439"
+                 data-text="I think I always felt what he did instinctively &amp; felt easily inspired to intertwine with it . Chris always seemed to like what I had to bring . very effortless sync ,  sort of concious-less , like breathing .
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:13 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397994254971117576"
+                 data-text="I Could  -     
+
+  It always feels like  Chris &amp; I have an unspoken but innate understanding &amp; recognition of each other &amp; our music .
+
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:12 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397994124146577417"
+                 data-text="@RRelves thank you rachel ~ been a long road tbis one!" data-datetime="7:12 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397993895586316289"
+                 data-text="@MartinaHemmings hey martina!" data-datetime="7:11 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397993839273689092"
+                 data-text="â€œTime Waits for No Oneâ€ was initially recorded at my house with Nick Kramer, who built a little makeshift studio here #TimsTwitterListeningParty" data-datetime="7:11 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397993741802250242"
+                 data-text="@formbymax thanks for hanging, max ~" data-datetime="7:10 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="109000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397993636818677762"
+                 data-text="Thatâ€™s @WarehamDeanâ€™s slinky electric guitar jiving with Peteâ€™s otherworldly voodoo on â€œI Couldâ€â€¦ #TimsTwitterListeningParty https://t.co/Z3PaEuX9kN" data-datetime="7:10 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397993183183659009"
+                 data-text="@Michellebwatso3 @placid_casual75 @tweetbytheriver thank you michelle ~ first time â€” iâ€™m celebrating!" data-datetime="7:08 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397993020306436106"
+                 data-text="â€œI Couldâ€ was recorded in Portugal in between fresh house vino in the afternoon &amp; walks by the cliffs by the sea. Itâ€™s a loose rock n roll about saying yes to all kinds of possibilities &amp; losing inhibitions. #TimsTwitterListeningParty https://t.co/C9Mg5NITF0" data-datetime="7:08 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="149000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397992828861571075"
+                 data-text="@placid_casual75 @tweetbytheriver thanks alan ~ so glad it speaks to you." data-datetime="7:07 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397992202257813506"
+                 data-text="California Lament  
+
+I love this song a lot . just that    
+#TimsTwitterListeningParty #cheval_sombre" data-datetime="7:04 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397992065208889350"
+                 data-text="I actually wanted â€œCalifornia Lamentâ€ to be single for the album. But through an unexpected collaboration with @tweetbytheriver I shot raw footage of where I live by the Hudson and made a video for it. #TimsTwitterListeningParty https://t.co/4LgPEmQNJF" data-datetime="7:04 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397991931070672900"
+                 data-text="Itâ€™s Not Time - 
+
+      I imagine If this song doesnâ€™t reflect something that happened in your life , it probably reflects something that will happen . such a beautiful sadness ..... planets out of orbit &amp; time misaligned 
+#TimsTwitterListeningParty" data-datetime="7:03 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2F2020sonicboom%2Fstatus%2F1397991858559672320"
+                 data-text="#TimsTwitterListeningParty
+#cheval_sombre
+
+hey chris  : )   have fun  love u brer
+  xp" data-datetime="7:03 PM May 27, 2021"> 
+                2020sonicboom            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397991838792011786"
+                 data-text="â€œCalifornia Lamentâ€ was written after recording the cowboy lp with @WarehamDean in Los Angeles. When I heard Peteâ€™s strings on this I just fell over. Told him it was our â€œWichita Lineman.â€ #TimsTwitterListeningParty https://t.co/bLJQCBaKuN" data-datetime="7:03 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397991678611529733"
+                 data-text="A bare bones version of â€œItâ€™s Not Timeâ€ was actually released in 2014 on a 7â€ on Australian label Slightly Delic Productions, run by Wes Holland. #TimsTwitterListeningParty https://t.co/edOTyaFm4X" data-datetime="7:02 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397991332111695879"
+                 data-text="@inner_strings did an incredible video for it. #TimsTwitterListeningParty https://t.co/CCofBvShJ2" data-datetime="7:01 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fcheval_sombre%2Fstatus%2F1397991136615092232"
+                 data-text="â€œItâ€™s Not Timeâ€ was the first single to signify the coming of these two lps about the passage of time. An enchanting-lullaby-blues, Pete (@2020sonicboom)  delicately hovering. #TimsTwitterListeningParty" data-datetime="7:00 PM May 27, 2021"> 
+                cheval_sombre            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1397991025130577922"
+                 data-text="Handing over to @cheval_sombre and @2020sonicboom 
+
+#TimsTwitterListeningParty https://t.co/cuoHBrtjNr" data-datetime="7:00 PM May 27, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
