@@ -1,0 +1,442 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4brJ6hWYqPj1sccgk390dC" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02aa3c0529b9fc1fee2d0acc66" alt="Porcupine" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Echo And The Bunnymen</span><br/><span class="sub-colour">Porcupine</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4brJ6hWYqPj1sccgk390dC" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 67 tweets from Saturday 29th May 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Will_Fuzz" target="_blank"><img src="https://pbs.twimg.com/profile_images/1396855529088163840/GTjRzWZO_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Will_Fuzz.jpg'"><br/>@Will_Fuzz</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="The Cutter" data-start="0"
+             data-duration="232" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Back of Love" data-start="233"
+             data-duration="193" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="My White Devil" data-start="427"
+             data-duration="280" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Clay" data-start="708"
+             data-duration="256" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Porcupine" data-start="965"
+             data-duration="360" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Heads Will Roll" data-start="1326"
+             data-duration="213" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Ripeness" data-start="1540"
+             data-duration="290" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Higher Hell" data-start="1831"
+             data-duration="301" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Gods Will Be Gods" data-start="2133"
+             data-duration="325" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="In Bluer Skies" data-start="2459"
+             data-duration="272" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Fuel" data-start="2732"
+             data-duration="245" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="The Cutter - Alternative Version" data-start="2978"
+             data-duration="246" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3225"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851aa3c0529b9fc1fee2d0acc66" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-67" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="192000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398746193732194308"
+                 data-text="@Eternal_Ikaris cheers fella try me best" data-datetime="9:00 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398745389088575494"
+                 data-text="@Will_Fuzz @LlSTENlNG_PARTY ðŸ¤˜ðŸ”¥ðŸ˜âœŠðŸ’¥" data-datetime="8:57 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398745351985807365"
+                 data-text="Thank you all. I will be reading all the tweets and coments.
+#timstwitterlisteningparty #bunnymen https://t.co/0YVtXWR5kv" data-datetime="8:57 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398745204916621317"
+                 data-text="An amazing album, a brilliant host - the perfect @LlSTENlNG_PARTY 
+
+Thanks so much @Will_Fuzz, you absolute hero x x" data-datetime="8:56 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398744791479984133"
+                 data-text="Thank you all for tuning in. Once again hectic fun all the way. Its a great album and has become more interesting with age. Sad we don\'t make em like that anymore. No boundaries no borders no limits. Ending on Never Stop not on the album. #timstwitterlisteningparty #bunnymen https://t.co/IE8RDMUScM" data-datetime="8:55 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1398744654204506112"
+                 data-text="@Will_Fuzz @Tim_Burgess Great tune. Too good to be hidden away on a b-side. Was pleased to see it included on the fab Tim Peaks compilation https://t.co/ttHY86mgyM" data-datetime="8:54 PM May 29, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398744391817252865"
+                 data-text="Back into the studio with Hugh Jones and we completely revamped the record. Adam Peters built up a cello intro. Pete De Fraitas came crashing in with the drums. We were experimenting with sequencers and the overall effect is very electronic. #timstwitterlisteningparty #bunnymen" data-datetime="8:53 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398744161193496585"
+                 data-text="Never Stop-I didn\'t want a producer I wanted us  to try it alone. But Steve Lillywhite turned up. it was very awkward I said to him \'We told Bill We don\'t want a fucking Producer, so he left. After, I felt bad and still do not SL\'s fault.  #timstwitterlisteningparty #bunnymen https://t.co/ZWMlzEGD4t" data-datetime="8:52 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398744142054895619"
+                 data-text="Those 3 notes in Never Stop ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜" data-datetime="8:52 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398743764567482368"
+                 data-text="Encore 3 Never Stop Discoteque. This track was started at RAK studios, original working title \'Big Nose\' was a lot more like a Rolling Stones kind of thing. It had Cor anglais on the intro. The record label hated it. #timstwitterlisteningparty #bunnymen https://t.co/05uONepnHX" data-datetime="8:51 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398743374589480965"
+                 data-text="Fuel we sort of threw the kitchen sink at this one. Though it was only a four track by bouncing down we got alot of sound on there including the autoharp, African Marimba and the Casio Keyboard.
+#timstwitterlisteningparty #bunnymen https://t.co/j98wFRIu3b" data-datetime="8:49 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398743324387778562"
+                 data-text="Fuel-encore 2 had a TEAC 4 track tape machine, so we Recorded in my flat I shared with @IanZBroudie. Pete started with the marimba pattern and he just kept going Les added the bass, I had a drumatix drum machine that was in the sonic stew. #timstwitterlisteningparty  #bunnymen https://t.co/JT3355J6DQ" data-datetime="8:49 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398742834698764290"
+                 data-text="Encore 2 Fuel. The new thing at the time was the 12 inch single the record labels were trying to get everyone to buy the record twice 7 inch and 12 inch thus boosting sales and chart positions. We needed another song to fill said 12 inch up. #timstwitterlisteningparty #Bunnymen https://t.co/hglnDPIYbr" data-datetime="8:47 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398742350831177733"
+                 data-text="Subject. Recorded at Amazon. It was after the Porcupine album was completed. We went into the studio to make a B-side, we were pretty good at coming up with things under pressure, &amp; just conjured it up out of thin air. #timstwitterlisteningparty  #Bunnymen" data-datetime="8:45 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398742249433862145"
+                 data-text="well your getting a few encores weather you wan them or not.  Starting with The Subject. #timstwitterlisteningparty #bunnymen" data-datetime="8:45 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398742056839827467"
+                 data-text="RT @Tim_Burgess: After the classic running order of Porcupine - @Will_Fuzz will be including some bonus tracks for the @LlSTENlNG_PARTY:â€¦" data-datetime="8:44 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="188000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398741882625314819"
+                 data-text="Real hand claps so much better with the slight timing anomalies keeping it real. The harmonium sneaks in there again. love the Ebo too. Lyrics are so ahead of the other bands at the time. #timstwitterlisteningparty #bunnymen" data-datetime="8:43 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398741092598751232"
+                 data-text="In Bluer Skies. We had been turned on to the fact that bands did not have to stick to the old bass, drums guitars format. Ian Broudie was very good at recording interesting sounds and instruments, he\'s a top Geezer. #timstwitterlisteningparty #Bunnymen https://t.co/9H6yUcyX4T" data-datetime="8:40 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398740796338323459"
+                 data-text="Gods Will Be Gods. Great backwards guitar section. The thrill of turning the tape over then having a rough idea of what to play with everything backwards. To be revealed when the tape if put into the forward position. again.#timstwitterlisteningparty #bunnymen https://t.co/ISVTNpatXR" data-datetime="8:39 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="153000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398740716336173060"
+                 data-text="gods those drums and the sounds  superb could have been from the sixties or the future its not an 80\'s sounding album and that\'s what we after after songs with immortality not stuck in any time  #timstwitterlisteningparty #bunnymen" data-datetime="8:39 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398740072984465416"
+                 data-text="Gods are Gods- There are quite a lot of interesting instruments on this. It\'s it basically the key of D thundering along. It very drone inspired who need other chords 1 or 2 is plenty. #timstwitterlisteningparty #Bunnymen https://t.co/Lo7yzpWG5J" data-datetime="8:36 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398739791240470532"
+                 data-text="Gods Will be Gods. I had recently bought a little Casio keyboard MT-40. All the keyboard sounds this are me on my new Casio toy. Used it live too and on Fuel the B side of the Back of Love. #timstwitterlisteningparty #bunnymen https://t.co/sb9ZCE3bhS" data-datetime="8:35 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398739545949196288"
+                 data-text="In Bluer Skies-Ebo small part of  this record. lots of great percussion sounds. We all sat in a circle and did the hand claps. There is also a pedal harmonium that I played as Les pumped the treadles to keep the speed steady teamwork #timstwitterlisteningparty #Bunnymen https://t.co/ROBx6CD78F" data-datetime="8:34 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="144000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398739146580049935"
+                 data-text="The frozen land of Iceland. I think fits in well with the swirling psychedelic sound of Porcupine. Having listened to it all the way through for the first time in donkeys years, I think of it as our Strange Days. #TimsTwitterListeningParty #Bunnymen https://t.co/JCC82UzF3K" data-datetime="8:32 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398738540893282316"
+                 data-text="Higher Hell is becoming one of my favourite tracks. It has got so many layers and interesting parts. I don\'t think many at the time were taking the Rock format arrangements to these extremes. First use of my recently bought Autoharp. 
+#timstwitterlisteningparty #bunnymen https://t.co/2GT8GpbOiR" data-datetime="8:30 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398738250391601158"
+                 data-text="Ripeness Mac\'s rhythm guitar on this is fantastic. I wish he would play guitar live! The intensity and serious meaning of  every vicious chugging stroke is a kick in the teeth to our then rivals.  #timstwitterlisteningparty #bunnymen https://t.co/dHoYZ2S5xX" data-datetime="8:29 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398738203830521860"
+                 data-text="Bill Butt the Cutter video director discussing  shots with Les at the wheel of the 4 x 4. Bill the only one of us with any decent cold weather clothes on. But he had been before and knew it was brass monkeys in that Iceland.  #timstwitterlisteningparty #bunnymen https://t.co/eh9HXB32fn" data-datetime="8:29 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398737858102534145"
+                 data-text="Sorry to keep coming back to the cover photo but it was one hell of an Atlas Adventure. We stood on that tiny icy ledge for ages. #timstwitterlisteningparty #bunnymen https://t.co/FfFXPbLoIE" data-datetime="8:27 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398737831862968327"
+                 data-text="RT @markemoon: @LlSTENlNG_PARTY @Tim_Burgess https://t.co/4lwxprgO7H" data-datetime="8:27 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398737655404371968"
+                 data-text="Ripeness. Love the way my guitar creeps up in volume and the fast one string harmonic play. And various lead parts in the stomping northern soul drumming chorus.      #timstwitterlisteningparty #bunnymen https://t.co/F0KCgFZxyG" data-datetime="8:26 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398737546419527680"
+                 data-text="Ripeness. Another guitar layer fest funky, Velevetsy mysterious and of course trippy.  Mac does lots of vocal layers  towards the end. #timstwitterlisteningparty #bunnymen" data-datetime="8:26 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398737213966389255"
+                 data-text="Martyn Atkins and me freezing our nuts off for the sake of art. I\'m only smiling because my face is frozen in that position. #TimsTwitterListeningParty #bunnymen https://t.co/tmTj1MpnRE" data-datetime="8:25 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398737087025852416"
+                 data-text="Shankar is brilliant here this crazy violin work with me sitting in 
+on the wobbly guitar sounds.#timstwitterlisteningparty #bunnymen" data-datetime="8:24 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398736690622210057"
+                 data-text="As usual Pete\'s drums and Les\'s bass are amazing a solid bed, as Les used to say \'lettuce the bed!\' That\'s right- I don\'t know what that means either. But it sounds like good advice from the LTP aka the Neon Poet. #timstwitterlisteningparty #Bunnymen https://t.co/0szDp8pvks" data-datetime="8:23 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="99000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398736615154061312"
+                 data-text="I Always was a sucker for the Indian modal scale. The most psychedelic of all scales. Heads will roll was born of my transcendental noodles. I never really knew what I was doing just finding notes I liked. #timstwitterlisteningparty #bunnymen https://t.co/HrEwlfw42X" data-datetime="8:22 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398736196780630018"
+                 data-text="Heads Will Roll. I love this track. When we did play it live I could really let rip on the guitar freakout sections. Using the Indian scale style. We never play this anymore and when we did, my guitar bits got shorter and shorter. Wonder why? #timstwitterlisteningparty #Bunnymen https://t.co/14y0V6K4S4" data-datetime="8:21 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="130000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398736116900040704"
+                 data-text="Channeling the velvets at the end I think some ace sounds through a Eventide Harmoniser  shed loads of reverb swamping the guitar always a winner with me. #timstwitterlisteningparty #bunnymen" data-datetime="8:20 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398735570931793927"
+                 data-text="Porcupine. When we played this one live, we had a reel to reel tape machine playing the backing track. Drums and the discordant piano bit in the middle. We would all be poised to take it to the next level for the big wig-out at the end. #timstwitterlisteningparty #Bunnymen https://t.co/aOfrNG9xWd" data-datetime="8:18 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="147000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398735474685100038"
+                 data-text="porcupine possibly the goth-est Bunnymen track? #timstwitterlisteningparty #bunnymen" data-datetime="8:18 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398734858449477634"
+                 data-text="Pushing the boundaries of what could be considered pop music? This sounds to me like it was made up in the studio from parts we had. Cobbled them together. Having said that it adds to the utherworlrdly tense nature of the song. #timstwitterlisteningparty #bunnymen https://t.co/RBleHivcHm" data-datetime="8:15 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398734745073238018"
+                 data-text="Porcupine-I am very pleased my intro guitar part. It sounds complete and cohesive with the taste of eastern bloc Cold War vibe. I feel it blowing into my finger tips right off the Caucasus Mountains. #timstwitterlisteningparty #bunnymen https://t.co/ODwbGYZXyk" data-datetime="8:15 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="207000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398734665998077960"
+                 data-text="the guitars are intertwining very well Mac is the master of the fast rhythmic guitar brilliant stuff. Against my dark spooky twangy stuff. Clay sounds very filmic to me. #timstwitterlisteningparty #bunnymen" data-datetime="8:15 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398733798867673088"
+                 data-text="Clay Changes Gear in the chorus. It reminds me a little of the chorus of Flaming off The Piper at the gates of Dawn album Pink Floyd, Or am I dreaming?  #timstwitterlisteningparty #Bunnymen https://t.co/d95ZWMLaWD" data-datetime="8:11 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398733720455110665"
+                 data-text="Love it! So under rated https://t.co/fqbAHJN0f5" data-datetime="8:11 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="125000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398733689710862342"
+                 data-text="Clay. this one has some great dark and mysterious sounds in the backing track. Not exactly easy listening but I love the short rhythmic bursts of Mac\'s guitar that come in the  chorus? #TimsTwitterListeningParty #bunnymen https://t.co/Nwuh0R265F" data-datetime="8:11 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398733165473193984"
+                 data-text="My White Devil has got to be one of our most trippy song? what say you? #timstwitterlisteningparty #bunnymen" data-datetime="8:09 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398732673842135041"
+                 data-text="Still gives me such a thrill to be listening to an album with all of you around the world.
+
+A million thanks to @Will_Fuzz for the amazing guided tour" data-datetime="8:07 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398732631118954498"
+                 data-text="Playing it now its so layered! With of bits of guitar to create a total immersive vibe almost in a jazz way. some ace sounds floating about and parts that happen for short spells so much melody in the layers, a slight bit of Shankar too.  #TimsTwitterListeningParty #Bunnymen" data-datetime="8:07 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398732560868560901"
+                 data-text="My White Devil this one really personifies the nature of experimentation that was in the bunnymen camp at the time. Some of the Lyrics were inspired by an essay about the writer John Webster Pete Played a lot of Marimba on this track. #TimsTwitterListeningParty #Bunnymen https://t.co/W5U8Y9dOAu" data-datetime="8:06 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398732322262880261"
+                 data-text="It\'s a pity we don\'t play Back Of Love live anymore, it was one of my favourites to play. Les\'s bass is incredible gives our recent bass players a workout. Here is Les on the frozen tundra in Iceland #TimsTwitterListeningParty #Bunnymen https://t.co/ayCnbjdlAF" data-datetime="8:05 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398732249441374221"
+                 data-text="I remember when we recorded The Back of Love Bill Drummond didn\'t like it and we had argument with him. We remixed it one more time with Ian and Dave Bascomb . The next day he came back and loved it. Not sure why but he saw the light! #TimsTwitterListeningParty #Bunnymen https://t.co/UV8lqNCGTn" data-datetime="8:05 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398732196895154176"
+                 data-text="The break down of the song-we found some kids twirly toys. They were roughly the note of E all in the  studio &amp; twirled them like crazy. A perfect bed for my guitar &amp; Macs vocal \"Shook those shackles off\" and \"What were you thinking of\" etc.? #TimsTwitterListeningParty #Bunnymen https://t.co/s52TRMgQrA" data-datetime="8:05 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398732111213961217"
+                 data-text="Our record company A and R man had been given an Andy Warhol Screen print- Electric Chair. I was very into Warhol  He said if The Cutter makes the top 5- I could have it. The record got to number 8 Doh! Hit the post. #TimsTwitterListeningParty #Bunnymen https://t.co/AIx5Zir7aL" data-datetime="8:04 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398732045237506050"
+                 data-text="Pre photoshop if you wanted to get  a great photo you had to be adventurous. We are on this tiny ledge. I think of it now &amp; It gives me shivers we were messing around and pushing each other death defying high Jinx #TimsTwitterListeningParty #Bunnymen https://t.co/nbz2Z8HeEV" data-datetime="8:04 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398731983375712263"
+                 data-text="Our lighting man Bill Butt came with us on the cover shoot his mission to get footage for the video for the Cutter. You can actually see his blue jacket on the other side of the gorge on the front cover of the LP. #TimsTwitterListeningParty #Bunnymen https://t.co/f7VRyyoYKL" data-datetime="8:04 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398731938727301122"
+                 data-text="I balanced my camera on a rock and used the self timer feature to get this. Left to Right Pete, Me, Martyn Atkins (designer) Mac, Mick Houghton (press) Bill Butt (Video) Les, and Brian Griffin Photographer. #TimsTwitterListeningParty #Bunnymen https://t.co/QlgdG6DrVf" data-datetime="8:04 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398731887967981574"
+                 data-text="Back of Love this was the first time Adam Peters played cello with us. He was only 18 years old. I got on well with him straight away. He was on the same wave length and into experimental music. He taught me about Karlheinz Stockhausen #TimsTwitterListeningParty #Bunnymen" data-datetime="8:04 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398731820506755076"
+                 data-text="The label didn\'t really like the direction we were going they had a thirst for a hit single. Bill went in, remixed Cutter Dave Balfe added some trumpets (keys) at the end I hated it. Forget it, tomorrow there will be a new hurt to heal.  #TimsTwitterListeningParty #Bunnymen" data-datetime="8:03 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398731774411300872"
+                 data-text="RT @Tim_Burgess: Shout up where you are in the world for our @Bunnymen Porcupine @LlSTENlNG_PARTY 
+
+Iâ€™m at @thecharlatans studio. Where youâ€¦" data-datetime="8:03 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398731704148369414"
+                 data-text="â€œConquering myself 
+Until I see another hurdle approaching 
+Say we can, say we will 
+Not just another drop in the oceanâ€
+
+Perfect lyrics" data-datetime="8:03 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398731687186645002"
+                 data-text="I play this guitar part the Ian B had done live or an approximation of it but it never sounds exactly as @IanZBroudie did it.   #TimsTwitterListeningParty #Bunnymen https://t.co/tSFJlv06tm" data-datetime="8:03 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398731633679900679"
+                 data-text="When I got back to the studio Broudie had done some guitar with a big screechy reverb sound after Mac Sings Spare us the Cutter. initially I was pissed off, but we have saying in the Bunnymen \'tomorrow there will be a new hurt to heal\' #TimsTwitterListeningParty #Bunnymen" data-datetime="8:03 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398731586988871682"
+                 data-text="At the recording news came in that someone had broken into the flat I was sharing with Broudie. I had to go home and make sure my equipment was ok and board up the window. This is me in the flat I shared with Ian (Kingbird) Broudie #TimsTwitterListeningParty #Bunnymen https://t.co/d53m5PUm4p" data-datetime="8:02 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398731526301495304"
+                 data-text="Ian Broudie had a friend who christened him Kingbird and that\'s what the production credit became it was produced by @IanZBroudie the man is a genius! #TimsTwitterListeningParty #Bunnymen th" data-datetime="8:02 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398731157030813698"
+                 data-text="I asked Shankar if he knew Mathew and son by Cat Stevens  He Said yes. I asked could he do a psychedelic version of that that became the intro to the Cutter. I had recently become obsessed by the song and me and @IanZBroudie both loved it #TimsTwitterListeningParty #Bunnymen https://t.co/qVg4eLZSos" data-datetime="8:01 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1398730937547079685"
+                 data-text="L Shankar came to the recording with his custom electronic double 10 string violin. He could play a drone on one of the necks and the tune on the other. It sounded the most psychedelic thing I had ever heard. #TimsTwitterListeningParty #Bunnymen https://t.co/LCxQwE83SZ" data-datetime="8:00 PM May 29, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1398730880525422597"
+                 data-text="Going inâ€¦.
+
+Over to you @Will_Fuzz https://t.co/ZD2v14XIIm" data-datetime="8:00 PM May 29, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
