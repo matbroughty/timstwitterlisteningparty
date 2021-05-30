@@ -36,7 +36,7 @@ dependencies {
   implementation("se.michaelthelin.spotify:spotify-web-api-java:6.0.0-RC1"){
     exclude(group = "org.slf4j")
   }
-  implementation("com.github.redouane59.twitter:twittered-jdk8:1.24")
+  implementation("com.github.redouane59.twitter:twittered:1.25")
 
   // had to add some additional code to allow for update of collections to twitter4j - need
   // this until aws updates to Java 15 for lambda's or twittered drops back to java 8
