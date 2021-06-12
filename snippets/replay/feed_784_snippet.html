@@ -1,0 +1,455 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7E54UsiVFMQuIAG9t5UOL4" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0202b800c75c4d62b0c8110936" alt="Ancient Heart" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Tanita Tikaram</span><br/><span class="sub-colour">Ancient Heart</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(67815)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7E54UsiVFMQuIAG9t5UOL4" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_67815_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 75 tweets from Sunday 23rd May 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/tanita_tikaram" target="_blank"><img src="https://pbs.twimg.com/profile_images/1171781617095991297/2XjNea9M_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/tanita_tikaram.jpg'"><br/>@tanita_tikaram</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/oharaviolin" target="_blank"><img src="https://pbs.twimg.com/profile_images/1054107434627883008/FEFPn8yd_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/oharaviolin.jpg'"><br/>@oharaviolin</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Good Tradition" data-start="0"
+             data-duration="170" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Cathedral Song" data-start="171"
+             data-duration="173" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Sighing Innocents" data-start="345"
+             data-duration="213" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="I Love You" data-start="559"
+             data-duration="165" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="World Outside Your Window" data-start="725"
+             data-duration="294" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="For All These Years" data-start="1020"
+             data-duration="314" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Twist in My Sobriety" data-start="1335"
+             data-duration="292" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Poor Cow" data-start="1628"
+             data-duration="117" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="He Likes the Sun" data-start="1746"
+             data-duration="328" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Valentine Heart" data-start="2075"
+             data-duration="246" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Preyed Upon" data-start="2322"
+             data-duration="304" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2627"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485102b800c75c4d62b0c8110936" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-75" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568760035708929"
+                 data-text="@TheAnisaSubedar @LlSTENlNG_PARTY â˜€ï¸ðŸ™" data-datetime="8:48 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568704897454085"
+                 data-text="@JohnLovesJulie @Tim_Burgess @oharaviolin â˜€ï¸ðŸ™" data-datetime="8:48 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568605312028673"
+                 data-text="@PeterMallett3 @Tim_Burgess @oharaviolin â˜€ï¸ðŸ™" data-datetime="8:47 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568569098473476"
+                 data-text="@dalmeida_br ðŸ™â˜€ï¸" data-datetime="8:47 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568506607587334"
+                 data-text="@RayKnut @Tim_Burgess @oharaviolin â˜€ï¸ðŸ™" data-datetime="8:47 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568471589330945"
+                 data-text="@Robwarren348 ðŸ™â˜€ï¸" data-datetime="8:47 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568410394333189"
+                 data-text="@pauyeung @LlSTENlNG_PARTY @Tim_Burgess @oharaviolin â˜€ï¸ðŸ™" data-datetime="8:47 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568358741594120"
+                 data-text="@PhilHuckle2 @WarnerMusicUK @gerarddethame @warner_chappell ðŸ™â˜€ï¸" data-datetime="8:46 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568271898484738"
+                 data-text="@graham_habben @oharaviolin â˜€ï¸ðŸ™" data-datetime="8:46 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568235714260994"
+                 data-text="@madkaddi @LlSTENlNG_PARTY @Tim_Burgess @oharaviolin ðŸ™â˜€ï¸" data-datetime="8:46 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fallyeasson%2Fstatus%2F1396568214159695874"
+                 data-text="@tanita_tikaram @Tim_Burgess @oharaviolin What a fab album and #TimsTwitterListeningParty !  Thank you!  Time for another spin... https://t.co/mBTXNAojt7" data-datetime="8:46 PM May 23, 2021"> 
+                allyeasson            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568188977037313"
+                 data-text="@JamesCurran6 @LlSTENlNG_PARTY ðŸ™â˜€ï¸" data-datetime="8:46 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568142151921666"
+                 data-text="@superginrai @Tim_Burgess @oharaviolin â˜€ï¸ðŸ™" data-datetime="8:46 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568112577880077"
+                 data-text="@TrudyAWhite @LlSTENlNG_PARTY @Tim_Burgess @oharaviolin ðŸ™â˜€ï¸" data-datetime="8:45 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396568103513899010"
+                 data-text="@tanita_tikaram @oharaviolin ðŸ¤˜" data-datetime="8:45 PM May 23, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568081313538056"
+                 data-text="@JazzMcBride @Tim_Burgess @oharaviolin â˜€ï¸ðŸ™" data-datetime="8:45 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396568053807206402"
+                 data-text="Thanks Tanita. Hope to catch up in the real world some time. And I canâ€™t wait to play more live music with @oharaviolin too â¤ï¸ðŸ”¥ https://t.co/NwyNDDU9YN" data-datetime="8:45 PM May 23, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396568009930588160"
+                 data-text="@Tim_Burgess @oharaviolin Thank you @Tim_Burgess Honoured to have been a guest â¤ï¸" data-datetime="8:45 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396567869446569993"
+                 data-text="@veeryam @Tim_Burgess @oharaviolin ðŸ‘â˜€ï¸" data-datetime="8:45 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396567753834864648"
+                 data-text="That was brilliant. Thanks so much @tanita_tikaram @oharaviolin and Ancient Heart x x" data-datetime="8:44 PM May 23, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396567523055833094"
+                 data-text="What a truly beautiful album. So lovely to hear it again. Great memories and very proud to have played on GT and to still be working with you! Thanks Tanita ðŸ˜ƒâ¤ï¸ #TimsTwitterListeningParty @tanita_tikaram" data-datetime="8:43 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396567500314324998"
+                 data-text="@simon_tickner @Tim_Burgess â˜€ï¸ðŸ‘" data-datetime="8:43 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396567382957625349"
+                 data-text="ANCIENT HEART #TimsListeningParty  Thank you for listening &amp; to all who helped make AH ! It \'s been fab . @Tim_Burgess you are a national treasure â˜€ï¸And @oharaviolin can\'t wait to play more music with you ðŸŽ» !  Have a sweet night everyone â¤ï¸ Love tt" data-datetime="8:43 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FGilliebooks%2Fstatus%2F1396567014957780997"
+                 data-text="#TimsTwitterListeningParty I lied! #PreyedUpon... God, I love this. And it\'s another sweaty sunny condensation rolling down a long glass of something very cold type of song. The feels... \'See your old friends and it\'s fresh as dew\'. So true @tanita_tikaram" data-datetime="8:41 PM May 23, 2021"> 
+                Gilliebooks            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396566600648728583"
+                 data-text="@tanita_tikaram @TheZombiesMusic Wow I never knew the quartet was doubled. Brilliant" data-datetime="8:39 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396566572915888128"
+                 data-text="PREYED UPON #TimsTwitterListeningParty PREYED UPON #TimsTwitterListeningParty Legendary musician Mo Foster \'s bass playing on this is gorgeous ! Love Rod\'s strings &amp; the way the track builds - it\'s a sweet way to end . The lyrics are strange but somehow express  yearning . https://t.co/8RNxvBSoO7" data-datetime="8:39 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396566261748977668"
+                 data-text="PREYED UPON #TimsTwitterListeningParty Often rec co. are criticised for bad taste but @WarnerMusicUK got it so right with AH From the Peter Moss cover photos to @gerarddethame \'s haunting videos for  \'Twist\' &amp; \' Cathedral Song\' &amp; my producers \' creative freedom in the studio ðŸ™ https://t.co/ju2rKf6vJQ" data-datetime="8:38 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396566199220281349"
+                 data-text="@Gilliebooks ðŸ™ƒ !" data-datetime="8:38 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396566087576080384"
+                 data-text="Valentine Heart - such a beautiful song. Beautiful quartet arrangement &amp; playing. Tanita and me sometimes perform this as a duet on tour. Itâ€™s really special to me as weâ€™ve played it since 1988 #TimsTwitterListeningParty @tanita_tikaram" data-datetime="8:37 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2FGilliebooks%2Fstatus%2F1396565988758392832"
+                 data-text="#TimsTwitterListeningParty That\'s some fine alliteration right there @tanita_tikaram Someone was paying attention in English Language lessons. #ValentineHeart" data-datetime="8:37 PM May 23, 2021"> 
+                Gilliebooks            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396565499769675778"
+                 data-text="VALENTINE HEART #timstwitterlisteningparty This song connects deeply to people . When I wrote it I hadn\'t been in love but it\'s expression of yearning for someone or something magical to happen is universal. I often play it live with @oharaviolin works like an old folk song â¤ï¸â˜€ï¸" data-datetime="8:35 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="181000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396565229002231809"
+                 data-text="VALENTINE HEART #timstwitterlisteningparty Rod Argent @TheZombiesMusic did such a beautiful arrangement on this - love how he arranges strings . On this the string quartet is doubled &amp; has real momentum &amp; intensity . Rod  a lovely man &amp; one of our finest musician/ songwriters . https://t.co/6Dqf21hQSQ" data-datetime="8:34 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396564470613295105"
+                 data-text="Tanita &amp; me in Colorado on a day off on her US Ancient Heart tour 1989. #TimsTwitterListeningParty @tanita_tikaram https://t.co/b3kGHETdz3" data-datetime="8:31 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396564392762875904"
+                 data-text="@Gilliebooks â¤ï¸â˜€ï¸" data-datetime="8:31 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396564238341136384"
+                 data-text="HE LIKES THE SUN #timstwitterlisteningparty I\'m not sure if anyone\'s noticed but there\'s a completely bonkers  bit in the middle  ..not sure I would approach the M8 in quite the same way now , but I admire Rod &amp; Pete for going with it &amp; not asking me to change it ðŸ™ƒ !" data-datetime="8:30 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396563852461056001"
+                 data-text="HE LIKES THE SUN  #timstwitterlisteningparty  \'Brendan Croker &amp; the 5 o\'clock shadows\' were a fab guitar band at the time who I often supported - members Mark Creswell &amp; Brendan play the bluesy guitar parts on this â˜€ï¸ A sweet song with lovely Rod Argent strings &amp; hammond ðŸ™‚ https://t.co/FZCwMsWLf9" data-datetime="8:29 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396563547866476546"
+                 data-text="POOR COW #TimsTwitterListeningParty Even though the recording is chirpy the language is quite violent ! I guess I was expressing  a fear of being on display .. I  managed to sneak in a Sylvia Plath poetry book \' Winter Trees \'too - so that must have influenced the song  ." data-datetime="8:27 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396563460872417289"
+                 data-text="Pop star moment - after playing Twist on TOTPs we raced to Heathrow where a tiny plane flew TT &amp; band to a gig somewhere in the south of England.The pilot (really posh) chatted non stop ðŸ˜±telling us to help ourselves to drinks &amp; snacks! #TimsTwitterListeningParty @tanita_tikaram" data-datetime="8:27 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="171000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396563359236075524"
+                 data-text="POOR COW #TimsTwitterListeningParty Can\'t believe I wrote a song called \' Poor Cow \' ðŸ˜³ ! There was a club in Basingstoke called Martines - I was very sniffy about it even though I\'d never been there ðŸ™ƒ ! This song is how my teen self imagined the gender politics of Martines ! https://t.co/L9I3pkALcx" data-datetime="8:27 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FChorizoGarbanzo%2Fstatus%2F1396562644207902730"
+                 data-text="Malcolm Messiter who plays the oboe on Twist In My Sobriety is the son of Ian Messiter who invented  the radio panel game Just A Minute.
+#TimsTwitterListeningParty 
+@tanita_tikaram https://t.co/ASraHguL9W" data-datetime="8:24 PM May 23, 2021"> 
+                ChorizoGarbanzo            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396562448853909504"
+                 data-text="Tanita asked me to mime the oboe for Twist on TOTPs. Iâ€™d no idea how to play it but I knew how to play the recorder so used that method! ðŸ˜‚ really hoping no oboe players were watching! @KateStJohn5 ðŸ˜‰ I thought I gave quite an authentic performance!! #TimsTwitterListeningParty" data-datetime="8:23 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396562427165167619"
+                 data-text="I was also reading a lot of TS Eliot poetry at the time  . This literary mash up produced this bleak but hypnotic song . https://t.co/UTsjGeeSxZ" data-datetime="8:23 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396562422530547712"
+                 data-text="Twist In My Sobriety #timslisteningparty A shout out for libraries &amp; geeky teens who love books ! Whatever else this song is about the vivid imagination that produced the enigmatic lyrics reflects a love of reading . First line is Maya Angelou whose biographies I loved &amp;" data-datetime="8:23 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="182000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396562126173507586"
+                 data-text="Twist In My Sobriety #timslisteningparty \'Ain\'t No Cure for Love\' from @jenniferwarnes fab \' Famous Blue Raincoat \' inspired the feel &amp; groove of Twist . The oboe , wonderful keyboard bass that\'s all Rod Argent from @TheZombiesMusic  a master arranger with the best hooks ðŸ˜ŽðŸŽ¶ ! https://t.co/o2YXEeDLF9" data-datetime="8:22 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FJamesCurran6%2Fstatus%2F1396561362692628481"
+                 data-text="For All These Years, has such a cinematic feel to it, seems ridiculous looking back how young @tanita_tikaram was when this was written  #TimsTwitterListeningParty" data-datetime="8:19 PM May 23, 2021"> 
+                JamesCurran6            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396561213883027463"
+                 data-text="@TheAnisaSubedar â˜€ï¸ðŸ‘" data-datetime="8:18 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396561055833370625"
+                 data-text="FOR ALL THESE YEARS #timslisteningparty Producers Rod &amp; Pete recorded me acoustically to a click , separate guitar voice &amp; built the track around that . An approach that worked well  for an inexperienced singer &amp; musician &amp; enabled them to layer the track creating AH\'s sound." data-datetime="8:17 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FTheAnisaSubedar%2Fstatus%2F1396561055405559816"
+                 data-text="OMG OMG OMG @tanita_tikaram 
+Even now this song makes me yearn (in a way I never really understood) and makes my stomach and head flip a thousand times over. 
+Every second and word of â€˜For All These Yearsâ€™ is truly sublime. 
+#TimsListeningParty #AncientHeart https://t.co/tQuymZlfJF" data-datetime="8:17 PM May 23, 2021"> 
+                TheAnisaSubedar            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396560806523936769"
+                 data-text="FOR ALL THESE YEARS #timslisteningparty Complete Contrast ! @markisham \'s trumpet &amp; flugel horn &amp; Van Hooke\'s drums elevate this track to a brooding sophisticated city song . Band mates in a classic Van Morrison line - up  their complicity shines . Intriguing lyrics ðŸ˜Ž https://t.co/IIAR1RpbX7" data-datetime="8:16 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396560604979138564"
+                 data-text="@NicklebyWhelks @Tim_Burgess ðŸ‘â˜€ï¸" data-datetime="8:16 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="132000" data-url="https%3A%2F%2Ftwitter.com%2FNicklebyWhelks%2Fstatus%2F1396560467301175298"
+                 data-text="#ancientheart proving to be a revelation to me this evening.  The joy of the #TimsTwitterListeningParty experience revealing albums with strength in depth: and this one is no exception.  Well played @Tim_Burgess and @tanita_tikaram  !" data-datetime="8:15 PM May 23, 2021"> 
+                NicklebyWhelks            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396559912772243463"
+                 data-text="WORLD OUTSIDE YOUR WINDOW #timstwitterlisteningparty  Can\'t believe that Helen Sharman 1st British astronaut in space  took WOYW with her ! I met her at @robinince \'s Xmas fundraiser &amp; she was lovely &amp; amazing exactly as you want a heroine to be ðŸš€ðŸ™ðŸªIllustration @amyjpeg https://t.co/Y7pkviSkyV" data-datetime="8:13 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396559843494875136"
+                 data-text="â¤ï¸ðŸ”¥ WORLD OUTSIDE YOUR WINDOW by @tanita_tikaram ðŸ”¥â¤ï¸" data-datetime="8:13 PM May 23, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="123000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396559575122382852"
+                 data-text="WORLD OUTSIDE YOUR WINDOW #TimsTwitterListening The title is fab ! Moved to Basingstoke from Germany when I was 12 &amp; my parents are from Fiji &amp; Borneo . As a teen I felt this difference , it comes out in WOYW &amp; also my love of country music , even has David Lindley on fiddle !" data-datetime="8:12 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396559060657389571"
+                 data-text="I LOVE YOU #TimsTwitterListeningParty makes me a bit giggly ðŸ™ƒ I \'ve never seen \' Betty Blue \' , I don\'t know why I\'m singing \' possible \' like that &amp; I\'m awkward not knowing . But  I just love that as a kid you\'re trying all different writing hats &amp; hoping sth fits ðŸ§¢ðŸ‘’ðŸŽ“ https://t.co/06sX6JfdZM" data-datetime="8:10 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396558884819644417"
+                 data-text="I LOVE YOU #TimsTwitterListeningParty Wow ! I  really hear the influence of Suzanne Vega on \' I Love You \' So thankful to @suzyv She helped me find my writing voice &amp; she looked &amp; sounded so different to everything at that time that someone like me could imagine a life in music https://t.co/4rej6GmDBd" data-datetime="8:09 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396558585094709248"
+                 data-text="Here are a couple of photos I took of Tanita in her dressing rooms on her 1st Ancient Heart tour in 1988 #TimsTwitterListeningParty @tanita_tikaram https://t.co/VZA5lXUep3" data-datetime="8:08 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396558293007544321"
+                 data-text="@MitchDalton1 Thank you ! tt" data-datetime="8:06 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396558244970119177"
+                 data-text="SIGHING INNOCENTS #TimsTwitterListeningParty Producers Van Hooke &amp; Rod Argent quantised everything - which works on AH except on this . I heard a messier sound in my head , BUT tbf it\'s the weakest song on AH , it\'s v. long &amp; the words are non-sensical ðŸ™ƒ I blame the writer ðŸ˜‡" data-datetime="8:06 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396558230315274245"
+                 data-text="@MitchDalton1 â˜€ï¸ðŸ‘" data-datetime="8:06 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396557988274524162"
+                 data-text="SIGHING INNOCENTS #TimsTwitterListeningParty As a  fan of Tom Waits I was thrilled that @marcribotmusic agreed to play on this . But tbh Marc\'s style of playing &amp; Van Hooke &amp; Rod Argent\'s production style didn\'t sit well together - his loose feel which I love can\'t breathe . https://t.co/Qv54teCSNb" data-datetime="8:05 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396557715233775620"
+                 data-text="Ha ! https://t.co/2kKRKBIErA" data-datetime="8:04 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396557680223862786"
+                 data-text="I thought it was really cool that Rod Argent from The Zombies and Vanâ€™s drummer Peter van Hooke were producing Tanitaâ€™s album. An interesting combination but what a team! #TimsTwitterListeningParty @tanita_tikaram" data-datetime="8:04 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396557573973815300"
+                 data-text="CATHEDRAL SONG #TimsTwitterListeningParty I \'m proud of this song. A simple image , the cathedral, expressing how elusive  &amp; overwhelming &amp; distant love is  . So grateful for the intense reading during my Lit . classes  &amp; Emily Dickinson dragging the poetry out of me ! ðŸ˜‰ðŸ™ðŸ¾ https://t.co/OWPNRFnhwu" data-datetime="8:04 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396557487151718402"
+                 data-text="@pauyeung @LlSTENlNG_PARTY @NinaSimoneMusic no" data-datetime="8:03 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396557259560439813"
+                 data-text="CATHEDRAL SONG #TimsTwitterListeningParty This was the first demo I recorded @MitchDalton1 on stunning classical guitar . Co-producer drummer Peter Van Hooke created AH\'s  unique drum sound with an electronic drum kit Simmons SDS-V Drum Synthesizer -both sensual &amp; modern ! https://t.co/Hi6R7Rz09Q" data-datetime="8:02 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396557223808090114"
+                 data-text="@tanita_tikaram @LlSTENlNG_PARTY @oharaviolin â¤ï¸" data-datetime="8:02 PM May 23, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396557020556312584"
+                 data-text="I hadnâ€™t been asked to write a ðŸŽ» solo but thought Iâ€™d write one just in case. Tanita kept it !!! ðŸ˜ƒ" data-datetime="8:01 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FJAJRobertson%2Fstatus%2F1396556977149521925"
+                 data-text="@LlSTENlNG_PARTY @tanita_tikaram @oharaviolin Listening in from Bradford on Avon on original vinyl https://t.co/8c4TS81dXi" data-datetime="8:01 PM May 23, 2021"> 
+                JAJRobertson            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396556727449960449"
+                 data-text="GOOD TRADITION #TimsTwitterListeningParty @oharaviolin \'s solo on this is poptastic ðŸ¥³&amp; totally lifts the song .She has a genius for joyful melody After a gap of 20 years , recording together again , her sound still has that joy but darkness too , can\'t wait for you to hear ðŸŽ» https://t.co/gTWLMBhvY4" data-datetime="8:00 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Foharaviolin%2Fstatus%2F1396556679869837315"
+                 data-text="I met Tanita through â€˜Good Traditionâ€™. Her manager at the time had been Dexys agent for the Too-Rye-Ay tours. He sent me a demo of GT asking if Iâ€™d write a ðŸŽ» part &amp; record it. I loved Tanitaâ€™s voice &amp; the song so naturally I said yes! #TimsTwitterListeningParty @tanita_tikaram" data-datetime="8:00 PM May 23, 2021"> 
+                oharaviolin            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1396556577071640580"
+                 data-text="Itâ€™s time
+
+Handing over to @tanita_tikaram and @oharaviolin https://t.co/A7T5pmKHEX" data-datetime="8:00 PM May 23, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396556555223552007"
+                 data-text="GOOD TRADITION #TimsTwitterListeningParty Teenaged I only owned about 4 records ! ðŸ™ðŸ¾1 of them was Nina Sings the Blues ðŸ˜‰ I obsessed  on \'Real Real \' whose influence you can hear.  In Lit. we were reading \' Songs of Innocence &amp; Experience \' contrasting emotions hence love/hate . https://t.co/pLKB1FFIyg" data-datetime="8:00 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1396556441390047238"
+                 data-text="Let us know where you are in the world for our Ancient Heart @LlSTENlNG_PARTY 
+
+Same question to @tanita_tikaram &amp; @oharaviolin https://t.co/dN6QUnVCSc" data-datetime="7:59 PM May 23, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Ftanita_tikaram%2Fstatus%2F1396556383219326977"
+                 data-text="we \'re off !" data-datetime="7:59 PM May 23, 2021"> 
+                tanita_tikaram            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

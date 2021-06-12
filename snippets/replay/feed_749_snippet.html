@@ -1,0 +1,611 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/57D6dwhQSmhW0JCihhLd1g" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0232b0659956a34cf049cd0d68" alt="Let Go" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Nada Surf</span><br/><span class="sub-colour">Let Go</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(172227)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/57D6dwhQSmhW0JCihhLd1g" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_172227_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 99 tweets from Monday 19th April 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/nadasurf" target="_blank"><img src="https://pbs.twimg.com/profile_images/1196810565722787840/8SMEz2ky_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/nadasurf.jpg'"><br/>@nadasurf</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Blizzard Of '77" data-start="0"
+             data-duration="129" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Way You Wear Your Head" data-start="130"
+             data-duration="192" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Fruit Fly" data-start="323"
+             data-duration="274" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Blonde On Blonde" data-start="598"
+             data-duration="275" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Inside Of Love" data-start="874"
+             data-duration="298" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Hi-Speed Soul" data-start="1173"
+             data-duration="279" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="No Quick Fix" data-start="1453"
+             data-duration="203" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Killian's Red" data-start="1657"
+             data-duration="373" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="La Pour Ca" data-start="2031"
+             data-duration="197" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Happy Kid" data-start="2229"
+             data-duration="249" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Treading Water" data-start="2479"
+             data-duration="263" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Paper Boats" data-start="2743"
+             data-duration="400" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3144"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485132b0659956a34cf049cd0d68" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-99" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="189000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384249928793288716"
+                 data-text="man, guys, i\'m out of pre-planned things to say. feels like so long ago. feels like yesterday. i don\'t know where i\'d be without music. i hope we can all see each other soon. big big love from this house #TimsTwitterListeningParty thanks to tim again X https://t.co/kGr8SGbnfD" data-datetime="8:57 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384249133670617088"
+                 data-text="love the \"ghost train\" rail-squeak that louie snuck in there. i know there are over-ground subways in NY and commuter train lines, but i still feel like sometimes you can hear sounds in the middle of brooklyn that make no sense, like old-time whistles
+#TimsTwitterListeningParty" data-datetime="8:54 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384248894884745223"
+                 data-text="@louielino just reminded me that he snuck the keyboard parts onto this and â€œpaper boatsâ€ (which he also mixed) without telling us because we might have mentioned that they were low-priority songs that might not make the album. we had no perspective. 
+#TimsTwitterListeningParty" data-datetime="8:53 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384248675581382660"
+                 data-text="#TimsTwitterListeningParty i forgot to note the end of the official UK/EU release! thank you thank you thank you! here\'s some US extra action : )" data-datetime="8:52 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1384248553770340360"
+                 data-text="Mucho love and thanks to @nadasurf for another brilliant @LlSTENlNG_PARTY" data-datetime="8:52 PM Apr 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384248495834427397"
+                 data-text="NEITHER HEAVEN NOR SPACE
+
+another magic shop song. also tuned 2 frets down. the atmosphere in this song is all down to @louielino, keyboard and mix. i feel like this cinematic vibe is his real specialty. 
+#TimsTwitterListeningParty" data-datetime="8:52 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384248404381888530"
+                 data-text="i sometimes sing the @Bunnymen\'s \"ocean rain\" here live. it\'s the feel i wanted. something about that song.... thank you @Will_Fuzz #TimsTwitterListeningParty" data-datetime="8:51 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384248031990542338"
+                 data-text="#TimsTwitterListeningParty @ozmaofficial https://t.co/zrPVht5S4M" data-datetime="8:50 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384247792248397825"
+                 data-text="i have that (local/express) the other way around in the song. must have done it for the rhyme. people have pointed out that the REALLY big blizzard in new york was in \'78, but \'77 is a better-sounding number. songs are often an amplified truth. 
+#TimsTwitterListeningParty" data-datetime="8:49 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384247745003753475"
+                 data-text="there\'s a spot in NYC midtown where the express and the local of the uptown 6 train run next to each other but change depths. if you\'re on the express train at just the right moment, it looks like the local is floating up into a night sky. 
+#TimsTwitterListeningParty" data-datetime="8:49 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384247698329456640"
+                 data-text="#TimsTwitterListeningParty photo by brennan cavanaugh https://t.co/i7aL19zRrK" data-datetime="8:49 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384247358091792390"
+                 data-text="the \"what\'s wrong? nothing...\" conversation part. oof. there\'s sometimes nothing lonelier than saying \"nothing\" when you really mean \"everything.\" 
+#TimsTwitterListeningParty" data-datetime="8:47 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384247060015190018"
+                 data-text="he kept a tally of how many dots of each color there were.  there are many more under the ones you see, all accounted for. he made sure each dot was exactly twenty strokes of a small brush.   #TimsTwitterListeningParty" data-datetime="8:46 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384247016465727493"
+                 data-text="let go\'s cover image is a small detail of a larger painting by our friend mark ferguson. for a period he\'d made his life a study of obsession compulsion. he counted his steps from his house to his studio, he counted the puffs of every cigarette.  #TimsTwitterListeningParty" data-datetime="8:46 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384246879605514251"
+                 data-text="PAPER BOATS
+
+more made-up chords. i mostly just put my fingers on the frets and move them around until something sounds good. not the quickest way to work though... 
+#TimsTwitterListeningParty" data-datetime="8:45 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384246726727323656"
+                 data-text="#TimsTwitterListeningParty https://t.co/3cpDWDkFah" data-datetime="8:45 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384246600512405512"
+                 data-text="#TimsTwitterListeningParty https://t.co/vMMxjxUy5f" data-datetime="8:44 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384246310597894153"
+                 data-text="my dad was conflicted about losing contact with his family. of course he had to leave, had to, but what a loss. i used to try and think of things i could say to flip missionaries. now i guess i just wish them peace and hope they can leave if they want. 
+#TimsTwitterListeningParty" data-datetime="8:43 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384246174018793478"
+                 data-text="my father grew up in england, in the Exclusive Brethren, a fundamentalist christian cult. lost the faith as a teen then planned his getaway. went to grad school in US and stayed. the religion wouldn\'t let my grandparents meet me, so i never knew them. 
+#TimsTwitterListeningParty" data-datetime="8:43 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384246104410103821"
+                 data-text="there\'s a line about talking to missionaries at my door. i used to work at a bookstore and a couple of young mormons on mission talked to me for an afternoon. i felt for them. six-and-a-half days a week of rejection, and a few hours to do laundry. 
+#TimsTwitterListeningParty" data-datetime="8:42 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384245962906865672"
+                 data-text="scotty marshall amazing bass player too, don\'t want to leave him out! grand entrances..." data-datetime="8:42 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384245810951450632"
+                 data-text="TREADING WATER
+
+one of my favorite bands of all time is chavez. guitarists matt sweeney @theheavyjamz and clay tarver @cbtarver are huge influences + we all love drummer james lo. the riff starting \"treading water\" is definitely a tribute to them. 
+#TimsTwitterListeningParty" data-datetime="8:41 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384245761638948869"
+                 data-text="#TimsTwitterListeningParty studio litho https://t.co/b0zNJOAq6i" data-datetime="8:41 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384245413742465044"
+                 data-text="#TimsTwitterListeningParty https://t.co/VW13ZkSyhV" data-datetime="8:39 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384245311057448964"
+                 data-text="#TimsTwitterListeningParty @louielino on the pedal steel! âœ¨" data-datetime="8:39 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384245041388871691"
+                 data-text="#TimsTwitterListeningParty https://t.co/mNRbVrXvYG" data-datetime="8:38 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384244937537986560"
+                 data-text="he did something on \"happy kid\" that blew my mind: took 2 hours getting all sounds the way he wanted them, then asked me to come in. he hit \"record\" on the 1/2-inch and \"play\" on the multi-track. didn\'t touch the desk. no moves, no mutes, no nothing. 
+#TimsTwitterListeningParty" data-datetime="8:38 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384244798941405191"
+                 data-text="i went out to seattle to meet him with the tapes. we worked at pearl jamâ€™s studio litho. here\'s a photo of their API desk. chris charged us almost nothing. a total saint and wizard. 
+#TimsTwitterListeningParty" data-datetime="8:37 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384244754603397122"
+                 data-text="HAPPY KID
+
+\"happy kid,\" \"killian\'s red\" and \"blizzard of \'77\" were all mixed by death cab\'s guitarist/producer chris walla. he really helped us out. he was home for just a couple of days from tour, was under the weather, and still wanted to do it. 
+#TimsTwitterListeningParty" data-datetime="8:37 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384244505864392707"
+                 data-text="#TimsTwitterListeningParty https://t.co/CMuz1ga6nr" data-datetime="8:36 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384244297764020224"
+                 data-text="part of time slowing down was that in the midst of all the new music i was absorbing, there were still six months when i just about only listened to the kinks and hank williams
+#TimsTwitterListeningParty" data-datetime="8:35 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384244196861640710"
+                 data-text="the band was kind of dead in the water. but we always had so much fun playing with each other and for people that we just kept at it. we had a feeling things might take off again one day.Â 
+#TimsTwitterListeningParty" data-datetime="8:35 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384244146806788102"
+                 data-text="i worked at a great record store calledÂ @EarwaxRecordsNYÂ in brooklyn (where i met my future wife). i had by far the most normal tatstes. life was very charmed for a period. working at the store, going to shows, fooling around with home recording.Â 
+#TimsTwitterListeningParty" data-datetime="8:34 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384244098987556869"
+                 data-text="i think part of our sound becoming more varied on let go is due to us having had so much more time to write it. after getting dropped from elektra after the proximity effect, our lives really slowed down for a couple of years.Â 
+#TimsTwitterListeningParty" data-datetime="8:34 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384243983036026890"
+                 data-text="LA POUR CA
+
+daniel and i met at a french-language school in new york when we were six years old. daniel said he\'d been collecting phrases for a long time for this one. the lyrics are fantastic. i\'d been to some bossa nova and had this chord progression.
+#TimsTwitterListeningParty" data-datetime="8:34 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384243774855860224"
+                 data-text="we have been so lucky, but two of the people i\'m most grateful to are @heavenlyrecs\' jeff barrett @ChiltonBell and @barsukrecords\' josh rosenfeld. they were the first 2 first A&amp;R people (from my 2 favorite labels) to hear let go and believe in it â¤ï¸
+#TimsTwitterListeningParty" data-datetime="8:33 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384243398207365128"
+                 data-text="it turned out to be too wet and dirty to use so then ira and i drove around for hours during the next day trying to find somewhere to throw it out. finally found a dumpster in back of a home depot. sorry we didn\'t ask but we were sure you\'d say no...
+#TimsTwitterListeningParty" data-datetime="8:31 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384243309095186437"
+                 data-text="we were broke (have been saying that a lot huh), so we drove around downtown manhattan looking for carpeting that had been thrown out of an office building. after what seemed like forever, we finally found some and brought it back.
+#TimsTwitterListeningParty" data-datetime="8:31 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384243206435401740"
+                 data-text="daniel used to help them with their sound system. they let us use the basement. took ages to clean out. it was too big to heat so we thought we\'d build a smaller room by hanging some carpeting.Â 
+#TimsTwitterListeningParty" data-datetime="8:31 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384243163187998723"
+                 data-text="they turned each room into an installation. one was filled with old televisions painted silver. one had a fountain and strobe lights. another one had cinnamon powder heating all night. everything ran off one extension cord. super-dodgy, wild and fun
+#TimsTwitterListeningParty" data-datetime="8:31 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384243081101254670"
+                 data-text="the building next to daniel\'s house was abandoned, and had been taken over by a group of artists who had the most incredible parties. they called it lalalandia and then keep refrigerated.Â 
+#TimsTwitterListeningParty" data-datetime="8:30 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384243023723175943"
+                 data-text="#TimsTwitterListeningParty https://t.co/2qKlu60nwX" data-datetime="8:30 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384242925811290123"
+                 data-text="#TimsTwitterListeningParty https://t.co/6TKIwBu4nT" data-datetime="8:30 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1384242920987926537"
+                 data-text="RT @Tim_Burgess: Could there be some news incoming????" data-datetime="8:30 PM Apr 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384242602468274186"
+                 data-text="#TimsTwitterListeningParty https://t.co/6bcsnyIgn2" data-datetime="8:28 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384242430233366528"
+                 data-text="incredible bassline. once in awhile i\'d hear a record i had a feeling daniel would freak out about and i\'d buy it for him. that\'s what happened with @sdreband\'s \"how it feels to be something on.\" i think he brought a bit of sunny day into his own style
+#TimsTwitterListeningParty" data-datetime="8:28 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384242339422478349"
+                 data-text="in the middle of \"killians red\" it hit me that what i\'d been trying to do was to get at the atmosphere of come\'s \"the german song.\" listen if you have the time. the bar with the killian\'s red sign was the blue lounge on north 8th and driggs, now closed
+#TimsTwitterListeningParty" data-datetime="8:27 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384242288964947970"
+                 data-text="KILLIANS RED
+
+there was a great new york band called come i was a huge fan of. thalia zaked sang and played guitar and chris brokaw played guitar. i ran into thalia in a boston guitar store and invited her to our show that night.Â 
+#TimsTwitterListeningParty" data-datetime="8:27 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384242217284374531"
+                 data-text="rachel has two triplet sisters, petra and tanya, and they are the daughters of giant jazz bassist charlie haden. they are all three wildly gifted singers and musicians, together as the haden triplets and separately in a million projects.Â 
+#TimsTwitterListeningParty" data-datetime="8:27 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384242167565066242"
+                 data-text="chris was friends with rachel haden (from that dog) and invited her by. we really hit it off and asked her to sing on \"no quick fix.\" she was getting over a flu but still had laser-guided pitch. incredible.
+#TimsTwitterListeningParty" data-datetime="8:27 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384242131636613123"
+                 data-text="producer chris @fudurichâ€™s world 
+#TimsTwitterListeningParty https://t.co/ibiRt3gDWa" data-datetime="8:26 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384241839679578115"
+                 data-text="chris really stepped up and handled engineering and co-producing himself. he and fred lived together and let us stay at their house (super-generous) so we at least got to see fred, who we really got along with, and hear insane korn studio stories.Â 
+#TimsTwitterListeningParty https://t.co/O9RQdBqq5p" data-datetime="8:25 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384241705268891669"
+                 data-text="by the time we got to venice beach, we had $5G. a lot of money, but not enough for that team in that studio. it was mostly small bills, so at least it looked like a lot : ) fred couldn\'t afford to work that cheap and couldn\'t turn down a job with korn
+#TimsTwitterListeningParty" data-datetime="8:25 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384241651971858438"
+                 data-text="NO QUICK FIXÂ 
+
+our 2nd album was made at a great LA studio called palindrome. no control room, just huge space. our plan was to tour across the country selling merch to make a budget, and work with producer fred maher and engineer chris @fudurich again
+#TimsTwitterListeningParty https://t.co/2gGYHZvy40" data-datetime="8:25 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="124000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384241454378143750"
+                 data-text="#TimsTwitterListeningParty https://t.co/AaxqDKWtXp" data-datetime="8:24 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384240933500117006"
+                 data-text="another possible name had been \"faithful recordings\"" data-datetime="8:22 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384240830882357249"
+                 data-text="a lot of the overdubs for let go were done at @brycegoggin\'s studio, higher power, in upstate new york. it was a converted church. we slept on the floor in sleeping bags. incredible times. great work and crazy fun. thank you @roystonlangdon https://t.co/rNRcxfhe2e" data-datetime="8:21 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384240806093934593"
+                 data-text="another beautiful @heavenlyrecs single cover by @paulkellyfilm 
+#TimsTwitterListeningParty https://t.co/I0YbChPv56" data-datetime="8:21 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384240691497238528"
+                 data-text="more greatÂ @joemcginty7Â keyboard playing
+
+#TimsTwitterListeningParty https://t.co/Q80jdfn67H" data-datetime="8:21 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1384240640196710416"
+                 data-text="ðŸ”¥ðŸ”¥ðŸ¤˜ðŸ¤˜Hi-Speed Soul by @nadasurf ðŸ¤˜ðŸ¤˜ðŸ”¥ðŸ”¥" data-datetime="8:21 PM Apr 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384240584747982858"
+                 data-text="victoria also told me about talking to her ceiling in the morning. we\'ve been friends ever since. she and maria went on to form the concretes. now victoria makes music as taken by trees.Â 
+
+#TimsTwitterListeningParty" data-datetime="8:20 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384240536060530698"
+                 data-text="our first show out of the country was in stockholm. we went out to a club called tuben, in an old subway station. i met victoria bergsman and maria eriksson. victoria had a really quiet voice but i understood every word somehow.Â 
+
+#TimsTwitterListeningParty" data-datetime="8:20 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384240464774123526"
+                 data-text="#TimsTwitterListeningParty intro riff on tiny peavey amp https://t.co/zaMIbKicRt" data-datetime="8:20 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384240286763651072"
+                 data-text="HI-SPEED SOUL
+
+a lot of clubs we played turned into rock discos after our set. some of them were fantastic. the atomic cafe in munich was one of those. the djs were really adventurous, mixing genres and playing records at the wrong speed on purposeÂ #TimsTwitterListeningParty" data-datetime="8:19 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384240158283755521"
+                 data-text="home-grown covers for US #TimsTwitterListeningParty https://t.co/j4zcqH3jfo" data-datetime="8:19 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384239945531891729"
+                 data-text="#TimsTwitterListeningParty more of joe\'s world âœ¨ https://t.co/JDc2hLKK8D" data-datetime="8:18 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384239757324996611"
+                 data-text="the piano is byÂ @joemcginty7. he was our main album keyboard player beforeÂ @louielinoÂ and is all over let go. we did a lot of these parts in his apartment on skillman street. i helped him move some shelves first.Â 
+#TimsTwitterListeningParty https://t.co/I7M0MCAtwv" data-datetime="8:17 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384239623581274115"
+                 data-text="when we got to the studio, a friend offered to make a video for us, but had had a limited window. \"inside of love\" was the closest song to being finished but didn\'t have a final arrangement. we scrambled and shot the video a couple of days later.
+#TimsTwitterListeningParty" data-datetime="8:16 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384239573010587650"
+                 data-text="all the verses orginally had the more complicated chord progression of the \"i see the last page so well\" part, but at the last minute, just before recording, i took most of the chords out and it sounded better.
+#TimsTwitterListeningParty" data-datetime="8:16 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384239523907784705"
+                 data-text="@ChiltonBell love you jeff! X" data-datetime="8:16 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384239280273297415"
+                 data-text="we have been so lucky, but two of the people i\'m most grateful to are @heavenlyrecs\' jeff barrett @ChiltonBell and @barsukrecords\' josh rosenfeld. they were the first 2 first A&amp;R people (from my 2 favorite labels) to hear let go and believe in it â¤ï¸â¤ï¸
+#TimsTwitterListeningParty" data-datetime="8:15 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384239137910267924"
+                 data-text="the chorus finally hit me while i was sitting in mccarren park, five minutes away. i literally ran home to record it before forgetting. it was a crowded saturday and i remembering weaving through people while running.
+#TimsTwitterListeningParty" data-datetime="8:15 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384239066460213249"
+                 data-text="INSIDE OF LOVE
+
+i had these verses for awhile. i remember playing them over &amp; over on a cheap red danelectro. scared of getting it wrong (parents\' marriage had been bad) but i had such a longing / belief. i wanted to express it but i didn\'t know how.Â 
+#TimsTwitterListeningParty" data-datetime="8:14 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384239008616644609"
+                 data-text="beautiful @heavenlyrecs single cover by @paulkellyfilm 
+#TimsTwitterListeningParty https://t.co/gFtJYCvPqf" data-datetime="8:14 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1384238805079658502"
+                 data-text="@nadasurf @LlSTENlNG_PARTY ðŸ™ŒðŸ™ŒðŸ™ŒðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="8:13 PM Apr 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384238474631385090"
+                 data-text="i want to give, along the way, a big thank you to @Tim_Burgess for putting this phenomenon together, and letting us participate. i think this is a wildly beautiful idea, all listening at the same time âœ¨
+#TimsTwitterListeningPartyÂ @LlSTENlNG_PARTY" data-datetime="8:12 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384238401780551690"
+                 data-text="#TimsTwitterListeningParty  photo by samuel kirzenbaum https://t.co/WYkugKb2LY" data-datetime="8:12 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384238223669354498"
+                 data-text="we never rehearsed that one together. just played it on acoustic guitars. thereâ€™s a bass mistake around the two-minute mark but daniel wanted to keep it. sometimes those little mistakes are the best part. #TimsTwitterListeningParty" data-datetime="8:11 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384237958388076545"
+                 data-text="i had a discman and was listening to \"blonde on blonde,\" the dylan album. i was overcome by a feeling of gratitude that this rewarding, complex and beautiful piece of art would always be there to listen to. really cheered me up. felt worth documenting. 
+#TimsTwitterListeningParty" data-datetime="8:10 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384237896689803266"
+                 data-text="BLONDE ON BLONDE
+
+this is another very literal song. i\'d woken up sad for some reason. i needed to go into manhattan to buy a birthday present for a friend. when i got off at 1st avenue and 14th street, it was raining hard. i was dry under my hood. 
+#TimsTwitterListeningParty" data-datetime="8:10 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384237407445282824"
+                 data-text="lyrically, this was an exciting song for me. i\'d always written from a personal point of view and wanted to break out of that, but hadn\'t been able to do it. singing from the point of view of a fruit fly was a first step. start small... 
+#TimsTwitterListeningParty" data-datetime="8:08 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384237354118914049"
+                 data-text="in the end, it\'s only on \"fruit fly\" and a bit on \"the way you wear your head.\" we bought our own soon after. i still have it. the original knobs broke, that\'s why these are orange. i still want to do whole album with one. 
+#TimsTwitterListeningParty https://t.co/PuSku4rVMp" data-datetime="8:07 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384237260833398785"
+                 data-text="there was a vocoder pedal in the studio. you could plug a guitar and a microphone into it and if you sang while playing a chord, whatever you sang would have all the notes of the chord in it. magic! i was obsessed and wanted to use it on every song. 
+#TimsTwitterListeningParty" data-datetime="8:07 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384237236221210645"
+                 data-text="another amazing daniel lorca bassline. totally drives the song while also adding hamonic complexity. ticks every box! 
+#TimsTwitterListeningParty https://t.co/dYQNIsLL9v" data-datetime="8:07 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384236915285655562"
+                 data-text="i noticed the fruit flies, got up from the table, went into the the living room, wrote the song in a few minutes, and then came back and finished eating. fastest song i ever wrote. i don\'t think i\'ll *ever* get that lucky again. 
+#TimsTwitterListeningParty" data-datetime="8:06 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384236688856150026"
+                 data-text="FRUIT FLY
+
+the beginning of \"fruit fly\" is totally literal. i was having  take-out at my kitchen table and the previous day\'s take-out was still there. i\'m not that messy now thank goodness. in my defense, i wasn\'t always then either, just sometimes....
+#TimsTwitterListeningParty" data-datetime="8:05 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384236409750396934"
+                 data-text="#TimsTwitterListeningParty https://t.co/P32fgB9miV" data-datetime="8:04 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384236335049842693"
+                 data-text="some hot ira elliott @rockpilot drumming at 2:00! ðŸ”¥ i love that fill. i think it was the answer to the question \"is it possible to go all the way around the kit and then all the way back in one bar? #TimsTwitterListeningParty https://t.co/TRnAuHfKW5" data-datetime="8:03 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384236129524674563"
+                 data-text="borrowed from cheap trick in the lyrics, \"i want you to want me, i need you to need me\" turned into \"i want to want you, i need to need you\" etc. love a lyric quote, should do it more often! a later song \"whose authority\" has some zeppelin in it : ) #TimsTwitterListeningParty" data-datetime="8:03 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384236079872573452"
+                 data-text="the loop was just one chord. i loved playing other chords against that, it felt instantly complex and dense, almost like MBV (but obvs simpler in our case). it\'s probably a common trick, but i\'d never done it before. #TimsTwitterListeningParty" data-datetime="8:02 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384236032292319235"
+                 data-text="THE WAY YOU WEAR YOUR HEAD
+
+we had a cheap sampler called â€œdr. sampleâ€ and i looped the opening riff of a lyres song, \"how do you know?\" it\'s tremolo-based, kind of like a faster \"how soon is now?\"  i wrote â€œyour headâ€ on top of it. #TimsTwitterListeningParty https://t.co/OcD1nTW5Cq" data-datetime="8:02 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384235912767303695"
+                 data-text="#TimsTwitterListeningParty https://t.co/KmrqlvLTuV" data-datetime="8:02 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1384235826914103299"
+                 data-text="RT @LlSTENlNG_PARTY: Two questions for our @LlSTENlNG_PARTY people 
+
+1) Which town/ city are you tuned in from?
+
+2) For those who have beenâ€¦" data-datetime="8:01 PM Apr 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384235818651295751"
+                 data-text="the magic shop had an incredible one-of-a-kind wraparound neve console. the house engineer juan garcia (who had shown me the ropes when he was the head intern) recorded \"blizzard of \'77,\" \"happy kid\" and \"neither heaven nor space\" in one day. #TimsTwitterListeningParty https://t.co/8MTJEevmVZ" data-datetime="8:01 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384235633082654720"
+                 data-text="i was a failed audio engineer. interned at the magic shop in new york, didnâ€™t learn enough technique to move up. but i loved the process. we had almost no money when we were making let go, and my old boss was kind enough to give us a great deal. #TimsTwitterListeningParty" data-datetime="8:01 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384235576648368132"
+                 data-text="that\'s how i\'ve made every demo since. the \"blizzard of \'77\" demo felt right as is, so we didn\'t change the song much, just made it a bit more lush. borrowed the full-drop-D tuning from elliott smith (D G C F A D) #TimsTwitterListeningParty" data-datetime="8:00 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384235527872782336"
+                 data-text="iâ€™d borrowed a friend\'s 4-track when i was 16 and recorded billy bragg\'s \"a new england,\" playing it twice and singing it twice. i didn\'t know that was called \"double-tracking\" but i thought it was the coolest sound. #TimsTwitterListeningParty" data-datetime="8:00 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fnadasurf%2Fstatus%2F1384235485879443457"
+                 data-text="BLIZZARD OF \'77
+
+we were in amsterdam on tour. i was sharing a hotel room with daniel. i had an idea for a song so i went into the bathroom so as not to wake him. i made a really quiet demo on a small cassette 4-track, the kind with only 2 faders. #TimsTwitterListeningParty https://t.co/vk2q8gzrGA" data-datetime="8:00 PM Apr 19, 2021"> 
+                nadasurf            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1384235368082415616"
+                 data-text="Hey Ho, 
+Let Go
+
+Handing over to @nadasurf for the @LlSTENlNG_PARTY https://t.co/dzrkYD53hG" data-datetime="8:00 PM Apr 19, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

@@ -51,9 +51,9 @@ class TimeSlotFileEnrich {
       if ((it.spotifyImgLinkSmall.isEmpty() || it.spotifyImgLinkLarge.isEmpty()) && it.spotifyImgLink.contains("i.scdn.co")) {
         val albumId = it.getSpotifyAlbumId()
         logger.info("Spotify Album Id $albumId for album ${it.album} and band ${it.band}")
-        val album : Album? = if(albumId.isEmpty()) {
+        val album: Album? = if (albumId.isEmpty()) {
           SpotifyUtils().findAlbum(it.band, it.album)
-        }else{
+        } else {
           SpotifyUtils().searchByAlbumId(albumId)
         }
         if (album != null) {
@@ -80,9 +80,12 @@ class TimeSlotFileEnrich {
           }
 
         }
-        // only set the tweeters if the time slot data was empty
-        if (it.tweeters.isEmpty()) {
-          it.tweeters = replayMap[it.hashBandAlbum()]?.twitterIds ?: ""
+        // get tweeters from replay page as this has actual list.  The time slot data
+        // has main artist/band first which replay doesn't so keep that as first , remove duplicate
+        // and remove any double separators as a result of this madness
+        val replayTweeters = replayMap[it.hashBandAlbum()]?.twitterIds ?: ""
+        if (it.hasReplay() && replayTweeters.isNotEmpty()) {
+          it.tweeters = "${it.tweeterList().first()}:${replayTweeters.replace(it.tweeterList().first(), "")}".replace("::",":")
         }
 
         // spotify link from php if
@@ -129,11 +132,11 @@ class TimeSlotFileEnrich {
     return super.equals(other)
   }
 
-  private fun addListeningPartyNumber(it: TimeSlot, counter :AtomicInteger) {
+  private fun addListeningPartyNumber(it: TimeSlot, counter: AtomicInteger) {
     // Not scheduled yet
-    if(it.is1970() || it.band.contains("Gorilla", ignoreCase = true)){
+    if (it.is1970() || it.band.contains("Gorilla", ignoreCase = true)) {
       it.listeningPartyNumber = "-1"
-    }else{
+    } else {
       it.listeningPartyNumber = counter.incrementAndGet().toString()
     }
     logger.debug("Time Slot is $it")

@@ -1,0 +1,478 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/07sbMYttM9R2K2i0zg9jjD" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0283fb432f35afeb2d4719012d" alt="I Don't Feel Well" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Pluralone</span><br/><span class="sub-colour">I Don't Feel Well</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/07sbMYttM9R2K2i0zg9jjD" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 51 tweets from Tuesday 18th May 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Pluralone1" target="_blank"><img src="https://pbs.twimg.com/profile_images/1240729949863948288/_hbWJCoU_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Pluralone1.jpg'"><br/>@Pluralone1</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Red Don't Feel" data-start="0"
+             data-duration="274" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Night Won't Scare Me" data-start="275"
+             data-duration="333" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Carry" data-start="609"
+             data-duration="224" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="The Report" data-start="834"
+             data-duration="256" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Steal Away" data-start="1091"
+             data-duration="252" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Mother Nature" data-start="1344"
+             data-duration="269" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Knowing You" data-start="1614"
+             data-duration="272" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Plank" data-start="1887"
+             data-duration="289" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Don't Have To" data-start="2177"
+             data-duration="205" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="I Hear You" data-start="2383"
+             data-duration="320" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2704"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485183fb432f35afeb2d4719012d" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-51" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="236000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1394757137990029317"
+                 data-text="@Pluralone1 @LlSTENlNG_PARTY A pleasure âœŠðŸ”¥" data-datetime="8:49 PM May 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1394756148406935552"
+                 data-text="Thanks so much Josh
+
+Such a brilliant record
+
+Forza @Pluralone1 âœŠ" data-datetime="8:45 PM May 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394756107231326209"
+                 data-text="Thank you everyone.  Thank you Tim. 
+
+@Tim_Burgess @LlSTENlNG_PARTY 
+#TimsTwitterListeningParty" data-datetime="8:45 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394756011341213701"
+                 data-text="As I watched you play that night, Iâ€™d have never thought youâ€™d be hosting a Listening Party for an album Iâ€™d make someday, for people all over the world, using a whole new form of communication.  Iâ€™m glad the reason weâ€™re all still moved to be together is music." data-datetime="8:45 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394755915635589120"
+                 data-text="Well, thatâ€™s I Donâ€™t Feel Well.  @Tim_Burgess, THANK YOU THANK YOU THANK YOU THANK YOU!!!!!!  I saw you last at the John Anson Ford Amphitheater in August of 1998 and I still think of it as one of may favourite nights of that era.
+#TimsTwitterListeningParty" data-datetime="8:44 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394755576337371136"
+                 data-text="This song contains my favourite moment on the album.  Basically from when the Bass VI enters at the end.  That whole bit.  Save the best for last.  Thank you again for the strings Nate!
+
+#TimsTwitterListeningParty" data-datetime="8:43 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394755169770819585"
+                 data-text="An extra special thanks to Jose Medeles and Revival Drums in Portland, OR. for selling me the greatest snare drum on earth oh so many years ago.
+
+#TimsTwitterListeningParty" data-datetime="8:42 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394754913612144643"
+                 data-text="Oh, hereâ€™s another eye roller.  Wanna see where I learned the word â€˜countermandâ€™?  https://t.co/IOovndPPZT.  
+
+#TimsTwitterListeningParty" data-datetime="8:40 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394754669939814402"
+                 data-text="I Hear Youâ€¦
+
+Who said â€œTo Be One With Youâ€ is my Kubrick putting the 2001 soundtrack in the record shop in A Clockwork Orange moment.  Lofty eh?  Iâ€™m rolling my own eyes right now. 
+
+#TimsTwitterListeningParty" data-datetime="8:40 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394754433641185281"
+                 data-text="Not that itâ€™s a very interesting photo, but I was curious if I had a picture of the piano Donâ€™t Have To was written on.  It was the RHCP dressing room piano.
+#TimsTwitterListeningParty https://t.co/UOnABFNLf2" data-datetime="8:39 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394754216002871298"
+                 data-text="Itâ€™s hard for me to listen and feel I succeeded, but I guess â€œit doesnâ€™t have to be anyone,â€ just what it is.
+
+#TimsTwitterListeningParty" data-datetime="8:38 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394754115838693376"
+                 data-text="I never thought I could accurately recreate the emotion I spewed into the air that first night I was alone in a big house screaming at the piano.
+
+#TimsTwitterListeningParty" data-datetime="8:37 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394753790150987780"
+                 data-text="Donâ€™t Have Toâ€¦
+
+Donâ€™t Have To was a thorn in my side for years.  It was written as an improv looking over the ocean as the sun set one July evening in 2014.
+
+#TimsTwitterListeningParty" data-datetime="8:36 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394753641504931840"
+                 data-text="This song had a very particular bass tone.  I love this bass.
+
+#TimsTwitterListeningParty https://t.co/DVQcjGhOvP" data-datetime="8:35 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394753275883245568"
+                 data-text="I hope everyone out there has experienced the amount of joy I had the day I wrote this song.  Red Donâ€™t Feel was written the same day.  I went to sleep very pleased with the life I lived that day.  
+
+#TimsTwitterListeningParty" data-datetime="8:34 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394752954222059520"
+                 data-text="This was one of the first bits of music written once the world shut down and I started working.  I was so happy to be sitting at the piano.
+
+#TimsTwitterListeningParty" data-datetime="8:33 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394752543100604417"
+                 data-text="Plankâ€¦
+
+Speaking of the mind, why did this song instantly present an image of standing out over a sea, on a plank, with a load of unforgiving people behind?  Thatâ€™s why I called it Plank.
+
+#TimsTwitterListeningParty" data-datetime="8:31 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394752163843166209"
+                 data-text="â€œYou canâ€™t live life without something youâ€™re sufferingâ€. The mind...
+
+#TimsTwitterListeningParty" data-datetime="8:30 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1394751925032300544"
+                 data-text="Not sure if our @LlSTENlNG_PARTY folks know but @Pluralone1 is Josh Klinghoffer (say hi Josh). A Red Hot Chili Pepper for 10 years &amp; session dude who has toured with PJ Harvey, Beck, Butthole Surfers, Warpaint &amp; Sparks among many others. But, to us, right now heâ€™s @Pluralone1" data-datetime="8:29 PM May 18, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394751899723722752"
+                 data-text="I donâ€™t believe in magical shit.  I believe in the magic of the mind. The magic of consciousness.
+
+#TimsTwitterListeningParty" data-datetime="8:29 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394751596316139520"
+                 data-text="Itâ€™s amazing how they somehow wiggle their way to the front of the line when it comes time to write and get songs together. 
+
+#TimsTwitterListeningParty" data-datetime="8:27 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394751422495813632"
+                 data-text="Knowing Youâ€¦
+
+Knowing You is the wise old bugger in this bunch of songs.  This damn chord progression had been around for ages!
+
+#TimsTwitterListeningParty" data-datetime="8:27 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394751301557178370"
+                 data-text="My dear friend Chris Warren made me this shirt!!!  Not sure which song Iâ€™m shaking the tambourine on here, but could be this one.  I like a loud tambourine.
+
+#TimsTwitterListeningParty https://t.co/yprGjgCjr4" data-datetime="8:26 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394750919577800704"
+                 data-text="These past few months, everyday Iâ€™ve been asking myself where the rules I make up for myself to follow come from?  Why keep them around?  Who do they help?  Sorry, we should be enjoying the music.  
+
+#TimsTwitterListeningParty" data-datetime="8:25 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394750767962066944"
+                 data-text="Why wouldnâ€™t I think to write a song about that?  Every song should probably be about that.  
+
+#TimsTwitterListeningParty" data-datetime="8:24 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394750607278239744"
+                 data-text="I feel like writing a song about climate change is something Iâ€™d never let myself do if I was actually paying attention.  I had called this Mother Nature the day I came up with the chords in 2015.
+
+#TimsTwitterListeningParty" data-datetime="8:23 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394750306664148995"
+                 data-text="Mother Natureâ€¦
+
+Iâ€™m still unclear which version of this song is being played.  There are now three of them.  You ever listen to a song and wanna break your stereo?  Iâ€™m having that now.
+
+#TimsTwitterListeningParty" data-datetime="8:22 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394750190104432642"
+                 data-text="Itâ€™s a beautiful thing to me that weâ€™ve been involved in a few musical endeavours and toured the world together.  What an honour it is for me.
+
+#TimsTwitterListeningParty" data-datetime="8:22 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394750085607526401"
+                 data-text="Nate Walcott on the string arrangement!  I feel so lucky to be able to work with him.  I met him in a hotel in London, drunk, in 2003.  
+
+#TimsTwitterListeningParty" data-datetime="8:21 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1394749920666689536"
+                 data-text="RT @Tim_Burgess: Every so often there is a flurry of tweets asking me if this is a) my dog b) a dog that took a photo of me when it went foâ€¦" data-datetime="8:21 PM May 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394749888324272129"
+                 data-text="I think I enjoyed stealing away from the world a little too much last year.  Being by myself.  As I said, I donâ€™t feel very well. 
+
+#TimsTwitterListeningParty" data-datetime="8:21 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394749776160120832"
+                 data-text="Steal Away, the perfect example of a song I can listen to and both love and despise my voice at the same time.  So much of this album is about the feelings last year brought.
+
+#TimsTwitterListeningParty" data-datetime="8:20 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394749546408800263"
+                 data-text="This is probably the loop in there, in that green one!  Look at the mess I made!!!
+
+#TimsTwitterListeningParty https://t.co/31Q77lb1kf" data-datetime="8:19 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394749252975218689"
+                 data-text="Steal Awayâ€¦
+
+The intro to Steal Away was recorded at Studio Litho in Seattle when I went up for a few extra days of recording at the end. 
+
+#TimsTwitterListeningParty" data-datetime="8:18 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394749060662251521"
+                 data-text="This is the other fretless song.  For this I used my childhood best friendâ€™s bass and recorded it on his birthday.  He left us when we were 19.  I miss him.
+
+#TimsTwitterListeningParty https://t.co/e7wLepjiqX" data-datetime="8:17 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394748920740282368"
+                 data-text="There are those two lines in the song I sang flat intentionally and it even (still) makes my spine tense up when I hear it.
+
+#TimsTwitterListeningParty" data-datetime="8:17 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394748711859679234"
+                 data-text="I write far too much in the car.  I drive round for hours listening, scratching words illegibly on bits of paper.  Iâ€™m sure there is a more modern way to do it.  
+
+#TimsTwitterListeningParty" data-datetime="8:16 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394748482334851073"
+                 data-text="I had to change the name of the song, thus The Report.  The objective for that day was to write words for that song.  It all came basically when summonsed.
+
+#TimsTwitterListeningParty" data-datetime="8:15 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394748188657999873"
+                 data-text="The Reportâ€¦
+
+Itâ€™s possible I decided to call the album I Donâ€™t Feel Well as I left the house one day on my way to my work space.  I remember halfway on that drive first signing those words on the chorus.
+#TimsTwitterListeningParty" data-datetime="8:14 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394748002506395648"
+                 data-text="Probably doing the drums to Carry.  Yes, thatâ€™s a 28â€ ride cymbal, so?!?!!  The cymbal on the right (of the photo) is an Istanbul Agop 30th Anniversary Flat Ride.  Itâ€™s one of my favourite things.
+#TimsTwitterListeningParty https://t.co/2SLWcLDdZX" data-datetime="8:13 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1394747904842141701"
+                 data-text="ðŸ¤˜@Pluralone1 sounding ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="8:13 PM May 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394747543750266881"
+                 data-text="There was a time when we were teenagers and he was pretty much my only audience, so thanks to you lovely people, I felt slightly confident in my initial decisions and carried on the way it is.  
+
+#TimsTwitterListeningParty" data-datetime="8:11 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="127000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394747185590247424"
+                 data-text="Carryâ€¦
+
+One of my closest and dearest friends told me when he first heard Carry to ditch the slow, moody beginning and make a song only out of the groovy end bit. 
+
+#TimsTwitterListeningParty" data-datetime="8:10 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394746649944104962"
+                 data-text="Writing is funny like that.  This is also a song, whose ending especially, is fucking embarrassing to get caught singing by the person in the car next to you.
+
+#TimsTwitterListeningParty" data-datetime="8:08 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394746224121581570"
+                 data-text="This is one of those songs where after the lyrics were written and the vocal recorded, I was shocked at how much (different) meaning I heard that was nowhere near my mind when the pen hit the paper.
+
+#TimsTwitterListeningParty" data-datetime="8:06 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394745938149740544"
+                 data-text="The Night Wonâ€™t Scare Meâ€¦
+
+The Night Wonâ€™t Scare Me is another example of Jack in the living room!
+#TimsTwitterListeningParty" data-datetime="8:05 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394745761699491840"
+                 data-text="This is day one of recording, June 22nd 2020 doing Nashville tuning guitar on Red Donâ€™t Feel.
+#TimsTwitterListeningParty https://t.co/E26LH5O4t4" data-datetime="8:04 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394745352780062721"
+                 data-text="Itâ€™s sickening to watch colours at war with each other.  I brought an Ampeg fretless bass to this particular fight.  Have it!
+
+#TimsTwitterListeningParty" data-datetime="8:02 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394745237717667844"
+                 data-text="Last year, with more time to pay attention to the news, there was more focus on the sad culture war going on.  A lot of it is as silly as red fighting blue.
+
+#TimsTwitterListeningParty" data-datetime="8:02 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FPluralone1%2Fstatus%2F1394744792282587137"
+                 data-text="Red Donâ€™t Feelâ€¦
+
+This record was recorded in the height of last yearâ€™s pandemic and Red Donâ€™t Feel was the first to really come together.  I sent it to Jack Irons and he recorded drums in his living room.
+
+#TimsTwitterListeningParty" data-datetime="8:00 PM May 18, 2021"> 
+                Pluralone1            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1394744609213980678"
+                 data-text="Over to you @Pluralone1 https://t.co/Sqbs2EMa6s" data-datetime="8:00 PM May 18, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

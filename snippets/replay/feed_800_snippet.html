@@ -1,0 +1,403 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7nPBHofOjXV7vumdbAjFku" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e026d6e9281277464cca6c228b2" alt="Utopian" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Ian McNabb</span><br/><span class="sub-colour">Utopian</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(7271)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7nPBHofOjXV7vumdbAjFku" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_7271_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 47 tweets from Sunday 6th June 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/empiresend" target="_blank"><img src="https://pbs.twimg.com/profile_images/1353100893353357312/uBPPgSZp_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/empiresend.jpg'"><br/>@empiresend</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1396915572328251393/rEF_JK1T_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Boy" data-start="0"
+             data-duration="311" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Harry Dean Stanton" data-start="312"
+             data-duration="366" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Mesmerised" data-start="679"
+             data-duration="339" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Deserter" data-start="1019"
+             data-duration="330" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Rollin' On (The Things We Gave Away)" data-start="1350"
+             data-duration="329" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Jonesin'" data-start="1680"
+             data-duration="373" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="You Bring Good Things" data-start="2054"
+             data-duration="230" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="The Outlaw" data-start="2285"
+             data-duration="235" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="YOLO" data-start="2521"
+             data-duration="323" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Runnin' Outta Stuff" data-start="2845"
+             data-duration="242" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Anamorphic Anodyne (Twistin' In the Wind)" data-start="3088"
+             data-duration="305" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Gigolo Days" data-start="3394"
+             data-duration="222" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Goin' to a Place" data-start="3617"
+             data-duration="242" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="Swiss Army knife of Fuerteventura" data-start="3860"
+             data-duration="274" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="The Old Grey Lady" data-start="4135"
+             data-duration="240" style="display:none"></div>
+                <div id="track-16" class="track-list"
+             data-name="We're Never Gonna Grow Up" data-start="4376"
+             data-duration="240" style="display:none"></div>
+                <div id="track-17" class="track-list"
+             data-name="Jivin' Miss Daisy" data-start="4617"
+             data-duration="237" style="display:none"></div>
+                <div id="track-18" class="track-list"
+             data-name="Great Spirit" data-start="4855"
+             data-duration="271" style="display:none"></div>
+                <div id="track-19" class="track-list"
+             data-name="No One Tells a Lie Like a Dude With a Tie" data-start="5127"
+             data-duration="267" style="display:none"></div>
+                <div id="track-20" class="track-list"
+             data-name="Melody" data-start="5395"
+             data-duration="208" style="display:none"></div>
+                        <div id="track-21" class="track-list"
+                     data-name="Finished" data-start="5604"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048516d6e9281277464cca6c228b2" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-47" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401612842911027205"
+                 data-text="I\'m off to have me veggie casserole. If you enjoyed listening to Utopian at Tim\'s Twitter Listening Party please consider buying a physical copy or download from Bandcamp. Stay frosty! Ix https://t.co/oBWy2d2GAP https://t.co/1PCs77SobR 
+@LlSTENlNG_PARTY" data-datetime="5:39 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1401612399329882119"
+                 data-text="10 minutes to go https://t.co/Cyu8oxq5ui" data-datetime="5:37 PM Jun 6, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="186000" data-url="https%3A%2F%2Ftwitter.com%2Fjorgeelbrecht%2Fstatus%2F1401612121465667588"
+                 data-text="CANT WAIT!!! https://t.co/AEe42hA1Bl" data-datetime="5:36 PM Jun 6, 2021"> 
+                jorgeelbrecht            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401611344412033026"
+                 data-text="@Tim_Burgess https://t.co/Kbixmk1TSD" data-datetime="5:33 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1401611193702301697"
+                 data-text="RT @empiresend: My brand new 20 track double album \'Utopian\' is now available to download in high quality. Thank you for your support! Ix #â€¦" data-datetime="5:32 PM Jun 6, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401611080158396418"
+                 data-text="@ciaronbell @LlSTENlNG_PARTY https://t.co/e6Y7B9Fllv" data-datetime="5:32 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="174000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1401611071237021705"
+                 data-text="Big thanks to @empiresend ðŸ¤˜" data-datetime="5:32 PM Jun 6, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="275000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401610342380281856"
+                 data-text="11) Melody. This is my hymn to music. The only thing that has never let me down. Thanks for stopping by. Thanks to Tim and the team. I absolutely love these listening sessions. Ix #utopian @LlSTENlNG_PARTY https://t.co/MjR32GzVgx" data-datetime="5:29 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="271000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401609187906535429"
+                 data-text="10) No One Tells A Lie Like A Dude With A Tie. I came up with a Billy Gibbons grinder and went from there. Dystopian verses - Utopian choruses. The whole album was built around this. Vocoder. Strings by Kate O\' Brien. Don\'t trust the f*ckers. Resist. Turn off your TV." data-datetime="5:24 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="186000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401608052164472841"
+                 data-text="9) Great Spirit. I tend to leave my spirituality ambiguous. Raised a Catholic you tend to go against organised religion when you get hip to what\'s going on. I have to believe in something. I can\'t believe it\'s all by chance. Behave. You kidding?" data-datetime="5:20 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1401607270669197320"
+                 data-text="âœŒï¸Jivinâ€™ Miss Daisy by @empiresend âœŒï¸" data-datetime="5:17 PM Jun 6, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="241000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401607052502384647"
+                 data-text="8) Jivin\' Miss Daisy. Jimmy Page/Joe Walsh guitar riff. Steve Miller by way of the Rolling Stones on the choruses. Chuck Berry-inspired movie-in-three-verses. \"Now my partner is a tattooed man.\" Whenever I drive my mum about I make her sit in the back and call her Miss Daisy." data-datetime="5:16 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="233000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401606040928587782"
+                 data-text="7) We\'re Never Gonna Grow Up. Who wants to grow up? Not me. That\'s when you start getting old. Ciaron Bell\'s beautiful daughters Nancy and Willow sing on the chorus. They demanded cash up front though. Not soft kids today are they? Alto sax by Bobby Bilsborough." data-datetime="5:12 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="282000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401605064217800710"
+                 data-text="6) The Old Grey Lady. It\'s my term for depression. I don\'t usually get depressed but sometimes the day after a show, or worse - when a long tour ends - The Old Grey Lady can show up. Performers will tell you about Hero To Zero. It\'s hard to come down." data-datetime="5:08 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="240000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401603883290464258"
+                 data-text="5) Swiss Army Knife Of Fuerteventura. A mate of mine went on holiday and met this Swiss guy who apparently couldn\'t stop doing things for everyone. Nothing was too much trouble. They called him the Swiss Army Knife Of Fuerteventura. \"I\'m having that.\" Said I." data-datetime="5:03 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="235000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401602873415380993"
+                 data-text="4) Goin\' To A Place. I love to imagine somewhere where we can all get along regardless of race, creed, colour, or difference of opinion, I dislike being put in a box and labelled - I don\'t want to be one thing I wanna be everything. Tenor sax by Colin Campbell." data-datetime="4:59 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="312000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401601890065043459"
+                 data-text="3) Gigolo Days. Was having a nap one Sunday and woke up with title and tune in my head. Love it when that happens. Meant to be a whimsical Ray Davies tongue-in-cheek affair. I used about four different sounds on my Mellotron. Roland TR 808 drum machine." data-datetime="4:55 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="190000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401600582264274951"
+                 data-text="2) Anamorphic Anodyne. This riff fell out of my guitar when I was 3/4 of the way through the album. It reminded me of John McGeoch/Andy Summers so that\'s where we went. Not sure what the lyric is about but it doesn\'t matter. Mood piece. Heavy metal middle bit for laughs ðŸ˜" data-datetime="4:50 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1401599784755081224"
+                 data-text="Handing over to @empiresend for the second half of Utopian
+
+Starting with Runninâ€™ Outta Stuffâ€¦ https://t.co/RN15mbSvY9" data-datetime="4:47 PM Jun 6, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401599633139306503"
+                 data-text="1) Runnin\' Outta Stuff. This is about trying to score dr*gs in the morning when everybody else is going to work. I came up with the riff at a soundcheck at the Old Courts in Wigan just before Covid. I\'m not proud of a lot of things I\'ve done in my life but I sure as Hell did \'em" data-datetime="4:46 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fandrewb1970%2Fstatus%2F1401599633139306502"
+                 data-text="The replay will carry on immediately" data-datetime="4:46 PM Jun 6, 2021"> 
+                andrewb1970            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401581307755483136"
+                 data-text="PLEASE PRESS PAUSE! Thanks for tuning in. See you at 7.00pm GMT for disc 2. Thanks to Tim and the team. This is so much fun it feels illegal! ðŸ˜ #utopian @LlSTENlNG_PARTY https://t.co/FnWXB8OfBZ" data-datetime="4:46 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="298000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1401581252822581248"
+                 data-text="End of round one of our @empiresend Utopian @LlSTENlNG_PARTY 
+
+Round two starts at 7pm (U.K. time) https://t.co/q1Ddzm7u4a" data-datetime="4:46 PM Jun 6, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="238000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401580002035093507"
+                 data-text="9) YOLO. You Only Live Once. I\'ve never hidden my adoration for Steely Dan. This is Babylon Sisters transported to Formby Beach on Merseyside. They had Lovely Day by Bill Withers on the jukebox in my college refectory and I played it every day. Alto sax by Bobby Bilsborough." data-datetime="4:41 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="228000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401579005120335872"
+                 data-text="8) The Outlaw. Like most terrified Catholic boys it took me a long time to break out of my programming and learn to do some proper rebelling. Love the harmonica in this and especially the way the middle eight appears to be another song altogether - crashing the party." data-datetime="4:37 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401578048944754690"
+                 data-text="7) You Bring Good Things. Written about when we were on a tour bus about to do 1st date of an Icicle Works tour a few years back. Girl backing singers on board so extra joy present. Andrew Gold/Waterboys vibe, piano-driven, 3 part harmony guitar solo. Quadrophenia sea samples." data-datetime="4:33 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="280000" data-url="https%3A%2F%2Ftwitter.com%2FBirkenheadLad%2Fstatus%2F1401577636074340364"
+                 data-text="@LlSTENlNG_PARTY @empiresend https://t.co/p5lKwzGCW0" data-datetime="4:32 PM Jun 6, 2021"> 
+                BirkenheadLad            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="323000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401576464198385665"
+                 data-text="6) Jonesin\'. Slang term for intense craving. Origin: Great Jones St. in NYC which used to be a junkie hangout. My version of a Keith Richards riff (C# standard tuning). Backing vocals by Dixie Daye. For most of the album I used a Brian May Red Special. Very versatile instrument." data-datetime="4:27 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401575107726827523"
+                 data-text="5) Rollin\' On (The Things We Gave Away). Written in 1999 but never found a home until now. It\'s about the relentless march of time. We always find a way. Let\'s hope we can this time. Lennon/McCartney-isms intentional. Unusual for me, but the song seemed to need them." data-datetime="4:22 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="242000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401575027796058114"
+                 data-text="@Tim_Burgess https://t.co/HJVH7jb07N" data-datetime="4:21 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1401574011675594753"
+                 data-text="Loving this @empiresend album. Whatâ€™re we all saying? https://t.co/qxiPuHXq7a" data-datetime="4:17 PM Jun 6, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="157000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401573718154002435"
+                 data-text="4) Deserter. Anti-war song. There aren\'t enough of them. Nick Kilroe (Echo And The Bunnymen, Richard Hawley, Poltergeist) plays drums on this album. I play bass on everything bar three tracks. Wonderful, war-zone production by Ciaron Bell. \"A manifestation of self-preservation.\"" data-datetime="4:16 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401573060461875205"
+                 data-text="@Tim_Burgess YEAH BABY!!!! ðŸ˜" data-datetime="4:13 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1401572936528666625"
+                 data-text="@empiresend Much love for Jason https://t.co/qYI0bGQxQJ" data-datetime="4:13 PM Jun 6, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="126000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401572802516426758"
+                 data-text="@Hugh_Gillan @DrBrianMay Through an Orange Crate 35w" data-datetime="4:12 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401572274075996169"
+                 data-text="3) Mesmerised. My attempt at marrying Rumours-era Fleetwood Mac with FM\'s founder member Peter Green - one of our greatest blues/rock guitar players. A song about constant yearning. OK to visit but wouldn\'t want to live there. Jason Falkner (Jellyfish/Beck) on Bass." data-datetime="4:10 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="120000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1401571965396209667"
+                 data-text="Enjoying @empiresendâ€™s new album as this train makes its way through the countryside" data-datetime="4:09 PM Jun 6, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401571461521891330"
+                 data-text="@LlSTENlNG_PARTY https://t.co/Xff8nL0a0n" data-datetime="4:07 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401571336888127498"
+                 data-text="@ciaronbell https://t.co/D4KAVD8qu1" data-datetime="4:07 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1401571326792454146"
+                 data-text="We love that Ian McNabbâ€™s home studio is called: Nabby Road
+
+#TimsTwitterListeningParty 
+@empiresend" data-datetime="4:06 PM Jun 6, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FMichellebwatso3%2Fstatus%2F1401571154654019587"
+                 data-text="@LlSTENlNG_PARTY @empiresend Salford ðŸ™‚ my Listening party anniversary 12 months  526 parties ðŸŽ‰" data-datetime="4:06 PM Jun 6, 2021"> 
+                Michellebwatso3            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FRobwarren348%2Fstatus%2F1401570785035235329"
+                 data-text="@LlSTENlNG_PARTY @empiresend A little corner of London that is currently hurtling at speed into the wonderful space that @empiresend music sends us to" data-datetime="4:04 PM Jun 6, 2021"> 
+                Robwarren348            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401570743100510217"
+                 data-text="2) Harry Dean Stanton. Written whilst thinking about the man who acted in 250 films and countless TV shows. Distinction not made clear if author is speaking about himself or HDS. Echoes of Dylan\'s Blind Willie McTell. Scratch vocal recorded in my home studio \'Nabby Road.\'" data-datetime="4:04 PM Jun 6, 2021"> 
+                empiresend            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1401570303566823427"
+                 data-text="Let us know where you are for our @empiresend @LlSTENlNG_PARTY 
+
+Shout up https://t.co/c8Tp1ylWC3" data-datetime="4:02 PM Jun 6, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="127000" data-url="https%3A%2F%2Ftwitter.com%2Fwewet23%2Fstatus%2F1401570149245796354"
+                 data-text="@LlSTENlNG_PARTY @empiresend VIVA Stockport!!!!  â¤ï¸â¤ï¸â¤ï¸ https://t.co/jjVxuCH8Xb" data-datetime="4:02 PM Jun 6, 2021"> 
+                wewet23            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1401569618607710220"
+                 data-text="Handing over to Ian @empiresend McNabb for the part one of Utopian 
+
+(Taking us up to YOLO)
+https://t.co/OtV6OEdnRt https://t.co/wdhAZtWBgR" data-datetime="4:00 PM Jun 6, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Fempiresend%2Fstatus%2F1401569452945248259"
+                 data-text="Utopian by Ian McNabb. Disc 1.
+1) Boy. This is an anthem for musicians (male &amp; female) in Everytown who deserve to have their music heard by a greater number of people. The odds are against them. They carry on anyway. Hopefully their art will be appreciated before they leave us." data-datetime="3:59 PM Jun 6, 2021"> 
+                empiresend            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

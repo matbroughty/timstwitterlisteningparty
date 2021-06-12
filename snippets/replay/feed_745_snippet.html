@@ -1,0 +1,439 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3TBCbmyNZGHwmyz5CWfwNl" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e028e23af3ac0e137f874d788a1" alt="Love To Make Music To" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Daedelus</span><br/><span class="sub-colour">Love To Make Music To</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(193842)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3TBCbmyNZGHwmyz5CWfwNl" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_193842_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 41 tweets from Sunday 18th April 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Daedelus" target="_blank"><img src="https://pbs.twimg.com/profile_images/1251125379357605888/BP8pifSK_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Daedelus.jpg'"><br/>@Daedelus</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/huwstephens" target="_blank"><img src="https://pbs.twimg.com/profile_images/947942621099552768/9BpDMi3C_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/huwstephens.jpg'"><br/>@huwstephens</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Fair Weather Friends" data-start="0"
+             data-duration="186" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Touchstone" data-start="187"
+             data-duration="209" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Twist The Kids" data-start="397"
+             data-duration="240" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Get Off Your HiHats" data-start="638"
+             data-duration="293" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="My Beau" data-start="932"
+             data-duration="187" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Make It So" data-start="1120"
+             data-duration="234" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Only For The Heart Strings" data-start="1355"
+             data-duration="198" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="I Car(ry) Us" data-start="1554"
+             data-duration="211" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="I Took Two" data-start="1766"
+             data-duration="203" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Assembly Lines" data-start="1970"
+             data-duration="213" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Bass In It" data-start="2184"
+             data-duration="196" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Hrs:Mins:Secs" data-start="2381"
+             data-duration="216" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="If We Should" data-start="2598"
+             data-duration="251" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="Drummery Jam" data-start="2850"
+             data-duration="240" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="You're The One" data-start="3091"
+             data-duration="226" style="display:none"></div>
+                        <div id="track-16" class="track-list"
+                     data-name="Finished" data-start="3318"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048518e23af3ac0e137f874d788a1" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-41" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fhuwstephens%2Fstatus%2F1383812800569516034"
+                 data-text="And when you can, go see @Daedelus play live. Itâ€™s an incredible experience! #TimsTwitterListeningParty" data-datetime="4:00 PM Apr 18, 2021"> 
+                huwstephens            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383812603890208780"
+                 data-text="Dive in!
+
+Itâ€™s our @colorama_sound 
+@LlSTENlNG_PARTY 
+
+ðŸ¤˜ðŸ¤˜ https://t.co/n7hf2hl9t2" data-datetime="4:00 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2Fhuwstephens%2Fstatus%2F1383812196803571721"
+                 data-text="Thank you @Daedelus itâ€™s been fascinating! #TimsTwitterListeningParty https://t.co/rMOTgWUd7i" data-datetime="3:58 PM Apr 18, 2021"> 
+                huwstephens            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383811769609584644"
+                 data-text="Thaaaaanks @Daedelus ðŸ™ŒðŸ™Œ" data-datetime="3:56 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2Fcolorama_sound%2Fstatus%2F1383811736034107398"
+                 data-text="The cast for #MAS:
+
+Carwyn Ellis - voice, keys, guitars
+@kassinkassin - producer, bass
+AndrÃ© Siqueira - percussion
+Manoel Cordeiro - guitars
+@iloveshawnlee - drums, guitars
+
+@ninamirandasing, @elanmererid and @Marged_Rhys - voices
+
+#TimsTwitterListeningParty https://t.co/VUhqiAyx3U" data-datetime="3:56 PM Apr 18, 2021"> 
+                colorama_sound            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383811242406539271"
+                 data-text="Hopefully setting you down back into your surrounds nice and gentle. Its been such a pleasure guesting in your day to day. Let\'s do it again sometime. Visit any time.
+
+#TimsTwitterListeningParty" data-datetime="3:54 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383810833860333574"
+                 data-text="The middle B section here is by far one of my favorite asides I\'ve ever had on record
+
+#TimsTwitterListeningParty" data-datetime="3:53 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="160000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383810606977875975"
+                 data-text="You\'re The One (featuring @OMMASDOTCOM) bringing us home! Sweetness hear and far.
+
+#TimsTwitterListeningParty" data-datetime="3:52 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383809934987382793"
+                 data-text="a Bop! a choreographed fun fair! it\'s the keys here that do the hard work. And you might guess how that reflected in the album cover\'s Heart Grand Piano.
+
+#TimsTwitterListeningParty" data-datetime="3:49 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383809540102049797"
+                 data-text="Drummery Jam one more Australian connection here! That vocals are from a very specific audio toy and of course highlights the Drum. Jam. I\'ve been aspiring towards on this whole LP.
+
+#TimsTwitterListeningParty" data-datetime="3:47 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383809078212718598"
+                 data-text="\"If we should rise above...\" hopefully sets a tone for your night ahead. I often think of my albums as either daylight or night bright affairs and as Love To Make Music To is a sun-shinning thing it makes sense that there\'d be a dusk.
+
+#TimsTwitterListeningParty" data-datetime="3:46 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383808762406862860"
+                 data-text="More work on the book today. Think/ hope youâ€™re going to like it (big thanks to all the artists whoâ€™ve helped out so far) https://t.co/GrWPu7E15K" data-datetime="3:44 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="151000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383808661097644037"
+                 data-text="If We Should (featuring Laura Darlington) this is the very apex of the album, once more high to bliss out in. A little intensity intro before...
+
+#TimsTwitterListeningParty" data-datetime="3:44 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383808029917728769"
+                 data-text="Perhaps you heard the raw version of this song rinsed by Flying Lotus in their sets around that time? It is wonderful to know the many ways music can reach us!
+
+#TimsTwitterListeningParty" data-datetime="3:41 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383807683002703880"
+                 data-text="Hrs:Mins:Secs can you guess the audio sampled? It\'s from a classic movie that sets the tone of reckless fun against a serious backdrop
+
+#TimsTwitterListeningParty" data-datetime="3:40 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383807381126094854"
+                 data-text="In case this reference to Los Angeles\' mix of dance styles including Freestyle, Go-Go, etc. you used to be able to hear all on the airwaves. Just look at Dr. Dre\'s previous existence as part of Dream Team!
+
+#TimsTwitterListeningParty" data-datetime="3:39 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="127000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383806972604993543"
+                 data-text="Bass In It (featuring Taz) I always thought this beat did something special. Originally made for MF DOOM with whom I\'d originally worked with on my Exquisite Corpse, grateful that Taz got in it as they channeled 80s LA perfectly!
+
+#TimsTwitterListeningParty" data-datetime="3:37 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383806438426906626"
+                 data-text="If this horn sounds familiar it\'s because appeared also on I Car(ry) Us, it\'s a Casio DH-100 -  such sweetness!
+
+#TimsTwitterListeningParty" data-datetime="3:35 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="104000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383805957965172747"
+                 data-text="Assembly Lines here we are coming back up for air, towards the light. If ever I made something even slightly Steam Punk it is this mechanized little clockwork.
+
+#TimsTwitterListeningParty" data-datetime="3:33 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383805521556242432"
+                 data-text="This is such my M.O. take little bits of everything into the blender and just try to tease forth something that alights on memory even if for a moment. Whatever it takes to abscond with ears.
+
+#TimsTwitterListeningParty" data-datetime="3:32 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="113000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383805131016208385"
+                 data-text="I Took Two - whatever could this mean?! A Summer of Love indeed. I wanna rock *cue* woofy bass warbles.
+
+#TimsTwitterListeningParty" data-datetime="3:30 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383804657374355465"
+                 data-text="For those loving the little details: The guitar here, and everywhere on my albums, is a Tenor with a modified tuning of Bb, D, F, A just in case you are also playing along at home. ðŸ˜ƒ 
+
+#TimsTwitterListeningParty" data-datetime="3:28 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383804260761042946"
+                 data-text="I Car(ry) Us - spells out?
+
+Icarus! That\'s correct, my own name a reference to the mythological Daedalus, and the song is all about that famous tumble down...
+
+#TimsTwitterListeningParty" data-datetime="3:27 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383803817892798485"
+                 data-text="If you let me, we\'d never stop... ðŸŽ¶ 
+
+I\'d to think that every sample is another gateway to musical depth, a twist to turn.
+
+#TimsTwitterListeningParty" data-datetime="3:25 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="138000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383803500803493888"
+                 data-text="Only for the Heart Strings is a stab a center of what I recall from a previous decades Summer of Love. Could 2008 have been considered another? Here it\'s pure hectic Samba with that call to arm\'s flailing fun.
+
+#TimsTwitterListeningParty" data-datetime="3:23 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383802922652237826"
+                 data-text="Michael Johnson is also known as @apeschool and is co-founder of the incredible @boiledrecords so you know they know their way around this wonderful weird!
+
+#TimsTwitterListeningParty" data-datetime="3:21 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="139000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383802610046496784"
+                 data-text="Make It So (featuring Michael Johnson) one of the songs that were made into lovely music video (another time check it https://t.co/4ipDZ8FI04 ) we are in full Springtime uplift.
+
+#TimsTwitterListeningParty" data-datetime="3:20 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="123000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383802024446156805"
+                 data-text="Our version of course is more intimate with the additional lyrics, another pulse coursing through all of the LP is heartfelt sincerity. I love that mix of emotions especially on the dancefloor.
+
+#TimsTwitterListeningParty" data-datetime="3:18 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="124000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383801509058551821"
+                 data-text="My Beau (featuring Erica Rose and Paperboy) imagine my surprise having such a throw back (directly covering the 90s moments that birthed) and having it years later make it\'s own dance moves
+
+#TimsTwitterListeningParty" data-datetime="3:16 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383800991900831745"
+                 data-text="Hopefully a theme is appearing across all of Love to Make Music To. It\'s a story of genre love that knows no bounds. Breakdowns build towards rave stabs, and little ragga jungle nods. Electro doesn\'t exactly swing, but does boom.
+
+#TimsTwitterListeningParty" data-datetime="3:14 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1383800687935459331"
+                 data-text="Wow! Who knew? @Daedelus has made the perfect Sunday afternoon album (that would sound great any time, any day) https://t.co/GtOtPZacZm" data-datetime="3:12 PM Apr 18, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383800545052270612"
+                 data-text="Get Off Your HiHats is as it sounds, rollicks. That piano sample, well I don\'t want to give e too much away but perhaps you can figure for yourself what a nice refrain against breakbeats can do.
+
+#TimsTwitterListeningParty" data-datetime="3:12 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="142000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383800122568413195"
+                 data-text="N\'fa and I were introduced through Heath Ledger, who was quite a fan of Australian Hip Hop. They\'d frequent @LOWENDTHEORY in Los Angeles!" data-datetime="3:10 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="138000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383799526822006794"
+                 data-text="Twist the Kids (featuring. @NfaJones ) is the clearest example of what was in the air in 2008, as young Dubstep and French Electro was all pulsing at 140bpm, every once in a while it just works out like that. So nice to play along
+
+#TimsTwitterListeningParty" data-datetime="3:08 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fhuwstephens%2Fstatus%2F1383798947286638601"
+                 data-text="@Tim_Burgess @Daedelus And sounding great in the Cardiff sun! Having a coffee for you Tim! https://t.co/akKYekn9Ub" data-datetime="3:05 PM Apr 18, 2021"> 
+                huwstephens            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383798925287575569"
+                 data-text="One of two songs on the album featuring members of Sa-Ra, the incredible production trio that made so much of the 00s most incredible productions, less recognized for their emcee skills, but deserving of mention
+
+#TimsTwitterListeningParty" data-datetime="3:05 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383798519014707209"
+                 data-text="Touchstone (featuring @tAzArnold and Paperboy) was channeling the raw spirit of \'08. Paying homage to the raps of 90s aggrandizement...
+
+#TimsTwitterListeningParty" data-datetime="3:04 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383798294975967240"
+                 data-text="Thanks @huwstephens - this @Daedelus sounding ace in the sunshine  ðŸ™Œ" data-datetime="3:03 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383797947364638724"
+                 data-text="If youâ€™ve been in Ireland you might recognize that this tune was used for a mobile ad some years ago. In fact when I play this out I still get the occasional odd eyebrow raise about why Iâ€™m doing that O2 commercial? Ah, being a modern day musician!
+
+#TimsTwitterListeningParty" data-datetime="3:01 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FDaedelus%2Fstatus%2F1383797576575582209"
+                 data-text="Fair Weather Friends usually something less than kind, but here itâ€™s all ushering in warm weather welcomes. Fitting first song? I hope that drum break decides it.
+
+#TimsTwitterListeningParty" data-datetime="3:00 PM Apr 18, 2021"> 
+                Daedelus            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383797488184819713"
+                 data-text="Going in
+
+Say hello to @Daedelus 
+
+#TimsTwitterListeningParty https://t.co/7iO5Chl2kd" data-datetime="3:00 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

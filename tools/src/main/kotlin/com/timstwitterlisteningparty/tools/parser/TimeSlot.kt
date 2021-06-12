@@ -125,11 +125,11 @@ data class TimeSlot(val dateStr: String = "?",
    * Just a list of the @name twitter handle
    * @see tweeterLinkList for full link
    */
-  fun tweeterList(): List<String> {
+  fun tweeterList(): MutableList<String> {
     if (tweeters.isEmpty()) {
       return Collections.emptyList()
     }
-    return tweeters.split(":").map { it.trim() }
+    return tweeters.split(":").map { it.trim() }.toMutableList()
   }
 
 
@@ -286,6 +286,40 @@ data class TimeSlot(val dateStr: String = "?",
 
   fun hasNumber(): Boolean {
     return listeningPartyNumber.isNotBlank() && listeningPartyNumber != "-1"
+  }
+
+
+  fun buildTweeters(lengthRemaining: Int): String {
+
+    var charCount = lengthRemaining - (this.album.length + this.band.length)
+    logger.debug("remaining char count so far $charCount")
+
+    val tweetList = tweeterList()
+    // Only include Tim if his band
+    if (!band.contains("Charlatans", true)
+      && !band.equals("Tim Burgess", true)) {
+      tweetList.remove("@Tim_Burgess")
+    }
+
+    // tweeting from listening party so no point including it unless it was one of the few where
+    // the tweets came from the listening party account
+    if(tweetList.size > 1) {
+      tweetList.remove("@LlSTENlNG_PARTY")
+    }
+
+    val tweetString = tweetList.map {
+      val tweetHandleLength = (it.length + 1)
+      if (charCount - tweetHandleLength > 0) {
+        charCount -= tweetHandleLength
+        "$it "
+      } else {
+        ""
+      }
+    }.toList().joinToString(separator = "")
+
+    logger.debug("tweeters String = $tweetString")
+    return tweetString;
+
   }
 
 

@@ -1,0 +1,491 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1Shxzz6xwTGCUH2YqPuUlR" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0222fa6f3a8d621a7d748aa126" alt="All Or Nothing" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Subways</span><br/><span class="sub-colour">All Or Nothing</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(115847)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1Shxzz6xwTGCUH2YqPuUlR" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_115847_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 86 tweets from Thursday 22nd April 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/thesubways" target="_blank"><img src="https://pbs.twimg.com/profile_images/1377183322615341057/gYJr9t8G_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/thesubways.jpg'"><br/>@thesubways</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/charlottesubway" target="_blank"><img src="https://pbs.twimg.com/profile_images/686636830415007748/wyCfz62p_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/charlottesubway.jpg'"><br/>@charlottesubway</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Girls & Boys" data-start="0"
+             data-duration="212" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Kalifornia" data-start="213"
+             data-duration="174" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Alright" data-start="388"
+             data-duration="171" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Shake! Shake!" data-start="560"
+             data-duration="165" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Move To Newlyn" data-start="726"
+             data-duration="164" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="All Or Nothing" data-start="891"
+             data-duration="192" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="I Won't Let You Down" data-start="1084"
+             data-duration="222" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Turnaround" data-start="1307"
+             data-duration="168" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Obsession" data-start="1476"
+             data-duration="188" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Strawberry Blonde" data-start="1665"
+             data-duration="278" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Always Tomorrow" data-start="1944"
+             data-duration="178" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Lostboy" data-start="2123"
+             data-duration="186" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="2310"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485122fa6f3a8d621a7d748aa126" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-86" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1385333701484204033"
+                 data-text="@charlottesubway @LlSTENlNG_PARTY ðŸ¤˜ðŸ¤˜A total pleasure" data-datetime="8:44 PM Apr 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385333467895025669"
+                 data-text="Thank you so much! Tweets like these are genuinely making our year (and it\'s been a toughie)! So much love! BL. https://t.co/WUHiXhIaTd" data-datetime="8:43 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FMichellebwatso3%2Fstatus%2F1385333257173094404"
+                 data-text="@Tim_Burgess @charlottesubway @thesubways Oh man donâ€™t know what else to say one of the best finds ever for me thanks ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="8:42 PM Apr 22, 2021"> 
+                Michellebwatso3            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385333111651700737"
+                 data-text="Huge, huge thank you to @Tim_Burgess @LlSTENlNG_PARTY for having us back for All or Nothing tonight...what a ride! Honoured to be included ðŸ˜" data-datetime="8:42 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fmartinlrix%2Fstatus%2F1385333003665170433"
+                 data-text="14. This Is The Club For People Who Hate People @LlSTENlNG_PARTY @thesubways @charlottesubway #TimsTwitterListeningParty #LinerNotes https://t.co/aDH4ShasGx" data-datetime="8:41 PM Apr 22, 2021"> 
+                martinlrix            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385332765588135940"
+                 data-text="Thank you so much for having us, Tim. We love what you do! And it\'s always an honour! Thanks to all for tuning in! We love you! Rock on! BL. #TimsTwitterListeningParty https://t.co/gFXvHjs4M8" data-datetime="8:40 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385332491477716995"
+                 data-text="Please stay with us for secret track This Is the Clubâ€¦.fan favourite, live favourite and Josh hit an actual flaming gong at the end! Because that is exactly how this recording process should have ended! #TimsTwitterListeningParty https://t.co/x11Q0f2ssO" data-datetime="8:39 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1385332438432374784"
+                 data-text="Fantastic. Thanks Billy thanks @charlottesubway 
+
+@thesubways https://t.co/0lOpnDoD4z" data-datetime="8:39 PM Apr 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385332206445506563"
+                 data-text="Lostboy: Your ears do not deceive you. I learnt to play the banjo and played it for this song!!! BL. #TimsTwitterListeningParty" data-datetime="8:38 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385332085750173696"
+                 data-text="MAKIN ME CRYYYYYYYYYYY!!!!!!!! It was meant to be. We were meant to meet, connect, and make music together our whole lives! BL. #TimsTwitterListeningParty https://t.co/VyQnuRScZh" data-datetime="8:38 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Findieimmy%2Fstatus%2F1385331924957286404"
+                 data-text="#TimsTwitterListeningParty Lostboy, the final song on the album. Such a blast to always listen to this album by @thesubways. Thanks, to Billy @charlottesubway and Josh for continuing to make cracking albums. Much love ðŸ’•" data-datetime="8:37 PM Apr 22, 2021"> 
+                indieimmy            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385331848839114752"
+                 data-text="@Tim_Burgess @indieimmy @LlSTENlNG_PARTY @charlottesubway HELL YEAH!!!!" data-datetime="8:37 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385331738193375243"
+                 data-text="Lostboy: The first performance of it actually took place in the vocal booth. It all just rolled out of me. Looking back over the years since, I wish Iâ€™d had the confidence to play this song more at live shows. Something to do in future, for sure! BL. #TimsTwitterListeningParty" data-datetime="8:36 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385331691691122693"
+                 data-text="LostBoy - A perfect study in why I am so lucky to have found Billy at Harlow swimming pool and to have spent the past almost 20 years making music with him... #TimsTwitterListeningParty" data-datetime="8:36 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1385331632366919682"
+                 data-text="@indieimmy @thesubways @LlSTENlNG_PARTY @charlottesubway Totes up to them. Iâ€™d love that too ; )" data-datetime="8:36 PM Apr 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385331474388373510"
+                 data-text="Lostboy: A couple of months before the AoN sessions, I underwent vocal surgery. I was told I couldn\'t talk for a month, or Iâ€™d permanently destroy my voice. I wound up writing this song during the time I couldnâ€™t talk. BL. #TimsTwitterListeningParty" data-datetime="8:35 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385331428662075392"
+                 data-text="Always Tomorrow: This, I can see now, is me begging myself to always look to tomorrow for hope. I think it was inspired by something Stephen Fry said about his own depression. Something about always remembering itâ€™s temporary; good times are ahead. BL. #TimsTwitterListeningParty" data-datetime="8:35 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385331241348648961"
+                 data-text="Always Tomorrow: \'Would you die for your good friends?\' Written for my best mates, the Johnson brothers. They taught me family outside family. BL. #TimsTwitterListeningParty" data-datetime="8:34 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385331045323714565"
+                 data-text="The greatest drummer I\'ve ever seen/heard/loved. BL. #TimsTwitterListeningParty https://t.co/qLiM2AHR6B" data-datetime="8:33 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385330954064048131"
+                 data-text="Always Tomorrow - An often forgotten Subways songâ€¦.but a personal favourite. There was one tour when we played this and Newlyn - it was the best! #TimsTwitterListeningParty" data-datetime="8:33 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385330797364883457"
+                 data-text="Always Tomorrow: I didnâ€™t know it at the time, but Iâ€™m an addict &amp; a depressive (for various now-known reasons. In moments when despair isnâ€™t quite so crippling &amp; dangerous, Iâ€™m able to articulate it. Music has always been the best way to do this. BL. #TimsTwitterListeningParty" data-datetime="8:32 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385330723360591874"
+                 data-text="Arghhhh I\'m crying guyyyyyys! #TimsTwitterListeningParty" data-datetime="8:32 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385330680763146242"
+                 data-text="Strawberry Blonde: This one is for @Rowenaaaaa  BL #TimsTwitterListeningParty" data-datetime="8:32 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385330596981903362"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY @charlottesubway We love you and your incredible listening party, Tim!!!" data-datetime="8:32 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385330413456052224"
+                 data-text="Strawberry Blonde: THIS SOLO TOOK TWO DAYS TO RECORD!!! HAHAHA! BL #TimsTwitterListeningParty" data-datetime="8:31 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1385330290797785089"
+                 data-text="Total @LlSTENlNG_PARTY brilliance from @thesubways right now. A whole new dimension brought to each song. Thanks Billy &amp; @charlottesubway ðŸ¤˜ðŸ”¥â¤ï¸" data-datetime="8:30 PM Apr 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385330249668366341"
+                 data-text="Strawberry Blonde: I was so proud of what we achieved with SB, I had it tattooed on my chest when we got back to the UK. The tattoo was also a direct reference to Simon Neil\'s (@BiffyClyro) beaut â€˜God only knows what Iâ€™d be without youâ€™ chest tattoo. BL #TimsTwitterListeningParty" data-datetime="8:30 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385330178902085634"
+                 data-text="Strawberry Blonde - My favourite bass line too. Can you tell how much Death Cab I was listening to?! #TimsTwitterListeningParty" data-datetime="8:30 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385330164926722051"
+                 data-text="Strawberry Blonde: I had to REEEEEEEALLY convince Butch to let me add these acoustic licks in the second verse. I\'m so glad I was stubborn. They so luvleeee! BL #TimsTwitterListeningParty" data-datetime="8:30 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385329864236994560"
+                 data-text="Strawberry Blonde - I struggled a lot with imposter syndrome recording of this album. Playing the beautiful grand piano on this song was a real moment for this. Thankfully Butch was so lovely and would always make a joke at the right moment. #TimsTwitterListeningParty" data-datetime="8:29 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385329832532365318"
+                 data-text="What a beautiful elephant though!!! BL. https://t.co/SBOcipv4LL" data-datetime="8:29 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385329589182992388"
+                 data-text="Strawberry Blonde: I\'d written an interlude, but @butchvig said, â€˜go &amp; write a chorus for it. It should be a complete song.â€™ I told everyone to leave, &amp; worked away on a key-change (inspired by @Mewâ€™s 156). Itâ€™s our MOST-REQUESTED song at gigs. BL. #TimsTwitterListeningParty" data-datetime="8:28 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385329401529782272"
+                 data-text="Obsession: \'Holding out my blood-red heart, hold my blood-red empty heart!\' I\'d been listening to a lot of @biffyclyro!!! BL. #TimsTwitterListeningParty" data-datetime="8:27 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385329084314656768"
+                 data-text="Obsession - The elephant in the room is that Billy and I broke up whilst recording this album. An emotionally confusing timeâ€¦elated and very sad at the same time. No regrets though - it makes this album so very special. #TimsTwitterListeningParty" data-datetime="8:26 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385329080803991558"
+                 data-text="Obsession: Hahaha! I\'ve just remembered that I mocked Butch\'s Wisconsin accent by saying \'endeeeeeeng\' in the verses! BL. #TimsTwitterListeningParty" data-datetime="8:26 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385328877665402887"
+                 data-text="Hats...haha! Ahhh reminiscing on the fun we had! #TimsTwitterListeningParty https://t.co/LgfHmMqijj" data-datetime="8:25 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385328779204218883"
+                 data-text="Obsession: This was torture to write. It was made during a time when CC &amp; I had just broken up. We sat in front of each other in the apartment on Sunset &amp; Vine, &amp; let it all out. Itâ€™s just raw emotion detailing honest impulses. I\'m proud of us. BL. #TimsTwitterListeningParty" data-datetime="8:24 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385328591349637126"
+                 data-text="Turnaround: This breakdown is probably the point in the the set at which our crowd goes craziest! We tell them to really let go! BL. #TimsTwitterListeningParty" data-datetime="8:24 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385328305122037761"
+                 data-text="Turnaround: \'I love it when you\'re mad, \'cos you give me your time!\' I love a good attention-seeking lyric! Haha! BL. #TimsTwitterListeningParty" data-datetime="8:23 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385328235261710340"
+                 data-text="Those whoâ€™ve been to a live showâ€¦..CIRCLE PITTTTTTT!!!! #TimsTwitterListeningParty" data-datetime="8:22 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385328172883927046"
+                 data-text="Hahahahaha!!!! https://t.co/C8nGpyoN57" data-datetime="8:22 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385328050942906373"
+                 data-text="Turnaround: Iâ€™ve always loved @myMotorhead, so when we played a festival with them, I was in that pit. I promised myself afterwards Iâ€™d write a song at 200bpm. Josh begged @butchvig to make it 210bpm, &amp; Butch replied â€˜errrrr, I think itâ€™s fast enough!â€™ #TimsTwitterListeningParty" data-datetime="8:22 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385327956805959690"
+                 data-text="I WON\'T LET YOU DOOOOOOOOOOWN! #TimsTwitterListeningParty" data-datetime="8:21 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385327533760057345"
+                 data-text="I Wonâ€™t Let You Down: We most definitely did not hold back on the riffs. We wanted to top Young for Eternity, and then some! We worked hard, but we also had so much fun too! BL. #TimsTwitterListeningParty" data-datetime="8:19 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385327469444669443"
+                 data-text="A few more photos from our manager @goomusic who\'s been there from the start and lived through it all with us. #TimsTwitterListeningParty https://t.co/FctCP8N3R5" data-datetime="8:19 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385327323755466756"
+                 data-text="I Wonâ€™t Let You Down: This was the last song we tracked in the first session in LA. I was making lunch, &amp; I CUT MY FINGER! The guitars for this song were recorded with blood streaming from my hand. I like to think you can hear that in the sound... BL. #TimsTwitterListeningParty" data-datetime="8:19 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385327197121126404"
+                 data-text="@Vlada_V_Z @LlSTENlNG_PARTY HELLO! It\'s okay! Join in! ðŸ˜" data-datetime="8:18 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385327076597719044"
+                 data-text="All or Nothing: At the time we recorded this song, I was beginning to think OMG we\'re making an album with BUTCH VIG!!! There were moments where it was... surreal! But he\'s such an amazing, charming, fun guy. Love him forever! BL. #TimsTwitterListeningParty" data-datetime="8:18 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385326998776696833"
+                 data-text="All or Nothing....those guitar notes in the middle 8...chills! #TimsTwitterListeningParty" data-datetime="8:17 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Frobthecult%2Fstatus%2F1385326833126854661"
+                 data-text="@thesubways @LlSTENlNG_PARTY @charlottesubway 
+This band are amazing. Will never forget the fact you guys sent a birthday card to my other half for her 50th. 
+Can\'t wait to see you again live!" data-datetime="8:17 PM Apr 22, 2021"> 
+                robthecult            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385326772439355392"
+                 data-text="Some photos from our time in LAâ€¦.strange yet wonderful placeâ€¦where Iâ€™d never want to live full time, but it was so cool to spend time thereâ€¦We stayed in an apartment, we went to cool bars, we went to the beach, we ate weird health foodâ€¦we lived it! #TimsTwitterListeningParty https://t.co/VzI4kvnLK1" data-datetime="8:16 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1385326751593771009"
+                 data-text="Anyone at the @LlSTENlNG_PARTY hearing All Or Nothing by @thesubways for the first time? Shout up https://t.co/GWcQ5rcpwt" data-datetime="8:16 PM Apr 22, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385326584123494405"
+                 data-text="All or Nothing: That\'s Josh at the beginning, counting us in! @butchvig instantly connected with Josh, and calls him Little Fighter! BL. #TimsTwitterListeningParty" data-datetime="8:16 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Findieimmy%2Fstatus%2F1385326578431930376"
+                 data-text="#TimsTwitterListeningParty All Or Nothing. Fantastic title track by @thesubways. This should have been a big radio hit single @charlottesubway this album just reminds me of summer 2008!" data-datetime="8:16 PM Apr 22, 2021"> 
+                indieimmy            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385326324361859075"
+                 data-text="All or Nothing: My mum always said I was â€˜all or nothingâ€™, so I wanted to shape it into a narrative about how everything was changing for us. @butchvig (yes, THE BUTCH VIG) who produced this album wanted it to end with a verse. What a genius idea! BL. #TimsTwitterListeningParty" data-datetime="8:15 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2F22GrandPod%2Fstatus%2F1385326289842737153"
+                 data-text="You can listen to Charlotte talking about making the album with Butch Vig here https://t.co/5I6uOGoLy1 #TimsTwitterListeningParty @thesubways" data-datetime="8:15 PM Apr 22, 2021"> 
+                22GrandPod            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385326233010032644"
+                 data-text="I REMEMBER THIS! Meant the world to me, to finally be there! Bliss! BL #TimsTwitterListeningParty https://t.co/4dIwBIj1LF" data-datetime="8:14 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385326077590089728"
+                 data-text="Move to Newlyn: Fun fact, I do in fact have a cousin Rick! He was my best friend growing up, but suffered some mental-health issues around the time of writing. I wanted him to have something nice mentioned about him in one of our songs. BL. #TimsTwitterListeningParty" data-datetime="8:14 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPillBoxBlues%2Fstatus%2F1385326037148516353"
+                 data-text="@charlottesubway This really is a top quality rock and roll album needs more recognition as such, you all sound so fabulous, Joshâ€™s drums are on fire too #TimsTwitterListeningParty" data-datetime="8:14 PM Apr 22, 2021"> 
+                PillBoxBlues            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385325926628610050"
+                 data-text="Move To Newlyn - So, so, much love for this song. Thereâ€™s something so calming about it. We took Billy to Newlyn once too. I love any song with a wurly on it! #TimsTwitterListeningParty" data-datetime="8:13 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385325684982173705"
+                 data-text="Move to Newlyn: Europe was really happening for us after YFE. Then I got food poisoning on a press jaunt in Germany. I was lying in a hotel bed, sick as a dog, &amp; a programme about Newlyn came on TV. I just wanted to be home again. Pining is my drug. BL. #TimsTwitterListeningParty" data-datetime="8:12 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385325589532495873"
+                 data-text="ðŸ˜ðŸ˜ðŸ˜ðŸ˜ https://t.co/Vix6Rcyfsf" data-datetime="8:12 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385325585266847749"
+                 data-text="This is why #TimsTwitterListeningParty is so wonderful! Thank you so very much! https://t.co/JqvjLjd4wc" data-datetime="8:12 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385325419461763074"
+                 data-text="I\'d totally forgotten this! That tour made us write so much! https://t.co/3bT8wUtvaU" data-datetime="8:11 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385325319498960900"
+                 data-text="Shake! Shake! That intake of breath at the beginning of each verse was inspired by MakeDamnSure by Taking Back Sunday!!! BL. #TimsTwitterListeningParty" data-datetime="8:11 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Findieimmy%2Fstatus%2F1385325285357326339"
+                 data-text="#TimsTwitterListeningParty Shake! Shake! Frantic drumming, great bass playing, Billy Lunnâ€™s voice on this whispering to a big time chorus! @thesubways @charlottesubway" data-datetime="8:11 PM Apr 22, 2021"> 
+                indieimmy            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385325239257772032"
+                 data-text="We need to talk about Butch Vig. Butch fuckin Vig produced this albumâ€¦how incredibly lucky are we?! He is so warm and calm and made the process fun, whilst also getting the best from us. #TimsTwitterListeningParty" data-datetime="8:10 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385325078519459844"
+                 data-text="Shake! Shake! - Bass solo hahaha! #TimsTwitterListeningParty" data-datetime="8:10 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385324959812235266"
+                 data-text="Shake! Shake! We were on our first US tour, &amp; Iâ€™d written this all in my head driving 16 hours from one state to another. I showed Josh &amp; @CharlotteSubway the chords/melody in sound check, &amp; we worked on it. We played it that night In Phoenix, AZ. BL. #TimsTwitterListeningParty" data-datetime="8:09 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385324839083335680"
+                 data-text="Alright: @charlottesubway\'s vocals are so pure I\'m actually crying. BL. #TimsTwitterListeningParty" data-datetime="8:09 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fshooterkriegler%2Fstatus%2F1385324608904077314"
+                 data-text="@indieimmy @thesubways @charlottesubway Saw these guys at Reading in 2006 and they were awesome ðŸ˜Ž" data-datetime="8:08 PM Apr 22, 2021"> 
+                shooterkriegler            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Findieimmy%2Fstatus%2F1385324568223621121"
+                 data-text="#TimsTwitterListeningParty Alright, another cracking song. Such a great single. This band @thesubways always deliver the big songs to mosh to. So good live eh @charlottesubway" data-datetime="8:08 PM Apr 22, 2021"> 
+                indieimmy            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385324484048138244"
+                 data-text="Alright - I think the best video weâ€™ve ever made. Certainly the most fun. So much fun driving around the desert. Barnaby had to teach me to drive an automatic as I had only driven manual before haha! #TimsTwitterListeningParty https://t.co/g9rSZfVKGT" data-datetime="8:07 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385324258096726021"
+                 data-text="Alright: This song was written STRAIGHT AFTER the Young for Eternity sessions at @ElevatorStudios, Liverpool. We actually demoed it with Jon Gray, YFEâ€™s recording engineer! I wanted to write melancholic lyrics to happy, hopeful music. It screams LA. BL. #TimsTwitterListeningParty" data-datetime="8:06 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FBloodRedSven%2Fstatus%2F1385324182792245252"
+                 data-text="I remember hearing Kalifornia for the first time on the Young for eternity Tour. Loved it immediately. @thesubways @charlottesubway #TimsTwitterListeningParty" data-datetime="8:06 PM Apr 22, 2021"> 
+                BloodRedSven            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1385324005180284934"
+                 data-text="ðŸ¤˜Kalifornia by @thesubways ðŸ¤˜" data-datetime="8:05 PM Apr 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385323917812850688"
+                 data-text="Kalifornia: I absolutely cannot help going \'ughhh!\' in a song! Haha! Also, how LUSH are those acoustic guitars.  @butchvig is a genius! BL. #TimsTwitterListeningParty" data-datetime="8:05 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Findieimmy%2Fstatus%2F1385323889706819585"
+                 data-text="#TimsTwitterListeningParty Kalifornia, this second album by @thesubways is so full of pent up aggression but sweet coated in rich Melody and Drivetime choruses. Such a banger!! @charlottesubway" data-datetime="8:05 PM Apr 22, 2021"> 
+                indieimmy            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385323685846949888"
+                 data-text="We used to start our live shows with Kaliforniaâ€¦.I miss playing so much! â€œStart the firesssssâ€ #TimsTwitterListeningParty" data-datetime="8:04 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385323473652813840"
+                 data-text="Kalifornia: I wrote this song when back at my parentsâ€™ council house pining for LA. Weâ€™d just appeared on @TheOCseries, &amp; Iâ€™d fallen in love. Iâ€™d also just watched the Brad Pitt film Kalifornia, so I decided to steal the K at the beginning. Ha! BL. #TimsTwitterListeningParty" data-datetime="8:03 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385323351502118916"
+                 data-text="HERE COMES THE OUTRO!!! GIRLS &amp; BOYS!!! YEEEEEEEEEEEAH! #TimsTwitterListeningParty" data-datetime="8:03 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385323125957709824"
+                 data-text="Girls &amp; Boys: I remember when we first played it through, in a sound check in Long Beach, California. All the other bands on the tour walked out into the arena and applauded and cheered us. We knew then that we had something special! BL. #TimsTwitterListeningParty" data-datetime="8:02 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Findieimmy%2Fstatus%2F1385322981497479175"
+                 data-text="#TimsTwitterListeningParty Girls And Boys. A blistering single to kick the hell out of this album ðŸ’¿ heavy drums, crashing guitars. Love those twin vocals of Billy and Charlotte Cooper! @thesubways @charlottesubway" data-datetime="8:01 PM Apr 22, 2021"> 
+                indieimmy            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fcharlottesubway%2Fstatus%2F1385322863088054279"
+                 data-text="Here we goâ€¦.one of my all time favourites to playâ€¦letâ€™s get heavy! #TimsTwitterListeningParty" data-datetime="8:01 PM Apr 22, 2021"> 
+                charlottesubway            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fthesubways%2Fstatus%2F1385322800114769922"
+                 data-text="Girls &amp; Boys: Our first single for the AoN album campaign, so it felt right to have it track-listed first on the album. A teasting intro, and a pounding riff. We wrote it on a US tour with @TBSOfficial and @AVABandOfficial! BL. #TimsTwitterListeningParty" data-datetime="8:01 PM Apr 22, 2021"> 
+                thesubways            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1385322539463892998"
+                 data-text="Handing over to Billy (@thesubways) and @charlottesubway 
+
+ðŸš— 
+ðŸ”¥ðŸ”º
+
+All or Nothing... https://t.co/Y0SgFa0bXN" data-datetime="8:00 PM Apr 22, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

@@ -1,0 +1,667 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3V4j1tMdQqpq8nwW02UOiW" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0292a84c02e896fcad44c70351" alt="Ocean Rain" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Echo And The Bunnymen</span><br/><span class="sub-colour">Ocean Rain</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3V4j1tMdQqpq8nwW02UOiW" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 140 tweets from Tuesday 4th May 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Will_Fuzz" target="_blank"><img src="https://pbs.twimg.com/profile_images/1354092396208934913/U57YZg3B_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Will_Fuzz.jpg'"><br/>@Will_Fuzz</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/theapereport" target="_blank"><img src="https://pbs.twimg.com/profile_images/1354469039884496897/EB1sxW3d_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/theapereport.jpg'"><br/>@theapereport</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Silver" data-start="0"
+             data-duration="199" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Nocturnal Me" data-start="200"
+             data-duration="298" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Crystal Days" data-start="499"
+             data-duration="145" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="The Yo Yo Man" data-start="645"
+             data-duration="191" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Thorn of Crowns" data-start="837"
+             data-duration="292" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="The Killing Moon" data-start="1130"
+             data-duration="348" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Seven Seas" data-start="1479"
+             data-duration="199" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="My Kingdom" data-start="1679"
+             data-duration="245" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Ocean Rain" data-start="1925"
+             data-duration="310" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Angels and Devils" data-start="2236"
+             data-duration="263" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2500"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485192a84c02e896fcad44c70351" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-140" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="179000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389668256470929408"
+                 data-text="@theapereport @LlSTENlNG_PARTY Thanks so much Adam! That was brilliant. Sending much love x" data-datetime="7:48 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389667505812148228"
+                 data-text="https://t.co/8LPLZyFBBa" data-datetime="7:45 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389667465890762754"
+                 data-text="â¤ï¸â¤ï¸â¤ï¸â¤ï¸ https://t.co/KYx5Yzp1db" data-datetime="7:45 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389667261057622016"
+                 data-text="that was great listening.  felt like doing a gig ..!   be seeing you.  bye. x" data-datetime="7:44 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389667189838450688"
+                 data-text="Ok Thatâ€™s your lot for now hope to see you soon. It would be rude to not include Porcupine on a future listening Party eh Tim? #TimsTwitterListeningParty # #bunnymen" data-datetime="7:44 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389667100214636547"
+                 data-text="An absolutely incredible @LlSTENlNG_PARTY from  @Will_Fuzz &amp; @theapereport 
+
+Much love to Mac, Les &amp; Pete
+
+And, of course to the beast that is Ocean Rain https://t.co/IHQ5gGS9Ix" data-datetime="7:43 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389666807028518915"
+                 data-text="Love this Tune we were trying to be the Velvets or I was anyway. Pete does a good Mo #TimsTwitterListeningParty #bunnymen" data-datetime="7:42 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666594016567298"
+                 data-text="and the things I learned from Will and Mac on the stage and in the studio.  I still use them in my mind as a litmus test of striving for magic and greatness.  reaching for a horizon and touching the stars.. #TimsTwitterListeningParty" data-datetime="7:41 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666575028944902"
+                 data-text="I have been really lucky to have a great career in music   And whilst I believe we make our own fate, much of what has happened to me stems from this album and my time and formative years with the Bunnymen #TimsTwitterListeningParty" data-datetime="7:41 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666537913556993"
+                 data-text="After the big take of  â€œNocturnal Meâ€™ the whole orchestra spontaneously started  applauding.  Me or themselves? Or just the whole event.?I donâ€™t know .  It sounded amazing and the room felt like it was levitating #TimsTwitterListeningParty" data-datetime="7:41 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389666517902581760"
+                 data-text="I remember some lad hanging about that had red punk rock trousers on zips and shit all over the place.#TimsTwitterListeningParty #Bunnymen god know why?" data-datetime="7:41 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666511950737409"
+                 data-text="After that they were brilliant for the whole day.  I had passed the test.  They played better and better as the day went on #TimsTwitterListeningParty" data-datetime="7:41 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666489632923648"
+                 data-text="He called me an idiot in French, and then I replied to him in French that he was playing the wrong note and pointed it out to him in his score.  He looked at it, looked at me and apologised #TimsTwitterListeningParty" data-datetime="7:41 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666466178293760"
+                 data-text="The orchestra tried to haze me and generally fuck with me.  They played terribly.  I stopped them and walked though the whole orchestra over to the oboist who was clearly playing wrong #TimsTwitterListeningParty" data-datetime="7:41 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666435098570756"
+                 data-text="When I came to a few seconds later there was complete silence in the room and they were all looking at this English kid as though I was mad.   It was a rocky start to the day. #TimsTwitterListeningParty" data-datetime="7:41 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666413707612161"
+                 data-text="I then leaned down to pick up a score and on coming back up I banged my head on a long mic stand and knocked myself out. #TimsTwitterListeningParty" data-datetime="7:41 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666372066496513"
+                 data-text="On the first day of recording I walked into the live room where 50 or so old French dudes were our orchestra.   They completely ignored me when I stood on the conductorâ€™s podium and asked for quiet #TimsTwitterListeningParty." data-datetime="7:40 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666342542856193"
+                 data-text="We hired a copyist to help prepare parts for the players from my handwritten score.   old geezer arrived and set himself up in the bar next door, copying each part by hand, drinking pastis all day.. Turns out he had been Stravinskyâ€™s copyist.  Amazing. #TimsTwitterListeningParty" data-datetime="7:40 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666308568932353"
+                 data-text="By this time an assistant had been called over from Liverpool to help with the recordings in English as the band did not speak French. Gil turned up. He very supportive of the tricky time I was having writing the scores.  #TimsTwitterListeningParty" data-datetime="7:40 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389666284779020288"
+                 data-text="The Late great Alan Perman who was our sound man from the gigs was drafted in to be in charge of the recording. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:40 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666236858978304"
+                 data-text="No computers or synths.. Figure out the chords, the inversions , the parts.  The counter melodies. Pencil and paper.  #TimsTwitterListeningParty" data-datetime="7:40 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666217229619205"
+                 data-text="Everyone was also brilliant about it and laughing about it.  It was a scary and gigantic task to score it all. #TimsTwitterListeningParty" data-datetime="7:40 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666191539539974"
+                 data-text="In the studio there was a kind of conspiracy of silence.  Nothing was really discussed that much.  You kind of knew what you had to do and that was it.  If something didnâ€™t work the idea would just fall away without much ado #TimsTwitterListeningParty" data-datetime="7:40 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389666144471064579"
+                 data-text="If I remember correctly we had to increase the chourus length to accommodate the vocal Idea Mac had from 4 bars to 6 bars. .#TimsTwitterListeningParty #Bunnymen" data-datetime="7:40 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666142654853120"
+                 data-text="I could hear the notes in my head, and would sit and check everything on the piano.  Everyone was coming in and out of the room all the time and it was chaos #TimsTwitterListeningParty" data-datetime="7:40 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666115719102464"
+                 data-text="The bones of the album were there.  I locked myself in the studio lounge with a massive pile of music paper.  I had told everyone I could do it and it would be easy.I knew how hard it was going to be.   I didnâ€™t sleep much for that time #TimsTwitterListeningParty" data-datetime="7:39 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666074057011200"
+                 data-text="I think it was Bill Drummond that really believed I could do it.  He helped push for it. Once the record company approved the budget, it was pure madness.  I think I had two weeks or something to write all the arrangements #TimsTwitterListeningParty" data-datetime="7:39 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389666056172605443"
+                 data-text="We jammed around a sort of Velvets style cord sequence for a while it soon came into shape. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:39 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389666002498064388"
+                 data-text="Sometimes I would hear a fragment of something that Will was playing and would run with it on the cello and then turn it into a whole arrangement.  Or a rhythm of Peteâ€™s or some words that Mac would be trying that suggested a colour to me #TimsTwitterListeningParty" data-datetime="7:39 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389665985599348739"
+                 data-text="I hired a twelve string Les got a double bass Pete got a couple of drums a tom and a snare, there was a electric Harpsicord in the studio. .#TimsTwitterListeningParty #Bunnymen" data-datetime="7:39 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389665954511024129"
+                 data-text="The notes, the approach and the mystery.  we were always just trying to paint the words with sound and arrangements. #TimsTwitterListeningParty" data-datetime="7:39 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389665868859256838"
+                 data-text="Our equipment was in a truck on the way to the next gig, luckily there was a musical instrument hire place over the road.#TimsTwitterListeningParty #Bunnymen" data-datetime="7:38 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389665862638919682"
+                 data-text="I loved those gigs and was trying all sorts of stuff on my cello in the shows.
+This was what gave me the ideas for the string arrangements.  I knew we had everything we already needed. #TimsTwitterListeningParty" data-datetime="7:38 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389665831617892356"
+                 data-text="Bunnymen live gigs were a magical experience.  We had been touring quite a bit..I would sometimes look up and Will would be floating on a wall of sound and Mac shimmying through the dark lights. And Pete in a deep groove. Les holding it all up. #TimsTwitterListeningParty" data-datetime="7:38 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389665805181227011"
+                 data-text="Will was always up for experimenting and trying new things.  Mac knew that his voice could handle the sound of an orchestra as he loved the old Frank Sinatra, Jacques Brel etc recordings. . Everyone was aiming high. #TimsTwitterListeningParty" data-datetime="7:38 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389665773770137619"
+                 data-text="ENCORE
+Angels and Devils: we had a day off in San Francisco and Bill organised that we should go into the studio and record a beside #TimsTwitterListeningParty #Bunnymen" data-datetime="7:38 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389665736713408512"
+                 data-text="THE ALBUM
+After making Killing Moon I think we could all hear a new sound with all the cellos  and shimmering things starting to emerge.  A lighter sound. Going to Paris and using an orchestra was great step.  #TimsTwitterListeningParty" data-datetime="7:38 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389665731348938753"
+                 data-text="Wow feel quite emotional #TimsTwitterListeningParty" data-datetime="7:38 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389665377215565828"
+                 data-text="The tilled surface of the echo chamber created reflections in the sound and created a unique sound for my solo. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:36 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389665257979748358"
+                 data-text="sounds like a movie
+#TimsTwitterListeningParty" data-datetime="7:36 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389665227025883137"
+                 data-text="Me and Les took our bikes and would cycle around the crazy streets of Paris #TimsTwitterListeningParty #Bunnymen" data-datetime="7:36 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1389665068682563584"
+                 data-text="â€œMy ship\'s a sail
+Can you hear its tender frame?
+Screaming from beneath the wavesâ€ Utter genius from the @Bunnymen" data-datetime="7:35 PM May 4, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389664995454107655"
+                 data-text="The solo was recorded in an echo chamber that was accessed by a ladder it was a bit like an empty swimming pool #TimsTwitterListeningParty #Bunnymen" data-datetime="7:35 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389664879410237441"
+                 data-text="Mac actually did most of the vocals on the album at Amazon studio.  After Paris it was a completely different experience of a studio. But Amazon had so much vibes and the right atmosphere.  Brilliant studio. Dark and late nights. #TimsTwitterListeningParty" data-datetime="7:35 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389664707246657537"
+                 data-text="Fearless orchestral playing on the melody.  Purposely overdoing it and it sounds fantastic.. never melodramatic , always honest. Brave.   A great recording. Truly. #TimsTwitterListeningParty" data-datetime="7:34 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389664601093120003"
+                 data-text="Total @LlSTENlNG_PARTY gold from @theapereport https://t.co/udxhCUSIRa" data-datetime="7:33 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389664544100864004"
+                 data-text="from so quiet to so bloody loud. Also I think this one of many of Macâ€™s best performances #TimsTwitterListeningParty #Bunnymen" data-datetime="7:33 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389664455210897409"
+                 data-text="Orch take off.  Then at â€œPort in my heavy storm â€œ  orchestra widening the harmony to make the track grow.  Horns. falling violins on â€œrainâ€.  #TimsTwitterListeningParty" data-datetime="7:33 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389664442019946496"
+                 data-text="Ocean Rain: This was not my favourite at the time, Iâ€™ve since come to love this track for its dynamics. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:33 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389664358352007174"
+                 data-text="Will be playing angels and devils at the end of Ocean Rain kind of Encore #TimsTwitterListeningParty #Bunnymen" data-datetime="7:32 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389664107041722368"
+                 data-text="OCEAN RAIN
+Electric cello noodlings and piano to start, Les on double bass and the orchestra to take over .  mapped it all out.   It ended up a perfect marriage of instruments.   Orchestra quietly enters doubling Willâ€™s trem chords.  #TimsTwitterListeningParty" data-datetime="7:31 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389664023738732552"
+                 data-text="I was after the power of when the guitar appears from nowhere in Loveâ€™s song A House is not a Motel. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:31 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389663863679995905"
+                 data-text="The acoustic sounded fuzzy through this old radio. I used it on the solo for my kingdom it hard to believe itâ€™s an acoustic #TimsTwitterListeningParty #Bunnymen" data-datetime="7:30 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389663801079914503"
+                 data-text="I had an old radio from the 30s I had discovered you could use it as a guitar amp. I routed my acoustic though the amp. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:30 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389663731366256642"
+                 data-text="ten a penny and there goes Will again bossin it
+
+#TimsTwitterListeningParty" data-datetime="7:30 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389663398867181570"
+                 data-text="MY Kingdom: we had been given Washburn acoustic guitars and I was using mine quite a lot on the album.
+#TimsTwitterListeningParty #Bunnymen" data-datetime="7:29 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389663327534596101"
+                 data-text="My Kingdom - an utter gem in an album full of treasures" data-datetime="7:28 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389663319645167641"
+                 data-text="I lay on the floor on some old carpets while the orchestra and Adam conducted it was magical. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:28 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389663225394786304"
+                 data-text="also remember Seymour Stein flouncing in to Amazon in his full length ermine fur coat. I was wondering if he would be coming back from the chip shop in Kirkby still with that coat.. #TimsTwitterListeningParty" data-datetime="7:28 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389663210341552130"
+                 data-text="Adam was working all hours to get all the parts written and we went to another studio to record all the strings. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:28 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389663120579301376"
+                 data-text="We were finding it hard to visualise but Adam knew what he was doing #TimsTwitterListeningParty #Bunnymen" data-datetime="7:28 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389663098659753986"
+                 data-text="MY KINGDOM
+I remember Will blowing my mind with the guitar solo.  I seem to remember he was playing through a radio or something like that.   Total drug song..â€I chop and I changeâ€â€¦ #TimsTwitterListeningParty" data-datetime="7:27 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389662876785315848"
+                 data-text="While we were recording Adam was in the lounge with a piano writing the orchestra parts, he would take little motifs tunes embellish them. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:27 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389662784791752712"
+                 data-text="Adam Peters had worked with us on Killing moon and was versed in writing for Orchestras. We Korova, the label, we got him to come over to Paris. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:26 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389662708006596611"
+                 data-text="We Didnâ€™t want him to do it was a last-minute thing we were nearly done in Paris and time was running out. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:26 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389662587558801414"
+                 data-text="He had worked with Serge Gainsbourg or Jacques Brel. Me and Mac didnâ€™t like him. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:25 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389662518843297793"
+                 data-text="I loved that piano at the old Amazon studios. Played it on a bunch of recordings.  I would jar open the fire exit door and look out over the field to the lumber yards whilst I was playing.  It was great. #TimsTwitterListeningParty" data-datetime="7:25 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389662496726867971"
+                 data-text="Sven Seas: we had a meeting with some French arranger bloke to talk about strings orchestration etc. we went for some food at lunch. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:25 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389662411813134336"
+                 data-text="I got them to speed the tape up an octave so it would drop back down and sound big.  Sounded great.  Will and Mac on rhythm.Mac was a great rhythm guitar player. shame he stopped. Band never sounded the same after that. The mesh of sound was way cool. #TimsTwitterListeningParty" data-datetime="7:25 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389662232779296770"
+                 data-text="Is Mac is right to say itâ€™s the greatest song ever written he has a point I think #TimsTwitterListeningParty #Bunnymen" data-datetime="7:24 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389662224495439872"
+                 data-text="SEVEN SEAS More Amazon studio piano.   I was trying to get a big bell sound.  The piano wasnâ€™t enough.  We rented a set of bells.  They arrived from London.  They were tiny. Stonehenge.. #TimsTwitterListeningParty" data-datetime="7:24 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1389661933964509189"
+                 data-text="Thatâ€™s no killing moon https://t.co/MEkMVsApjd" data-datetime="7:23 PM May 4, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389661924921643012"
+                 data-text="The drums were replaced, Pete played to the backing track and fixed it. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:23 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389661870148050946"
+                 data-text="another 100% ending   fate
+#TimsTwitterListeningParty" data-datetime="7:23 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389661854050496513"
+                 data-text="The original had quite heavy drums on. Mac wasnâ€™t keen and wanted Pete to use a lighter touch, so he got out his brushes. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:22 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389661757174583300"
+                 data-text="My auto harp on the chorus we added a reverse reverb this gives the impression that the chorus chords come sweeping in. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:22 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389661627776110598"
+                 data-text="We miked my Vox Twelve string up and I played the lead acoustically it was such an odd sound. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:22 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389661611724394497"
+                 data-text="Will and I were watching Killing Joke soundcheck â€Requiemâ€on the other stage. We looked at each other at the ferocious gigantic sound and were a bit freaked out about what we were about to do with the new song. #TimsTwitterListeningParty" data-datetime="7:22 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389661575758368771"
+                 data-text="We needed a middle section Les set to work on mandolin style bass run of notes. We also put a bit at front#TimsTwitterListeningParty #Bunnymen" data-datetime="7:21 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389661573312958466"
+                 data-text="A few weeks later we were doing the tv show The Tube.  There were some nerves as it was definitely a new sound.  Brushes on drums , 12 strings, cellos. #TimsTwitterListeningParty" data-datetime="7:21 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389661548017197057"
+                 data-text="Something unspoken and magical happened in those days and itâ€™s all there in this music.  A conspiracy of silence in the studio.  You are what you play. What a thing. Brings a tear to my eye sometimes. #TimsTwitterListeningParty" data-datetime="7:21 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389661516819943425"
+                 data-text="We rerecorded it again in Paris with full orchestra.  It did not quite have the magic of the Bath recordings so we ditched it. #TimsTwitterListeningParty" data-datetime="7:21 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389661479108898817"
+                 data-text="Perfect structure. Perfect song.  Perfect arrangement. Best vocal.. ever. Everyone playing at the top of their game.  We are so young and brave and wide eyed   Reaching for horizons. #TimsTwitterListeningParty" data-datetime="7:21 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389661263899279364"
+                 data-text="David Lord the producer spotted it and when we had gone out to the local curry house, he spliced up the little intro. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:20 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389661183293145092"
+                 data-text="The Intro was just something I did when we were tuning up and getting ready to do the backing track. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:20 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389661114221436928"
+                 data-text="Best song ever? We know someone who thinks it is ðŸ˜‰" data-datetime="7:20 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389661050438524928"
+                 data-text="I multitracked up loads of cellos to give it that shimmering effect of the chorus taking off.   Pete replaced the drums with gentle brushes and this new thing was appearing.  It was really beautiful. #TimsTwitterListeningParty" data-datetime="7:19 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389661046554734599"
+                 data-text="The Killing Moon: Recorded Crescent Studio in Bath before we went to Paris, this set the vibe, where we were headed next musically #TimsTwitterListeningParty #Bunnymen" data-datetime="7:19 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389661006289272834"
+                 data-text="Will then messing around with his fragmented genius guitar ideas, Les started playing that mad bass line. #TimsTwitterListeningParty" data-datetime="7:19 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389660959707328512"
+                 data-text="The next day we felt a bit weird about the previous night.  But the others had already come in and heard it and loved it.  It gave us a key to how the song might develop. #TimsTwitterListeningParty" data-datetime="7:19 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389660916719886338"
+                 data-text="Little twinkling sounds and tinkering aroundÂ¬Â¬Â¬ with some chord inversions.   We tracked up some ideas and he was messing with some stuff and then we left #TimsTwitterListeningParty" data-datetime="7:19 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389660843839606784"
+                 data-text="One night Mac and I came back to the studio after bevvies at the local club, Moles.   The others had already left  We called up the tape op to open up the studio and I started messing around with the piano upstairs with Mac encouraging. #TimsTwitterListeningParty" data-datetime="7:18 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389660781122244613"
+                 data-text="KILLING MOON Before Ocean Rain we all went down to Bath to record this.  Started out a quite heavy handed rock song.  Pete was hitting the drums hard  #TimsTwitterListeningParty" data-datetime="7:18 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389660588327022600"
+                 data-text="Reminded me of the End by the Doors when it drops down Nowt wrong with that. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:17 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389660520605573121"
+                 data-text="inside out   amazing
+
+#TimsTwitterListeningParty" data-datetime="7:17 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389660296042713098"
+                 data-text="It was all about dynamics on that one, ebb and flow. It has a nice Doors feel here and there  #TimsTwitterListeningParty #Bunnymen" data-datetime="7:16 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389660074667253760"
+                 data-text="ace guitar, Will !!
+#TimsTwitterListeningParty" data-datetime="7:15 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389659954102128643"
+                 data-text="We winged it, a couple of overdubs of a tremolo guitar in an eastern scale we had a song. Mac filled in the blanks with amazing trippy words #TimsTwitterListeningParty #Bunnymen" data-datetime="7:15 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389659821742374912"
+                 data-text="We had been listening Bo Diddly Pete started, Les had a great riff on the bass that he had been messing about with. I stepped in and did a scratchy guitar #TimsTwitterListeningParty # Bunnymen" data-datetime="7:14 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389659748773945347"
+                 data-text="Bunnymen take down sections were long magical journeys.   Classic Will.   Love Peteâ€™s random hits.  I was trying to do something like that with the orchestra and a delay unit.  Gob smacking great singing from Mac #TimsTwitterListeningParty." data-datetime="7:14 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389659700564725760"
+                 data-text="Thorn of Crowns: we needed another track as the album was a bit short. We said weâ€™ll just make something up #TimsTwitterListeningParty #Bunnymen" data-datetime="7:14 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389659644017078273"
+                 data-text="before Ocean Rain I remember us playing this live in Belgium at  Plan K.  a great gig. thatâ€™s where it developed a call and response from audience.  Mac came off the stage elated about the audience reaction to his word games.. #TimsTwitterListeningParty" data-datetime="7:14 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389659592523665420"
+                 data-text="Me and Les and Adam are in the background picking out notes to go with Peteâ€™s little fairy tale tune.
+#TimsTwitterListeningParty #Bunnymen" data-datetime="7:14 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389659549892681730"
+                 data-text="THORN OF CROWNS Originally it was a live jam on a Bo Diddley riff.. that middle section is exactly what Bunnymen sounded like live.  The takedown. Sometimes would go on for ten minutes.  Explorations. #TimsTwitterListeningParty" data-datetime="7:13 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389659380656840719"
+                 data-text="We only had a couple of tracks left on the tape to play with. Pete made up the main theme #TimsTwitterListeningParty #Bunnymen" data-datetime="7:13 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389659182811553793"
+                 data-text="Middle section of this we all went into the studio and gathered some old keyboards a marimba and a xylophone #TimsTwitterListeningParty #Bunnymen" data-datetime="7:12 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389659139412955142"
+                 data-text="For the middle section we all played the marimbas and xylophones live together. Everyone.  Sliding up and down making a great strange ambience. I think I was playing pop goes the weasel on the xylophone. Les was going nuts. #TimsTwitterListeningParty" data-datetime="7:12 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389659029811519488"
+                 data-text="The cello sounded amazing..Multitracked at least ten times. Tripping out in the headphones.  To my head, the minor 5th clash chord on the high cellos represented deathâ€™s calling.  And the pipes were the headstone cold winds. #TimsTwitterListeningParty" data-datetime="7:11 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389658919707029508"
+                 data-text="â€œTo purify our misfit ways
+And magnify our crystal daysâ€" data-datetime="7:11 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389658904381071360"
+                 data-text="The Yo Yo Man: this is a waltz so take your partners. More eastern influence on this #TimsTwitterListeningParty #Bunnymen" data-datetime="7:11 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389658899100225542"
+                 data-text="Sparkling piano stars.  Recorded the cellos in the old reverb tank in the Paris studio. Had to climb down into it with all the spiders webs in there.  It was like recording in a submarine or a swimming pool #TimsTwitterListeningParty" data-datetime="7:11 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389658787506638848"
+                 data-text="THE YO YO MAN
+I love the Mac vocal in a major key and Will playing in minor. Typical Bunnymen.  What key is it in ? â€œI dunnoâ€ #TimsTwitterListeningParty" data-datetime="7:10 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389658687418126340"
+                 data-text="Pete added percussion in the middle freak-out, he is bashing the shit out of some congas with his sticks #TimsTwitterListeningParty #Bunnymen" data-datetime="7:10 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389658625682063368"
+                 data-text="I remember just smashing the guitar and bending the neck to see what happened. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:10 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389658518723104770"
+                 data-text="In the middle Mac is going crazy on the rhythm guitar and I am getting all angular in a Roxy Music Phil Manzanera style. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:09 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389658271271714816"
+                 data-text="CRYSTAL DAYS Mac great singing.Believable. Amazing guitars.  Light.  All multitracked cellos. About eight thousand of them..We were recording at Studio Des Dames.  The French engineer Henri got a great sound out of the big old reverb. #TimsTwitterListeningParty" data-datetime="7:08 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389658215814770700"
+                 data-text="Crystal Days: This was fairly poppy song, at one point it was suggested as a single, listening back to it it might have done ok #TimsTwitterListeningParty #Bunnymen" data-datetime="7:08 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389658003276718080"
+                 data-text="This must have rubbed off a bit on Mac as he gets very soviet Red Army choir by tracking the vocals on the outro #TimsTwitterListeningParty #Bunnymen" data-datetime="7:07 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389657886066987017"
+                 data-text="Wow! Ocean Rain - an album that just sounds better and better each time you hear it" data-datetime="7:07 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="139000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389657781058211840"
+                 data-text="Magical lyrics    and then what an ending   #TimsTwitterListeningParty" data-datetime="7:06 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389657199815823361"
+                 data-text="When we were writing Nocturnal Me well before it had words we called it the Russian one. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:04 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389657171495849984"
+                 data-text="Had the chills recording this.   Sounded massive in the Paris room.. Doubling the bass with piano is great sound..Later, back in UK late nights at Amazon finishing off this one.    Amazing drumming from Pete #TimsTwitterListeningParty" data-datetime="7:04 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389657100192821249"
+                 data-text="Me, Les and Jake had been on a winter holiday to the USSR 1983 and it had a big Influence on us
+#TimsTwitterListeningParty #Bunnymen" data-datetime="7:04 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389657029107720195"
+                 data-text="Nocturnal me: We were trying to sound like a Russian balalaika band on this one. Well me and Les were. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:03 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389656981208588292"
+                 data-text="NOCTURNAL ME I wanted it to have a Russian feel.  Cold winters and starry skies. Scored for extra cellos and double basses. I had been listening to Tchaikovsky symphony 6.  When we recorded it the whole room took off #TimsTwitterListeningParty" data-datetime="7:03 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389656967661162501"
+                 data-text="I was into the Byrds and trying to do an Eight Miles High twelve string style solo #TimsTwitterListeningParty #Bunnymen" data-datetime="7:03 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389656950909059075"
+                 data-text="The lyrics to Silver are like the greatest adventure / a dream - a forgotten novel. The Bunnymen at their majestic best 
+
+T t t t tiiips" data-datetime="7:03 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389656909884661763"
+                 data-text="I had recently bought a Rickenbacker 12 string guitar in New York and was trying to use it wherever I could it was my new toy. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:03 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389656864783147008"
+                 data-text="great guitar solo , WIll   #TimsTwitterListeningParty" data-datetime="7:03 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389656834697572366"
+                 data-text="I did a little arpeggiated note thing halfway in the verse this was put through a spinning speaker called a Leslie cabinet #TimsTwitterListeningParty #Bunnymen" data-datetime="7:03 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389656765520912389"
+                 data-text="Silver Intro was an A chord then all strings open which is a sort of G chord not sure if itâ€™s an actual chord or not. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:02 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389656552274006024"
+                 data-text="We wanted to take the band further than just the rock format. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:01 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389656473106632706"
+                 data-text="Mac loved the romance of Paris and was convinced it would add something to the vibe, it did. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:01 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389656403904761856"
+                 data-text="Bill Drummond and the Label found a very traditional studio in the heart of Paris. Studio Des Dames. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:01 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389656389832773632"
+                 data-text="The opening was originally one of Willâ€™s riffs that I spread over the orchestra.  It all sounds simple but was an incredibly complex arrangement. The French sound of the orchestra makes this super light and bright. Only in Paris.  Took forever to write  #TimsTwitterListeningParty" data-datetime="7:01 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389656307460976640"
+                 data-text="I think we were given three weeks to do the recording the place had a very old feel a bit like the BBC. Lots of old equipment around. #TimsTwitterListeningParty #Bunnymen" data-datetime="7:00 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389656223096598538"
+                 data-text="SILVER  Baroque .bright like stars and silver.  Amazing guitar solo.   The cellos drive .  Broken microphone on this take meant the second violins disappear yet it sounds cool. The interplay of the violins and voice is great. Music word painting. #TimsTwitterListeningParty" data-datetime="7:00 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FWill_Fuzz%2Fstatus%2F1389656210794852358"
+                 data-text="Silver: This came from a very simple chord structure that I had #TimsTwitterListeningParty #Bunnymen" data-datetime="7:00 PM May 4, 2021"> 
+                Will_Fuzz            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftheapereport%2Fstatus%2F1389656111528042497"
+                 data-text="hi Tim  hiya Will ! hello all, good to be here.     Friends, Romans, Bunnymen, lend us your ears" data-datetime="7:00 PM May 4, 2021"> 
+                theapereport            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1389656081501245442"
+                 data-text="All at sea again
+
+Handing over to @Will_Fuzz 
+
+Ably assisted by @theapereport https://t.co/l5VpUFciSR" data-datetime="7:00 PM May 4, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

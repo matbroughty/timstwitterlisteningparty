@@ -1,0 +1,484 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4ayjwWvEKVXsCL5RF6ad81" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02406805fbfe0398102b5edea9" alt="News And Tributes" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Futureheads</span><br/><span class="sub-colour">News And Tributes</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(194494)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4ayjwWvEKVXsCL5RF6ad81" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_194494_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 72 tweets from Sunday 30th May 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/thefutureheads" target="_blank"><img src="https://pbs.twimg.com/profile_images/1321047977364987904/aNKAQUk6_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/thefutureheads.jpg'"><br/>@thefutureheads</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/rgtmillard" target="_blank"><img src="https://pbs.twimg.com/profile_images/1088221841519509504/z5h6tMDB_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/rgtmillard.jpg'"><br/>@rgtmillard</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Yes / No" data-start="0"
+             data-duration="180" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Cope" data-start="181"
+             data-duration="172" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Fallout" data-start="354"
+             data-duration="180" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Skip to the End" data-start="535"
+             data-duration="174" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Burnt" data-start="710"
+             data-duration="221" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="News and Tributes" data-start="932"
+             data-duration="229" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Return of the Beserker" data-start="1162"
+             data-duration="156" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Back to the Sea" data-start="1319"
+             data-duration="204" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Worry About It Later" data-start="1524"
+             data-duration="218" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Favours for Favours" data-start="1743"
+             data-duration="172" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Thursday" data-start="1916"
+             data-duration="226" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Face" data-start="2143"
+             data-duration="212" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="2356"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851406805fbfe0398102b5edea9" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-72" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="137000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399089265074638850"
+                 data-text="@itstonyt10 Haha-that\'s fair enough, Tony, wouldn\'t want it any other way! Some of us have greatness thrust upon them! #mufc" data-datetime="7:44 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1399088692594159618"
+                 data-text="Happy 40th birthday to the magical Heaven Up Here by Echo &amp; The Bunnymen. Replay #TimsTwitterListeningPartyÂ  for the LP with @Will_Fuzz @Tim_Burgess @LlSTENlNG_PARTY at https://t.co/evn9fqY5CH. Hereâ€™s Over The Wall filmed in Sefton Park in 1982.
+https://t.co/mHBesTnpfr" data-datetime="7:41 PM May 30, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399088686227202050"
+                 data-text="@DanielbigginV @LlSTENlNG_PARTY Hahah - you know it" data-datetime="7:41 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399088480890900480"
+                 data-text="Thanks for having us. Be well into that! https://t.co/BrlONgWQHQ" data-datetime="7:41 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399088357175709700"
+                 data-text="I thought that was our long album... #timstwitterlisteningparty" data-datetime="7:40 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1399088347344220170"
+                 data-text="Big thanks to @thefutureheads - looks like we should sort some more listening parties ðŸ¤˜" data-datetime="7:40 PM May 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399088254964670469"
+                 data-text="Happy Birthday Tim - thanks for having us! X https://t.co/SkyOtDVtMd" data-datetime="7:40 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399088232852332545"
+                 data-text="Well that\'s us done. I\'m so proud of this record. Sonically. Creatively. Great Times. Monday to Friday in a barn in Scarborough. Home.for the weekend, xcept Barry who went a bit insane making soups amd casserole. What a way to make a record. #timstwitterlisteningparty" data-datetime="7:40 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399088156385890306"
+                 data-text="And happy birthday @Tim_Burgess ðŸŽŠðŸŽ‚" data-datetime="7:39 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399087974906728448"
+                 data-text="And thatâ€™s it. Thanks so much to everyone who joined us for this. Itâ€™s been a pleasure to celebrate N&amp;Tâ€™s birthday like this. Cheers @LISTENING_PARTY for having us! #timstwitterlisteningparty https://t.co/giicAIBNR6" data-datetime="7:39 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399087709734506498"
+                 data-text="Oh we\'d be dead up for that alright https://t.co/2gma5cnnF0" data-datetime="7:37 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399087653555945475"
+                 data-text="Face
+Barry was playing @benhillier \'s roundwound 1930s acoustic with the worst action I\'ve ever seen. Sounded great though" data-datetime="7:37 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399087398810697736"
+                 data-text="Face
+The only song we\'ve ever recorded in separate rooms. Normally we can see each other, even of we choose to ignore each other. 
+Live take for vocals and guitar from Barry in the kitchen while dave was in his barn. #timstwitterlisteningparty" data-datetime="7:36 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399087180769906691"
+                 data-text="Face. The first time weâ€™d tried anything like this, really. I love the shift when the band come in. We were going for that Gastr del Sol, @blackfaurest  sound. Camofleur was a one of our favourites then, and it still is! #timstwitterlisteningparty" data-datetime="7:35 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399087048825389063"
+                 data-text="Thursday
+Originally in g, we had to detune the bass to drop d for the baseline to work. Basically makes us Metallica in my eyes.
+#timstwitterlisteningparty" data-datetime="7:35 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399086829845069824"
+                 data-text="Thursday 
+J: I was in bed while everyone dicked about with coins and amps and that. I was in a mood. Probably about losing at cards. Don\'t even know they\'re the best days of your life until they\'ve passed you by, eh" data-datetime="7:34 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399086620272480261"
+                 data-text="@thecookingwine â¤ï¸" data-datetime="7:33 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399086542145179653"
+                 data-text="These two bickering sweethearts are right in the pocket, though. #timstwitterlisteningparty https://t.co/QMpGBuwFzf" data-datetime="7:33 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399086499371626504"
+                 data-text="Thursday
+That\'s the sound of some coins being dropped on a baking tray and a guitar and keyboard coming out of an amp at the same time.
+#timstwitterlisteningparty" data-datetime="7:33 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2F22GrandPod%2Fstatus%2F1399086345860141056"
+                 data-text="@thefutureheads Listen to Ross talk about his time in @thefutureheads here https://t.co/4eaGt26cmK #timstwitterlisteningparty @LlSTENlNG_PARTY" data-datetime="7:32 PM May 30, 2021"> 
+                22GrandPod            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399086299898855430"
+                 data-text="Thursday
+\'Bout time we did a ballad. Im knacked listening to these again and this is our slow record
+#timstwitterlisteningparty" data-datetime="7:32 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399086255065997319"
+                 data-text="Thursday. Tonally, this sums the album up, I think. We wanted to do something really different from the first one. Spacious, expansive, a bit slower. A bit distant. A bit sad. #timstwitterlisteningparty" data-datetime="7:32 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399086012253495298"
+                 data-text="Favours for Favours
+Used a music mam combo guitar amp for the bass on this one. Not the ampeg portaflex like the rest of the record. #timstwitterlisteningparty" data-datetime="7:31 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399085946163826691"
+                 data-text="Here is the control room for the studio. All built just before we started work on the record. Quite a few albums have been made there since, I think. #timstwitterlisteningparty https://t.co/nyOR8zvYOF" data-datetime="7:30 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399085730127925253"
+                 data-text="Favours for Favours
+Ross and jaff worked on this one in the kitchen while Barry did some vox in the booth. Wanted the baseline to cut across the chords in the verse and not follow them in the bridge and chorus. Dunno why. Just love a \'rule\'
+#timstwitterlisteningparty" data-datetime="7:30 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399085506940522502"
+                 data-text="Favours for Favours. This was the last song we recorded. We were going off on tour with the Foo Fighters and it all had to be finished. We were still doing guitars &amp; vocals right until the very last minute. As if 6 weeks wasnâ€™t enough. Different times. #timstwitterlisteningparty" data-datetime="7:29 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399085390028591105"
+                 data-text="Worry about it later.
+Some very fast tambourine by @benhillier #timstwitterlisteningparty" data-datetime="7:28 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399085091905736706"
+                 data-text="@rgtmillard Hey. Get your own lines ðŸ˜˜" data-datetime="7:27 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399085059248951298"
+                 data-text="This is how Dave spent quite a bit of his time on the farmâ€¦ #timstwitterlisteningparty https://t.co/1dgiNIKR3b" data-datetime="7:27 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399084970925252615"
+                 data-text="Worry about it later.
+I love the break down in this song. Barry\'s guitar sounds excellent. Then the BVs when the go to the major9 get me every time. #musicnerd #timstwitterlisteningparty" data-datetime="7:27 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399084729337589763"
+                 data-text="@Jack_Is_Sound Love seeing clips of him rocking out, mate!" data-datetime="7:26 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399084721515212801"
+                 data-text="Worry about it later.
+Barry\'s lament on the perils.of not being prepared for one night stands. So spacious in the verse where we let Davey\'s groove (can insay groove...as a noun, not a verb) carry the song
+#timstwitterlisteningparty" data-datetime="7:26 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399084538446417926"
+                 data-text="Worry About it Later. I loved playing this one live. One of Barryâ€™s songs about the idiotic things you do when youâ€™re young. Nice guitar break towards the end! #timstwitterlisteningparty" data-datetime="7:25 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399084304337100811"
+                 data-text="Back to the Sea
+First time we ever took a bridge and repeated it to turn it into a middle 8.
+#timstwitterlisteningparty" data-datetime="7:24 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399084258187264004"
+                 data-text="The drums sound great on this one, and hereâ€™s what Daveâ€™s set-up looked like. He recorded all of his drums in one of the barns on the farm. Very cold. SoundedðŸ‘Œ, though. @benhillier did a great job. #timstwitterlisteningparty https://t.co/UAkMwM68Ul" data-datetime="7:24 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399084151484076035"
+                 data-text="Back to the Sea
+We listened to Rumours over breakfast. I can hear Go your your way in the second verse and chorus baseline. 1 ofthe first tracks we recorded. I\'d just got my precision bass and it was so wide-necked in comparison with my jazz #timstwitterlisteningparty" data-datetime="7:23 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399083799418486786"
+                 data-text="Heroes https://t.co/KzqkGWGgO7" data-datetime="7:22 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399083746343673866"
+                 data-text="@DavidCallaghan ðŸ˜˜" data-datetime="7:22 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399083698700656641"
+                 data-text="Back to the Sea. If youâ€™re asking me, then the job is part of me. #timstwitterlisteningparty" data-datetime="7:22 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399083389127479303"
+                 data-text="Return of the Berserker
+Originally called \'A\'... All live. All in one room. The barn. Amps. Mics. No overdubs. All bleed. No structure. Looking at each other to stop. And start. Fun. #timstwitterlisteningparty" data-datetime="7:20 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399083373088366600"
+                 data-text="@sammypatters @thefutureheads ðŸ˜˜" data-datetime="7:20 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399083181614186496"
+                 data-text="@k8ty11 @thefutureheads One of the best!" data-datetime="7:19 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="150000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399083020175527936"
+                 data-text="The Return of the Berserker. Barry had this idea that we should have a song where one of us counts each section in and someone else counts it out. This is a thrash along in A, watch *someone* for the changes, and try to keep upâ€¦ #timstwitterlisteningparty" data-datetime="7:19 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399082390736211972"
+                 data-text="News and tributes
+
+Some great harmonies in the chorus of this one. Hope Ross can dig out the Moleskine before the gig next Saturday at the Sage. Again...loafs of space in this one, slow burner. Typified this album for me (Jaff). So different from album 1 in a good way" data-datetime="7:16 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399082361128640514"
+                 data-text="I grew up a Man Utd fan because my dad is from Tyldesley. I started being able to go home &amp; away around the time of us making this record. Still do. #UTFR #timstwitterlisteningparty https://t.co/YsAl5Yo7WB" data-datetime="7:16 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399082067355439107"
+                 data-text="News &amp; Tributes. I wrote this song about the Flowers of Manchester - Busbyâ€™s Babes. #timstwitterlisteningparty @ManUtd https://t.co/xb62HGK4G3" data-datetime="7:15 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399081705143685123"
+                 data-text="@graham_habben @EBallroomCamden Ross? Harrumph.  He\'s not even the tall one" data-datetime="7:14 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399081568157773824"
+                 data-text="Burnt
+Unconventional double guitar solo treble chorus. Weird. Love it." data-datetime="7:13 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399081532204199948"
+                 data-text="Residential studio sessions can send you mad sometimes but it was great to be in the proper English countryside - lit fires on a nighttime, communal meals, we felt miles away from any other humans. #timstwitterlisteningparty https://t.co/LzTjKchilu" data-datetime="7:13 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399081319037083649"
+                 data-text="BURNT.
+Jazzy chords in this one but loads of space. We had a version without any lead vocals on for ages as it was Barry\'s last one to finish. The BVs in the verse made little sense alone!" data-datetime="7:12 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399081226980442116"
+                 data-text="Burnt. I love this one. You can really hear the hollow body of the Gretsch on the low parts. The harmony that Barry and Jaff sing together on the last line of each verse is one of my favourites.  #timstwitterlisteningparty" data-datetime="7:12 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399081106532675587"
+                 data-text="#timstwitterlisteningparty https://t.co/d3Kv3bO1jy" data-datetime="7:11 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399080980670001153"
+                 data-text="@rgtmillard Coldest I\'ve ever been. Had hand warmers in me brogues" data-datetime="7:11 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1399080839544201216"
+                 data-text="Skip To The End taking me back" data-datetime="7:10 PM May 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399080818493079553"
+                 data-text="Skip to the end.
+Real Spinal Tap moment when we were working on the vowel sound for the chorus BV. Can we do, do do...nah doesn\'t work. Oh oh? Done that before. Can we use Nah. We\'ve not used nah....let\'s do nah.
+
+#timstwitterlisteningparty" data-datetime="7:10 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399080694173908997"
+                 data-text="Probably quite an unconventional single, but thatâ€™s good, isnâ€™t it? #timstwitterlisteningparty" data-datetime="7:10 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399080531862736896"
+                 data-text="Skip to the end
+Exactly the same tempo as Billie Jean; nod to ACDC and a bassline you could play all with your left hand." data-datetime="7:09 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="111000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399080510719238150"
+                 data-text="Skip to the End. We made the video for this just outside of Copenhagen - we drove through the night from KÃ¶ln to get there on time. Weirdest vid we ever made. #timstwitterlisteningparty https://t.co/ko9whTh3Xb" data-datetime="7:09 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399080048209055746"
+                 data-text="ðŸ™Œ https://t.co/WMEcinVDE6" data-datetime="7:07 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399080032631496704"
+                 data-text="FALLOUT
+a post-apocalyptic nuclear love long. As you do. With the same chords all the way through, some lovely under-water guitars from Ross. Love the harmonies in the chorus (especially when i love from the major 7 to the root mid-word) #timstwitterlisteningparty" data-datetime="7:07 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399079715017834502"
+                 data-text="Fallout. That weird underwater reverb sound on my guitar comes from this Holier Grail - not the most reliable piece of gear, as @mbmpedals can attest as heâ€™s grappled with it for me in the pastâ€¦ #timstwitterlisteningparty https://t.co/HUGM01VoPp" data-datetime="7:06 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399079379565613059"
+                 data-text="I remember I filled a whole Moleskine with the harmony arrangements that we wrote for this album, all sat around a little keyboard in the â€˜boot roomâ€™. #timstwitterlisteningparty" data-datetime="7:04 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399079300268281857"
+                 data-text="Cope
+
+Barry was very angry.
+Dunno why I refused to play the root notes of the chords. 
+BVs have a kind of mackem Beastie Boys vibe. Ha.
+Love the ascending thumb work of Ross and Baz on guitars. Just like Jimi! #timstwitterlisteningparty" data-datetime="7:04 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399078994134327304"
+                 data-text="I always liked how Cope flitted between the nastiness of those semi-metal guitar parts in the intro and verse, and then it shifts off for the lush middle section. Customary FH oh-ohs in this one.
+#timstwitterlisteningparty" data-datetime="7:03 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399078749879025669"
+                 data-text="Yes/no
+All the drums for this record were recorded in a massive barn. This song, and album, starts with Barry walking over gravel towards the drums with microphones in his ears. Odd." data-datetime="7:02 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399078674478022664"
+                 data-text="Yes/No. Feels like a song about Brexit to meâ€¦. (Way before Brexit was a thing, mind you)â€¦
+#timstwitterlisteningparty" data-datetime="7:02 PM May 30, 2021"> 
+                rgtmillard            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1399078482081165316"
+                 data-text="Shout up and let us know where you are in the world for @thefutureheads @LlSTENlNG_PARTY https://t.co/Z1Tt81NgOX" data-datetime="7:01 PM May 30, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399078364913319953"
+                 data-text="Yes/No
+This song started life as a drum beat that Davey used to play in soundchecks and practices (normally over us talking, as he is prone to do...). Simple for us. Used to open the shows with this one when we toured it.
+#timstwitterlisteningparty" data-datetime="7:00 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399078320411660301"
+                 data-text="@Tim_Burgess @rgtmillard Cheers Tim-Happy birthday to you too mate! X" data-datetime="7:00 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fthefutureheads%2Fstatus%2F1399078238522068994"
+                 data-text="Here we go..." data-datetime="7:00 PM May 30, 2021"> 
+                thefutureheads            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1399078186265219077"
+                 data-text="Handing over to @thefutureheads &amp; @rgtmillard 
+
+Happy 15th birthday News And Tributes https://t.co/vowkvbfHHK" data-datetime="7:00 PM May 30, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Frgtmillard%2Fstatus%2F1399078171291623427"
+                 data-text="Ok-weâ€™re off! @LISTENING_PARTY 
+This is Warren House Farm where we made the album in Autumn 2005. Thatâ€™s the gravel that Barry is walking across at the start of the song. I think he did it in the dark, for some reason. #timstwitterlisteningparty https://t.co/1T1BIhDdt1" data-datetime="7:00 PM May 30, 2021"> 
+                rgtmillard            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

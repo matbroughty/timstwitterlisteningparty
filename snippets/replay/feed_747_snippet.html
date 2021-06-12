@@ -1,0 +1,622 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1XGjH1AhTk0F5pE39MnXR5" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e027e0520eb40ad5d13e62d911c" alt="Mai" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Georgia Ruth</span><br/><span class="sub-colour">Mai</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(2902531)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1XGjH1AhTk0F5pE39MnXR5" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_2902531_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 60 tweets from Sunday 18th April 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/georgiaruth" target="_blank"><img src="https://pbs.twimg.com/profile_images/1179401475044335616/UjBMTWD4_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/georgiaruth.jpg'"><br/>@georgiaruth</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/huwstephens" target="_blank"><img src="https://pbs.twimg.com/profile_images/947942621099552768/9BpDMi3C_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/huwstephens.jpg'"><br/>@huwstephens</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1359256083328606213/wWGxDEGZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Gardd" data-start="0"
+             data-duration="74" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Madryn" data-start="75"
+             data-duration="173" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="7 Rooms" data-start="249"
+             data-duration="292" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Terracotta" data-start="542"
+             data-duration="264" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Mai" data-start="807"
+             data-duration="369" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Close for Comfort" data-start="1177"
+             data-duration="211" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="In Bloom" data-start="1389"
+             data-duration="266" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Cosmos" data-start="1656"
+             data-duration="339" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Brychni" data-start="1996"
+             data-duration="225" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Cynnes" data-start="2222"
+             data-duration="278" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Haul" data-start="2501"
+             data-duration="48" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2550"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048517e0520eb40ad5d13e62d911c" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-60" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fhuwstephens%2Fstatus%2F1383869641592774659"
+                 data-text="@georgiaruth @BBCRadioCymru The session was so special. Gymaint o fraint cal ei chware hi ar @BBCRadioCymru. Am lun hyfryd." data-datetime="7:46 PM Apr 18, 2021"> 
+                huwstephens            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383869639130681345"
+                 data-text="@BubblewrapWales ðŸ˜­â¤ï¸" data-datetime="7:46 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383869190159753216"
+                 data-text="RT @LlSTENlNG_PARTY: Starting at 10pm (ðŸ´ó §ó ¢ó ·ó ¬ó ³ó ¿ time) - join @HighContrast for our Notes From The Underground @LlSTENlNG_PARTY https://t.co/â€¦" data-datetime="7:45 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383868863079620613"
+                 data-text="@georgiaruth @LlSTENlNG_PARTY @huwstephens Loved! Diolch ðŸ¤˜" data-datetime="7:43 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fhuwstephens%2Fstatus%2F1383868808540999694"
+                 data-text="@georgiaruth @Tim_Burgess @LlSTENlNG_PARTY Diolch Georgia. 
+What a beautiful album, and thanks so much for the insights. ðŸ’«" data-datetime="7:43 PM Apr 18, 2021"> 
+                huwstephens            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383868766170218501"
+                 data-text="The hugest of thanks to Rich Chitty @BubblewrapWales for giving Mai such a happy home! Heâ€™s one of the most hardworking, fab people alive and itâ€™s been great to release this record with him and his label. Also, his design work is - as ever - ðŸ‘ŒðŸ»
+
+#Mai
+#TimsTwitterListeningParty https://t.co/i7tAbfiv7d" data-datetime="7:43 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383868717457559554"
+                 data-text="I loved making this album so much. It was the best. Diolch to @IwanMorgan_ and all the musicians: Daf, Iwan, Steve, Ailsa, Angharad, Laura a Rhodri â¤ï¸ So happy we got to make it! Thanks to @HelpMusiciansUK and @AberUni also. 
+
+#TimsTwitterListeningParty https://t.co/Yk8bCveti5" data-datetime="7:43 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383868650902360078"
+                 data-text="ðŸ§¡TEAM MAI ðŸ§¡
+@IwanMorgan_ - co-producer, engineer, mix, master 
+@Daf_Hughes - drums &amp; percussion
+@IGHuws - guitars, organ
+@Sweet_Babs - bass, sax
+@AilsaBadger - cello, viol
+@angsd2 - violin
+@rhodribrooks - pedal steel 
+@LauraJMartinuk - flute
+
++ me! 
+
+#TimsTwitterListeningParty https://t.co/VqAJQdaeSm" data-datetime="7:42 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383868616290955268"
+                 data-text="Huge thanks to @georgiaruth ðŸ´ó §ó ¢ó ·ó ¬ó ³ó ¿ðŸ”¥ðŸ™Œ" data-datetime="7:42 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383868532325163016"
+                 data-text="A dyna ni! And thatâ€™s a wrap! 
+
+So grateful to @Tim_Burgess and @huwstephens for letting me share it with everyone here tonight! What a ride! Diolch @LlSTENlNG_PARTY ðŸ™ðŸ»
+
+Music is â¤ï¸
+
+#Mai
+#TimsTwitterListeningParty https://t.co/14sCDAWP7J" data-datetime="7:42 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383868374564827139"
+                 data-text="#Haul. The afterglow of the album. Wanted to go out with some good vibes! ðŸŒžðŸŒžðŸŒž
+
+@IwanMorgan_ went down to the sea in Aberystwyth and recorded the waves ðŸŒŠ
+
+This place is at the heart of the album. I moved back after a long time away and now Iâ€™m home
+
+#TimsTwitterListeningParty" data-datetime="7:41 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fhuwstephens%2Fstatus%2F1383868356449628161"
+                 data-text="@GaryTwisted @Daedelus @Tim_Burgess @LlSTENlNG_PARTY @colorama_sound @georgiaruth @HighContrast 21 years young!" data-datetime="7:41 PM Apr 18, 2021"> 
+                huwstephens            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383868253198381062"
+                 data-text="Itâ€™s a love song for the dear old earth â¤ï¸
+
+#Cynnes
+#TimsTwitterListeningParty" data-datetime="7:41 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fhuwstephens%2Fstatus%2F1383867922880208904"
+                 data-text="@mrmitchell78 I know Iâ€™m biased, but if you should hear what else happens musically in Wales! @adamwalton â€˜s show on @BBCRadioWales is a great listen." data-datetime="7:39 PM Apr 18, 2021"> 
+                huwstephens            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383867834585915395"
+                 data-text="I think Common One by Van Morrison was a bit of an influence on this song (and the whole album actually). Love this.. 
+
+https://t.co/dESp7HIc9Z
+
+#Cynnes
+#TimsTwitterListeningParty" data-datetime="7:39 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383867690985549827"
+                 data-text="Something beautiful happened on the outro. It kept building, almost to a point of chaos. I wanted it to feel like nature rising up. This huge swell of energy. I love how @Daf_Hughes builds the drums &amp; @SweetBabs sax stabs (haha) 
+
+#Cynnes 
+#TimsTwitterListeningParty https://t.co/4pmK6QZbR8" data-datetime="7:39 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383867564850249735"
+                 data-text="Something a bit Radiohead about those chords I think! 
+
+#Cynnes 
+#TimsTwitterListeningParty" data-datetime="7:38 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fhuwstephens%2Fstatus%2F1383867281025880071"
+                 data-text="#aberystwyth #TimsTwitterListeningParty https://t.co/Zgd1p6PEGO" data-datetime="7:37 PM Apr 18, 2021"> 
+                huwstephens            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383867206102966276"
+                 data-text="#Cynnes means warm. I wrote it after waking up to a terrifyingly hot day in the middle of winter. Something felt wrong. This is about the climate crisis and how that tallies with the need for warmth and light. 
+
+â€œI needed the sun but not like thisâ€ 
+
+#TimsTwitterListeningParty" data-datetime="7:37 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383866897729396737"
+                 data-text="The record was mostly recorded in my hometown Aberystwyth! In the beautiful Joseph Parry Hall @AberUni (who v kindly let us turn it into our makeshift studio for a week in April 19) It had chandeliers. Totally unlike any studio Iâ€™ve ever been in!
+#Mai 
+#TimsTwitterListeningParty https://t.co/hdqX3Fl2Iw" data-datetime="7:35 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383866677889175553"
+                 data-text="I love the bubbling sounds on the track! How did we make those @IwanMorgan_ - can you remember? They make it feel more otherworldly..
+
+#Brychni 
+#TimsTwitterListeningParty https://t.co/L9mLNadr9T" data-datetime="7:35 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383866451811999749"
+                 data-text="#Brychni was played first by @huwstephens on @BBCRadioCymru! Iâ€™m still so thankful to Huw, because that session was the beginning of the whole album! ðŸ§¡
+
+Emahoy TseguÃ©-Maryam Guebrou was a big influence, as was this painting by Peter Schmidt! 
+
+#TimsTwitterListeningParty https://t.co/BujByTIWR6" data-datetime="7:34 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383866288112496641"
+                 data-text="#Brychni means freckles / spots. I was away from my family recording in Liverpool &amp; my son got chicken pox. I felt so far away from him and so I wrote him this song on @IwanMorgan_ @LauraJMartinuk piano. I love how you can hear the room on the track ðŸ’›
+
+#TimsTwitterListeningParty" data-datetime="7:33 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383866162916708352"
+                 data-text="I also â¤ï¸ the @ACCU___ remix of #Cosmos from the Mai:2 EP. She understood SO perfectly what the song was about, and gave it a dreamy, pure shores dimension which made me v happy! Diolch Ang x
+
+https://t.co/mRZZLJXzNS
+
+#TimsTwitterListeningParty" data-datetime="7:32 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383865792387686402"
+                 data-text="But the song is about learning to embrace the wild things. Letting go.
+
+The outro was ðŸ’ƒðŸ» to record. When the band came in at the end, we just went for it. A nod to Week of Pines + Neu &amp; some rare â€œspoken wordâ€ by me
+
+MAKE WAY FOR WILDNESS ðŸŒ¿
+
+#Cosmos 
+#TimsTwitterListeningParty https://t.co/1LH4Xd8Po9" data-datetime="7:31 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="149000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383865471779295239"
+                 data-text="â€œAnd my good friend the gardener holds life in her two handsâ€ðŸŒ¿
+
+My good friend the gardener is the v inspiring @rebeccamsw - a goddess who makes things grow. Unlike me, the shit gardener, â€œI kill all I cultivateâ€. 
+
+Shit gardeners united! 
+
+#Cosmos 
+#TimsTwitterListeningParty https://t.co/Q4SGJPjVW6" data-datetime="7:30 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383864846807011328"
+                 data-text="#Cosmos. Named after the flower. But I dig the sci-fi connotations too!ðŸŒ 
+
+Hereâ€™s me rehearsing the electric guitar parts &amp; vocals. I love Kath Bloom and she was a huge influence on this song. 
+
+#TimsTwitterListeningParty https://t.co/iGGF3K4fHO" data-datetime="7:27 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383864560528936969"
+                 data-text="Star of this album is how Ailsa @AilsaBadger plays on the outro here. Her cello sounds almost Appalachian. What a musician! One of my favourites moments. Xx
+
+#TimsTwitterListeningParty" data-datetime="7:26 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383864168290217992"
+                 data-text="Itâ€™s â€œflowers filling up my roomâ€ rather than â€œwombâ€ - although dya know what, I like that too! ðŸŒ¹ðŸ˜‚
+
+#InBloom 
+#TimsTwitterListeningParty" data-datetime="7:25 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383863716467249154"
+                 data-text="#InBloom. Written in &amp; about our old house in Cardiff, where the garden grew under the back door at night! Weâ€™d find tendrils and bugs on the floor ðŸ›I initially imagined it as an electropop banger! As ur hearing, it became something a bit different..
+
+#TimsTwitterListeningParty" data-datetime="7:23 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383863483662405633"
+                 data-text="Devilâ€™s in the detail, step back 
+
+Feels very welsh to say that. Salem and the devil in the shawl! 
+
+#CloseForComfort
+#TimsTwitterListeningParty https://t.co/QZ6mRsjHXx" data-datetime="7:22 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383863082477264902"
+                 data-text="This song really came alive when @rhodribrooks sent through his pedal steel takes! Thereâ€™d been something missing from the whole thing that @IwanMorgan_ &amp; I could never quite identify. Rhod solved the mystery. Which was kind of him! 
+
+#CloseForComfort
+#TimsTwitterListeningParty" data-datetime="7:20 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383862824766566402"
+                 data-text="Close for Comfort was the 1st single! Inspired by all the characters in Murakami novels who accidentally fall into holes / wells / dark places. I identified with their plight!ðŸ’¡ 
+
+Even familiar, loved rooms can become strange &amp; unsettling sometimes. 
+
+#TimsTwitterListeningParty https://t.co/0oMVlh5OmY" data-datetime="7:19 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383862617765158914"
+                 data-text="Forgot about that zither @IwanMorgan_ - inspired by Laraaji â¤ï¸
+
+#Mai 
+#TimsTwitterListeningParty" data-datetime="7:18 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383862388806479883"
+                 data-text="In my head, Mai is like a madrigal society homage to The Colour of Spring?!? ðŸ˜‚ Anyone up for that?? 
+
+#TimsTwitterListeningParty https://t.co/1u0LBEirTh" data-datetime="7:17 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="183000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383862178357211138"
+                 data-text="I like how the song changes here. Thereâ€™s something quite medieval about my harp bit, reminds me of the Incredible String Band!
+
+@angsd2 &amp; Ailsa @AilsaBadger create this ethereal landscape with the strings. I LOVE the flute part @LauraJMartinuk! 
+
+#Mai
+#TimsTwitterListeningParty https://t.co/xLuwReTCrN" data-datetime="7:17 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383861410434732034"
+                 data-text="Gwn ei ddyfod fis y mÃªl = I know itâ€™s coming, month of honey ðŸŒž
+
+Thereâ€™s this huge sense of hope &amp; desire radiating from the words; felt so vital
+
+&amp; then when the record came out at start of lockdown 1, it took on a whole new (unexpected) meaning
+
+#Mai
+#TimsTwitterListeningParty" data-datetime="7:14 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383861299243667456"
+                 data-text="#Mai. The poem by Eifion Wyn which gives the album its name! The words in Welsh are so beautiful. I just wanted to set them very simply, dim frills. And then wait to see what happened when we started playing. It took on its own energy ðŸŒ¿ðŸŒ¿ðŸŒ¿ðŸŒ¿
+
+#Mai
+#TimsTwitterListeningParty https://t.co/tSjfqFZIgF" data-datetime="7:13 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383861178355523591"
+                 data-text="Terracotta by @georgiaruth ðŸ™ŒðŸ”¥" data-datetime="7:13 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383861143655964675"
+                 data-text="Thereâ€™s a ðŸ”¥ remix of Terracotta on the Mai:2 EP by @gwennosaunders 
+
+She found the heart of the song (which was living in @IGHuws guitar) and brought it out into the light! â¤ï¸
+
+https://t.co/CuhnZ6USTj
+
+#Terracotta 
+#Mai 
+#TimsTwitterListeningParty" data-datetime="7:13 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383860993768321034"
+                 data-text="I think gorj drummer @Daf_Hughes is â€œplayingâ€ a broom on the outro here.. his sweeping action was immaculate! ðŸ§¹ The chimey sound is a little red kidsâ€™ piano. 
+
+I never wanted the outro to end. Maybe itâ€™s still going somewhere... 
+
+#Terracotta 
+#Mai 
+#TimsTwitterListeningParty" data-datetime="7:12 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FHighContrast%2Fstatus%2F1383860895730655232"
+                 data-text="At 9pm tonight join in #TimsTwitterListeningParty and listen along to my album Notes From The Underground as I live tweet it. Thanks to @huwstephens @Tim_Burgess 
+https://t.co/5ndJsKvVYe https://t.co/pz2wCkdNzp" data-datetime="7:12 PM Apr 18, 2021"> 
+                HighContrast            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383860777757515778"
+                 data-text="This is where the change happens! Felt like light streaming in thru a window
+
+â€œMae fy mabiâ€™n hoff o bwyntio ar wyneb yr haul mewn cegin ger y mÃ´râ€
+
+= My baby likes to point at the sunâ€™s face in a kitchen by the sea..
+
+ðŸŒžðŸŒŠðŸŒž
+
+#Terracotta 
+#Mai 
+#TimsTwitterListeningParty https://t.co/3obCMCYCjL" data-datetime="7:11 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383860487423598599"
+                 data-text="The terracotta sun in question made it onto the album cover! 
+
+Beautiful artwork by my soul sister Catrin Davies @CatrinLewisArt. We shot the photos in my garden in one hour when our kids were asleep. The happiest, dreamiest hour ðŸŒºðŸŒž
+
+#Terracotta 
+#Mai
+#TimsTwitterListeningParty https://t.co/EmGyAySwdG" data-datetime="7:10 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="129000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383860159944937474"
+                 data-text="#Terracotta is one of my favourites! Iâ€™m singing about the magic of creating ur own rituals &amp; mysticism ðŸ’ƒðŸ»
+
+Translation: terracotta above the fire / goddess of little things / her body is the proof / of bigger things beyond all this
+
+#Terracotta 
+#Mai
+#TimsTwitterListeningParty" data-datetime="7:09 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383859619487834115"
+                 data-text="Ahhh THIS is my favourite moment on the entire record. We recorded pretty much all the band bits live. And this change, when the guys come in, felt charged &amp; magic. They break my heart every time I hear it!
+
+Saxophone from  @Sweet_Babs here 
+
+#7Rooms
+#TimsTwitterListeningParty" data-datetime="7:06 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383859158156410884"
+                 data-text="I wanted more of a country feel on this song. I wrote it on guitar (rare for me) &amp; wanted to create something which would make me feel like how Townes can make me feel! Stark, almost? Thereâ€™s vulnerability in it &amp; I was nervous to share
+
+#7Rooms
+#Mai
+#TimsTwitterListeningParty" data-datetime="7:05 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383859009715785736"
+                 data-text="â€œSeven Rooms and no spool to follow..â€
+
+The song Iâ€™m proudest of on the album I think. When I heard the band play it for the first time, felt v emotional. 
+
+I think itâ€™s about finding your way out of a labyrinth by following the light ðŸ’¡ 
+
+#7Rooms
+#Mai
+#TimsTwitterListeningParty" data-datetime="7:04 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383858728131129349"
+                 data-text="The amazing @Sweet_Babs aced the harmonies on the outro! I had a go, but his sounded so much better. Diolch Stephen. 
+
+#Madryn 
+#TimsTwitterListeningParty" data-datetime="7:03 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383858643032895489"
+                 data-text="Oh, and Ringo lived on Madryn St in Liverpool! We recorded lots of extra bits + overdubs for the album in Lâ€™pool in fact (favourite city) @IwanMorgan_ 
+
+Album is part west walian and part scouse â¤ï¸
+
+#Madryn 
+#TimsTwitterListeningParty https://t.co/FLEm5lxzV3" data-datetime="7:03 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383858489005514758"
+                 data-text="Thereâ€™s a gorgeous video for this song by @EfaGBlosseMason - madryn can also mean fox ðŸ¦Š and her animation was so perfect! The weird thing is, I actually own a cardigan exactly like that one.. 
+
+https://t.co/Yjy4Gf9Ftu
+
+#Madryn 
+#TimsTwitterListeningParty" data-datetime="7:02 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383858485255761925"
+                 data-text="Big thanks to @huwstephens for the recommendation ðŸ™Œ" data-datetime="7:02 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383858410785890307"
+                 data-text="Iâ€™m singing â€œpaid ag ofniâ€™r pethe tawel / donâ€™t fear the quiet thingsâ€. 
+
+I think maybe the whole album was an exercise in that: learning to see (and hear) the power of quiet things ðŸŒ¿
+
+obviously my next album (thrash metal) will be different
+
+#Madryn 
+#TimsTwitterListeningParty" data-datetime="7:02 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383858280326307844"
+                 data-text="I know @IGHuws is v proud of this guitar pattern and rightly so! I loved it the first time he played it to me, and it shaped the whole song. I like how it feels like it never wants to settle in one place! Keeps the song rolling.. 
+
+#Madryn 
+#TimsTwitterListeningParty https://t.co/f2NtMeUZ94" data-datetime="7:01 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383858215167815688"
+                 data-text="#Madryn was written for my little boy. Itâ€™s named after his favourite hill, Garn Fadryn, on Pen LlÅ·n. I wanted him to have something he could always rely upon - songs &amp; hills are dependable even when the world becomes crazy! â›° 
+
+#Mai
+#TimsTwitterListeningParty https://t.co/o83Safg6Yv" data-datetime="7:01 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383858158800494601"
+                 data-text="I wanted the album to feel intoxicating and wild, somewhere between order and chaos! Nothing too fixed. Weirdly, this was the oblique strategy co-pilot @IwanMorgan_ picked when we started the session! It felt like a sign from @dark_shark ðŸŒ¿
+
+#TimsTwitterListeningParty https://t.co/DvnqNsZiIg" data-datetime="7:01 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1383858129922756613"
+                 data-text="Itâ€™s time
+
+My first listen
+
+Hello @georgiaruth https://t.co/8kAwgGJv4N" data-datetime="7:01 PM Apr 18, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fhuwstephens%2Fstatus%2F1383858085819682822"
+                 data-text="Mai is gooooooo! https://t.co/a6h8n75b3X" data-datetime="7:00 PM Apr 18, 2021"> 
+                huwstephens            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383857913651896328"
+                 data-text="And weâ€™re off!
+
+#Gardd is the sound of something waking up ðŸ‘ Theme with improvised harp &amp; strings by @angsd2, Ailsa Mair Hughes &amp; me. 
+
+&amp; high prince of the pedal steel @rhodribrooks delivering swells that sound like the sun coming up. Pure magic ðŸŒž
+
+#TimsTwitterListeningParty" data-datetime="7:00 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Fgeorgiaruth%2Fstatus%2F1383857883335462921"
+                 data-text="Welcome to the garden..  Croeso!ðŸŒ¿ðŸŒº
+
+This is Mai. Meaning May in Welsh, the best month of all (in my opinion!) 
+
+U can also use it as a greeting: â€˜Mai? /â€˜Sup?ðŸ‘‹ðŸ» 
+
+The songs were written in winter, with their eyes fixed firmly on warmer times ahead.. 
+
+#TimsTwitterListeningParty https://t.co/cWwXIzhEF4" data-datetime="7:00 PM Apr 18, 2021"> 
+                georgiaruth            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
