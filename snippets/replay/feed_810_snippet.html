@@ -1,0 +1,538 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/6LbsrGVIwLid6rwRA0qasr" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0286878bba613bafa16e36d797" alt="Crooked Machine" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Róisín Murphy</span><br/><span class="sub-colour">Crooked Machine</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(1168629)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/6LbsrGVIwLid6rwRA0qasr" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_1168629_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 97 tweets from Sunday 13th June 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/roisinmurphy" target="_blank"><img src="https://pbs.twimg.com/profile_images/1289117666050023426/jZMnF606_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/roisinmurphy.jpg'"><br/>@roisinmurphy</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Kingdom of Machines" data-start="0"
+             data-duration="388" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Echo Returns" data-start="389"
+             data-duration="355" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Capable Rhythm" data-start="745"
+             data-duration="366" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Assimilation" data-start="1112"
+             data-duration="414" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Crooked Madame" data-start="1527"
+             data-duration="435" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Less Is More" data-start="1963"
+             data-duration="401" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Name Changer" data-start="2365"
+             data-duration="349" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="We Are the Law" data-start="2715"
+             data-duration="372" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Hardcore Jealousy" data-start="3088"
+             data-duration="445" style="display:none"></div>
+                        <div id="track-10" class="track-list"
+                     data-name="Finished" data-start="3534"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485186878bba613bafa16e36d797" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-97" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404166850573971456"
+                 data-text="All artwork and collage by the wonderful, the brilliant @BraulioAmado â™¥ï¸â™¥ï¸â™¥ï¸ðŸ’• https://t.co/cvfEh4mr7M" data-datetime="8:00 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404166790750609409"
+                 data-text="Thank you @LlSTENlNG_PARTY" data-datetime="8:00 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404166789152509961"
+                 data-text="Thank you everybody who came to this very groovy party! KEEP STEPPING!! until the next time ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="8:00 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1404166521107238913"
+                 data-text="That was off the scale amazing! Thanks @roisinmurphy (and Parrot) https://t.co/zSoeQyCCmO" data-datetime="7:59 PM Jun 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404166207180312579"
+                 data-text="No, itâ€™s a warmer experience than that, warmer than most music around at the moment. And it came from the place of soulful authenticity. #crookedmachine forever ðŸ”¥" data-datetime="7:58 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404166044265156610"
+                 data-text="#CrookedMachine #timstwitterlisteningparty 
+Basically, this record is right up my street, which is handy. But really, I love it. Itâ€™s timeless not just something thatâ€™s trying to reach for the Zeitgeist or for a few extra sales." data-datetime="7:57 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="135000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1404165932449153026"
+                 data-text="So many artists put so much work into each @LlSTENlNG_PARTY - itâ€™s been an honour to work with these brilliant people and bring you hundreds of ace albums.
+Iâ€™ll be forever grateful. Itâ€™s been such a blast so far. Hereâ€™s to the future  
+
+Tim x" data-datetime="7:57 PM Jun 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404165368927694849"
+                 data-text="Parrot: \'Hardcore Jealousy\' is a response to that. No, we\'re not going to slow it down.Â 
+
+We\'re going to make it punch you in the face. 
+
+Then run off laughing. ðŸ¤ªðŸ˜œ" data-datetime="7:54 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404165345137598464"
+                 data-text="Complex remix to have achieved, Itâ€™s an incredible feat! Imagine when I got to the end of this record on first listen, everything was already in its right place, I got to the end, to this track and â€œJesus fucking Christâ€, I said to myself â€œheâ€™s out done him self!â€ https://t.co/tySGBaA9qw" data-datetime="7:54 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404165129323913216"
+                 data-text="#Hardcorejealousy 
+
+Oh God this is bad bad bad bad bad bad bad bad bad bad bad bad bad bad! (In a good way, obvs) â™¥ï¸â™¥ï¸â™¥ï¸â™¥ï¸â™¥ï¸â™¥ï¸â™¥ï¸â™¥ï¸â™¥ï¸â™¥ï¸â™¥ï¸â™¥ï¸" data-datetime="7:53 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404165052429709316"
+                 data-text="Parrot: So we were aghast when record labels interested in releasing it as a single wanted to slow the tempo down. Because apparently \"people can\'t dance to anything faster than 130bpm\". Jesus... That\'s a good proportion of dance music history disappearingÂ down the K-hole innit?" data-datetime="7:53 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404164898918178820"
+                 data-text="Parrot: Like a rush of sugar to the head, the finished article was simple but pleasingly effective." data-datetime="7:52 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404164654339956742"
+                 data-text="Parrot: \'Jealousy\' is a tune that always contained a lot of kinetic energy. The original rhythm track was giddy disco fluff, which Murf responded to with a lyric about frantic, unstoppable ever building emotion." data-datetime="7:51 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404164530163249153"
+                 data-text="9. HARCORE JEALOUSY #TimsTwitterListeningParty #crookedmachine" data-datetime="7:51 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404164383299846144"
+                 data-text="@cesarmoz Poor lad @JamieMccredie" data-datetime="7:50 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="159000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404164258485657606"
+                 data-text="#Wearethelaw
+Great running track this! It has propulsion. 
+Synths are magic on this track. https://t.co/JQg7E7q9L1" data-datetime="7:50 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404163588160360462"
+                 data-text="Come on then!!! Letâ€™s have ya!! #WEARETHELAW ðŸ’« https://t.co/4uuGzNq3wP" data-datetime="7:47 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404163574608674824"
+                 data-text="Parrot: Anyroad, despite my foibles, I thought it might be fun to forget about the songs for once and just have a bit of this and a bit of that over a bit of something else. Like a megamix or summat." data-datetime="7:47 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404163285101027330"
+                 data-text="Parrot: ...But in dance music thatÂ 
+style can be so prevalent that sometimes it\'s a struggle to find the real primal beating heart of a tune. Everything becomes a single carpet of noise. Or very loud wallpaper." data-datetime="7:46 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404163186270654467"
+                 data-text="@stevegray1974 @LlSTENlNG_PARTY Lol" data-datetime="7:46 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404163152946814979"
+                 data-text="Parrot: These days I tend to avoid doing remixes that don\'t use many vocals from theÂ original songs. For DJs I accept that tunes with just a few rhythmicÂ shards of vocalÂ are easier to sequence..." data-datetime="7:45 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404163118624874496"
+                 data-text="@roisindaily_ Hahahahaha" data-datetime="7:45 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404162988383350786"
+                 data-text="8. WE ARE THE LAW #TimsTwitterListeningParty #crookedmachine
+
+Parrot: This one sounds quite 80s doesn\'t it?" data-datetime="7:45 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404162790701547535"
+                 data-text="@DebrophyOff Dancing is deep and dark ðŸ”¥ðŸ’“" data-datetime="7:44 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404162600456364034"
+                 data-text="Parrot: For a no doubt very important reason that I can\'t remember, somewhere along the way, the tune acquired a bit of a soul shuffle, and I liked the idea of picking the remix up with a loping 4/4 kick drum. Slightly Steppers. 
+
+Which steps into..." data-datetime="7:43 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404162560035786758"
+                 data-text="@MickeyDeron Yep" data-datetime="7:43 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404162271086002177"
+                 data-text="What a concoction this groove is. Funky and menacing at the same time, a totally unique sound. #namechanger #crookedmachine" data-datetime="7:42 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404161915165851652"
+                 data-text="#NameChanger which parrot did across this album, changing the titleâ€™s names to titillate and amuse himselfðŸ˜œ https://t.co/dMKLL1jZz9" data-datetime="7:41 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404161830763773952"
+                 data-text="Parrot: For it\'s eventual release, Murf freshened the vocals up with a couple of extra parts, and \'Game Changer\' was a song that evolved out of one of said parts." data-datetime="7:40 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404161668062588930"
+                 data-text="Parrot: The oldest song on Roisin Machine was \'Murphy\'s Law\', which had originally been written for the Overpowered album but didn\'t make it past the A&amp;R man." data-datetime="7:40 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404161655232159745"
+                 data-text="@stevegray1974 @LlSTENlNG_PARTY Top stuff that!" data-datetime="7:40 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404161470171078656"
+                 data-text="7. NAME CHANGER #TimsTwitterListeningParty #crookedmachine" data-datetime="7:39 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404161418560159749"
+                 data-text="Another hands in the air moment!! We are in a field at 9am, been dancing all night and we could dance forever! #LessisMore" data-datetime="7:39 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404161416148488192"
+                 data-text="oh the drama here! 
+This is a really good version, one of my favourite tracks on the record. Love it, itâ€™s deep and dark as fuck but still camp as hell! #LessisMore https://t.co/hX6aLHaJPu" data-datetime="7:39 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1404161365351276545"
+                 data-text="ðŸ˜ðŸ˜ https://t.co/IXzHKE9eWS" data-datetime="7:38 PM Jun 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="159000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1404161128377290756"
+                 data-text="@DomkKing @Sid15112000 Fo sho" data-datetime="7:37 PM Jun 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404160460245680128"
+                 data-text="Parrot: The full remix LP felt like an opportune moment to nag Fat Dave into getting the chorus to work on the truncated b line. Which he did by using musicianly words like \"transposition\" and \"modulation\" and other magical musical twattery that I\'m tooÂ stupid to understand." data-datetime="7:35 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404160353257263104"
+                 data-text="#LessisMore 
+Well the title could be engraved on Parrots gravestone! #crookedmachine #timstwitterlisteningparty" data-datetime="7:34 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404160185967562753"
+                 data-text="Parrot: â€¦but unfortunately we ran out of time before we could massage the chorus into its new bedding. That\'d always niggled me, because there\'s nothing I like better than a sweet melody
+riding on a dark undercarriage." data-datetime="7:34 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1404160160315101188"
+                 data-text="@DomkKing @Sid15112000 Nope ; )" data-datetime="7:34 PM Jun 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404160047933018114"
+                 data-text="Parrot: There was a previously released mix of \'Something More\' that we did very quickly, almost as an afterthought. The track was sped up 5bpm and only part of the bass line used. This resulted in the song taking on a darker, deeper vibeâ€¦" data-datetime="7:33 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404159966013972487"
+                 data-text="@haavarg Jesus thatâ€™s saying something!" data-datetime="7:33 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404159889308536834"
+                 data-text="@Eddiemunsteron1 @GlasgowRunner Aye ðŸ¤£ðŸ¤£ðŸ¤£" data-datetime="7:33 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404159812087259137"
+                 data-text="6. LESS IS MORE #TimsTwitterListeningParty #crookedmachine" data-datetime="7:32 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404159781292675077"
+                 data-text="Iâ€™m already lost, long gone people! https://t.co/8exzc33qCH" data-datetime="7:32 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404159499812884483"
+                 data-text="@robshone Iâ€™m already lost in the groove #Tim stwitterlisteningparty" data-datetime="7:31 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTrudyAWhite%2Fstatus%2F1404159239787061253"
+                 data-text="@LlSTENlNG_PARTY https://t.co/vIZl5AoS6d" data-datetime="7:30 PM Jun 13, 2021"> 
+                TrudyAWhite            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404159098568990723"
+                 data-text="It has that kind of minimalism, that kind of regimentation that makes you bore down into the very core of yourself, into the very meaning of existence. #CrookedMademoiselle" data-datetime="7:29 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404159097352724483"
+                 data-text="There were 75,000 lyrics in the original track or thereabouts, and before it had a title everyone always called it â€œthe Mademoiselle trackâ€ Even though I only say that word once. #CrookedMademoiselle" data-datetime="7:29 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404159095712714755"
+                 data-text="Thereâ€™s something about Parrots claps, theyâ€™re so fully real and rounded, I recon itâ€™s the claps that keep this whole project together. The rather mechanical structure of the music is humanised!  #CrookedMademoiselle #timstwitterlisteningparty" data-datetime="7:29 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="121000" data-url="https%3A%2F%2Ftwitter.com%2Froisin__machine%2Fstatus%2F1404158985075363840"
+                 data-text="https://t.co/MNzsJknJ77 https://t.co/NuvYLCn9Qs" data-datetime="7:29 PM Jun 13, 2021"> 
+                roisin__machine            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404158477774331905"
+                 data-text="#CrookedMademoiselle 
+Sublime groove, this is a Parrot classic, it just bounces along, total equilibrium in this song. Itâ€™s simple, deceptively. https://t.co/9J0XZnXLsH" data-datetime="7:27 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404158058343849988"
+                 data-text="Parrot: Ironically, this is rhythmically straighter and less crooked than \'Shellfish Mademoiselle\'. Which was totally intentional. It was an opportune moment for a moment of slightly wonky disco dancing. To help me get the feel, I pictured Murphy doing her old broken robot moves." data-datetime="7:25 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404157977049939976"
+                 data-text="5. CROOKED MADAME #TimsTwitterListeningParty #crookedmachine" data-datetime="7:25 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404157945269698561"
+                 data-text="Thatâ€™s me that is ðŸ¤·ðŸ¼â€â™€ï¸ https://t.co/vwI00amcIh" data-datetime="7:25 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404157596114767873"
+                 data-text="You donâ€™t get to it slide @LlSTENlNG_PARTY https://t.co/Xvc55OJVNn" data-datetime="7:23 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404157169524785157"
+                 data-text="Parrot sure can do a build and release, he must be good in bed! ðŸ˜œ #Assimulation #crookedman" data-datetime="7:22 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404157053258584066"
+                 data-text="These piano chords, I feel them so hard, itâ€™s so of my moment right now. I have a feeling that whenever I hear this song in the future, I will be back in this peculiar moment, this era of our lives.  #Assimulation" data-datetime="7:21 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404156997285654528"
+                 data-text="ï¿¼
+this song was the first one written for this entire project and it was so long ago, with this remix it all comes flooding back, the spirt of everything. #Assimulation #crookedmachine https://t.co/fjL4DRKFMb" data-datetime="7:21 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404156850040356868"
+                 data-text="#Assimulation Iâ€™m in my happy place.
+#crookedmachine" data-datetime="7:20 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404156598734446592"
+                 data-text="Parrot: ... But it turned out ok, probably the best thing on the record.Â It\'s got more of a traditional \"song\" arrangement than the main version, which is quite unusual in the world of modern remixes." data-datetime="7:19 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404156419725725706"
+                 data-text="Parrot: I was shitting myself doing \'Simulation\' cos I always quite liked the original, andÂ unusually for me had never felt the urge to experiment with other versions..." data-datetime="7:19 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404156236808048640"
+                 data-text="4. ASSIMILATION #TimsTwitterListeningParty #crookedmachine" data-datetime="7:18 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404155883140026369"
+                 data-text="@trasho_mondo Itâ€™s warm innit! ðŸ¥³ðŸ˜œ" data-datetime="7:17 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404155758133006338"
+                 data-text="@mrmitchell78 Aye!" data-datetime="7:16 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404155625651638272"
+                 data-text="@claire3638 Ideal!" data-datetime="7:16 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404155238492299265"
+                 data-text="Iâ€™d love to be back in the cellar in Sheffield and hear this get dropped. When I was living in Sheffield years ago, it was always other people who made records that really worked at those underground parties, but this would slap everyoneâ€™s arse! #CapableRhythm https://t.co/qHGa3IVsnc" data-datetime="7:14 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404155225045340172"
+                 data-text="#CapableRhythm
+Perfect version, encapsulates it all, so Sheffield.. Its a glamor-stomper! The guitar on this is a special thing of beauty." data-datetime="7:14 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404154796127539204"
+                 data-text="Parrot: Is just an old version of Incapable with some rhythm guitar busked over the top. Spotlight on Fat Dave!" data-datetime="7:12 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404154732453797891"
+                 data-text="@robshone @Tim_Burgess @LlSTENlNG_PARTY ðŸ’«" data-datetime="7:12 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404154724509683714"
+                 data-text="3.CAPABLE RHYTHMÂ #timstwitterlisteningparty #crookedmachine" data-datetime="7:12 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1404154632184766466"
+                 data-text="ðŸ™‹â€â™‚ï¸ https://t.co/d1fDa9KFMm" data-datetime="7:12 PM Jun 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404154360129589258"
+                 data-text="@bambibaebe ðŸ‘" data-datetime="7:11 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404154152041725964"
+                 data-text="Parrot: Which is quite pretentious... So as an antidote to the pseudery..." data-datetime="7:10 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404154024232947717"
+                 data-text="Down to the molecule! Some serious Celtic minimalism on the go here lads! Weâ€™re also in Doctor Who territory, inside the machine, backwards and forwards in time! Deep Disco mysticism, machine mythology. #EchoReturns" data-datetime="7:09 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404153842468536325"
+                 data-text="Parrot: The picture I had in my head when making Echo Returns was of Narcissus dead, floating face down in the languid pool whilst what remains of Echo hovers above, powerless, fragments of her flickering across the water and bouncing between the wet river rocks." data-datetime="7:08 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404153569218080771"
+                 data-text="#kingdomofmachines Oh it makes my heart sing! ðŸŽ¼ðŸ’• https://t.co/lEUYbRDNNN" data-datetime="7:07 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1404153406009249794"
+                 data-text="Twitter is a right dumpster fire sometimes. Weâ€™re here bring some good stuff ðŸ”¥" data-datetime="7:07 PM Jun 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404153399701127169"
+                 data-text="Parrot: The love story of Echo and Narcissus is such a cracking tale, and luckily well enough known for me to go off at an arty-farty angle without feeling in danger of misrepresentingÂ what Roisin was singing about." data-datetime="7:07 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404153302951079940"
+                 data-text="Theyâ€™ve taken the original to a very pure place, accentuated the cold, JG Ballardness of the original!  The first track of the record lays it out, this isnâ€™t necessarily going about pure dance music, itâ€™s going to be about mood,  big-time!! #kingdomofmachines" data-datetime="7:06 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404153277827125255"
+                 data-text="2.ECHO RETURNS #TimsTwitterListeningParty #crookedmachine" data-datetime="7:06 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404153153734561794"
+                 data-text="I wanted the artwork to be simple,this record is not about the popstarâ€™ image, itâ€™s a producer record. Itâ€™s about the music contained within. @BraulioAmado had fun cutting me up into collage just as Parrot did with my voice. https://t.co/JjfyWNhwh2" data-datetime="7:06 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404153074772492288"
+                 data-text="Parrot: But ultimately, right at the end when you think it might be over, the wheel just keeps on turning...
+
+Into..." data-datetime="7:05 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404152703849279493"
+                 data-text="Itâ€™s really not enough to call it a remix album. Crooked Machine could stand on its own, itâ€™s itâ€™s own universe. The two records are in parallel dimensions. equal and opposite! ðŸš€ #crookedmachine #timstwitterlisteningparty" data-datetime="7:04 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1404152676653355008"
+                 data-text="https://t.co/SKTsy8erUX" data-datetime="7:04 PM Jun 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404152564074090501"
+                 data-text="Parrot: It felt pretty obvious that for the remix LP some kind of landing should arrive, solid ground could be reached. So that\'s what \'Kingdom of Machines\' is about, imposing a little stability." data-datetime="7:03 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404152496138956806"
+                 data-text="Parrot: All of that may be a complete misreading of what the song is about, but it\'s certainly what me and Fat Dave tried to put into the music. It goes up, it goes down but ultimately never resolves." data-datetime="7:03 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404152424324022278"
+                 data-text="https://t.co/ZqZypo7UFC" data-datetime="7:03 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404152393353371649"
+                 data-text="...although we never discussed it, I\'ve always presumed that \'Kingdom of Ends\' is about finding yourself stuck on a wheel of physical and spiritual unresolve.
+There\'s a climb of fresh excitement. You feel as if fulfilment can finally be reached...the itch just keeps on itching." data-datetime="7:03 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404152157339799560"
+                 data-text="Parrot: Me and Roisin rarely talk about the meaning of specific lyrics or instrumentation. A bit like a pair of leaky old dogs, we each scratch at what the other one has done, and then maybe add a little depositÂ of our ownâ€¦" data-datetime="7:02 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404152089157292034"
+                 data-text="Iâ€™ve known Parrot for nigh on 30 years, Iâ€™ve been close to him throughout my musical adventure.Heâ€™s always been there for me, he is a very, very special soul. I play him everything I do,to get his feedback and itâ€™s always priceless.He is a hugely consistent artist and individual." data-datetime="7:02 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404151901944528899"
+                 data-text="Parrot: Also I thought it might be nice to sample a bit of an old Crooked Man release called \'This Machine\'. That\'s where the high male vocal comes from. (I\'ll sue myself for copyright infringementÂ later)." data-datetime="7:01 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1404151823204761604"
+                 data-text="Hello @roisinmurphy https://t.co/iG5qEmkai0" data-datetime="7:00 PM Jun 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404151755986903042"
+                 data-text="Parrot: I wanted the record to start with some of the Celtic-Soul/ Large Mammal In Pain wailing from Game Changer. Didn\'t think the whole song wasÂ the right opening. So with aÂ  very slight nod in the direction of Padlock, Roisin wails and then is edited into a different track." data-datetime="7:00 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404151689452654593"
+                 data-text="What an incredible bonus was Crooked Machine!! Parrot made it look easy, though Iâ€™m sure it wasnâ€™t! So, Iâ€™ve asked old reliable, The Crooked man himself to provide a track by track commentary. I think you will find it most illuminating and with his typical dry wit also hilarious" data-datetime="7:00 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Froisinmurphy%2Fstatus%2F1404151630199726084"
+                 data-text="1.KINGDOM OF MACHINES #timstwitterlisteningparty  
+PRESS PLAY NOW!! #crookedmachine" data-datetime="7:00 PM Jun 13, 2021"> 
+                roisinmurphy            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1404151623383932930"
+                 data-text="Please be upstanding for the queen of the @LlSTENlNG_PARTY, the one, the only 
+
+@roisinmurphy 
+
+Time to crank up the Crooked Machine https://t.co/Mu6dS1vVPb" data-datetime="7:00 PM Jun 13, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
