@@ -1,0 +1,485 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/79zhJikz6RpvdBKwn4Lp86" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0218902f088e0ed2d9ced7b9ca" alt="The Seed, The Vessel, The Roots and All" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">New Pagans</span><br/><span class="sub-colour">The Seed, The Vessel, The Roots and All</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(9000119)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/79zhJikz6RpvdBKwn4Lp86" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_9000119_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 83 tweets from Sunday 20th June 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/NewPagansBand" target="_blank"><img src="https://pbs.twimg.com/profile_images/1293499360370622465/AmVBxikE_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/NewPagansBand.jpg'"><br/>@NewPagansBand</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/JohnKennedy" target="_blank"><img src="https://pbs.twimg.com/profile_images/378800000735115631/aa4459ab9a1718c65a6ed038695822c5_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/JohnKennedy.jpg'"><br/>@JohnKennedy</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="It's Darker" data-start="0"
+             data-duration="214" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Bloody Soil" data-start="215"
+             data-duration="208" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Charlie Has the Face of a Saint" data-start="424"
+             data-duration="242" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="I Could Die" data-start="667"
+             data-duration="190" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Lily Yeats" data-start="858"
+             data-duration="251" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Admire" data-start="1110"
+             data-duration="272" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Harbour" data-start="1383"
+             data-duration="245" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Yellow Room" data-start="1629"
+             data-duration="200" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Ode to None" data-start="1830"
+             data-duration="236" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Natural Beauty" data-start="2067"
+             data-duration="253" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Christian Boys" data-start="2321"
+             data-duration="338" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2660"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485118902f088e0ed2d9ced7b9ca" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-83" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406685339633295367"
+                 data-text="October UK tour, we can\'t wait, see you there! 
+Tickets: https://t.co/yCKZcFysGM 
+#TimsTwitterListeningParty https://t.co/sCTfci6FwJ" data-datetime="6:48 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406685338408476672"
+                 data-text="â€˜Stop-Startâ€™ lived up to all my hopes! @WEARELIINES have such a great energy, power &amp; emotion! So looking forward to hearing it as part of #TimsTwitterListeningParty #Liines I hope you love them too! 3/3 https://t.co/rDf8OnLhQN" data-datetime="6:48 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406685232716259329"
+                 data-text="I first heard @WEARELIINES because of a rave review by @sarahlay of @TheRecklessYes for @louderthanwar. She then got me some music so I could play them in the radio. It was exciting to see them develop over the next couple of years. 2/3 #TimsTwitterListeningParty" data-datetime="6:47 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406685180429996039"
+                 data-text="Next up for my curated #TimsTwitterListeningParty is â€˜Stop-Startâ€™ by @WEARELIINES! I love this band! Theyâ€™ve played The Remedy for me, been in session for X-Posure @RadioX &amp; given us so much great music! Refresh your drinks &amp; press play at 8pm! 1/3" data-datetime="6:47 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406685040474460161"
+                 data-text="Wow! ðŸ‘ðŸ‘ðŸ‘ðŸ‘ðŸ‘ðŸ‘
+Thanks @NewPagansBand! That was brilliant! Loved the insights! And pics! Thank you! ðŸ™ŒðŸ’šðŸ™#TimsTwitterListeningParty #TheSeedTheVesselTheRootsAndAll 
+#NewPagans" data-datetime="6:47 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406684976008073216"
+                 data-text="@NewPagansBand @LlSTENlNG_PARTY @JohnKennedy ðŸ¤˜" data-datetime="6:46 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406684818994302977"
+                 data-text="For insightful access to the inner workings of New Pagans, join us on our mailing list. This includes cookery tips from Conor, fanzines, nerdy recording stuff and mostly, a community of people who love music. #TimsTwitterListeningParty
+
+Join us here: 
+https://t.co/LxetWNPcE2" data-datetime="6:46 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406684539129303042"
+                 data-text="Weâ€™ll be touring â€˜The Seed, The Vessels, The Roots and Allâ€™ throughout the UK in October and Ireland in December, tickets are available HERE: https://t.co/yCKZcFysGM #TimsTwitterListeningParty" data-datetime="6:45 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406684477460451342"
+                 data-text="Huge thanks to @NewPagansBand @JohnKennedy and everyone who listened along with us" data-datetime="6:44 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406684373953486848"
+                 data-text="Album artwork by our good friend Daniel McCloskey and Claire Miskimmin (hereâ€™s a picture of Daniel with Claire and Lyndsey @Primavera_Sound a few years ago. #TimsTwitterListeningParty https://t.co/X5Oa4qBCHd" data-datetime="6:44 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406684250842271749"
+                 data-text="Thanks for listening through The Seed, The Vessels, The Roots and All with us tonight. We hope you had as much fun as we did and maybe weâ€™ll see you for some live music on our UK tour in October. Most of all, thanks to @LlSTENlNG_PARTY &amp; @JohnKennedy
+ #TimsTwitterListeningParty https://t.co/dcAc4Wb6kI" data-datetime="6:43 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406684152741744651"
+                 data-text="@LlSTENlNG_PARTY @NewPagansBand @JohnKennedy Yep! And they are brilliant" data-datetime="6:43 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406683951025070086"
+                 data-text="Conor: Thereâ€™s a video of us somewhere playing this track live on air for @StephenMainline ...Stephen is a great DJ and a real music fan. Thanks for the continued support Stephen!! #TimsTwitterListeningParty" data-datetime="6:42 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406683695436779527"
+                 data-text="It\'s long ..for a single but the Irish radio stations loved it..I wonder why?! #TimsTwitterListeningParty" data-datetime="6:41 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406683524904755200"
+                 data-text="Allan: my attempt at emulating an â€œEd Oâ€™Brienâ€ style picking technique. Build took AGES to get right and Cahir and I started going overboard with extra guitar parts but ended up stripping it back before mixing. The lyrics and original ideas are enough. #TimsTwitterListeningParty" data-datetime="6:41 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406683170557378563"
+                 data-text="Cahir: I think this might be my favourite track on the record too, itâ€™s recorded pretty much live and came together very naturally when the band started working it up from demos. #TimsTwitterListeningParty" data-datetime="6:39 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406683062616924170"
+                 data-text="Lyndsey: This might be my favourite song on the album, I love playing it live. It\'s very cathartic for me. Iâ€™m glad we wrote this song #TimsTwitterListeningParty" data-datetime="6:39 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406683007851900935"
+                 data-text="11 CHRISTIAN BOYS #TimsTwitterListeningParty the final track on #theseedthevesseltherootsandall and itâ€™s a bullet. This one got the Irish tabloids interested and Lyndsey was even asked if she would name the people involved - NOPE." data-datetime="6:38 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406682904881684480"
+                 data-text="Elizabeth O\'Neill is also Claire\'s Granny\'s name  #TimsTwitterListeningParty" data-datetime="6:38 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406682731195535364"
+                 data-text="Allan: a song that I never got until we recorded it live in a practise one day and listened back to it. Iâ€™m really glad that it made its way onto the record. I think it wouldâ€™ve been missed if it wasn\'t there #TimsTwitterListeningParty https://t.co/z5gYPNpSbc" data-datetime="6:37 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406682421253320704"
+                 data-text="Conor - The quiet middle bit of this song is deceptively hard to play on drums...hard as a goat\'s knee. #TimsTwitterListeningParty" data-datetime="6:36 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406682128629350404"
+                 data-text="Cahir: I love all the parts in this song, we always found it difficult getting it right live, we recorded it a few times and I still donâ€™t feel like itâ€™s finished. The middle section &amp; GTR solo is a tip of the hat to Les Savy Fav, one of my fave bands. #TimsTwitterListeningParty" data-datetime="6:35 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406681998828077058"
+                 data-text="Lyndsey - Written around the same time as Christian Boys, this song is constantly evolving, it never feels finished. When I sing it I always imagine roaming across a bog in a dress. Donâ€™t even ask. #TimsTwitterListeningParty" data-datetime="6:34 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406681909560758278"
+                 data-text="10. NATURAL BEAUTY #TimsTwitterListeningParty about the Irish actor Elizabeth O\'Neill (1791 â€“ 1872) who seemed to get tarred with the â€˜sheâ€™s difficultâ€™ brush in the press" data-datetime="6:34 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406681639909052417"
+                 data-text="Allan: originally recorded in Newcastle, but then got a complete revamp for the record. We kept the original feedback after the first chorus and intro guitar because they sounded so good. The album version sounds night and day above the original demo #TimsTwitterListeningParty" data-datetime="6:33 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406681453660880896"
+                 data-text="Recording Guitars in our old room #TimsTwitterListeningParty https://t.co/xLVqY8hTa6" data-datetime="6:32 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406681266687299587"
+                 data-text="Conor - After dedicating my whole life to bands then taking two years out, I never wanted to be in a band ever again. But these diamonds roped me in. Thereâ€™s no escape. #TimsTwitterListeningParty" data-datetime="6:32 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406681143047557122"
+                 data-text="Cahir: written in our kitchen in Belfast, this was the song Lyndsey and I used to tempt our friends to start a band with us. #TimsTwitterListeningParty" data-datetime="6:31 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406681066925080578"
+                 data-text="Lyndsey: this was the first song I wrote/recorded ever.. I was terrified to sing in front of Cahir then, oh how things have changed! #TimsTwitterListeningParty" data-datetime="6:31 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406680927850401792"
+                 data-text="9 ODE TO NONE #TimsTwitterListeningParty this is the very first song we ever wrote." data-datetime="6:30 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406680771499266057"
+                 data-text="Conor - the end of this track gives me whiplash. Not quite my tempo...badum tish! #drumnerd #TimsTwitterListeningParty" data-datetime="6:30 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406680683972595718"
+                 data-text="Many of the vocal tracks were recorded in our kitchen, an old Victorian house in Belfast with high ceilings and really good natural reverb. Oscar Wilde had dinner here when he visited Belfast in 1884 #TimsTwitterListeningParty https://t.co/gm1F5Iw0xt" data-datetime="6:29 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406680522386989056"
+                 data-text="Lyndsey: #TimsTwitterListeningParty I love our video for Yellow Room, I embroidered the black dress and mask I wear in this, video/artwork is where I combine my love for art and music. Claire directed this (check it out later):  https://t.co/CxnHLitOVW" data-datetime="6:29 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406680299556200448"
+                 data-text="Allan: We tracked the guitars through a Zilla 2x12 with cream back speakers and a Marshall JCM 900 for the dirty sounds then we used the same cab and an Orange Rockerverb 50 head for clean sounds.#TimsTwitterListeningParty" data-datetime="6:28 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406680181499174917"
+                 data-text="Cahir: I had the first half written for quite some time and knew it needed something big for the end. I lost my mind mixing this one aarrgghh. I love playing this one live, canâ€™t wait to get back on tour. #TimsTwitterListeningParty" data-datetime="6:27 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406680021780025344"
+                 data-text="8. YELLOW ROOM Written in response to â€˜The Yellow Wallpaperâ€™ by Charlotte Perkins Gilman, first published in 1892 in â€˜The New England Magazineâ€™, a seminal piece of American feminist literature. A gothic horror, both chilling and identifiable. #TimsTwitterListeningParty" data-datetime="6:27 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406679697921134594"
+                 data-text="Lyndsey: Harbour is about how it feels to be pregnant, really bloody uncomfortable but also pretty exciting (for me at least). Hereâ€™s our daughter Maisie  @LimelightNI with Cahir and I, and 2nd is me 7/8 months pregnant just before a gig @WorkmansClubs #TimsTwitterListeningParty https://t.co/Dv9IHFh5o0" data-datetime="6:25 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FCaolanAustin%2Fstatus%2F1406679500507713538"
+                 data-text="Harbour - I had absolutely nothing to do with this track but it\'s my current favourite on the record. The performances are incredible, the arrangement is lethal and every time I listen to it it reminds me why I\'m a massive fan of this band. #TimsTwitterListeningParty" data-datetime="6:25 PM Jun 20, 2021"> 
+                CaolanAustin            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406679388406652931"
+                 data-text="Conor - Great for going mental to live this track...Cahir is a bloody good guitar player!! #TimsTwitterListeningParty" data-datetime="6:24 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406679198127767552"
+                 data-text="Allan: The Harbour Guitar parts were being changed right up until the song was sent for mastering. Cahir had a brain wave just in time and came up with something that became the definitive version. This song was tracked in three different locations #TimsTwitterListeningParty" data-datetime="6:23 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406679071967399936"
+                 data-text="Cahir:  I loved the fizzy pop choruses of early @ashofficial and @Weezer and this was my attempt at trying to write something like that. I love playing the middle 8, with the half time riff, dirty bass and guitar solo... rock it out! #TimsTwitterListeningParty" data-datetime="6:23 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406678994829852680"
+                 data-text="7. HARBOUR #TimsTwitterListeningParty probably our most popular song so far and to be fair our lovely manager, the final boss @ZeroMythUK called it first day!" data-datetime="6:23 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406678839774883848"
+                 data-text="Claire- I make most of the artwork for New Pagans (Lyndsey and Daniel help too) this is my favourite collage, made for the Admire single campaign. #TimsTwitterListeningParty https://t.co/j1bXoMY0t1" data-datetime="6:22 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406678631124979717"
+                 data-text="Lyndsey - This is a beautiful song and I imagine when Iâ€™m 80 this is probably the only song of ours Iâ€™ll ever listen to (mostly because itâ€™s not fun listening to your own songs, itâ€™s like looking at photos of yourself, no point). #TimsTwitterListeningParty" data-datetime="6:21 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FCaolanAustin%2Fstatus%2F1406678611004956673"
+                 data-text="Loved this swirling/drone-y lead line Cahir plays in behind the vocal. It sounds like something is living in the track; it adds so much feeling to the track and really compliments how minimal and open the chorus is. Beautiful. Â #TimsTwitterListeningParty" data-datetime="6:21 PM Jun 20, 2021"> 
+                CaolanAustin            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FCaolanAustin%2Fstatus%2F1406678370784624641"
+                 data-text="Loved these angular, disjointed guitar parts from the moment I opened the session to mix. Riffs like this are everything I love about rock/indie music. A total joy to work on. #TimsTwitterListeningParty" data-datetime="6:20 PM Jun 20, 2021"> 
+                CaolanAustin            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406678305835819009"
+                 data-text="Conor - I was channeling a @DarrenABeckett1 type tom fill thing in the chorus of this track. Darren is a killer drummer and can play on anything - thanks for the inspiration DB!! #TimsTwitterListeningParty" data-datetime="6:20 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406678168505929734"
+                 data-text="Allan - We ended up tracking guitars in two different locations. Constantly fighting between gain and clarity. We used an electro harmonix pedal throughout the entire first verse to create that drone. #TimsTwitterListeningParty" data-datetime="6:19 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406677980991082496"
+                 data-text="Cahir- I love this track and pushed for it to be a single, the chorus is our version of a Fleetwood Mac song or something. Also, my good friend @MattPressure did a great remix of this track called the illicit love mix. Check it out. #TimsTwitterListeningParty" data-datetime="6:19 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406677855229128709"
+                 data-text="6. ADMIRE #TimsTwitterListeningParty We call this one our LOVE SONG, itâ€™s about staying with someone and loving them even when they are really annoying." data-datetime="6:18 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406677725407072262"
+                 data-text="Conor: The most enjoyable ending to a song live. Come see us in October and watch Cahir throw his guitar into my drums. #TimsTwitterListeningParty" data-datetime="6:17 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406677305506910219"
+                 data-text="Lyndsey: I have a degree in embroidery and Lily was an embroiderer who studied under May Morris, so when I discovered her work after uni, I was really thrilled but also a bit annoyed I hadnâ€™t been taught about her. #TimsTwitterListeningParty https://t.co/Wcj1RDQ4bO" data-datetime="6:16 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FCaolanAustin%2Fstatus%2F1406677188414525442"
+                 data-text="Lily Yeats - This was a different one to mix. Cahir had already mixed the previous version released a year or two earlier and I\'d listened to it to death by the time I\'d been asked to work on it #TimsTwitterListeningParty" data-datetime="6:15 PM Jun 20, 2021"> 
+                CaolanAustin            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406677083846230018"
+                 data-text="Lyndsey: The lyrics â€˜My daughter needs to knowâ€™ were written a year before I got pregnant with my daughter. Premonition? #TimsTwitterListeningParty" data-datetime="6:15 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406676969849303041"
+                 data-text="Cahir: I love this song. Itâ€™s rough and ready, it has all the 90s elements that I love, Sonic Youth, Nirvana, Dinosaur Jr... it descends into chaos at the end, we love finishing our live set with this. #TimsTwitterListeningParty" data-datetime="6:14 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406676807169069066"
+                 data-text="5. LILY YEATS Written in memory of Lily and Elizabeth, the sisters of the famous Irish Yeats brothers. Weâ€™re all particularly interested in Irish history, and even more so in Irish womenâ€™s history, an ever expanding field #TimsTwitterListeningParty" data-datetime="6:14 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406676699090231297"
+                 data-text="Conor: I absolutely love playing this live, itâ€™s pointy and edgy and you really get to dig into the kit and rip it apart #TimsTwitterListeningParty" data-datetime="6:13 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406676652285992964"
+                 data-text="Lyndsey: see I can be sweet #TimsTwitterListeningParty" data-datetime="6:13 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406676467061342214"
+                 data-text="Lyndsey: I do LOVE this one, itâ€™s probably our least refined song but its rawness will always have a place in my heart, it marks the point when I realised I could let myself go and tune into the moment. #TimsTwitterListeningParty" data-datetime="6:12 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406676354528071683"
+                 data-text="Claire : Itâ€™s my fault this one sounds like Black Sabbath #TimsTwitterListeningParty https://t.co/tlGRNGHabj" data-datetime="6:12 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406676183920566272"
+                 data-text="Allan: Tracked in Newcastle (NI) on an 8 track Alesis Firewire Interface (IO/26). We didnâ€™t have enough inputs (or any budget) to run more than one room mic on the kit but Iâ€™m proud of how it turned out. It definitely has a LOFI â€œsoundâ€ #TimsTwitterListeningParty" data-datetime="6:11 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406676071928434694"
+                 data-text="Cahir: This is the first track we ever released. I love how raw it is. When Lyndsey and Claire sent me this track I knew exactly what to do and added a build up and a menacing guitar solo, and boom it was done quite quickly. #TimsTwitterListeningParty" data-datetime="6:11 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406676000390459393"
+                 data-text="I COULD DIE #TimsTwitterListeningParty" data-datetime="6:11 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406675812137512960"
+                 data-text="Allan: The reprise piano part happened after a night of wine in front of a grand piano in the studio. I think it was Claireâ€™s birthday, so we ended up having a very late night, playing all our favorite songs and adding bits like this piano part. #TimsTwitterListeningParty" data-datetime="6:10 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406675536815009795"
+                 data-text="We recorded the majority of the album ourselves in this room in Belfast, an old mill. It doesnâ€™t look like much but it served us very well. We recently built our own studio â€˜Badlandsâ€™ so said goodbye to this room a few weeks ago #TimsTwitterListeningParty https://t.co/WNIa0GnMdD" data-datetime="6:09 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406675282476601351"
+                 data-text="Cahir: The 2nd half is like something from Transatlanticism by @dcfc, Allan wrote a beautiful guitar and piano part, Conor sat back on the Drums and Lyndsey wrote a great vocal that glued it all together. I love this track. #TimsTwitterListeningParty" data-datetime="6:08 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406675243041689600"
+                 data-text="Yes @NewPagansBand - a fantastic recommendation from Mr. @JohnKennedy" data-datetime="6:08 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406675216059842563"
+                 data-text="Cahir: Another song which is like two songs stuck together. Claire and I wrote the first half of the track when we were listening to â€˜Blueprintâ€™ by Fugazi (100bpm). We used it as our Blueprint (sorry) #TimsTwitterListeningParty" data-datetime="6:08 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406675117330010116"
+                 data-text="Lyndsey: When I was travelling in and out of Belfast to university I kept a notebook of all the weird conversations I was overhearing. These notes then got cut and collaged together into lyrics. I also have a cousin called Charlie #TimsTwitterListeningParty" data-datetime="6:07 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406675029933363201"
+                 data-text="3 Charlie has the face of a saint #TimsTwitterListeningParty probably our most indie tune to date, itâ€™s pretty, uplifting and cheeky. We love Charlie ðŸ¤." data-datetime="6:07 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406674838941487111"
+                 data-text="Cahir: One of my favourites, recorded in our sweaty practice space with whatever equipment we could get our hands on, it has one of the most difficult guitar parts to sing over, that Iâ€™ve ever had the pleasure of fucking up live. #TimsTwitterListeningParty https://t.co/fNLINJfFa2" data-datetime="6:06 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406674657474924556"
+                 data-text="Conor: This song is an ass kicker live. The chorus is constantly pushing in a weird way, you need to be on top of it the whole time. When Lyndsey sings the word rubies I always hear boobies. #TimsTwitterListeningParty" data-datetime="6:05 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406674429908819971"
+                 data-text="Lyndsey: Lyrics, I hunted for interesting words in Culpeper\'s Complete Herbal, first published in 1814. I was a bit obsessed with this book at the time. A glimpse into the past when people seemed more intune with nature and the lost art of healing. #TimsTwitterListeningParty" data-datetime="6:04 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406674384241188864"
+                 data-text="@LlSTENlNG_PARTY @JohnKennedy @NewPagansBand @WEARELIINES @danlesac @Scroobiuspipyo Norfolk ðŸ”¥ðŸ¤˜" data-datetime="6:04 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406674310597681165"
+                 data-text="Allan: We tracked Bloody Soil in our rehearsal space. The feedback at the start was created by cranking a JCM 900 into  marshall 1970â€™s 4x12 and throwing on an electro harmonix â€œPulsarâ€ tremolo pedal. #TimsTwitterListeningParty" data-datetime="6:04 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406674129424633863"
+                 data-text="2. BLOODY SOIL: #TimsTwitterListeningParty It wasnâ€™t our intention for this song to be about Northern Ireland but once it was released and the interviews started rolling in we realised we had unconsciously written a song about this strange but lovely place." data-datetime="6:03 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1406674123011596293"
+                 data-text="Let us know where you are in the world for our @JohnKennedy listening parties, featuring @NewPagansBand @WEARELIINES @danlesac &amp; @Scroobiuspipyo 
+
+Shout up https://t.co/yUKeB3f2Fb" data-datetime="6:03 PM Jun 20, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406673915217420289"
+                 data-text="Allan: I was shitting myself during takes. A combination of being the new guy and not wanting to let anyone down by playing shit! #TimsTwitterListeningParty" data-datetime="6:02 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406673736783306754"
+                 data-text="Lyndsey: The lyrics were written after an unpleasant incident I had with a guy at a house party, I was really angry that no one helped me. So, I channelled that energy into this song. I love it #TimsTwitterListeningParty" data-datetime="6:02 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406673447669882884"
+                 data-text="Conor recorded this one naked apart from his orange trainers. #TimsTwitterListeningParty https://t.co/RfmdQgilhQ" data-datetime="6:00 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406673333970780161"
+                 data-text="Cahir: One of the first tracks we recorded, we wanted a huge drum sound so we put a couple of mics in the hall, but we rehearse next to a gym and also picked up the sound of guys pumping iron which you can hear at the end #TimsTwitterListeningParty" data-datetime="6:00 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406673247328948224"
+                 data-text="Handing over to @NewPagansBand for the next 44 minutes and 16 seconds
+
+Welcome to the @LlSTENlNG_PARTY https://t.co/yO4r1v5ohN" data-datetime="6:00 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FNewPagansBand%2Fstatus%2F1406673211698384896"
+                 data-text="Good evening! 
+Our debut album \'The Seed, The Vessel, The Roots And All\'.
+1. ITâ€™S DARKER: Not an easy song to ignore and thatâ€™s why we put it right at the start of the album. 
+#TimsTwitterListeningParty #theseedthevesseltherootsandall" data-datetime="6:00 PM Jun 20, 2021"> 
+                NewPagansBand            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

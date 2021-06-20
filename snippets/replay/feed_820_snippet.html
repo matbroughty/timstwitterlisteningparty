@@ -1,0 +1,724 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/6q0Ft3k8hYdW7N8fGibeOs" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02ff91f757f63bd6231ad75369" alt="Angles" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Dan Le Sac vs Scroobius Pip</span><br/><span class="sub-colour">Angles</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(305032)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/6q0Ft3k8hYdW7N8fGibeOs" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_305032_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 122 tweets from Sunday 20th June 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/danlesac" target="_blank"><img src="https://pbs.twimg.com/profile_images/1399734513253687305/AvEkSJUx_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/danlesac.jpg'"><br/>@danlesac</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Scroobiuspipyo" target="_blank"><img src="https://pbs.twimg.com/profile_images/793528819487502336/yPQJ8syE_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Scroobiuspipyo.jpg'"><br/>@Scroobiuspipyo</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/JohnKennedy" target="_blank"><img src="https://pbs.twimg.com/profile_images/378800000735115631/aa4459ab9a1718c65a6ed038695822c5_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/JohnKennedy.jpg'"><br/>@JohnKennedy</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="The Beat That My Heart Skipped" data-start="0"
+             data-duration="313" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Development" data-start="314"
+             data-duration="237" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Look for the Woman" data-start="552"
+             data-duration="244" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Rapper's Battle" data-start="797"
+             data-duration="217" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Tommy C" data-start="1015"
+             data-duration="266" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Fixed" data-start="1282"
+             data-duration="208" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Angles" data-start="1491"
+             data-duration="237" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Letter from God to Man" data-start="1729"
+             data-duration="237" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Magician's Assistant" data-start="1967"
+             data-duration="279" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Back from Hell" data-start="2247"
+             data-duration="194" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Thou Shalt Always Kill" data-start="2442"
+             data-duration="318" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2761"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851ff91f757f63bd6231ad75369" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-122" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406718461540290566"
+                 data-text="Thanks @danlesac vs @Scroobiuspipyo for taking us through \'Angles\'! What an album! What a band! The memories! The friendship! The love! Stay beautiful! ðŸ’šðŸ’šðŸ’šðŸ™ðŸ™ðŸ™ #TimsTwitterListeningParty" data-datetime="8:59 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406718348977659909"
+                 data-text="@RRelves Well thank you... it\'s not even our best one! ;)" data-datetime="8:59 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406718231839133700"
+                 data-text="@jamesspratt @Scroobiuspipyo NEVER!!!!! ;)" data-datetime="8:58 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406718194975444996"
+                 data-text="@danlesac @JohnKennedy ðŸ¤˜ðŸ”¥â¤ï¸" data-datetime="8:58 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406718135869317120"
+                 data-text="Big love to @JohnKennedy &amp; @Tim_Burgess for the invite." data-datetime="8:58 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406717917534867458"
+                 data-text="@Wlforce_Science @Scroobiuspipyo Hull was always fun... other than the time I went all the way up there to get dumped... but that\'s a story for another time ;)" data-datetime="8:57 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406717864061685763"
+                 data-text="@Robwarren348 @danlesac @Scroobiuspipyo me too!" data-datetime="8:57 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406717856927170561"
+                 data-text="@JohnKennedy @Jenny1092 @danlesac Yes!
+And one of my brothers mates, Andy, came over to listen with us. Haha" data-datetime="8:57 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406717804422778880"
+                 data-text="I hope everyone is listening to \'Reading My Dreams\' though...ðŸ’š #TimsTwitterListeningParty" data-datetime="8:57 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406717643445391360"
+                 data-text="The characters I meet in â€œWaiting for the Beat to Kick inâ€:
+
+Billy Brown - Buffalo â€˜66
+Llyod Dobbler - Say Anything
+Elwood P Dowd - Harvey
+Walter Neff - Double Indemnity
+
+#TimsTwitterListeningParty https://t.co/8bkao1Ks7v" data-datetime="8:56 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406717561262247937"
+                 data-text="@Jenny1092 @Scroobiuspipyo @danlesac Amazing!" data-datetime="8:56 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406717380055740419"
+                 data-text="Well that was nice! Thank you everyone.
+Was worried because we wrote it while I was still very ill and was spending as much time as possible trying to destroy myself... glad the good memories won out though. #TimsTwitterListeningParty" data-datetime="8:55 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406717197662228482"
+                 data-text="Hidden track time.
+Reading My Dreams.
+
+@danlesac made a beat for a friends relatives funeral.
+
+I wrote a vocal about giving a girl a massage over it (stealing a line from @VincentOliver).
+
+THANKS FOR TUNING IN!
+#TimsTwitterListeningParty" data-datetime="8:54 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406717142767214593"
+                 data-text="Huuuuge thanks to everyone involved in our listening parties tonight 
+
+@NewPagansBand @WEARELIINES @danlesac &amp; @Scroobiuspipyo 
+
+â€¦.and to our host, curator, MC and all round good guy @JohnKennedy 
+
+Night everyone x https://t.co/5CFLSJwDxa" data-datetime="8:54 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406717008322891776"
+                 data-text="Wow! So good to hear \'Angles\' again - in such great company! Thank you! Listening to these songs again took me back to all the gigs I saw them performed at ahead of the album, then hearing them as the album. Such a YES! moment! Not just a band! #TimsTwitterListeningParty" data-datetime="8:54 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406716895080951813"
+                 data-text="And we\'re done! I aint touching the bonus tracks... they didn\'t make it on the record for a reason ðŸ˜¹ #TimsTwitterListeningParty" data-datetime="8:53 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406716757071515657"
+                 data-text="@Robwarren348 These were the kid of tracks i felt most proud of. They\'re both moments were what we do fits perfect imo" data-datetime="8:53 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406716307618271237"
+                 data-text="\"Retro look\" makes me laugh every time. #TimsTwitterListeningParty" data-datetime="8:51 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406716278241386497"
+                 data-text="Thatâ€™s three of the fourâ€¦ https://t.co/EHMVjviGnr" data-datetime="8:51 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406716147525881856"
+                 data-text="Iâ€™ve told a few â€œðŸ¤¯ moments that this album brought but how about a more recent one?
+
+I was listening to @rhysjamesy &amp; @lollyadefope on a podcast recently and to my shock they spent 5 minutes talking about how much of a game changer this album was.
+
+#TimsTwitterListeningParty" data-datetime="8:50 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406715718062718977"
+                 data-text="@Scroobiuspipyo Its easily the best track on the album." data-datetime="8:48 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406715554094800897"
+                 data-text="The Waiting for the Beat beat always feels like its the one track that showed me my own potential. Like its almost foreshadowing what we\'d do with You Will See Me a few years later. #TimsTwitterListeningParty" data-datetime="8:48 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406715477372637189"
+                 data-text="Little game to end the night: who can name the films each person I meet in this story are from?
+
+#TimsTwitterListeningParty" data-datetime="8:47 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406715397156519937"
+                 data-text="@evansgaz Itâ€™s not my real ladder, itâ€™s just my step ladder" data-datetime="8:47 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406715253539360768"
+                 data-text="It may be my favourite because we never played it live so this is the first time Iâ€™ve heard it in well over 10 years.
+
+And the spoken word rant/intro to this PISSES over the one that starts the album.
+
+#TimsTwitterListeningParty" data-datetime="8:47 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406715205091012617"
+                 data-text="LAST TRACK! I don\'t care what y\'all say BUT Waiting For The Beat To Kick In is the best track on the album. @Scroobiuspipyo\'s writing and delivery are absolutely perfect and honestly some of his best work. #TimsTwitterListeningParty" data-datetime="8:46 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406715042393903106"
+                 data-text="Waiting for the Beat to Kick In - This may be my favourite track on the album.
+I remember writing it whilst flat sitting for my Dad (@chris1meads) and going over it again and again in his living room.
+
+#TimsTwitterListeningParty" data-datetime="8:46 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406714849284046849"
+                 data-text="Outro reminding me of Hip-Hop karaoke at Latitude @Scroobiuspipyo #TimsTwitterListeningParty" data-datetime="8:45 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406714658036359169"
+                 data-text="@charlieashcroft ðŸ™ŒðŸ’šðŸ™" data-datetime="8:44 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406714614226821125"
+                 data-text="Oh and to answer myself, the reason we re-recorded the vocal was because the original was recorded here (in my bedroom at my mums house again) and the quality was LOWâ€¦ 
+#TimsTwitterListeningParty https://t.co/zIBUVPV9oM" data-datetime="8:44 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406714576327086085"
+                 data-text="So weird, live the second half flips into a Mr Ozio style banger... kinda jarring to hear it not go wonky! #TimsTwitterListeningParty" data-datetime="8:44 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406714234227118080"
+                 data-text="It meant that the first time I met @stephenfry he dropped to his knees and bowed in praise (as told by @Schreiberland will contest).
+
+#TimsTwitterListeningParty" data-datetime="8:43 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406714221123997697"
+                 data-text="Thou Shalt Always Kill... written is like 3hrs and the 1st song we wrote that wasn\'t a remix(i think)... what a weird song to launch a career with. How this got us 1000 shows and 3 albums i\'ll never know, but I\'m glad it did. #TimsTwitterListeningParty" data-datetime="8:43 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406713973320323075"
+                 data-text="@Scroobiuspipyo I basically just didn\'t want people to see face my own trauma on stage! ðŸ˜¹ #TimsTwitterListeningParty" data-datetime="8:42 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406713918173683712"
+                 data-text="â€¦and putting us on the radar or @SageFrancis and the @SFRupdates family, being nominated for an @MTV award in Japan, being made video of the year by @zanelowe on Gonzoâ€¦ It changed everything.
+
+#TimsTwitterListeningParty" data-datetime="8:41 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406713811923619840"
+                 data-text="Thou Shalt Always Kill - This the track that changed it all.
+The music video was shot by Nick Frew for Â£300 (mostly borrowed from friends of @danlesac) and it gave us a career.
+Charting in the U.K., blowing up in america andâ€¦ 
+#TimsTwitterListeningParty" data-datetime="8:41 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406713754990043145"
+                 data-text="@danlesac There was a line on dreaming that was so bad you have no memory of ever hearing the song." data-datetime="8:41 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406713594578939910"
+                 data-text="The absolute worst line he ever wrote ;) https://t.co/X2bzjTzEDJ #TimsTwitterListeningParty" data-datetime="8:40 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406713594050383872"
+                 data-text="Can confirm.
+I regularly had to fight to keep Magicians Assistant in our live sets.
+Haha.
+Specially at festival.
+And I get itâ€¦ itâ€™s certainly a moodâ€¦ changer.
+But Iâ€™ve ALWAYS felt â€œfunâ€ is overrated soâ€¦ https://t.co/Hc3fGWfw4f" data-datetime="8:40 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406713332707516424"
+                 data-text="The order on the album feels really wonky right now... like up down up in quick succession. Back From Hell is better than I remember it BUT it nearly was B-sideâ€¦ we made the mistake of saying it wasnâ€™t gonna be on the LP &amp; yâ€™all shouted at us. #TimsTwitterListeningParty" data-datetime="8:39 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406712879928250368"
+                 data-text="Back from Hell - This has THE WORST opening verse line Iâ€™ve ever written but it was one of my faves to perform live.
+I always remember @Okwonga being impressed by the flow &amp; tempo switches &amp; it meaning the world to me as I respect the guy so damn much.
+
+#TimsTwitterListeningParty" data-datetime="8:37 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406712580140421127"
+                 data-text="I wrote it after losing one of my best mates to suicide and also being in a relationship with someone who battled self harm for a long time.
+
+So it was emotionally charged.
+
+Regularly cried real tears when performing the last verse live.
+
+#TimsTwitterListeningParty" data-datetime="8:36 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406712548288827395"
+                 data-text="No disrespect to the song BUT I have to be glib about it or I\'ll accidentally face it emotionally  #TimsTwitterListeningParty" data-datetime="8:36 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406712227604934663"
+                 data-text="This has apparently been that track for a lot of people.
+And I will still never really know how to process that." data-datetime="8:35 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406712206629158916"
+                 data-text="I used to get incredibly restless playing Magic Ass live for some reason, so would end up layering strings and fucked breaks into it to distract myself. https://t.co/ioE3nBgUIz #TimsTwitterListeningParty" data-datetime="8:35 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406712114736254979"
+                 data-text="Magicians Assistant - by far the track Iâ€™ve been contacted about the most.
+I donâ€™t think a song can save a lifeâ€¦ but I think it can be a catalyst for the hard work that the individual then has to do to save themselves.
+
+#TimsTwitterListeningParty" data-datetime="8:34 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406712057916014594"
+                 data-text="We wrote Magicianâ€™s Assistant when we were still working with @LexRecords, they were looking for spooky stuff for a Halloween compilation BUT we really overshot the brief by missing spooky and landing on harrowing. PS MS20 again #TimsTwitterListeningParty" data-datetime="8:34 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406711944099282945"
+                 data-text="Thankfully Magic Ass is here to bring the party down. #TimsTwitterListeningParty" data-datetime="8:33 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406711905306169345"
+                 data-text="ðŸ’” Magicians Assistant by @danlesac Vs @Scroobiuspipyo ðŸ’”" data-datetime="8:33 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406711775614091266"
+                 data-text="@Muxley14 Brilliant! Love that you decided to give it a go! ðŸ™ŒðŸ’š" data-datetime="8:33 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406711727069220864"
+                 data-text="And my favourite moments live have and always will be the thousands of times I got to step off stage with a roaring crowd and just listen to/watch @danlesac cut up that ending.
+#TimsTwitterListeningParty" data-datetime="8:33 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406711697100902400"
+                 data-text="Outro still absolute FUCKS and its entirely me at my most me-ness. Also Mooooooo. #TimsTwitterListeningParty" data-datetime="8:32 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406711502711709696"
+                 data-text="Lyrically I donâ€™t think I ever beat this one.
+I think I maybe equalled it two or three times but dead proud of this.
+Honestly felt like it just appeared from somewhere else when driving home one night.
+Repeating it to try not to forget any of it.
+#TimsTwitterListeningParty" data-datetime="8:32 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406711450417127431"
+                 data-text="To be fair, the whole of Angles got better once we played it live for a while. I dont think the record was actually finished until a year after it released. #TimsTwitterListeningParty" data-datetime="8:31 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406711354120155146"
+                 data-text="@Scroobiuspipyo @radiohead They were in to do an album playback interview with me. I thought they should hear it! How could they not think it was brilliant! ðŸ˜€" data-datetime="8:31 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406711331844206596"
+                 data-text="It was so good to play live though... some of my happiest memories are extending the outro into a mess of happy hardcore / breakcore... oooh and the Prodigy mash up too #TimsTwitterListeningParty" data-datetime="8:31 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406711108120027136"
+                 data-text="Clearing that Radiohead sample for Letter from God to Man was an assssspain, months of chasing anyone associated with Radiohead around to no avail UNTIL @JohnKennedy cornered them in an XFM studio and forced them to listen to it! LEGEND ðŸ˜¹ #TimsTwitterListeningParty" data-datetime="8:30 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406710891370979336"
+                 data-text="Fuck it, this is that MS20â€¦ she was the first synth i managed to own without some shady business going on to get it. #TimsTwitterListeningParty https://t.co/wYU3hoQX9G" data-datetime="8:29 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406710846944915463"
+                 data-text="â€¦In session and he played it to them (I think in an ad break or something?) and a short while after we got the thumbs up and had the honour of being one of maybe two acts at the time to have a sample cleared by @radiohead (Just aâ€¦ oh forget it)
+
+#TimsTwitterListeningParty" data-datetime="8:29 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406710725922394119"
+                 data-text="Letter From God to Man - this almost wasnâ€™t on the album.
+Basically, we were struggling to get the sample cleared.
+@danlesac made a version without the sample but it just didnâ€™t feel right.
+Then, RIGHT at the last minute, @JohnKennedy had @radiohead..
+
+#TimsTwitterListeningParty" data-datetime="8:29 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406710620427329545"
+                 data-text="IRL Keith was an utter c*nt tbh #TimsTwitterListeningParty https://t.co/oM0tK0qdd1" data-datetime="8:28 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406710542283284480"
+                 data-text="@danlesac I think it was @tastywelshie who recently pointed out that NIN - Closer is just WAP for goths.
+ðŸ˜™ðŸ‘Œ" data-datetime="8:28 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406710286397153281"
+                 data-text="Seriously. â€œI want to penetrate youâ€¦â€ fits perfectly lmao #TimsTwitterListeningParty" data-datetime="8:27 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406710210597736452"
+                 data-text="Although I named the characters after real people I know (but didnâ€™t really BASE them on them)â€¦ and one of the security guards I used to work with APPARENTLY got pretty offended by it.
+So thereâ€™s thatâ€¦
+#TimsTwitterListeningParty" data-datetime="8:27 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406710090544078851"
+                 data-text="Angles is so blatantly a low rent NiN rip off, Iâ€™m kinda proud of my younger self having the audacity to put it on the albumâ€¦ Loving that for me.
+That MS20 again though, thing was beautiful. All credit to @Scroobiuspipyo for smashing this. #TimsTwitterListeningParty" data-datetime="8:26 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406709937493917696"
+                 data-text="Angles - This was another one that was originally me beatboxing into a loop pedal but when when @danlesac &amp; I got together he took it to a whole other level.
+
+I feel this was one of the first tracks that started our reputation as being a good live act.
+
+#TimsTwitterListeningParty" data-datetime="8:25 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406709867650428939"
+                 data-text="@Scroobiuspipyo I forgot it existed and was shook." data-datetime="8:25 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406709822515519499"
+                 data-text="The legend @soundmanjim making an appearance!
+#TimsTwitterListeningParty https://t.co/5sv9zWbQBA" data-datetime="8:25 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406709639421513728"
+                 data-text="Oh and guitars on Fixed are @iamyila again... but that screeching MS20 at the end is ALL me... love the old double time switch up too! #TimsTwitterListeningParty" data-datetime="8:24 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406709587307384833"
+                 data-text="@danlesac saves it all with this outro though.
+Was always a fun one live." data-datetime="8:24 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406709336060092416"
+                 data-text="@sampolkinghorne @LlSTENlNG_PARTY Nah people brought stuff for us to add to it and put in the ornament cabinetâ€¦" data-datetime="8:23 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406709321166172161"
+                 data-text="The irony of @Scroobiuspipyo saying UK hip-hop was getting monotonous whilst we cover Dizzee is not lost on me. #TimsTwitterListeningParty ðŸ˜¹" data-datetime="8:23 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406709182640922624"
+                 data-text="That spoken intro is SHIIIIIIIIIIIT thoughâ€¦
+Proper painful to listen toâ€¦ haha" data-datetime="8:22 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406709084703932419"
+                 data-text="â€¦ Dizzee we were the guys who did the rewrite of his song.
+After we landed I was at luggage waiting for my bag he came up &amp; said â€œyou the guys who did that Hip Hop is art thing?â€
+I said yeah not sure if he was gonna be happy or mad.
+He nodded &amp; said â€œitâ€™s good man, itâ€™s good.â€" data-datetime="8:22 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406709068115349510"
+                 data-text="Fixed is a lot of fun! It\'s a very silly song BUT i get to chop breaks up a lot, so I\'m happy. #TimsTwitterListeningParty" data-datetime="8:22 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406708900183818242"
+                 data-text="Fixed - a few years after this came out we were doing a show in France with @DizzeeRascal.
+We chatted a bit in the shared transport to &amp; from the show.
+We were also on the same plane back to the U.K.
+From what I was told, on the plane @DJSemtex toldâ€¦
+
+#TimsTwitterListeningParty" data-datetime="8:21 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406708758793834501"
+                 data-text="Ooooh messy outro and reverse piano ending. Still do it to this day! #TimsTwitterListeningParty" data-datetime="8:21 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406708400847736834"
+                 data-text="That opening bit is referencing @JamesBlunt and when performing it live I used to hold up a photo of him.
+
+People tended to think it was an insult but Back to Bedlam came out when I was working in @hmvtweets and we BUMPED that shit so it was all love.
+
+#TimsTwitterListeningParty" data-datetime="8:19 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406708240340164609"
+                 data-text="Like his writing is great but I kinda fucked it. BUT no-one told me i fucked it so I\'m blaming them #TimsTwitterListeningParty" data-datetime="8:19 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fandy_golfpro%2Fstatus%2F1406708080218460160"
+                 data-text="Tommy C @Scroobiuspipyo @danlesac  @JohnKennedy #timstwitterlisteningparty https://t.co/7G3h5kO9Zg" data-datetime="8:18 PM Jun 20, 2021"> 
+                andy_golfpro            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406708005337546762"
+                 data-text="Tommy C... absolutely not a fan of the bassline on this, but still digging making a fake piano sound like a less fake piano. Last minute is great BUT i let @Scroobiuspipyo down in the first half. ðŸ˜¹ #TimsTwitterListeningParty" data-datetime="8:18 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406707850655764480"
+                 data-text="@david_marquis @Scroobiuspipyo @danlesac Great! I would love to get some!" data-datetime="8:17 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406707838727098374"
+                 data-text="@rojaws @Scroobiuspipyo @LlSTENlNG_PARTY A porn thing." data-datetime="8:17 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406707821039833089"
+                 data-text="Tommy C - I have the clearest memory of coming up with this concept whilst laying in bed in my bedroom at my mumâ€™s (@Jenny1092) house &amp; thinking:
+1. @danlesac will never go for this weird shit;
+and
+2. No one will be into it.
+
+I was wrong on both counts.
+#TimsTwitterListeningParty" data-datetime="8:17 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406707584531419136"
+                 data-text="Launch Party photos!
+
+On our first tour we filled the van with living room furniture bought from charity shops so our stage set was comfortable and homely.
+
+#TimsTwitterListeningParty https://t.co/ciFyGzK1k4" data-datetime="8:16 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406707572384714757"
+                 data-text="It was a lot of fun trying to re-contextualise Pip\'s jazz tracks into this mess tbh #TimsTwitterListeningParty" data-datetime="8:16 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406707332910882816"
+                 data-text="Rapperâ€™s Battle is basically a bootleg of Rapperâ€™s B from lesacsayyeah! and At All from No Commercial Breaks. We kinda had no songs when Thou Shalt blew up and we starting doing shows... so smashing together our previous solo stuff made sense. #TimsTwitterListeningParty" data-datetime="8:15 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406707309196234758"
+                 data-text="@david_marquis @Scroobiuspipyo @danlesac oh wow - don\'t have any pics of that night!" data-datetime="8:15 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406707222994948104"
+                 data-text="Okay so another â€œI wrote that tweet before the listening partyâ€â€¦ this one started and I had to panic check it was the right song.
+
+Itâ€™s another one we never really performed live so I havenâ€™t heard this in 10-15 years so I had no idea this was what it sounds like." data-datetime="8:15 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fmehaceruido%2Fstatus%2F1406707008292589568"
+                 data-text="@andy_golfpro @Scroobiuspipyo @ Coachella 2008 https://t.co/m2F7NmRnBD" data-datetime="8:14 PM Jun 20, 2021"> 
+                mehaceruido            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406706858354745345"
+                 data-text="â€¦which I felt had a vocal that would fit this, despite the styles of the tracks being HUGELY different.
+
+So I got the beat for Rappers Be and rapped the lyrics for At All over the top and Rappers Battle was born." data-datetime="8:13 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406706789253627909"
+                 data-text="Rappers Battle - this was one of the first tracks on our le sac vs Pip MySpace page as it was essentially a mash up.
+@danlesac had a track on â€œLe sac say yeah!â€ called â€œRappers Beâ€ that I loved.
+I had a track called â€œAt allâ€ on â€œNo Commercial Breaksâ€..
+
+#TimsTwitterListeningParty" data-datetime="8:13 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406706748988198914"
+                 data-text="Chris Doran and @Scroobiuspipyo rockinâ€™ their LFTW video lewks. #TimsTwitterListeningParty https://t.co/fI8O6ndJqJ" data-datetime="8:13 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406706618742476803"
+                 data-text="Such a pretty song but its a gut punch every time.... But more importantly @iamyila smashes that bass solo at the end ðŸ˜¹ #TimsTwitterListeningParty" data-datetime="8:12 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406706273056395266"
+                 data-text=".@Scroobiuspipyo\'s lyrics really do capture what I was going through with that relationship, even though he\'s not directly speaking about it... #TimsTwitterListeningParty" data-datetime="8:11 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406706271844245504"
+                 data-text="Look for the Woman is great BUT fuck it makes me feel guilty... i was literally writing those lines and singing them whilst still living with the girl they were about.
+I was an absolute dick back then, a shambles of a man. #TimsTwitterListeningParty" data-datetime="8:11 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406706014431363075"
+                 data-text="@JohnKennedy @thesociallondon Yup! For a while before that he had a projector and everything" data-datetime="8:10 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406706000913121281"
+                 data-text="(Dan can tell the story of how that relationship DID end if he wants tooâ€¦ haha. It involved a gig in Shoreditch and a lot of booze)" data-datetime="8:10 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406705927689019400"
+                 data-text="Look for the Woman - @danlesac sent the beat&amp;hook for this &amp; it blew me away.
+
+I almost instantly wrote both versesâ€¦ but refused to show him as I knew the hook was based on the relationship he was in &amp; I didnâ€™t want influence whether he stayed or left.
+#TimsTwitterListeningParty" data-datetime="8:10 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406705784554246149"
+                 data-text="I love badly cut samples tbh #TimsTwitterListeningParty" data-datetime="8:09 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1406705728627294221"
+                 data-text="Development - wasn\'t this the one you performed with a periodic table and pointer stick early on? Sure you had that for The Remedy @thesociallondon.  #TimsTwitterListeningParty" data-datetime="8:09 PM Jun 20, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fandy_golfpro%2Fstatus%2F1406705627209023488"
+                 data-text="@Scroobiuspipyo https://t.co/0W69wUTo8e" data-datetime="8:08 PM Jun 20, 2021"> 
+                andy_golfpro            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406705611769851908"
+                 data-text="For performing this live I pulled out a periodic table for that part of the rap.
+I bought every one I ever used from Corringham Library (where my mum, @Jenny1092 worked).
+Donâ€™t think she gave me a discount either but itâ€™s council so fair play.
+#SupportLocal" data-datetime="8:08 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406705302125350923"
+                 data-text="Oh shit that American accent is terrible... ooooh and here comes that stock garageband break... (No shade on garageband, i just used that break like 80 times before this) #TimsTwitterListeningParty" data-datetime="8:07 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406705262891839493"
+                 data-text="I wrote this tweet before we started the listening the party and now Iâ€™m not sure if thatâ€™s true.
+I really donâ€™t listen to myself as I feel super uncomfortable doing so.
+Oh waitâ€¦ yeah this was ScroobRap. Itâ€™s was right.
+Ignore this tweet." data-datetime="8:07 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406705184022073344"
+                 data-text="Weirdly this aint the first Development remix I didâ€¦ for a while it existed as party of this Bloc Party breakcore mash up thingy which Pip heard me do live at his first ever gig! #TimsTwitterListeningParty" data-datetime="8:07 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406704984545181698"
+                 data-text="Development - The first half of this was the first thing I ever wrote/recorded.
+It was originally over me beatboxing into a loop pedal and layering it.
+It was called â€œScroob Rapâ€.
+I improved it for my solo record &amp; then again for Angles, hence the name.
+#TimsTwitterListeningParty" data-datetime="8:06 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406704883403788294"
+                 data-text="@andy_golfpro @FranHeatley @danlesac @JohnKennedy YES ANDY" data-datetime="8:05 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406704825308528642"
+                 data-text="@Scroobiuspipyo Stunner eventually but only right at the end" data-datetime="8:05 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fandy_golfpro%2Fstatus%2F1406704787064774660"
+                 data-text="Working the merch with @FranHeatley in 2008 on a tour up north somewhere! Good times @Scroobiuspipyo @danlesac @JohnKennedy #timstwitterlisteningparty https://t.co/zRfoEthSj8" data-datetime="8:05 PM Jun 20, 2021"> 
+                andy_golfpro            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406704712406155267"
+                 data-text="Banbarra \"Shack Up\" is one of my favourite songs, like just makes me happy every time... so i had to steal the drum break for this! #TimsTwitterListeningParty" data-datetime="8:05 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406704671557828610"
+                 data-text="This was the track we opened EVERY gig with I think.
+@danlesac â€¦ did we switch it to Stunner towards the end or keep it with this forever?" data-datetime="8:05 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406704432637792256"
+                 data-text="Beat That My Heart Skipped feels super basic hearing now, still bumps though... Banbarra drum break, Acoustic Guitar recorded with a webcam mic and my MS20 (which sadly fell victim to my quest for rent during lockdown ðŸ˜­) #TimsTwitterListeningParty" data-datetime="8:04 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406704222750625808"
+                 data-text="RT @LlSTENlNG_PARTY: Favourite ever @danlesac Vs @Scroobiuspipyo live show? https://t.co/2Tynad99Oe" data-datetime="8:03 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406704035911065612"
+                 data-text="I\'m never getting that Panda hat back am I? #TimsTwitterListeningParty" data-datetime="8:02 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406703886140850186"
+                 data-text="â€¦Kate at @theoldbluelast and someoneâ€™s first gen camera phone footage of that performance was the first thing I uploaded to my YouTube page (itâ€™s still there but the quality is BAD).
+
+And I THINK that intro was recorded at one of @JohnKennedyâ€™s nightsâ€¦." data-datetime="8:01 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1406703702292025348"
+                 data-text="Pics please if you are listening to Angles on vinyl https://t.co/ugWTGHCECb" data-datetime="8:01 PM Jun 20, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FScroobiuspipyo%2Fstatus%2F1406703699767042048"
+                 data-text="The Beat That My Heart Skipped - I originally rapped this vocal over the piano riff from â€œShit Songâ€ by @katenash (who was the one that recommended we send â€œThou Shaltâ€ to @JohnKennedy in the first place.
+I later ended up performing it withâ€¦
+#TimsTwitterListeningParty" data-datetime="8:01 PM Jun 20, 2021"> 
+                Scroobiuspipyo            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406703699540557828"
+                 data-text="Feels fitting to do this #TimsTwitterListeningParty with @JohnKennedy considering that the spoken word intro to Beat That My Heart Skipped was recorded at his Remedy show in Camden Barfly (same venue i had my panda hat stolen but thats another story)" data-datetime="8:01 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406703521089691656"
+                 data-text="And big love to @JockMooney for the incredible artwork. #TimsTwitterListeningParty https://t.co/jteIxlw69E" data-datetime="8:00 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fdanlesac%2Fstatus%2F1406703516152905733"
+                 data-text="We begin! And before we go too deep, gotta credit @iamyila for his help producing &amp; mixing this record. He played a big part in wrangling my messy production into a listenable state.
+And shoutout to Sam @precisemaster for the mastering + cutting. #TimsTwitterListeningParty" data-datetime="8:00 PM Jun 20, 2021"> 
+                danlesac            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1406703406933327887"
+                 data-text="Say hello to @danlesac &amp; @Scroobiuspipyo for our Angles @LlSTENlNG_PARTY 
+
+ðŸ¤˜ðŸ¤˜ https://t.co/JxA0SV8nQM" data-datetime="8:00 PM Jun 20, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
