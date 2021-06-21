@@ -1,0 +1,457 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3yoTjMMZK9wsN7rwQc8zSY" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02678e6c143d1130def63276e0" alt="Pedestrian" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Max Bloom</span><br/><span class="sub-colour">Pedestrian</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(10045704)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3yoTjMMZK9wsN7rwQc8zSY" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_10045704_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 75 tweets from Monday 21st June 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/maxbloommusic" target="_blank"><img src="https://pbs.twimg.com/profile_images/1361342767180488704/WFfzEi___normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/maxbloommusic.jpg'"><br/>@maxbloommusic</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Pedestrian" data-start="0"
+             data-duration="340" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Palindromes" data-start="341"
+             data-duration="248" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="All the Same" data-start="590"
+             data-duration="195" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="America" data-start="786"
+             data-duration="217" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Weatherman" data-start="1004"
+             data-duration="233" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Imposter Syndrome" data-start="1238"
+             data-duration="215" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Under Green Skies" data-start="1454"
+             data-duration="338" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="How Can I Love You" data-start="1793"
+             data-duration="191" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Twenty-two" data-start="1985"
+             data-duration="297" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Cat on Your Lap" data-start="2283"
+             data-duration="313" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2597"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851678e6c143d1130def63276e0" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-75" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1407077388098453510"
+                 data-text="@maxbloommusic @LlSTENlNG_PARTY Thanks for stopping by Max x x" data-datetime="8:46 PM Jun 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407077355084976133"
+                 data-text="@necoconut ðŸ˜»ðŸ˜»ðŸ˜»" data-datetime="8:45 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1407077282838106114"
+                 data-text="ðŸ¤˜ðŸ”¥ https://t.co/Cy9XRrO6D1" data-datetime="8:45 PM Jun 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407077193960898564"
+                 data-text="@murrell_simon Absolutely - found that on the street and took it home" data-datetime="8:45 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407077039732056064"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess And if you do care to buy the album, you can do so here: https://t.co/2jYAihgiue" data-datetime="8:44 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407076972769972224"
+                 data-text="@Tim_Burgess Thank you! That was fun! xxx" data-datetime="8:44 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1407076876506570764"
+                 data-text="Thaaaaaaanks @maxbloommusic" data-datetime="8:44 PM Jun 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407076792909901827"
+                 data-text="That\'s it! I sincerely hope you enjoyed the album, and I want to say a huge thank you to Tim for all his hard work and support @LlSTENlNG_PARTY @Tim_Burgess" data-datetime="8:43 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407076472813199364"
+                 data-text="Where would I be without my cats... #TimsTwitterListeningParty" data-datetime="8:42 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407076387098349568"
+                 data-text="#TimsTwitterListeningParty https://t.co/Dst8Ie2bh8" data-datetime="8:42 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407076198694502407"
+                 data-text="Mischa \"helping\" #TimsTwitterListeningParty https://t.co/BMXyTpODXV" data-datetime="8:41 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407075957014511620"
+                 data-text="Inspired greatly by one of my favourite musicians of all time, Jim O\'Rourke: https://t.co/DU3Rr8BM0L #TimsTwitterListeningParty" data-datetime="8:40 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407075884037718019"
+                 data-text="Having spent a lot of time with my cats during lockdown, I realised that humans can learn a lot from cats. Cats have a quiet dignity, they never judge and will treat anyone with kindness, if you give them the respect they deserve #TimsTwitterListeningParty" data-datetime="8:40 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407075485109174272"
+                 data-text="And Whiskey (Queen Whiskus VII): Descended from royalty, half cow, half cat, fiercely loyal and natural enemy of the raccoon. Will only eat food from my hand #TimsTwitterListeningParty https://t.co/aUwXMJNB7Y" data-datetime="8:38 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407075409108295682"
+                 data-text="Introducing the real inspiration behind this song. First of all, Mischa. Half cat, half raccoon, ultimate court jester #TimsTwitterListeningParty https://t.co/zHGsHViEWm" data-datetime="8:38 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407075326610509834"
+                 data-text="CAT ON YOUR LAP #TimsTwitterListeningParty https://t.co/mqUpvCuDrg" data-datetime="8:37 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407075151389282307"
+                 data-text="#TimsTwitterListeningParty https://t.co/5dEhstXnSf" data-datetime="8:37 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407075055067090949"
+                 data-text="This weird reverse guitar bit was done using one of my favourite pedals of all time, the Line-6 DL4 delay pedal. Hereâ€™s an article about it if youâ€™re interested: https://t.co/xdh1iuNwyi #TimsTwitterListeningParty" data-datetime="8:36 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407074730604216321"
+                 data-text="And Cocteau Twins #TimsTwitterListeningParty https://t.co/4iPPtdKvM1" data-datetime="8:35 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407074573238083588"
+                 data-text="Of course, I need to give credit to Red House Painters at this point https://t.co/XrnjbMoAW8 #TimsTwitterListeningParty" data-datetime="8:34 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407074419567116288"
+                 data-text="Whereas Perfume was an album dedicated entirely to a breakup, this song is about the confusing period directly afterwards when I was rediscovering myself, making some mistakes and trying to discover a new path #TimsTwitterListeningParty" data-datetime="8:34 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407074243381284869"
+                 data-text="I had this song sitting on my hard drive for quite a while and quite liked it so decided to revisit it. In the flow/context of the album as a whole I liked how it sits in this moment #TimsTwitterListeningParty" data-datetime="8:33 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407074186120597505"
+                 data-text="TWENTY-TWO #TimsTwitterListeningParty https://t.co/f53KhXoh2s" data-datetime="8:33 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1407073929945100288"
+                 data-text="Love it that @maxbloommusic describes his songs as â€˜Dadgazeâ€™" data-datetime="8:32 PM Jun 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407073712290074632"
+                 data-text="And they weren\'t too hard to please, in fact they\'ve always been very supportive and I feel very lucky #TimsTwitterListeningParty" data-datetime="8:31 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407073675065634823"
+                 data-text="I really don\'t blame them at all for my anxiety and I did text them to let the know that. My mum does say that I inherited my anxiety from her, but I definitely don\'t blame her for that #TimsTwitterListeningParty" data-datetime="8:31 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407073614600540163"
+                 data-text="This is one lyric that I was really worried about my parent\'s hearing: \'I blame my mother and my father for my anxiety / it\'s not my fault that they were too fucking hard to please\' #TimsTwitterListeningParty" data-datetime="8:31 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407073436522975239"
+                 data-text="This song is about how self involved and anxious I was, and meeting someone who helped to bring me out of it #TimsTwitterListeningParty" data-datetime="8:30 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407073340368560138"
+                 data-text="This isn\'t a particularly serious song, I do feel like I\'m taking the piss out of myself slightly #TimsTwitterListeningParty" data-datetime="8:30 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407073287998431239"
+                 data-text="HOW CAN I LOVE YOU #TimsTwitterListeningParty https://t.co/Brj6AtVb4f" data-datetime="8:29 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1407073077972852743"
+                 data-text="Loving it https://t.co/OGqqqe3Aa3" data-datetime="8:28 PM Jun 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407072930123628544"
+                 data-text="Halfway through! How\'s everyone doing #TimsTwitterListeningParty" data-datetime="8:28 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407072435313197063"
+                 data-text="The song is about being physically trapped inside, but also about being trapped inside a negative feedback loop in my head, which felt all the more poignant at times during lockdown #TimsTwitterListeningParty" data-datetime="8:26 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407072218060820483"
+                 data-text="I thought of the title while I was running - during lockdown I ran a lot down the Lea River and all the boats were moored, so the river became stagnant and a layer of moss/algae started growing. The sky reflected in the water and looked green... #TimsTwitterListeningParty" data-datetime="8:25 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407072045737857024"
+                 data-text="This song was built using several Apple drum loops on top of each other. I was aiming to write a song like Ritournelle by Sebastian Tellier: https://t.co/gLxO620dGE #TimsTwitterListeningParty" data-datetime="8:24 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407072020207181825"
+                 data-text="UNDER GREEN SKIES #TimsTwitterListeningParty https://t.co/Iy8Th7X3SY" data-datetime="8:24 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407071852816744452"
+                 data-text="#TimsTwitterListeningParty https://t.co/Rd40VmESSZ" data-datetime="8:24 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407071746671493122"
+                 data-text="This song actually has the same name as a song by @superfriendsUK. I saw them playing it at a show and I really connected with it so I wanted to write my own take on it. Sorry for stealing it! #TimsTwitterListeningParty" data-datetime="8:23 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407071688106426369"
+                 data-text="I do owe a lot to @girlpool for this song https://t.co/HwLzRw0cwF #TimsTwitterListeningParty" data-datetime="8:23 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407071424989302785"
+                 data-text="I love the process of writing/recording music, but when it comes to showing it to other people I carry a lot of shame with me. I\'ve come to realise that this is just part of the process for me and I\'ll probably never get over it #TimsTwitterListeningParty" data-datetime="8:22 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407071189206458375"
+                 data-text="People often think that because I\'ve done music for this long that I have an inherent self confidence - this is not the case at all, I\'m convinced I\'m a fake, fraud, phoney, etc, especially when I\'m performing #TimsTwitterListeningParty" data-datetime="8:21 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407071089805737992"
+                 data-text="This is obviously a very dark moment on the album, and it\'s quite difficult for me to talk about but it felt very cathartic to write about it for the first time #TimsTwitterListeningParty" data-datetime="8:21 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407071025569964034"
+                 data-text="IMPOSTER SYNDROME #TimsTwitterListeningParty https://t.co/TYKUyKe5l8" data-datetime="8:20 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407070783168552968"
+                 data-text="Spring makes me feel happy and sad at the same time. It\'s a time of rebirth and opportunity, but there\'s a sadness in the transition as well, which is true with life in general, good means nothing without bad, dark always comes with the light #TimsTwitterListeningParty" data-datetime="8:19 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407070510207352835"
+                 data-text="GIVE IT UP for arguably the best weather man of all time #TimsTwitterListeningParty https://t.co/kxlwsf7rEo" data-datetime="8:18 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407070293877825542"
+                 data-text="This song is half about a fictional weatherman, but also about myself and my emotional connection to the changing weather. This song was written in early spring, a magical time and my favourite part of the year #TimsTwitterListeningParty" data-datetime="8:17 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1407070213758140418"
+                 data-text="â˜€ï¸ The Weatherman by @maxbloommusic â˜€ï¸ 
+
+ðŸ¤˜" data-datetime="8:17 PM Jun 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407070102806278150"
+                 data-text="I saw this bottle of wine at my local @coopuk and I really liked the label, so I came home and wrote this song (whilst drinking the wine) #TimsTwitterListeningParty https://t.co/GKOF4FeSSR" data-datetime="8:17 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407069999945158661"
+                 data-text="THE WEATHERMAN #TimsTwitterListeningParty https://t.co/pLWuIv4s9Z" data-datetime="8:16 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407069810513563649"
+                 data-text="Some FUN memories from my American travelsâ€¦ #TimsTwitterListeningParty https://t.co/91wIqnvgFl" data-datetime="8:15 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407069722227757064"
+                 data-text="I have way too many memories of America to fit into one song, but I wanted to emphasise the driving. Sometimes it can feel endless, but one of my favourite things to do was listen to an album and stare out the window. Somehow it never got boring #TimsTwitterListeningParty" data-datetime="8:15 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407069472624627720"
+                 data-text="It also quickly became a game to see how many states/places I could feasibly fit into one song. Here they are in order:
+
+â€¢ New York
+â€¢ LA
+â€¢ Utah Salt Planes
+â€¢ Nashville
+â€¢ Kansas City
+â€¢ New Jersey
+â€¢ Pacific Highway
+
+#TimsTwitterListeningParty" data-datetime="8:14 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407069351409336326"
+                 data-text="I\'ve felt completely heartbroken watching America through the Trump years. I fell head over heels in love with America when I first started touring there. I wanted to write a love song about the America I fell in love with when I was younger #TimsTwitterListeningParty" data-datetime="8:14 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407069302625275904"
+                 data-text="Quite a late contribution to the album. It was the height of lockdown and I felt like I needed to escape. It was also written during the time when America was going through a reckoning with it\'s past, which I found very painful to watch #TimsTwitterListeningParty" data-datetime="8:13 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407069264755019776"
+                 data-text="AMERICA #TimsTwitterListeningParty https://t.co/kPfSAd2jLE" data-datetime="8:13 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407069044939821056"
+                 data-text="Harmonising fucking guitars. Never done that before but I was losing my mind in lockdown so I thought fuck it. It reminds me a lot of a band I used to LOVE when I was younger called Ratatat https://t.co/KVf1shBeaZ #TimsTwitterListeningParty" data-datetime="8:12 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407068958507814912"
+                 data-text="This weird little interlude was made using a pedal called Infinite Jets by Hologram... it\'s a really weird pedal and I still don\'t properly know how to use it but it does lots of weird/cool glitchy stuff #TimsTwitterListeningParty https://t.co/0rM3gN0j9D" data-datetime="8:12 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407068650209677321"
+                 data-text="This song started life as some kind of weird pop song that @marginalworld and I were working on, but I liked it so I kept it for myself. I was listening to a lot of Beck, Spoon, Grizzly Bear &amp; TV On The Radio around this time #TimsTwitterListeningParty https://t.co/7zHDJj56dN" data-datetime="8:11 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407068426749812737"
+                 data-text="This opening synth sound was on the Juno 60, on a really weird setting that I can\'t remember and will probably never be able to recreate again. It does sound faintly like the wonderful christmas time synth and I\'m fully ok with that #TimsTwitterListeningParty" data-datetime="8:10 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407068349398405130"
+                 data-text="ALL THE SAME #TimsTwitterListeningParty https://t.co/A7WgpG0B0O" data-datetime="8:10 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1407068221145034752"
+                 data-text="Anyone at the @LlSTENlNG_PARTY new to @maxbloommusic? Go say hi, heâ€™s lovely. This album is ðŸ˜ðŸ˜ðŸ˜ðŸ˜" data-datetime="8:09 PM Jun 21, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407068156137443330"
+                 data-text="Here we are together at the last Primaveraâ€¦ â¤ï¸â¤ï¸â¤ï¸ #TimsTwitterListeningParty https://t.co/DHL4mH1Vjs" data-datetime="8:09 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407068008833601539"
+                 data-text="This song has quite a simple arrangement. I do always try to maintain the \'less is more\' mantra with songwriting #TimsTwitterListeningParty" data-datetime="8:08 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407067790159274000"
+                 data-text="\'It\'s been a long time, but I\'m ready not to be alone\' - a little reference to the lead single from my last album #TimsTwitterListeningParty https://t.co/PIhobGdAB2" data-datetime="8:07 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407067642549125130"
+                 data-text="I was really happy when I came up with the guitar riff after the chorus, I loved how it weaved in and out of the main riff. If I had more time and patience I would\'ve tried to make it the same forwards and backwards, but I couldnâ€™t be bothered #TimsTwitterListeningParty" data-datetime="8:07 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407067374554079236"
+                 data-text="This was probably the earliest song that made it onto the album. I wrote it shortly after I released my last album, Perfume. It\'s a song about how me and @marginalworld got together! It\'s probably the first \'love\' song I\'ve ever written #TimsTwitterListeningParty" data-datetime="8:06 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407067229682819072"
+                 data-text="PALINDROMES #TimsTwitterListeningParty https://t.co/wAaG21bFKI" data-datetime="8:05 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407067080227229708"
+                 data-text="#TimsTwitterListeningParty https://t.co/QjumebciJt" data-datetime="8:05 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407066800546779140"
+                 data-text="I love Adam\'s drumming on this song. This was the first song he recorded for me, and he sent me 1 take. I was like, do you have any more? And he said, nope, this is how I like it. And to his credit, it was perfect first time. #TimsTwitterListeningParty" data-datetime="8:04 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407066459520524296"
+                 data-text="As soon as I wrote this I knew I wanted this to be the opener. Those who know me well know that I am fascinated with the album as a format. The pace of this song reminded me a lot of one of my favourite album openers of all time: #TimsTwitterListeningParty https://t.co/Yy2288pqVn" data-datetime="8:02 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407066255421493250"
+                 data-text="Trumpets. I started learning trumpet when I was 16 because I developed an unhealthy obsession with Miles Davis. I don\'t regret it - I\'ve managed to find a way to work trumpet into almost everything I\'ve ever released #TimsTwitterListeningParty" data-datetime="8:01 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407065969202245636"
+                 data-text="The song that got the ball rolling. I initially wrote this as just acoustic guitar and vocals, but then I translated it onto piano later. It\'s just 2 chords all the way through, but I think the best songs are, right? #TimsTwitterListeningParty" data-datetime="8:00 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1407065886435983366"
+                 data-text="@ProfTimOB @KendalCalling â¤ï¸â¤ï¸â¤ï¸" data-datetime="8:00 PM Jun 21, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fmaxbloommusic%2Fstatus%2F1407065816999333888"
+                 data-text="PEDESTRIAN #TimsTwitterListeningParty https://t.co/Rt9dAb0eT3" data-datetime="8:00 PM Jun 21, 2021"> 
+                maxbloommusic            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1407065800754745348"
+                 data-text="Over to you @maxbloommusic 
+
+#TimsTwitterListeningParty https://t.co/dKGLXQDKM9" data-datetime="8:00 PM Jun 21, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
