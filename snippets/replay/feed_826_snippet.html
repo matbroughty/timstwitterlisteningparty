@@ -1,0 +1,812 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/playlist/5J03x2S54YDmu9OWJ5hy74" target="_blank">                <img src="https://i.scdn.co/image/ab67706c0000bebb46b617c95066f78ef1991113" alt="The Trojan Story" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Trojan Records</span><br/><span class="sub-colour">The Trojan Story</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(2171164)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/playlist/5J03x2S54YDmu9OWJ5hy74" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_2171164_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 170 tweets from Thursday 24th June 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/trojanrecords" target="_blank"><img src="https://pbs.twimg.com/profile_images/1238086319647199232/eNAkiD6S_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/trojanrecords.jpg'"><br/>@trojanrecords</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Invitation to Jamaica" data-start="0"
+             data-duration="151" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Fat Man" data-start="152"
+             data-duration="142" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Tell Me Darling" data-start="295"
+             data-duration="179" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Running Around" data-start="475"
+             data-duration="132" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Miss Jamaica" data-start="608"
+             data-duration="144" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Housewives Choice (with The Beverley's All Stars)" data-start="753"
+             data-duration="160" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Give Me All Your Love" data-start="914"
+             data-duration="147" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Darling Patricia" data-start="1062"
+             data-duration="174" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Rough and Tough (Ruff and Tuff)" data-start="1237"
+             data-duration="185" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Man to Man" data-start="1423"
+             data-duration="150" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Eunodus (Uno-Dos-Tres) [with The Baba Brooks Band]" data-start="1574"
+             data-duration="167" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Slow Boat" data-start="1742"
+             data-duration="130" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Rude Boy" data-start="1873"
+             data-duration="169" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="Gone Is Yesterday (with The Baba Brooks Band)" data-start="2043"
+             data-duration="139" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="I'm In the Mood for Love" data-start="2183"
+             data-duration="152" style="display:none"></div>
+                <div id="track-16" class="track-list"
+             data-name="Ska Virginia (Virginia Ska)" data-start="2336"
+             data-duration="139" style="display:none"></div>
+                <div id="track-17" class="track-list"
+             data-name="Satan (with Baba Brooks & His Band)" data-start="2476"
+             data-duration="139" style="display:none"></div>
+                <div id="track-18" class="track-list"
+             data-name="One Eyed Giant" data-start="2616"
+             data-duration="187" style="display:none"></div>
+                <div id="track-19" class="track-list"
+             data-name="Every Night" data-start="2804"
+             data-duration="174" style="display:none"></div>
+                <div id="track-20" class="track-list"
+             data-name="King Size" data-start="2979"
+             data-duration="167" style="display:none"></div>
+                <div id="track-21" class="track-list"
+             data-name="Syncopate" data-start="3147"
+             data-duration="166" style="display:none"></div>
+                <div id="track-22" class="track-list"
+             data-name="Keep the Pressure On (with The Beverley's All Stars)" data-start="3314"
+             data-duration="187" style="display:none"></div>
+                <div id="track-23" class="track-list"
+             data-name="Oh Babe (Sick and Tired)" data-start="3502"
+             data-duration="167" style="display:none"></div>
+                <div id="track-24" class="track-list"
+             data-name="Train to Skaville (with The Supersonics)" data-start="3670"
+             data-duration="175" style="display:none"></div>
+                <div id="track-25" class="track-list"
+             data-name="Rudy, a Message to You" data-start="3846"
+             data-duration="158" style="display:none"></div>
+                <div id="track-26" class="track-list"
+             data-name="Dreader Than Dread (with Tommy McCook & The Supersonics)" data-start="4005"
+             data-duration="157" style="display:none"></div>
+                <div id="track-27" class="track-list"
+             data-name="It's Raining (with Tommy McCook & The Supersonics)" data-start="4163"
+             data-duration="165" style="display:none"></div>
+                <div id="track-28" class="track-list"
+             data-name="The Whip (with Lyn Taitt & The Jets)" data-start="4329"
+             data-duration="180" style="display:none"></div>
+                <div id="track-29" class="track-list"
+             data-name="Pretty Africa (with The Beverley's All Stars)" data-start="4510"
+             data-duration="150" style="display:none"></div>
+                <div id="track-30" class="track-list"
+             data-name="Rock Steady (with Tommy McCook & The Supersonics)" data-start="4661"
+             data-duration="169" style="display:none"></div>
+                <div id="track-31" class="track-list"
+             data-name="Rock Steady Train (with The Carib Beats)" data-start="4831"
+             data-duration="185" style="display:none"></div>
+                        <div id="track-32" class="track-list"
+                     data-name="Finished" data-start="5017"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67706c0000bebb46b617c95066f78ef1991113" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-170" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-169" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408173429195476996"
+                 data-text="Thank you!! You are most welcome ðŸ‡¯ðŸ‡² https://t.co/ra3TJvgtfs" data-datetime="9:21 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-168" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FLogicaLags%2Fstatus%2F1408173243807195141"
+                 data-text="@trojanrecords Thank you for that, skanktastic! Time to upgrade methinks!!
+#TimsTwitterListeningParty https://t.co/KzRxejwUdq" data-datetime="9:20 PM Jun 24, 2021"> 
+                LogicaLags            </div>
+                        <div id="tweet-feed-167" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408173219564118018"
+                 data-text="The Trojan Story is OUT NOW! #TimsTwitterListeningParty https://t.co/m5TrSs586j https://t.co/D7JEJDzIhF" data-datetime="9:20 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-166" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FDIreland02%2Fstatus%2F1408173190162096136"
+                 data-text="@LlSTENlNG_PARTY @trojanrecords Thanks so much to all involved. Really enjoyable, brilliant (and educational for me) background to every single song. @trojanrecords that was above and beyond. Thanks @Tim_Burgess and all at #TimsTwitterListeningParty https://t.co/pP4SwJH4wj" data-datetime="9:20 PM Jun 24, 2021"> 
+                DIreland02            </div>
+                        <div id="tweet-feed-165" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FGarybo1977%2Fstatus%2F1408173188631216134"
+                 data-text="@Tim_Burgess @trojanrecords Oh THIS 100%" data-datetime="9:20 PM Jun 24, 2021"> 
+                Garybo1977            </div>
+                        <div id="tweet-feed-164" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fgingerbeardman%2Fstatus%2F1408173164077719552"
+                 data-text="@trojanrecords Thanks so much! That was a real treat. Big love #TimsTwitterListeningParty" data-datetime="9:20 PM Jun 24, 2021"> 
+                gingerbeardman            </div>
+                        <div id="tweet-feed-163" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2FPeterMallett3%2Fstatus%2F1408173127495004169"
+                 data-text="@trojanrecords It was brilliant thank you. I learnt loads and had some great fun listening. Magnificent â¤â¤â¤" data-datetime="9:20 PM Jun 24, 2021"> 
+                PeterMallett3            </div>
+                        <div id="tweet-feed-162" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408172785285873667"
+                 data-text="Thanks so much for having us guys!! https://t.co/gAoKW5jrSX" data-datetime="9:18 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-161" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408172687973826563"
+                 data-text="if you still have not got your hands of a copy or are interested in different formats click here --&gt; https://t.co/vjWz5rf6xm #TimsTwitterListeningParty  #trojanstory50" data-datetime="9:18 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-160" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1408172656327901187"
+                 data-text="So much love and thanks to @trojanrecords for one of the best listening parties weâ€™ve ever had. Lots of the artists arenâ€™t with us any more but their music is in the right place. Trojan are true custodians of an absolute goldmine of musical gems x x" data-datetime="9:18 PM Jun 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-159" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408172571145736198"
+                 data-text="Thank you for listeing to #Thetrojanstory50 with us! We hope you enjoyed the listening party #timstwitterlisteningparty" data-datetime="9:17 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-158" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408172503558721537"
+                 data-text="This was also the final song on the original edition and chosen because Rastafarianism was increasingly becoming the subject of songs, conversation and culture in 1971. outside of Jamaica Rastafarianism  was being explored more and more #TimsTwitterListeningParty #rastaneverfails" data-datetime="9:17 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-157" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1408172441172598786"
+                 data-text="Last track. Rasta Never Fails - please take a moment to tip your hat to @trojanrecords - it was like an immersive documentary tonight. Such a joy 
+
+Thanks Trojan! â¤ï¸" data-datetime="9:17 PM Jun 24, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-156" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408172378404888577"
+                 data-text="Cant believe this is the last track, where has the time gone. We hope you\'ve loved the last 2 (and a bit) hours as much as we have! #TimsTwitterListeningParty https://t.co/gzJeaxIL70" data-datetime="9:17 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-155" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408172031401775106"
+                 data-text="The Charmers on this track are none other than the great Ken Boothe, one of the top echelon Jamaican singers of all time, and the songâ€™s producer Lloyd Charmers, who soon after would release Kenâ€™s seminal reggae cover of Breadâ€™s â€˜Everything I Ownâ€™ #TimsTwitterListeningParty" data-datetime="9:15 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408171841957531650"
+                 data-text="don\'t forget to keep up-to-date with all things #trojanrecords just follow us on socials --&gt; https://t.co/9xP4VgbDC5" data-datetime="9:15 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408171471659311113"
+                 data-text="... So who prompted the Maytones to cover the song? Given the 1971 release date, itâ€™s pretty safe to state that once again, Greyhoundâ€™s hit version provided the inspiration. #blackandwhite #TimsTwitterListeningParty" data-datetime="9:13 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408171303845216256"
+                 data-text="Written in 1954 by David Arkin and Earl Robinson, with the latter recording his own version in 1957, a year after Pete Seeger first recorded it.  Sammy Davis also covered. The best known version in the US is  by Three Dog Night, whose 1972 reworking reached No.1 #Trojanstory50" data-datetime="9:12 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408171113432203266"
+                 data-text="2 more tracks to go... #TimsTwitterListeningParty" data-datetime="9:12 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408170938839994375"
+                 data-text="Some may say this recording sounds a little under-produced compared to many other reggae records of the day, but the charm lies in its stripped-down and raw approach. What do you guys think?  #satisfaction #TimsTwitterListeningParty" data-datetime="9:11 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408170770078081025"
+                 data-text="Carl Dawkins is one of the most unsung vocalists from Jamaica and also one of the most emotional. His voice is filled with agony, anguish, and deep soul, embodying a rawness and torment that could be compared to Otis Redding #TimsTwitterListeningParty #trojanstory50" data-datetime="9:10 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408170610434400263"
+                 data-text="Led by Brent Dowe with Tony Brevett and Trevor McNaughton handling the background harmony duties, â€˜Walking in the  Rainâ€™ features Kongâ€™s usual A-list backing musicians, notably the incomparable Hux Brown" data-datetime="9:10 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408170507665612805"
+                 data-text="@JamaicaLeeds Of course, send us a DM" data-datetime="9:09 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fadbryan15%2Fstatus%2F1408170301398163456"
+                 data-text="@trojanrecords @LlSTENlNG_PARTY @Tim_Burgess This party has been an absolute joy from start to finish.  Many thanks to all who worked to get it together." data-datetime="9:08 PM Jun 24, 2021"> 
+                adbryan15            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408170206304813059"
+                 data-text="Although best known for their classic â€˜Rivers Of Babylonâ€™, leading vocal group, the Melodians recorded an array of sublime sides, notably for Duke Reidâ€™s Treasure Isle and, of course, Leslie Kongâ€™s Beverleyâ€™s label, for whom they cut this typically lilting number in 1970" data-datetime="9:08 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FGaryTwisted%2Fstatus%2F1408170165813006338"
+                 data-text="This has just been amazing (and still a few more top tunes to come).  can\'t thank you enough for posting such extensive tweets for over two hours.  So good
+
+@trojanrecords, @Tim_Burgess, @LlSTENlNG_PARTY #TimsTwitterListeningParty" data-datetime="9:08 PM Jun 24, 2021"> 
+                GaryTwisted            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408169959293865990"
+                 data-text="Soon after this track saw issue, Glen said that Gibbs was â€œthe best producer in the islandâ€, although by the close of the year, he and Alva, along Hippy Boy band mates, Carlton and Aston Barrett, were firmly committed Upsetters, touring the UK with #LeeScratchPerry" data-datetime="9:07 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FLambieColin%2Fstatus%2F1408169610910777351"
+                 data-text="@trojanrecords Brilliant hearing some new tunes, especially with the back story detail added by you guys but this is just a bona fide classic. ðŸ™Œ" data-datetime="9:06 PM Jun 24, 2021"> 
+                LambieColin            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408169524130717696"
+                 data-text="Once more, Hippy Boy regulars, Glen Adams and Alva â€˜Reggieâ€™ Lewis go under cover with George Agard of the Pioneers on this long-term boss reggae classic from early 1969.  Produced by Joe Gibbs. #TimsTwitterListeningParty" data-datetime="9:05 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1408169270186590208"
+                 data-text="@trojanrecords Thank you for 50 years of incredible music and breaking down barriers, so many happy memories listening to your records- big love one and all x #TimsTwitterListeningParty" data-datetime="9:04 PM Jun 24, 2021"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408169148304216068"
+                 data-text="... with Toots laying his Otis Redding influenced deep gospel and soul-inflected vocals over a great performance by Leslie Kongâ€™s Beverlyâ€™s All Stars. #TimsTwitterListeningParty" data-datetime="9:04 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408169082671845384"
+                 data-text="#pressuredrop One of the more well-known songs in the Maytals\' deep catalogue, which carries the typical electrifying sound of the group from this timeâ€¦" data-datetime="9:04 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408168878837055492"
+                 data-text="Also, check out the Trojan Story microsite to see some vintage artist images, read more stories in depth about the music and even re-design your own trojan label --&gt; https://t.co/ebxkShMv66 #TimsTwitterListeningParty" data-datetime="9:03 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Fmartinlrix%2Fstatus%2F1408168876223963142"
+                 data-text="This is it. This is what it is all about. It always was and always will be. This is why I will forever love @trojanrecords and @tootsmaytals #PressureDrop #TimsTwitterListeningParty" data-datetime="9:03 PM Jun 24, 2021"> 
+                martinlrix            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2Fosakalbion%2Fstatus%2F1408168599139848193"
+                 data-text="Pressure drop, so many of @trojanrecords are classic tracks, can we have Super Charged Classic to describe tracks like this one  ðŸŽ¯  @Tim_Burgess #TimsTwitterListeningParty @LlSTENlNG_PARTY https://t.co/RavnAQDxjj" data-datetime="9:02 PM Jun 24, 2021"> 
+                osakalbion            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408168181160722434"
+                 data-text="Hong Kong Flu has a relentless and driving quality with Leonard Dillon and his Ethiopians singing beautifully about a miserable subject. Makes us wonder if Dillon were still here, would he be singing about the #Covid19 virus with his typically joyous approach?" data-datetime="9:00 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1408167928881717252"
+                 data-text="ðŸ”¥â¤ï¸ Pressure Drop â¤ï¸ðŸ”¥" data-datetime="8:59 PM Jun 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408167766989938692"
+                 data-text="Rather reminiscent of the rhythm on the Maytalsâ€™ â€˜Monkey Manâ€™, this track moves along rapidly and probably caused many a dancer to â€˜drop legsâ€™ when heard on a sound system. #TimsTwitterListeningParty #trojanstory50" data-datetime="8:58 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fmartinlrix%2Fstatus%2F1408167393101324300"
+                 data-text="Love Monkey Man? Youâ€™ll love this! @trojanrecords #TimsTwitterListeningParty" data-datetime="8:57 PM Jun 24, 2021"> 
+                martinlrix            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408167337006702599"
+                 data-text="Another Pioneers-related affair under the auspices of Joe Gibbs, this time billed as the Reggae Boys. The group comprised the trio of George Agard, Glen Adams and Alva â€˜Reggieâ€™ Lewis. Quite possibly the same session as the Soul Mates â€˜Ki Kiâ€™ session, which we\'ll hear soon..." data-datetime="8:57 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408167172233383937"
+                 data-text="Delano started his solo career in 1968, when the singer-songwriter recorded truly remarkable sides for Sonia Pottinger including â€˜Thatâ€™s Lifeâ€™, â€˜Got To Come Backâ€™  and â€˜Stay A Little Bit Longerâ€™. #TimsTwitterListeningParty" data-datetime="8:56 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408166764639408131"
+                 data-text="Winston â€˜Delanoâ€™ Stewart began his musical career in a duo with B.B. Seaton as â€˜Winston &amp; Bibbyâ€™, a pairing that soon after led to the formation of the Gaylads, following the recruitment of a third singer, Maurice Roberts. #TimsTwitterListeningParty" data-datetime="8:54 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408166601413861381"
+                 data-text="Next up is Tell Me Baby by Delano Stewart...Press play NOW #TimsTwitterListeningParty" data-datetime="8:54 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408166302854811657"
+                 data-text="30 second break after this track guys" data-datetime="8:53 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408166242851201027"
+                 data-text="â€˜Nanaâ€™, a Slickersâ€™ self-production, released in Jamaica on both Deltone and the eponymously titled Slickers, and on Pressure Disc in #Guyana has an uptempo feel featuring the lead vocals of George Agard, who also wrote the tune. #TimsTwitterListeningParty" data-datetime="8:52 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FJemMilner%2Fstatus%2F1408166009983455241"
+                 data-text="@trojanrecords Arrived on Monday been on repeat since! https://t.co/BT0hVaVY9b" data-datetime="8:51 PM Jun 24, 2021"> 
+                JemMilner            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408165811748061184"
+                 data-text="The Slickers were the Crooks brothers, Sydney and Derrick, along with Winston Bailey, and over the years following their formation did see some line-up changes. They are probably best known for the rude boy anthem â€˜Johnny Too Badâ€™ #TimsTwitterListeningParty" data-datetime="8:51 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Frea50nP%2Fstatus%2F1408165688976543750"
+                 data-text="@LlSTENlNG_PARTY having a great evening, listening to these summer sounds, reading the tweets and the bookâ€¦ thanx @trojanrecords https://t.co/xgd973HQHl" data-datetime="8:50 PM Jun 24, 2021"> 
+                rea50nP            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408165502317383684"
+                 data-text="Always energetic and full of explosive church-like sounding vocal harmony, the Maytals consistently delivered a lyric as though it was the last song they would perform. Often backed by such fiery and innovative musicians such as Hux Brown, Jackie Jackson + Gladdy Anderson" data-datetime="8:49 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408165216748290055"
+                 data-text="Amazing pics of the man himself! https://t.co/KELhaltUZu" data-datetime="8:48 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408165102587633673"
+                 data-text="Believed to be the first recording to use the term â€˜reggayâ€™ (later to be spelled reggae), the track intros with a ringing and bombastic snare drum roll, after which weâ€™re off into the reggae journey, guided by the now legendary #Maytals, led by the unique talent of #TootsHibbert https://t.co/1RaYXzfGY1" data-datetime="8:48 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408164786471321606"
+                 data-text="Over the years, their career saw many personnel changes, the most notable being the arrival of Ronnie Davis, who would go on to record many classics under his own name for numerous producers #TimsTwitterListeningParty" data-datetime="8:47 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408164600655323136"
+                 data-text="Formed in Kingston in the mid-Sixties by George â€˜Cliveâ€™ Murphy and Maurice â€˜Professorâ€™ Johnson, the Tennors originally billed themselves as the Tennor Twins, becoming the Tennors after Norman Davis joined them to complete a line-up. #TimsTwitterListeningParty" data-datetime="8:46 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1408164573585326082"
+                 data-text="Lee Perry photos taken in 2016 #TimsTwitterListeningParty #TrojanStory @LlSTENlNG_PARTY @trojanrecords https://t.co/UPsORXoZz6" data-datetime="8:46 PM Jun 24, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FLambieColin%2Fstatus%2F1408164417989234694"
+                 data-text="@trojanrecords Iâ€™m waiting for this beaut to arrive but phenomenal listening party and Iâ€™ve now got it on my phone for out and about listening as well. Itâ€™s just a win!" data-datetime="8:45 PM Jun 24, 2021"> 
+                LambieColin            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408164256290328585"
+                 data-text="With this hugely popular track, produced by the Upsetter soon after he had embarked on a career as an independent producer, we find ourselves firmly planted in the early stages of reggae music. #TimsTwitterListeningParty https://t.co/3Pj8Bnm0Sz" data-datetime="8:44 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408163899636076546"
+                 data-text=". @ScratchLee has long since seemed determined to create a completely different sound from all of his contemporaries, experimenting in the studio, sometimes utilising everyday objects such as bottles and cans, and, in the instance of â€˜People Funny Boyâ€™, a crying baby." data-datetime="8:43 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1408163622002569222"
+                 data-text="So much dedication from @trojanrecords.
+An hour and a half of amazing music and brilliant tweets so far. Half an hour left. Such a fantastic box set" data-datetime="8:42 PM Jun 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408163615862050820"
+                 data-text="Here we find Tommy McCook and his Supersonics grooving in 1968 as rock steady began shifting into #reggae with various instrumentalists starting to flirt with little detailed rhythmic changes, such as more movement in the hi-hat and shuffling organ sounds" data-datetime="8:42 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408163452573655041"
+                 data-text="Second Fiddle by Tommy McCook &amp; The Supersonics #TimsTwitterListeningParty" data-datetime="8:41 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fnjjkelly%2Fstatus%2F1408163274437414912"
+                 data-text="Wow ok @LlSTENlNG_PARTY @trojanrecords doing a ridiculous job  on the #rocksteady rhythms! Close your eyes and youâ€™re on Fulton St #CoxsonesMusicCity #TreasureIsleVinyl" data-datetime="8:41 PM Jun 24, 2021"> 
+                njjkelly            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408163188672192514"
+                 data-text="What a beauty #trojanstory50 #TimsTwitterListeningParty  
+
+https://t.co/m5TrSs586j https://t.co/9V57zRZCiz" data-datetime="8:40 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408163131843547138"
+                 data-text="Lynn remained musically active after moving to Toronto, often performing with other West Indian expatriates there, such as Jackie Mittoo, Lord Tanamo, Vernon Maytone, as well as his Jets rhythm section of bass player Brian Atkinson and drummer Joe Isaacs" data-datetime="8:40 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Flukeg9944%2Fstatus%2F1408162941833207817"
+                 data-text="If any of the many Trojan compilations show the impact and importance that @trojanrecords has had on the UK then itâ€™s this one â¤ï¸ #TimsTwitterListeningParty" data-datetime="8:39 PM Jun 24, 2021"> 
+                lukeg9944            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="120000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408162716410318849"
+                 data-text="We finally get to hear a solo outing by the man himself, Lynn Taitt. A nice easy medium/slow tempo rock steady finds saxophone man Karl Bryan blowing over the proceedings. #TimsTwitterListeningParty" data-datetime="8:38 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408162213899165702"
+                 data-text="Do the Beng Beng... Derrick Morgan hits a strong uptempo rock steady groove, ably backed by Lynn Taitt and The Jets for Leslie Kong. Derrick sings rather throw-away lyrics on this one, but the delivery is so charming, it canâ€™t miss. #TimsTwitterListeningParty #TROJANSTORY50" data-datetime="8:36 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fsoverylong%2Fstatus%2F1408162069053124619"
+                 data-text="@listening_party #TimsTwitterListeningParty This is such a tour de force already and there are still a couple of tracks by The Maytals to come (as well as a lot more, of course). @trojanrecords" data-datetime="8:36 PM Jun 24, 2021"> 
+                soverylong            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408161851171561475"
+                 data-text="â€˜Musical Trainâ€™ is a genuinely groovy track from Shirleyâ€™s extensive catalogue, with backing supplied by his regular studio compatriots, Bobby Aitken and The Carib Beats, who seemed to be producer Bunny Leeâ€™s studio band of choice in this era. https://t.co/kw6QSOkD30" data-datetime="8:35 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408161446052122625"
+                 data-text="Roy Shirley, the self-proclaimed â€˜High Priest Of Reggaeâ€™ was an exceedingly colourful and flamboyant character in the Jamaican pantheon of musical heroes. His live shows have become legendary! #TimsTwitterListeningParty #TROJANSTORY50" data-datetime="8:33 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408161277822832644"
+                 data-text="Press Play..." data-datetime="8:33 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408161152295702535"
+                 data-text="Coming up next we have Musical Train by Roy Shirley" data-datetime="8:32 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408160955113086978"
+                 data-text="Another #vinylchange after this track" data-datetime="8:31 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408160731351207946"
+                 data-text="Her 1967 hit, â€˜Perfidiaâ€™, was written in 1940 by Alberto Dominguez and popularised by Cuban bandleader, Xavier Cugat, although the song is perhaps best known outside of Jamaica as an instrumental hit for the American surf instrumental group, the Ventures. #trojanstory50" data-datetime="8:30 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408160562622701584"
+                 data-text="#PhyllisDillon, widely heralded as â€˜The Queen Of Rock Steadyâ€™, recorded some of the most enduring titles in the genre,filled with romance and innocence. Her pure and youthful sounding vocals must have delighted #DukeReid, for whom she recorded exclusively into the early Seventies" data-datetime="8:30 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fmartinlrix%2Fstatus%2F1408160520734228480"
+                 data-text="What makes me happiest about this is so many people not familiar with these genres and @trojanrecords getting the best possible introduction! #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="8:30 PM Jun 24, 2021"> 
+                martinlrix            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408160213685968897"
+                 data-text="Certain releases on the Sue label sold consistently well in the West Indian market, which is unsurprising given the close associations between r&amp;b and Jamaican music, especially in the early days. This one remained popular for years #TimsTwitterListeningParty #TROJANSTORY50" data-datetime="8:28 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408159856075362309"
+                 data-text="â€˜King Without A Throneâ€™ was produced by Sugar Simone himself under his real name - Keith Foster, but saw release as Sugar Simone on Islandâ€™s Sue imprint in 1967. #TimsTwitterListeningParty #trojanstory50" data-datetime="8:27 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408159468806934529"
+                 data-text="Trains have become completely immersed in mankindâ€™s culture and in the arts. They have become metaphors for relationships, hopes and aspirations. The themes abound in Jamaican music too. This is one of three train songs on this compilation. https://t.co/vjWz5rf6xm" data-datetime="8:25 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fsoverylong%2Fstatus%2F1408159343468482560"
+                 data-text="@LlSTENlNG_PARTY @trojanrecords In my happy place, thanks. This is sublime." data-datetime="8:25 PM Jun 24, 2021"> 
+                soverylong            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408159043726807045"
+                 data-text="The short-loved pairing of Ewan and Jerry take us on â€˜The Rock Steady Trainâ€™, assisted by Bobby Aitken and his Carib Beats. The vocal duo were in fact Ewan McDermott and Jerry McCarthy Mathias, a founding member of #TheMaytals" data-datetime="8:24 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408158766088998914"
+                 data-text="This kind of tune was a perfect vehicle for Altonâ€™s soulful phrasing and expressive crooning; indeed, he may be the most soulful singer to ever come out of Jamaica. Sometimes referred to as â€˜Mr. Soul Of Jamaicaâ€™ or â€˜The Godfather Of Rock Steadyâ€™ #TimsTwitterListeningParty" data-datetime="8:23 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fphilhappy%2Fstatus%2F1408158710401277953"
+                 data-text="@LlSTENlNG_PARTY @trojanrecords Loving it! I\'m surprised at how many songs I know. I wonder why I know them but can\'t remember where I heard them ðŸ¤”ðŸ¤”" data-datetime="8:22 PM Jun 24, 2021"> 
+                philhappy            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408158606705451015"
+                 data-text="#AltonEllis and The Flames were synonymous with rock steady and here is the proof, with the appropriately titled â€˜Rock Steadyâ€™, in which Alton encourages one to â€˜do it just like Uncle Freddyâ€™ and to â€˜shake your body lineâ€™ in his trademark mellifluous vocal tones #trojanstory50 https://t.co/7rCZsVXXsn" data-datetime="8:22 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FMartinaHemmings%2Fstatus%2F1408158471317512193"
+                 data-text="@LlSTENlNG_PARTY @trojanrecords All good. This is great" data-datetime="8:21 PM Jun 24, 2021"> 
+                MartinaHemmings            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408158090126577668"
+                 data-text="Dekker would have turned 80 on 16th July 2021. Keep your eyes peeled for lots of exciting activity led by Trojan to celebrate the king of ska.  To be announced soon. #timstwitterlisteningparty https://t.co/QOcYjnwQWe" data-datetime="8:20 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTrudyAWhite%2Fstatus%2F1408158057956261888"
+                 data-text="@LlSTENlNG_PARTY @trojanrecords Transported to another place &amp; timeðŸ˜Š ðŸŒ´ðŸ¹" data-datetime="8:20 PM Jun 24, 2021"> 
+                TrudyAWhite            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fadbryan15%2Fstatus%2F1408158051274825729"
+                 data-text="Listening to this evening\'s #TimsTwitterListeningParty featuring @trojanrecords has really taken me back to my 1970s Hackney childhood." data-datetime="8:20 PM Jun 24, 2021"> 
+                adbryan15            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fosakalbion%2Fstatus%2F1408157984824377350"
+                 data-text="@LlSTENlNG_PARTY @trojanrecords Just lost in one of the eternal genres, its blissful, 2 hours isn\'t enough @Tim_Burgess #TimsTwitterListeningParty @LlSTENlNG_PARTY @trojanrecords https://t.co/pwYOUzqOEA" data-datetime="8:20 PM Jun 24, 2021"> 
+                osakalbion            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="159000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408157710206607377"
+                 data-text="Lynn Taitt, and his band the Jets, with pianist Gladdy Anderson, PLUS #DesmondDekker and his sweet-as-dripping-honey vocals, the Acesâ€™ exact harmonies, and gorgeous horn lines = a perfect rock steady tour-de-force #TimsTwitterListeningParty #prettyafrica" data-datetime="8:18 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408157045451333633"
+                 data-text="Featuring a rhythm that, over the years, has frequently been â€˜versionedâ€™ by numerous Jamaican performers: Studio Oneâ€™s Soul Vendors recut the tune for \'The Soul Vendors - On Tour\' LP, Cornel Campbell reworked it for his hit, â€˜Conscious Loverâ€™ many dancehall acts have followed" data-datetime="8:16 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1408157011766910980"
+                 data-text="@LlSTENlNG_PARTY @trojanrecords Itâ€™s a real music history class for me!" data-datetime="8:16 PM Jun 24, 2021"> 
+                soozworld            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408156694727860227"
+                 data-text="â€˜Itâ€™s Rainingâ€™ is one of the classic #TreasureIsle offerings of rock steady era, with a wonderful bass line from the great Jackie Jackson and a poignant riff from premier saxophonist #TommyMcCook and his hornsmen. https://t.co/9sKt6V7Gq2" data-datetime="8:14 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1408156638725480451"
+                 data-text="Trojan would only sign the very best football team! Released in 86 when we beat QPR 3-0 in the League Cup Final at Wembley #HappyDays #OUFC #COYY #TimsTwitterListeningParty @LlSTENlNG_PARTY @trojanrecords @OUFCOfficial https://t.co/hedgqI6gcL" data-datetime="8:14 PM Jun 24, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Fosakalbion%2Fstatus%2F1408156593003405327"
+                 data-text="@trojanrecords the more you listen the more the soundtrack beat takes you over and grips you in its hypnotic vice we are in the Listening Party Dance Hall @Tim_Burgess #TimsTwitterListeningParty @LlSTENlNG_PARTY https://t.co/LmwZ08gmfT" data-datetime="8:14 PM Jun 24, 2021"> 
+                osakalbion            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408156258365054978"
+                 data-text="It\'s Raining by The Three Tops with Tommy McCook &amp; The Supersonics came out on the first British Trojan series, with the label erroneously crediting the group as the Tree Tops https://t.co/op6EJfJccx" data-datetime="8:13 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FCarolin06925103%2Fstatus%2F1408156110993952774"
+                 data-text="@LlSTENlNG_PARTY @trojanrecords Brilliant Party ðŸ‘Œ" data-datetime="8:12 PM Jun 24, 2021"> 
+                Carolin06925103            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408155903266897924"
+                 data-text="Honeyboy enjoyed stints as vocalist in one of Lynn Taittâ€™s pre-Jets combos, the Comets as well as with Hugh Hendricks &amp; the Buccaneers, but here he fronts Tommy McCook &amp; the Supersonics, featuring Taitt #timstwitterlisteningparty" data-datetime="8:11 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408155608700817410"
+                 data-text="With \'Dreader Than Dread\' we are well and truly in the #rocksteady age, as #HoneyboyMartin delivers a spoken word presentation in the style of Prince Busterâ€™s court room-themed classic, â€˜Judge Dreadâ€™ #TimsTwitterListeningParty #TROJANSTORY50" data-datetime="8:10 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408155437179019267"
+                 data-text="Dreader than Dread by Honey Boy Martin &amp; The Voices with Tommy McCook &amp; The Supersonics NEXT....GO" data-datetime="8:09 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408155231750348805"
+                 data-text="#vinylflip #TimsTwitterListeningParty" data-datetime="8:09 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408154883082104834"
+                 data-text="Dandy produced a treasure trove of recordings for the Rudies as well as key hits, notably Tony Tribeâ€™s cover of Neil Diamondâ€™s â€˜Red, Red Wineâ€™ (Downtown, DT-419) and his own chart-storming composition, â€˜Suzanne Beware Of The Devilâ€™ #TimsTwitterListeningParty" data-datetime="8:07 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1408154801498636297"
+                 data-text="A message to you
+
+Thereâ€™s a 30 second vinyl flip after this 
+
+@trojanrecords" data-datetime="8:07 PM Jun 24, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="120000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408154741591396359"
+                 data-text="Robert Thompson aka Dandy Livingstone or simply Dandy, was a very important figure in the development of UK reggae scene. Dandy found himself wearing many hats as a singer, producer, songwriter and musician, as well as performing other duties at Trojan Records in its early stages https://t.co/Wb9pv8bByF" data-datetime="8:07 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408154238857981957"
+                 data-text="#TheEthiopians boasted one of the greatest singers and writers from the little Caribbean island, Leonard Dillon. Dillon ended up in Kingston where he befriended a young #PeterTosh, who upon hearing his work, took him to audition for #CoxsonDodd. The rest in history..." data-datetime="8:05 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FDIreland02%2Fstatus%2F1408154216355532802"
+                 data-text="Without @LlSTENlNG_PARTY thereâ€™s no likelihood Iâ€™d be listening to this but foot tapping, head nodding joy to listen to and the @trojanrecords background tweets are brilliant #TimsTwitterListeningParty https://t.co/LVnKAImL2I" data-datetime="8:05 PM Jun 24, 2021"> 
+                DIreland02            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408154088727056392"
+                 data-text="Despite the songâ€™s title, this is most definitely #rocksteady rather than #ska #timstwitterlisteningparty https://t.co/2C72g9jUZl" data-datetime="8:04 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fgingerbeardman%2Fstatus%2F1408154022360592387"
+                 data-text="@trojanrecords love this one #TimsTwitterListeningParty" data-datetime="8:04 PM Jun 24, 2021"> 
+                gingerbeardman            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2Fosakalbion%2Fstatus%2F1408153894098804742"
+                 data-text="Come on everyone ðŸŽ¶ðŸŽµðŸŽ¶ðŸŽµðŸŽ¶BEEP BEEP Train to SKAVILLE @Tim_Burgess #TimsTwitterListeningParty @LlSTENlNG_PARTY @trojanrecords https://t.co/PdoVXQ8oeW" data-datetime="8:03 PM Jun 24, 2021"> 
+                osakalbion            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FdollyblueMC%2Fstatus%2F1408153569358925828"
+                 data-text="Ahhhhh Rock Steady! Pheeeww, time to sloooowwww it down a bit and take a breather! ðŸ¥µðŸ˜Ž
+
+ #TimsTwitterListeningParty @LlSTENlNG_PARTY @Tim_Burgess @trojanrecords" data-datetime="8:02 PM Jun 24, 2021"> 
+                dollyblueMC            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408153489352675331"
+                 data-text="The Techniques were formed by Winston Riley and initially also featured Slim Smith, Frederick Waite, and Franklyn White. #timstwitterlisteningparty #TROJANSTORY50" data-datetime="8:02 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="124000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408153121981935621"
+                 data-text="(Oh Babe - Techniques) Originally a regional hit for its writer, New Orleans performer Chris Kenner, and then a national one for Fats Domino, \'Sick and Tired\' was a big seller in Jamaica throughout the late Fifties, as reflected in the number of cover versions by Jamaican acts" data-datetime="8:00 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408152604878704641"
+                 data-text="One of those 1966 tracks that sounds like it has one foot still in ska, with the other one moving forward into #rocksteady , performed by Winston Weir and George Agard â€“ the latter also known as George Dekker joined #ThePioneers years later. #timstwitterlisteningparty" data-datetime="7:58 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408152156100775937"
+                 data-text="Who is the guitar man in question on this track? There is an almost surf like quality to this wonderful little tune, but also many elements of #calypso. Again, this is a mystery! #timstwitterlisteningparty #trojanstory50 https://t.co/5fhfaoSJLj" data-datetime="7:56 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Fskatalite%2Fstatus%2F1408152070830669836"
+                 data-text="Just gotta say that the quality of the vinyl is fantastic. Well pressed, sir. @trojanrecords #TimsTwitterListeningParty" data-datetime="7:56 PM Jun 24, 2021"> 
+                skatalite            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408151700129599504"
+                 data-text="The Astronautsâ€™ â€˜Syncopate\' is a rather unusual, but highly enjoyable piece showcasing a gorgeously executed guitar feature, complete with whammy bar tugging. #timstwitterlisteningparty" data-datetime="7:55 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408151367097761793"
+                 data-text="#LynnTaitt can be heard playing a counterpoint line in the lower register of his guitar, which would come even more to the forefront with the advent of rock steady. #timstwitterlisteningparty #trojanstory50" data-datetime="7:53 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FVeronaSerena%2Fstatus%2F1408151114705424387"
+                 data-text="@trojanrecords This is class! ðŸ™ŒðŸ¼" data-datetime="7:52 PM Jun 24, 2021"> 
+                VeronaSerena            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FCarolin06925103%2Fstatus%2F1408151105926799365"
+                 data-text="@trojanrecords Stunning â¤ï¸" data-datetime="7:52 PM Jun 24, 2021"> 
+                Carolin06925103            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408150985181126659"
+                 data-text="Baba Brooks, back again with â€˜King Sizeâ€™, in a sound that is reminiscent of a herd of cantering horses, with a wood block trotting along in the mix together with an organ, an instrument not often heard in ska up until this point. #timstwitterlisteningparty" data-datetime="7:52 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408150615801409540"
+                 data-text="This was the first record Graeme Goodall released on his #DoctorBird label in 1966, and was a monster hit in the Jamaican market. It sold in such quantities that had the sales been accurately reported to the charts, it would have certainly shown up on the hit parade." data-datetime="7:50 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408150287563509765"
+                 data-text="Every Night - One of the most memorable and enduring Jamaican hits of its time. Slow, romantic ballads have long since been popular on the island, with the style enduring for many decades. #timstwitterlisteningparty #trojanstory50 https://t.co/DnDNNUD3A3" data-datetime="7:49 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408149876303618048"
+                 data-text="One Eyed Giant moves along at a fast pace and features yet again a â€˜heecksman\' who here actually seems to be more of a â€˜higgetman\', providing vocal encouragment as Brooks rides the rhythm elegantly with his soulful and rather sophisticated trumpet styling. #trojanstory50" data-datetime="7:47 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408149549282115584"
+                 data-text="While Oswald â€˜Baba\' Brooks may not be as much of a name as the Skatalites, with whom he sometimes played trumpet, his contributions are more than essential in the history of Jamaican music. #timstwitterlisteningparty #trojanstory50" data-datetime="7:46 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408149324421373960"
+                 data-text="And we are ready to go again with The Baba Brooks Band - One Eyed Giant #timstwitterlisteningparty" data-datetime="7:45 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408149052127076352"
+                 data-text="another quick 30 second break after this track #vinylchange" data-datetime="7:44 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408148943846916101"
+                 data-text="Justin and the Dominoesâ€™ first, and biggest hit was the ska classic, \'Carry Go Bring Come\' (Island, WI-154), which proved so popular that he revisited the number again in the rock steady and reggae eras." data-datetime="7:44 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Fjimgoodall11%2Fstatus%2F1408148851500924939"
+                 data-text="Absolutely loving @trojanrecords @LlSTENlNG_PARTY definitely one of my favourites ðŸ™Œ #timstwitterlisteningparty" data-datetime="7:43 PM Jun 24, 2021"> 
+                jimgoodall11            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408148572525244418"
+                 data-text="#JustinHinds was a devoted #Rastafarian and his faith reflected greatly in his lyrical content that was permeated with Biblical content and parables. #timstwitterlisteningparty #trojanstory50" data-datetime="7:42 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408148249719062528"
+                 data-text="This track was actually mislabelled on the original Trojan Story in 1971. We can assure you that this track is definitely called \'Virginia Ska\', and not \'Yeah, Yeah\' by the Riots as it may be referred to (by mistake). Ooops." data-datetime="7:41 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="146000" data-url="https%3A%2F%2Ftwitter.com%2FMichellebwatso3%2Fstatus%2F1408148188217974791"
+                 data-text="@osakalbion @LlSTENlNG_PARTY @Tim_Burgess @trojanrecords So well put across these tunes, they have a feeling full of love ðŸ˜" data-datetime="7:41 PM Jun 24, 2021"> 
+                Michellebwatso3            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408147575899836417"
+                 data-text="https://t.co/vjWz5rf6xm" data-datetime="7:38 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408147454109835274"
+                 data-text="Lord Tanamo\'s  best known recording, which features the true inventors of ska music, the beyond legendary Skatalites. #timstwitterlisteningparty #lordtanamo #trojanstory50" data-datetime="7:38 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408147143215439873"
+                 data-text="\'Gone Is Yesterday\' was produced by Lindon Pottinger, and found its place on his SEP imprint. The track swings like mad and showcases Higgs and Wilson soulfully displaying their doo wop influenced vocal harmony style. #timstwitterlisteningparty #trojanstory50" data-datetime="7:36 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="112000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408146941947547658"
+                 data-text="One of the earliest singing duos in Jamaica, Joe Higgs and Roy Wilson are probably best known for their massive hit \'Oh Manny Oh\'. They recorded this particular track under the guidance of manger Edward Seaga, who also governed as Jamaicaâ€™s fifth Prime Minister https://t.co/sirrSqcAxa" data-datetime="7:36 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408146470084165640"
+                 data-text="This track definitely has a strong #Skatalites feel so, surely there are more Skatalites on board than just Knibb on the drums, but we just don\'t know for sure! #TimsTwitterListeningParty #trojanstory50" data-datetime="7:34 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408146131020922880"
+                 data-text="It has always been common for Jamaican producers to release sides with a different moniker for the line-up of players, so Duke Reid\'s Group could be anybody at any given session. #TimsTwitterListeningParty https://t.co/vOqKvQCud7" data-datetime="7:32 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408145863063523333"
+                 data-text="This particular track was executed for Lindon Pottinger on his Gaydisc label, but Al T. Joe went onto record for a handful of other Jamaican record producers, typically in the respectfully inspired style he borrowed from Antoine â€˜Fats\' Domino. #TimsTwitterListeningParty" data-datetime="7:31 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408145545303052294"
+                 data-text="Al T. Joe almost always sang in a fashion patterned after his idol, #FatsDomino, one of the prominent musical kings of New Orleans, whose music proved hugely popular and influential in Jamaica. #TimsTwitterListeningParty #trojanstory50" data-datetime="7:30 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408145343959769093"
+                 data-text="Yes!! Send us pics! https://t.co/RTPL9oCOBV" data-datetime="7:29 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408145090472820736"
+                 data-text="We are also treated to a warm and soulful trumpet solo, possibly from the Skatalitesâ€™ Johnny Moore, over this galloping, herky-jerky pre-ska rhythm. #TimsTwitterListeningParty #Trojanstory50" data-datetime="7:28 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Finremotepart%2Fstatus%2F1408144937263284225"
+                 data-text="@LlSTENlNG_PARTY @trojanrecords We\'re tuning in here in Norfolk *waves*
+#timstwitterlisteningparty https://t.co/2BdNQdn7YV" data-datetime="7:28 PM Jun 24, 2021"> 
+                inremotepart            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408144911031996420"
+                 data-text="Here #KenBoothe is heard in his very youthful approach, harmonising alongside #StrangerCole, with their combined voices making a charming contribution to the male vocal duo format that became hugely popular in Jamaican music at this time #TimsTwitterListeningParty https://t.co/yuVVNiCYVH" data-datetime="7:28 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408144511516262407"
+                 data-text="Creator recorded the timeless early reggae masterpiece, \'Kingston Town\' â€“ a song subsequently covered by the chart-topping UK reggae group, #UB40. #TimsTwitterListeningParty #trojanstory50 https://t.co/TL1zk6JcVO" data-datetime="7:26 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408144182640885766"
+                 data-text="Before Kentrick Patrick aka #LordCreator had arrived in Jamaica, he had already recorded in his native countryâ€™s calypso style with the renowned Trinidadian, Fitz Vaughan Bryan and his orchestra. #TimsTwitterListeningParty #trojanstory50" data-datetime="7:25 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408143822660513803"
+                 data-text="Rough and Tough is one of Stranger Cole\'s classics. He always strongly believed that the track was one of the first ska songs to emerge from Jamaica.  #TimsTwitterListeningParty #Trojanstory50" data-datetime="7:23 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408143803349929988"
+                 data-text="Itâ€™s a Red Stripe for us ðŸ‡¯ðŸ‡² https://t.co/qERpD0nTx9" data-datetime="7:23 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408143507315908611"
+                 data-text="Stranger Cole has been active throughout all of the musical shifts of Jamaicaâ€™s sound and after emigrating to #Canada he owned and operated his own record shop in the Kensington Market area of Toronto, a district with a heavy Caribbean presence. #TimsTwitterListeningParty" data-datetime="7:22 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408143301870510092"
+                 data-text="GO GO PRESS PLAY...." data-datetime="7:21 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408143097855463424"
+                 data-text="press pause after this track for 30 seconds to allow for a vinyl flip!! #vinylcrew #vinyl" data-datetime="7:20 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408142918586671106"
+                 data-text="Owen Gray is an extremely versatile vocalist, he can often be seen still performing this classic number during his live performances while displaying his wicked dance moves, known to Jamaicans as â€œdropping legsâ€. #timstwitterlisteningparty https://t.co/UBujP5dr0x" data-datetime="7:20 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408142484618813445"
+                 data-text="Released on Island (WI-002) and produced by #LeslieKong, this was actually the first Island disc available in the UK, being made available before WI-001 - â€˜Independent Jamaicaâ€™ by Lord Creator. An enormous seller, and remained in demand for years! #TimsTwitterListeningParty" data-datetime="7:18 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408142260542349313"
+                 data-text="A superb example of pre-Jamaican ska in all of its boogie shuffling glory. The Continentals had more UK releases in the UK in 1962 with Melodiscs Check Label. #TimsTwitterListeningParty #trojanstory50" data-datetime="7:17 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408141958967607307"
+                 data-text="The Continental\'s offer a swinging little shuffle with duo harmonies. No one really knows who The Continentals were, its one of the many mysteries of early Jamaican music. #TimsTwitterListeningParty #trojanstory50" data-datetime="7:16 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408141570541490177"
+                 data-text="FUN FACT - This track was initially called \'You Donâ€™t Know (How Much I Love You)\' but it was so popular on the radio  in Jamaica that a RJR DJ always referred to it as Housewive\'s choice due to the endless requests from housewives for the record. #TimsTwitterListeningParty" data-datetime="7:14 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408141268149014533"
+                 data-text="Derrick Morgan and Patsy Todd reveal their undying love for each other in the lyrics of this curiously titled track, with perhaps a nod to to the great New Orleans rhythm and blues duo Shirly and Lee. #TimsTwitterListeningParty" data-datetime="7:13 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408141015509254145"
+                 data-text="Jimmy found his spiritual truth in Islam, whilst many of his Jamaican counterparts were exploring the growing faith and lifestyle of Rastafari. Almost 60 years since his debut, Jimmy continues to be an exciting performer. #TimsTwitterListeningParty" data-datetime="7:12 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408140876572938240"
+                 data-text="@Michellebwatso3 Dancing shoes on!!" data-datetime="7:12 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408140685652467712"
+                 data-text="The legendary #jimmycliff is a household name in #reggae today, but this track from 1962 takes us to his beginnings , when AGED 14 (wow), he recorded for the legendary Leslie Kong, the producer that he would work with until Kong\'s death in 1971. #TimsTwitterListeningParty" data-datetime="7:11 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408140384836935683"
+                 data-text="\'Running Around\' showcases Owen in his American influenced blues manner on a composition that owes much to \'No More Doggin\' by the great #RoscoGordon #TimsTwitterListeningParty" data-datetime="7:10 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408140188526813187"
+                 data-text="Our pleasure. Hope everyone is enjoying! #trojanstory50 #trojanrecords https://t.co/8mXVVpWneE" data-datetime="7:09 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408140020880392199"
+                 data-text="#OwenGray is one of the original Jamaican singing pioneers, an underrated but masterful vocalist. His versatility as a vocalist has allowed him to shine in a variety of styles  including  #blues #rnb #gospel #soul #ska #rocksteady #reggae #TimsTwitterListeningParty" data-datetime="7:08 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1408139861295501321"
+                 data-text="And the @trojanrecords listening party tweets are the perfect accompaniment" data-datetime="7:07 PM Jun 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408139723223277569"
+                 data-text="Tell Me Darling was recorded by Chris Blackwell in Jamaica. Jackie followed Chris to the UK where the 2 continued to work closely together. During the early days of #IslandRecords Jackie would help sell records to retailers around London.  #TimsTwitterListeningParty" data-datetime="7:07 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408139349120753671"
+                 data-text="#JackieEdwards was one of Jamaica\'s finest crooners, his voice smooth and suave  and imbued with a very polished sweetness, with his voice possessing more than a hint of the great #natkingcole #TimsTwitterListeningParty #trojanstory50" data-datetime="7:05 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1408139270909480965"
+                 data-text="A huge thanks to @trojanrecords for tonightâ€™s soundtrack" data-datetime="7:05 PM Jun 24, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408139115850252288"
+                 data-text="On this track Morgan has a distinctly New Orleans vibe through and through, with its relaxed Latin feel: a rhythm that by this time had already been heavily adapted by many American blues, r&amp;b and jazz artists #TimsTwitterListeningParty #trojanstory50" data-datetime="7:05 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408138715743113221"
+                 data-text="Fat Man is one of Derrick Morgan\'s earliest hits, originally released by Simeon Smith - a significant figure on the islands music scene through the early 60s #TimsTwitterListeningParty" data-datetime="7:03 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408138565389803527"
+                 data-text="When \'ska\' music exploded on the scene in Jamaica the following decade, Tanamo was at the epicentre once again, regularly performing with #TheSkatalites the islands top instrumental group. #timstwitterlisteningparty" data-datetime="7:02 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2Ftrojanrecords%2Fstatus%2F1408138350226202624"
+                 data-text="Starting off with one of the most important Jamaican musical pioneers, Lord Tanamo with Invitation to Jamaica. whilst being active in most musical shifts in Jamaica, his beginnings started with \'mento\' - Jamaica\'s answer to Trinidad\'s Calypso #TimsTwitterListeningParty" data-datetime="7:01 PM Jun 24, 2021"> 
+                trojanrecords            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1408137911720103939"
+                 data-text="Sit back and relax
+
+Maybe have a dance in a bit 
+
+@trojanrecords have got this for the next couple of hours 
+
+Enjoy! https://t.co/HizRoc18NL" data-datetime="7:00 PM Jun 24, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
