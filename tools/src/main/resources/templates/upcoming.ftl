@@ -30,6 +30,7 @@
         '</table>';
     timezoneDiv.innerHTML = disp;
   });
+
 </script>
 
 
@@ -76,6 +77,7 @@
                      style="width:80px;height:80px;"></a><br>
 
               <hr style="width:80px;margin-left:0;">
+              <#if slot.hasNumber()>
               <span data-id="${slot.listeningPartyNumber}" data-dt="${slot.isoDate}"
                     class="tztooltip"
                     data-direction="bottom">
@@ -85,7 +87,7 @@
                 <span id="timezone-${slot.listeningPartyNumber}" class="tztooltip__item">
                 </span>
               </span>
-
+              </#if>
             </td>
             <td style="width:50%;text-align:left;">
               <b>${slot.band}</b><br/>${slot.album}
@@ -95,15 +97,25 @@
             <td style="width:15%">
               <a class="pure-button pure-button-active"
                  href="${slot.link}" target="_blank" data-toggle="tooltip" data-placement="top"
-                 title="Twitter Listening Party Announcement <#if slot.hasNumber() >
-             (ttlp ${slot.listeningPartyNumber} )
+                <#if slot.hasNumber() >
+                  title="Twitter Listening Party Announcement
+                 <#else>
+                 title="Link
+                </#if>
+
+                <#if slot.hasNumber() >
+                 (ttlp ${slot.listeningPartyNumber} )
               </#if>">
 
-                <#if slot.isToday() >
-                  <i class="fab fa-twitter"></i>
-                <#else>
-                  <i class="fab fa-twitter-square"></i>
-                </#if>
+              <#if slot.isToday() >
+                <i class="fab fa-twitter"></i>
+              <#elseif !slot.hasNumber()>
+
+                <i class="fas fa-ticket-alt"></i>
+              <#else>
+                <i class="fab fa-twitter-square"></i>
+              </#if>
+
               </a>
               <br>
               <#if slot.hasNumber() >
