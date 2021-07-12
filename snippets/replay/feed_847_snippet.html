@@ -1,0 +1,594 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1ciRQEddIB2rtUfb0SoiWH" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02d7692d41fc4408704b59134b" alt="Frisbee" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Tot Taylor</span><br/><span class="sub-colour">Frisbee</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1ciRQEddIB2rtUfb0SoiWH" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 45 tweets from Monday 12th July 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/tottaylor1" target="_blank"><img src="https://pbs.twimg.com/profile_images/1411063121620443145/_q0LbwSl_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/tottaylor1.jpg'"><br/>@tottaylor1</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384123236842045449/uliMd6Ra_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="National Music Day" data-start="0"
+             data-duration="209" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Yoko, Oh" data-start="210"
+             data-duration="386" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Carsick" data-start="597"
+             data-duration="255" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Do It the Hard Way" data-start="853"
+             data-duration="222" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Golden Waves" data-start="1076"
+             data-duration="328" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="American Baby" data-start="1405"
+             data-duration="493" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Baby, I Miss the Internet" data-start="1899"
+             data-duration="393" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Featurette" data-start="2293"
+             data-duration="143" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="I'll Go My Own Way" data-start="2437"
+             data-duration="306" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Sunset Sound" data-start="2744"
+             data-duration="207" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2952"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851d7692d41fc4408704b59134b" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-45" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414674359923494914"
+                 data-text="#timstwitterlisteningparty
+
+Tot Taylor: \'FRISBEE\'
+
+now I\'m a-gonna get on the bus and go home...
+
+It\'s been real... really real... thanks, so much, to Tim
+Burgess, 
+
+and Robbie Nelson, RAK STUDIOS, Joe Dworniak,
+Riverfish Cornwall, Shawn Lee (drums), Paul Cuddeford
+(guitar)" data-datetime="7:53 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1414674003545968642"
+                 data-text="@tottaylor1 @LlSTENlNG_PARTY @RoughTrade @FANLINK Thanks Tot! That was a blast!" data-datetime="7:52 PM Jul 12, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1414673729070804993"
+                 data-text="Wow! Thatâ€™s a new favourite album for me. Thanks for stopping by the @LlSTENlNG_PARTY @tottaylor1" data-datetime="7:51 PM Jul 12, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="127000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414673611479261191"
+                 data-text="#timstwitterlisteningparty
+
+Tot Taylor\'s \'FRISBEE LP\'
+
+Thanks to everyone who tuned in!
+
+Especially thanks to the great TIM!!! - thank you Man...!! 
+
+Ltd Edition FRISBEE vinyl to buy is @RoughTrade
+
+Digital things @fanlink.to/totfrisbee
+ 
+much more at https://t.co/YGQfy2Mh7E" data-datetime="7:50 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414673074667020295"
+                 data-text="#timstwitterlisteningparty
+
+SUNSET SOUND:
+
+\"I don\'t need a plane, I don\'t need a ship...\"" data-datetime="7:48 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414672981532553217"
+                 data-text="#timstwitterlisteningparty
+
+SUNSET SOUND:
+
+\"I\'m dustin\' off my demo tapes...\"" data-datetime="7:48 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414672838313889796"
+                 data-text="#timstwitterlisteningparty
+
+\'SUNSET SOUND\'
+
+â€œJesus Christ! Some groovy catâ€¦ Punched me in the face when I mentioned thatâ€¦
+
+Itâ€™s about being endlessly nostalgic. â€˜Being nostalgicâ€™ gets on peopleâ€™s nervesâ€¦" data-datetime="7:47 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414672708483403776"
+                 data-text="#timstwitterlisteningparty
+ 
+\'SUNSET SOUND\'
+
+hold on everyone ... this one is as little more \'subdued\'...
+
+\"Tho my sun is going\' down...\"" data-datetime="7:47 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414672338407366657"
+                 data-text="#timstwitterlisteningparty
+
+we ain\'t even started yet!!!!! https://t.co/Xdbc6Tllgm" data-datetime="7:45 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414672092767862790"
+                 data-text="#timstwitterlisteningparty
+ 
+\'Iâ€™LL GO MY OWN WAY\'
+
+â€œOh, yeah??â€
+
+\"I like you\"
+
+\"I Like You\"
+
+\"I Like You\"
+
+\"I Like You!!!!\"
+
+\"Do y like me too?\"\"" data-datetime="7:44 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1414671954058088454"
+                 data-text="This @tottaylor1 album is ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜ðŸ˜" data-datetime="7:44 PM Jul 12, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414671785484767234"
+                 data-text="#timstwitterlisteningparty
+ 
+\'Iâ€™LL GO MY OWN WAY\'
+
+\"I sing the song of the rattlesnake...\"
+
+\"Let me tell you today...\"" data-datetime="7:43 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414671582400811016"
+                 data-text="@jenniferhodgson well, keep it quiet please - \'cos I\'m doing @LlSTENlNG_PARTY right now..." data-datetime="7:42 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414671361314807810"
+                 data-text="#timstwitterlisteningparty
+ 
+\'Iâ€™LL GO MY OWN WAY\'
+ 
+In the 90s I was listening to Bob Dorough a lot (one of the only people to ever sing on a Miles Davis record). Had no idea this NY icon was living in Islington. This is my song for Bob â€¦" data-datetime="7:41 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414671020888367105"
+                 data-text="#timstwitterlisteningparty
+
+FEATURETTE
+
+(2)
+
+I smirked and turned up the little plastic transistor radio in my blazer pocketâ€¦
+ 
+d y know what I mean??
+
+anyone had these kind of problems at school?? Ha, ha...
+just all of us..." data-datetime="7:40 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414670763647455238"
+                 data-text="#timstwitterlisteningparty
+ 
+\'FEATURETTE\'
+
+My teacher said to me â€œTaylor - you think youâ€™re really something boy (I didnâ€™t!) but youâ€™re NOTHING!!!!! 
+NO-THING!! 
+
+Youâ€™re a â€¦ Youâ€™re just a â€¦ 
+a â€¦ FEATURETTE!!" data-datetime="7:39 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414670553097678852"
+                 data-text="#timstwitterlisteningparty
+
+â€˜BABY, I MISS THE INTERNETâ€™
+
+Really should send this song to Barry Manilow (who is actually one of Americaâ€™s biggest Democratic Party fundersâ€¦) (is that right???)" data-datetime="7:38 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414670182409191432"
+                 data-text="#timstwitterlisteningparty
+
+\'BABY, I MISS THE INTERNET\'
+
+The interviewer said â€œtake the comments down?â€
+\"No!\", said Trump - the internet! Take the internet down!\"" data-datetime="7:37 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414669870306893834"
+                 data-text="#timstwitterlisteningparty
+
+BABY, I MISS THE INTERNET
+
+(2) 
+
+I was watching TV in the middle of the night just before Trump got elected. He said he was fed up with comments about him on the internet, was gonna have it â€œtaken downâ€." data-datetime="7:35 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="185000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414669500474183683"
+                 data-text="#timstwitterlisteningparty
+
+\'BABY, I MISS THE INTERNET\'
+
+â€œBeen hearing about ya, for a long, long time.
+Whenever I hear your name, I donâ€™t hear no rhymeâ€¦â€
+
+guess whoâ€¦??" data-datetime="7:34 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414668721138946053"
+                 data-text="#timstwitterlisteningparty
+
+ \'AMERICAN BABY\'
+
+(5)
+
+Better turn it up nowâ€¦" data-datetime="7:31 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414668535343861765"
+                 data-text="#timstwitterlisteningparty
+
+ AMERICAN BABY
+
+(2)
+
+the subtitle of the song is â€¦ 
+
+2-part invention in D" data-datetime="7:30 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414668325272031232"
+                 data-text="#timstwitterlisteningparty
+
+ AMERICAN BABY
+
+â€œAmerican Baby: your teeth are white 
+ American Baby: your face is tightâ€¦â€ 
+
+Now, who does that remind you of??" data-datetime="7:29 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414668216463462401"
+                 data-text="#timstwitterlisteningparty
+
+ AMERICAN BABY
+
+\"y\'know I do...\"" data-datetime="7:29 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414668073341267972"
+                 data-text="#timstwitterlisteningparty
+
+ AMERICAN BABY
+
+we pressed the \'funk~soul\' button" data-datetime="7:28 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="191000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414667857787559939"
+                 data-text="#timstwitterlisteningparty
+
+ AMERICAN BABY
+
+â€œAmerican Baby: your teeth are white 
+ American Baby: your face is tightâ€¦â€" data-datetime="7:27 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414667058835509252"
+                 data-text="#timstwitterlisteningparty
+
+ \'AMERICAN BABY\'" data-datetime="7:24 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414666684489768966"
+                 data-text="#timstwitterlisteningparty
+
+GOLDEN WAVES
+
+\"carry me in GOLDEN WAVES\"...
+\"cover me in GOLDEN WAVES\"
+\"bury me in GOLDEN WAVES...\"" data-datetime="7:23 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="121000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414666192237830149"
+                 data-text="#timstwitterlisteningparty
+
+\'GOLDEN WAVES\'
+
+it\'s kind of a \'lullaby with guitars\' ..." data-datetime="7:21 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414665684945145857"
+                 data-text="#timstwitterlisteningparty
+
+GOLDEN WAVES
+
+definitely one of my early â€˜Cambridge songsâ€™ - captured in my â€˜teenage song styleâ€™. Had the tune since I was about 14. The lyrics came along just before the recording. 
+
+\"Sometimes I don\'t sleep at night\'" data-datetime="7:19 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414665346582294530"
+                 data-text="#timstwitterlisteningparty
+
+DO IT THE HARD WAY
+
+it\'s got a kind of \'HIT THE ROAD JACK\'-type bass...
+
+we shld \'go-on-the-road\' with it...
+
+but we can\'t damned well \'go-on-the-road\' with anything at the moment...
+
+will y all \'come-on-the-road\' and see us ???" data-datetime="7:17 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1414665233507962891"
+                 data-text="ðŸ’¥ðŸŒˆðŸ¤˜ðŸ”¥ Do It The Hard Way by @tottaylor1 ðŸ”¥ðŸ¤˜ðŸŒˆðŸ’¥" data-datetime="7:17 PM Jul 12, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414664917504991234"
+                 data-text="#timstwitterlisteningparty
+
+DO IT THE HARD WAY
+
+it\'s kind of \'super-80s\' this one, isn\'t it??" data-datetime="7:16 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414664567326662663"
+                 data-text="#timstwitterlisteningparty
+
+DO IT THE HARD WAY
+
+â€œI drive my car up a one-way street
+Dirty looks from everyone I meet
+I ask the Lord my soul to keep
+No reply - he must be asleepâ€¦â€
+
+... kind of a modern hymn, isnâ€™t it?" data-datetime="7:14 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="120000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414664379245727746"
+                 data-text="#timstwitterlisteningparty
+
+CARSICK
+
+this \'delicate\' mix/balance is by the (very talented) Joe Dworniak at @RiverfishMusic in Cornwall... we only finished it last week..." data-datetime="7:14 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414663874721239045"
+                 data-text="#timstwitterlisteningparty
+
+CARSICK
+
+some people like cars tho ..." data-datetime="7:12 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414663667363323905"
+                 data-text="#timstwitterlisteningparty
+
+CARSICK
+
+our family lived in the â€˜waterlandsâ€™ of Norfolk. Often wet, damp, steamy everywhere. Sundays weâ€™d go for long car-rides out there. The ride would make me sick as a dog. To my mind cars are destroyers. Therefore the songâ€¦" data-datetime="7:11 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414663385183105024"
+                 data-text="#timstwitterlisteningparty
+
+YOKO, OH (4)
+
+someone said it was \'Oh, Yoko\' \'upside down\'...
+
+might be..." data-datetime="7:10 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="175000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414663172364058631"
+                 data-text="#timstwitterlisteningparty
+
+YOKO, OH (3)
+
+slide guitar by Lewis Durham ... 
+
+drums: Shawn Lee, rhythm tr: Paul Cuddeford, 
+recorded at RAK London, 
+mixed by Robbie Nelson 
+
+there\'s a few \'diminished\' chords in there..." data-datetime="7:09 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="134000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414662437974970370"
+                 data-text="#timstwitterlisteningparty
+
+YOKO, OH (2)
+
+we sent Yoko a letter and she gave us a fab-u-lous Yoko exhibit (inc Bagism performance). The â€˜Yoko, Ohâ€™ song is a â€˜Thank Youâ€™ thing.
+
+â€œwhen it feels so unreal. Like only real things can feelâ€¦â€" data-datetime="7:06 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414661877637042176"
+                 data-text="#timstwitterlisteningparty
+
+YOKO, OH 
+
+at our art space Riflemaker in Beak Street, Soho: our Frieze Week show â€˜replayedâ€™ the activities of the Indica Gallery 1965/66. Yoko Onoâ€™s London debut was at Indica" data-datetime="7:04 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414661633960386561"
+                 data-text="#timstwitterlisteningparty
+
+(2)
+
+The subtitle of the NATIONAL MUSIC DAY song is â€˜Mister Deejayâ€™ â€¦ 
+
+I need a song to play..." data-datetime="7:03 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1414661364509982724"
+                 data-text="Anyone at the @LlSTENlNG_PARTY new to @tottaylor1â€™s music?" data-datetime="7:02 PM Jul 12, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Ftottaylor1%2Fstatus%2F1414660932702253065"
+                 data-text="#timstwitterlisteningparty
+
+NATIONAL MUSIC DAY
+
+FRISBEE storee: Protest songs with an upbeat sound?
+ 
+First up: how come no NATIONAL MUSIC DAY in England? â€œWhen the DeeJays on the radio stop talkinâ€™ and the records in the record-shops start walkinâ€™â€¦ 
+
+- well, Hereâ€™s one!" data-datetime="7:00 PM Jul 12, 2021"> 
+                tottaylor1            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1414660870819438603"
+                 data-text="Say hello to Frisbee!
+
+Say hello to @tottaylor1 
+
+#TimsTwitterListeningParty https://t.co/SPrLUt4OI9" data-datetime="7:00 PM Jul 12, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
