@@ -134,7 +134,9 @@ class TimeSlotFileEnrich {
 
   private fun addListeningPartyNumber(it: TimeSlot, counter: AtomicInteger) {
     // Not scheduled yet
-    if (it.is1970() || it.band.contains("Gorilla", ignoreCase = true) || it.band.contains("No Listening Party", ignoreCase = true)) {
+    if (it.is1970() || it.band.contains("Gorilla", ignoreCase = true) || it.band.contains("No Listening Party", ignoreCase = true)
+      || it.replayLink.contains("no-replay", ignoreCase = true)
+    ) {
       it.listeningPartyNumber = "-1"
     } else {
       it.listeningPartyNumber = counter.incrementAndGet().toString()
