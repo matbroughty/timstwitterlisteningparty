@@ -88,9 +88,6 @@ do
         "-t" )
             template=1
             ;;
-        "-u" )
-            tours=1
-            ;;
         "-g" )
             github=1
             ;;
@@ -99,7 +96,6 @@ do
             snippet=1
             template=1
             pictures=1
-            tours=1
             ;;
         * )
             # Confirm not an invalid - arg
@@ -224,10 +220,10 @@ do
         addtogit $localfile
     fi
 
-    if [ $tours -eq 1 ]
-    then
-        ./getUpdatedTours.sh $github
-    fi
+#    if [ $tours -eq 1 ]
+#    then
+#        ./getUpdatedTours.sh $github
+#    fi
 
     if [ $pictures -eq 1 ]
     then
