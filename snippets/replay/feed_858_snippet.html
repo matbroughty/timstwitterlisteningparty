@@ -1,0 +1,502 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1cagbnm4myBo9g2W8pQ7o3" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02899021159063930a46291482" alt="Just Look at That Sky" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Ganser</span><br/><span class="sub-colour">Just Look at That Sky</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(8424383)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1cagbnm4myBo9g2W8pQ7o3" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_8424383_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 85 tweets from Tuesday 20th July 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Ganserband" target="_blank"><img src="https://pbs.twimg.com/profile_images/1334395388103716864/L6LGGi8X_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Ganserband.jpg'"><br/>@Ganserband</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/electrelaneyeah" target="_blank"><img src="https://pbs.twimg.com/profile_images/1248737434919198720/EhVN-3JG_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/electrelaneyeah.jpg'"><br/>@electrelaneyeah</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Andybebop" target="_blank"><img src="https://pbs.twimg.com/profile_images/1292902329558224903/Yc2TFqlj_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Andybebop.jpg'"><br/>@Andybebop</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1416025920511557636/rm9TQm_a_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Lucky" data-start="0"
+             data-duration="224" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Self Service" data-start="225"
+             data-duration="220" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Projector" data-start="446"
+             data-duration="182" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Emergency Equipment And Exits" data-start="629"
+             data-duration="328" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Told You So" data-start="958"
+             data-duration="284" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Shadowcasting" data-start="1243"
+             data-duration="221" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Bad Form" data-start="1465"
+             data-duration="213" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="[NO YES]" data-start="1679"
+             data-duration="214" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Bags For Life" data-start="1894"
+             data-duration="311" style="display:none"></div>
+                        <div id="track-10" class="track-list"
+                     data-name="Finished" data-start="2206"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851899021159063930a46291482" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-85" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417585563067092998"
+                 data-text="@claire3638 @Tim_Burgess @LlSTENlNG_PARTY @electrelaneyeah @Andybebop Thank you!" data-datetime="8:41 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417585492774764545"
+                 data-text="@RRelves @Tim_Burgess @LlSTENlNG_PARTY @electrelaneyeah @Andybebop Thank you for joining in!" data-datetime="8:41 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417585215443283972"
+                 data-text="@Tim_Burgess @Andybebop @electrelaneyeah @LlSTENlNG_PARTY thank you, that was amazing! ðŸ’–" data-datetime="8:40 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417585025692979200"
+                 data-text="Thank you @Tim_Burgess! ðŸ’›âœ¨ https://t.co/cexrtivDCx" data-datetime="8:39 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FLiamBrigg%2Fstatus%2F1417584849636974594"
+                 data-text="Tomorrow is @LlSTENlNG_PARTY number 900 ðŸ”¥ #TimsTwitterListeningParty" data-datetime="8:39 PM Jul 20, 2021"> 
+                LiamBrigg            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417584698642026498"
+                 data-text="@Tim_Burgess @Ganserband @electrelaneyeah @LlSTENlNG_PARTY Thanks Tim as always #timstwitterlisteningparty" data-datetime="8:38 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417584681130905601"
+                 data-text="Thank you so much to everyone that\'s joined, thank you so much to @Tim_Burgess, @LlSTENlNG_PARTY, @electrelaneyeah, and @Andybebop! ðŸ’› 
+#TimsTwitterListeningParty https://t.co/6HfY731Rgi" data-datetime="8:38 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417584625640214529"
+                 data-text="@LlSTENlNG_PARTY That was awesome! Thank you @Ganserband @LlSTENlNG_PARTY @Andybebop â¤ï¸" data-datetime="8:38 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1417584522225496070"
+                 data-text="Wow! Thanks so much @Ganserband 
+
+Plus the ever amazing @Andybebop and Mia @electrelaneyeah 
+
+Such a brilliant @LlSTENlNG_PARTY" data-datetime="8:37 PM Jul 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417584453959012354"
+                 data-text="@Ganserband ðŸ™ŒðŸ™ŒðŸ™ŒðŸ™" data-datetime="8:37 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417584327861411843"
+                 data-text="@LlSTENlNG_PARTY One of my favorite moments during this time was sitting in Aliciaâ€™s old apartment, squeezed on the sofa, working through the tracklist, trying different things out. I think they nailed the albumâ€™s storytelling with this song sequence. #timstwitterlisteningparty" data-datetime="8:36 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417584299398864901"
+                 data-text="The piano at the end of the song was improvised, it began as Charlie and myself side by side and the run was something Charlie did spontaneously. Seemed a good a way as any to end things, @andybebopâ€™s remix of this song is also a great epilogue. -Alicia #TimsTwitterListeningParty https://t.co/Ecq8eNdOk3" data-datetime="8:36 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417584057500717059"
+                 data-text="Planning our record release show in 2020 before everything hit, we intended to debut this song live with a horn section, finally realizing that goal on the last night of our Empty Bottle residency 10 days ago. -Brian #TimsTwitterListeningParty https://t.co/vWr4LyqBky" data-datetime="8:35 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FLPLiveTweet%2Fstatus%2F1417584012613328897"
+                 data-text="@Andybebop @LlSTENlNG_PARTY @FourFourTwo @AndyBell_info \"Three Andy Bells
+There\'s only three Andy Bells...\"" data-datetime="8:35 PM Jul 20, 2021"> 
+                LPLiveTweet            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417583930660818947"
+                 data-text="@ericdbn @Ganserband Thanks Eric ðŸ‘" data-datetime="8:35 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fmath_safe%2Fstatus%2F1417583854915837953"
+                 data-text="@Andybebop @ganser We\'re listening to the remix EP straight after this, right?
+#TimsTwitterListeningParty" data-datetime="8:35 PM Jul 20, 2021"> 
+                math_safe            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417583787517661197"
+                 data-text="@LPLiveTweet @LlSTENlNG_PARTY @FourFourTwo We could get Andy Bell off Sky News to interview us @AndyBell_info what do you say ?" data-datetime="8:34 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417583631271403531"
+                 data-text="There\'s a allusion to Billie Holiday\'s \"I\'ll Be Seeing You\" in this as well, also the first time we had a horn section in. #TimsTwitterListeningParty" data-datetime="8:34 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417583611843432457"
+                 data-text="Suggested further listeningâ€¦ https://t.co/xKDK76btha Thanks to @ganser for letting me loose on this #timstwitterlisteningparty" data-datetime="8:34 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417583312458194944"
+                 data-text="Bags For Life
+This one is about the end of the world, how that would look online. Looking back, well, we kind of all have done that now, havenâ€™t we. Clearly someone would post â€œFirst!â€ during the apocalypse, so thereâ€™s the first line. -Alicia #TimsTwitterListeningParty https://t.co/rSN7GdzISR" data-datetime="8:32 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417583278387777538"
+                 data-text="@LlSTENlNG_PARTY Moment of appreciation for the album art. Alicia is my buddy and I remember us looking at different cover art ideas over negronis. I was blown away when I saw the final reveal. Totally unexpected but so spot on. An iconic cover ðŸ‘ðŸ¼ðŸ’• #timstwitterlisteningparty" data-datetime="8:32 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417582891303854084"
+                 data-text="We went from maybe 3 strings to 8, thereâ€™s just something about elevator-esque music dialed up to 11. -Alicia #TimsTwitterListeningParty https://t.co/26jl1vcdP9" data-datetime="8:31 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417582806373486594"
+                 data-text="@Ganserband @LlSTENlNG_PARTY Love this so much." data-datetime="8:30 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417582584419209218"
+                 data-text="@Ganserband Fantastic" data-datetime="8:30 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fericdbn%2Fstatus%2F1417582562264993792"
+                 data-text="One of the absolute highlights of the â¦@Ganserbandâ© show at â¦@theemptybottleâ© recently was finally hearing this immaculate bridge live and loud. My favorite musical moment of 2020.
+#TimsTwitterListeningParty https://t.co/qkIDnERHlG" data-datetime="8:29 PM Jul 20, 2021"> 
+                ericdbn            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417582437064904704"
+                 data-text="[NO YES]
+The original inspiration for the script came from an academic interview on depression. 1950â€™s charm on some pretty grim subject matter made it so intriguing. So we had an actor recreate an edited version of this organic conversation. -Alicia #TimsTwitterListeningParty https://t.co/Booub9KaAl" data-datetime="8:29 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417582126325800960"
+                 data-text="@LlSTENlNG_PARTY Thereâ€™s something so unapologetically dystopian about this record. But itâ€™s not without its humor. The tussle of that duality is what I love most about it.  #timstwitterlisteningparty" data-datetime="8:28 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417582112581029900"
+                 data-text="â€œAnd now I just look at the sunâ€ is about total surrender to procrastination, we were excited when Nadia and I figured out we were referencing similar weather and sky themes in different lyrics, just worked out that way. -Alicia #TimsTwitterListeningParty" data-datetime="8:28 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fspinal_bap%2Fstatus%2F1417581903973076996"
+                 data-text="Electrelaneâ€™s legacy lives on! Axes was best album of the mid-2000s! Just Look At That Sky was the best album of 2020! Canâ€™t wait for Ganserâ€™s next one! And Electrelaneâ€™s next one!!! Why not?! Stranger things have happened! 
+#timstwitterlisteningparty https://t.co/3dL2r1cCu6" data-datetime="8:27 PM Jul 20, 2021"> 
+                spinal_bap            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417581705876152325"
+                 data-text="I was determined to have a lopsided bass riff that straddled measures, thatâ€™s basically how this one started. -Alicia #TimsTwitterListeningParty https://t.co/2INc6JxJmH" data-datetime="8:26 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417581693242839048"
+                 data-text="@LlSTENlNG_PARTY One of my favourite tracks. The chorus, with Nadiaâ€™s deadpan â€œNow I just look at the sunâ€ feels simultaneously brutal and beguiling. #timstwitterlisteningparty" data-datetime="8:26 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417581582085459968"
+                 data-text="@uhatemyguts Very kind of you ðŸ™" data-datetime="8:26 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="132000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417581495074578439"
+                 data-text="Bad Form
+Good example of writing lyrics, but then collaborating with Nadia on delivery, I wanted it in her voice. Weâ€™ve developed trading lyrics sometimes based on whose voice fits the song better. I\'m sure @Andybebop knows a lot about that! -Alicia #TimsTwitterListeningParty" data-datetime="8:25 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1417580942022033412"
+                 data-text="RT @Tim_Burgess: âœŠWeâ€™re with you" data-datetime="8:23 PM Jul 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417580880583868421"
+                 data-text="Hands down my favorite song to play live.  -Charlie
+Ugh this song is just so lovely, in a brooding way, I love to play it. -Nadia #TimsTwitterListeningParty" data-datetime="8:23 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417580645916807173"
+                 data-text="Shadowcasting
+Definitely the moodiest track on the record, one of those 1-night demos including lyrics. I brought in several shepard tones in this one to really create that sinking, slippery feeling of avoidance the track is all about. - Alicia #TimsTwitterListeningParty https://t.co/TgbE8JjAvr" data-datetime="8:22 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417580607371108354"
+                 data-text="I love how Charlie makes his guitar sound like icicles, slowly cracking, on the verge of shattering. #timstwitterlisteningparty" data-datetime="8:22 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417580514966392834"
+                 data-text="@Ganserband It was so fun. You all have the best energy together." data-datetime="8:21 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417580431428444164"
+                 data-text="@soozworld @LlSTENlNG_PARTY @Ganserband Thanks for tuning in @soozworld" data-datetime="8:21 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417580281867943936"
+                 data-text="Mia (@electrelaneyeah) was amazing in studio, always had the best questions and prompts. Miss these studio days. ðŸ’› #timstwitterlisteningparty https://t.co/J7eQzq3px2" data-datetime="8:20 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417580255544496135"
+                 data-text="@Ganserband @LlSTENlNG_PARTY @RollingStone @PasteMagazine @Bandcamp @felte_label @treblezine @PostPunkzine @theQuietus @brooklynvegan @VICE @post_trash_ So amazing!" data-datetime="8:20 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417580122178211846"
+                 data-text="The girls in @ganser are so good at talking over post rock !!! #timstwitterlisteningparty https://t.co/CzRrNGLs29" data-datetime="8:20 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417579856905244678"
+                 data-text="Nadia got the tone of this down perfectly, a bit of belligerence, bit of cockiness. It was great to talk through \"acting\" this song out. -Alicia #TimsTwitterListeningParty https://t.co/309rqm8IZm" data-datetime="8:19 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417579436954857475"
+                 data-text="@LlSTENlNG_PARTY Definitely check out the @algiersremix of â€˜Told You Soâ€™ if you havenâ€™t already ðŸ”¥" data-datetime="8:17 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417579310186176517"
+                 data-text="Told You So
+I use a wah wah pedal for the intro now because sometimes you gotta go full tilt (that\'s a wah pedal joke). -Charlie 
+This somehow combines post-punk, Motown, the Peopleâ€™s Court theme song, and conga drums into one wild ride. -Brian #TimsTwitterListeningParty" data-datetime="8:16 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1417578948423299072"
+                 data-text="A brilliantly weird story. Worth looking up https://t.co/z9YMgvmRvG" data-datetime="8:15 PM Jul 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417578869335461891"
+                 data-text="@Ganserband @LlSTENlNG_PARTY Nothing quite as satisfying as dragging a guitar over a Vox ðŸ˜Š" data-datetime="8:15 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1417578631510044682"
+                 data-text="THIS is ONE of THOSE LP parties ðŸ™Œ@LlSTENlNG_PARTY Holy Moses ðŸ¤˜@Ganserband @Andybebop @electrelaneyeah #timstwitterlisteningparty" data-datetime="8:14 PM Jul 20, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1417578629127606272"
+                 data-text="Anyone at The @LlSTENlNG_PARTY new to @Ganserband? Theyâ€™re ace, right? Go say hello maybe" data-datetime="8:14 PM Jul 20, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417578603898880009"
+                 data-text="This one is such a ride to play live! #timstwitterlisteningparty https://t.co/nEMnGjcz70" data-datetime="8:14 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417578569316945922"
+                 data-text="@Andybebop @LlSTENlNG_PARTY So. Good." data-datetime="8:14 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417578496315035651"
+                 data-text="@Andybebop @LlSTENlNG_PARTY @rideox4 @CreateSpark Hi Debbie! @CreateSpark Mia x" data-datetime="8:13 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417578393026039811"
+                 data-text="The demo title was â€œDB Cooper.â€ He hijacked and robbed a commercial flight and disappeared in the 70â€™s, itâ€™s always been compelling in a Twin Peaks kind of way, and a good metaphor for a song about desperately wanting to leave ideal situations. - Alicia #TimsTwitterListeningParty https://t.co/Fhix0VKATe" data-datetime="8:13 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417578307269365760"
+                 data-text="@LlSTENlNG_PARTY Nadia and Alicia have such a special interplay going on with their vocals on this record. Each courageous and compelling in her own way, both tonally and in terms of their lyric-writing. #timstwitterlisteningparty" data-datetime="8:13 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417578264806236165"
+                 data-text="The guitar riff in this song continues to be the most difficult I\'ve ever written. I have no idea why. -Charlie #TimsTwitterListeningParty" data-datetime="8:12 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417578133016940549"
+                 data-text="@LlSTENlNG_PARTY Brianâ€™s intro drums on EE&amp;E make my heart skip a beat. #timstwitterlisteningparty" data-datetime="8:12 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417578120547381251"
+                 data-text="@Ganserband @electrelaneyeah Must try this â€¦one day ðŸ˜”" data-datetime="8:12 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417578031707836424"
+                 data-text="Emergency Equipment &amp; Exits
+Thereâ€™s a fair amount of phaser on this song, we wanted it to sound like an airplane taking off. - Alicia 
+I had so much fun working on the intro to this song, I was really able to tweak and experiment with noise. -Nadia #TimsTwitterListeningParty https://t.co/b3lB9Q4cbY" data-datetime="8:11 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417577681730822144"
+                 data-text="@electrelaneyeah @LlSTENlNG_PARTY Go on Charlie ðŸ™Œ" data-datetime="8:10 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1417577615909588992"
+                 data-text="ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥@Ganserband ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥ðŸ”¥" data-datetime="8:10 PM Jul 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417577606522748928"
+                 data-text="It was so much fun watching our co-producer Mia Clarke (@electrelaneyeah) show Charlie a technique sheâ€™s known for, raking the guitar over an amp during the guitar solo here. I was grinning like an idiot in-studio. -Alicia #TimsTwitterListeningParty https://t.co/8XeNr6kdl0" data-datetime="8:10 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417577452461871108"
+                 data-text="@electrelaneyeah @LlSTENlNG_PARTY @rideox4 I love this story !! BTW hi from Debbie Ball @CreateSpark" data-datetime="8:09 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417577271129526275"
+                 data-text="@LlSTENlNG_PARTY Charlieâ€™s guitar in this song is unreal. He is hands-down one of my all-time favorite guitarists. Thereâ€™s an unhinged, spiky, unpredictable quality to his playing that I am absolutely obsessed with. #timstwitterlisteningparty" data-datetime="8:08 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417577226057437185"
+                 data-text="The concept for the video was inspired by YouTube experts and Ted talks. We live in a time where pretty much anyone can have a platform for their ideas so how much do these â€œexpertsâ€ really know and whose purpose are they serving? -Nadia #TimsTwitterListeningParty" data-datetime="8:08 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417577222387478532"
+                 data-text="Projector
+We got the video shot in a mad dash mere days before lockdown in 2020, rather fitting for a song that sounds like itâ€™s in a rush to the finish line -Brian #TimsTwitterListeningParty https://t.co/n85eCfD8gs" data-datetime="8:08 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417577054283894797"
+                 data-text="Thatâ€™s what I call a bassline on â€œSelf serviceâ€ #timstwitterlisteningparty @Ganserband" data-datetime="8:08 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417576879662505985"
+                 data-text="This is the closest we\'ve ever been to krautrock and every time it comes up in a set I know I get to catch my breath. -Charlie #TimsTwitterListeningParty" data-datetime="8:07 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417576798498476033"
+                 data-text="@LlSTENlNG_PARTY I appreciated the bandâ€™s hyper-diligent use of spreadsheets to capture edits, ideas etc. in-between studio visits. Iâ€™ve never worked with such intentionality before and I found it surprisingly effective as a collaboration tool. (Mia)
+#TimsTwitterListeningParty" data-datetime="8:07 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417576550095011840"
+                 data-text="@giulaig ðŸ™" data-datetime="8:06 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417576388270428163"
+                 data-text="I wanted the lyrics for this song to fit the driving repetition of the music. The idea of cars on a race track going in circles but really going nowhere and how weirdly claustrophobic that idea can feel when you think about it. -Nadia #TimsTwitterListeningParty https://t.co/9aXBgjsYK6" data-datetime="8:05 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417576380628455426"
+                 data-text="@noonesphere ðŸ‘‹" data-datetime="8:05 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417576319815147520"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY ðŸ‘‹ love these guitar sounds #timstwitterlisteningparty" data-datetime="8:05 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417576212352937985"
+                 data-text="Self Service
+This song got started when Brian chopped up and slowed down a riff from a completely different sounding demo. It was very exciting when I was given early versions of this song. We chop and screw each otherâ€™s work a lot. -Charlie #TimsTwitterListeningParty" data-datetime="8:04 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417576121651060736"
+                 data-text="In directing and making the music video for Lucky, it was important for us to create a real sense of tension between the two characters. We wanted them to exist in a powder keg, the explosion opens the video and it unravels backwards from there. -Nadia #TimsTwitterListeningParty https://t.co/OKzib9TXSy" data-datetime="8:04 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1417575988125372419"
+                 data-text="@Andybebop @LlSTENlNG_PARTY Hola Andy!" data-datetime="8:03 PM Jul 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fericdbn%2Fstatus%2F1417575906567143426"
+                 data-text="@Ganserband â€œLuckyâ€ to be at one of your first days back, which happened to be my first show in 17 months. It was an emotional night ðŸ¥² https://t.co/1WvIomDbe6" data-datetime="8:03 PM Jul 20, 2021"> 
+                ericdbn            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Felectrelaneyeah%2Fstatus%2F1417575901940826115"
+                 data-text="@LlSTENlNG_PARTY I remember standing side of stage at Riot Fest give watching Ganser give an utterly electrifying performance of this song (while being attacked on stage by a swarm of bees!) before we all headed off to watch @rideox4. (Mia)
+#TimsTwitterListeningParty" data-datetime="8:03 PM Jul 20, 2021"> 
+                electrelaneyeah            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1417575858412326914"
+                 data-text="Evening everyone ! #timstwitterlisteningparty https://t.co/IA5n2eEfr3" data-datetime="8:03 PM Jul 20, 2021"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417575824233058304"
+                 data-text="When Nadia had â€œJust Look at That Skyâ€ in these lyrics, it shot to the front for album names pretty immediately. There is a lot in this record about personal deficits and taking the time to examine and reflect. -Alicia #TimsTwitterListeningParty" data-datetime="8:03 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417575669597360128"
+                 data-text="We just had a release residency at @theemptybottle for this record 12 days ago, nearly a year after it came out in July 2020. Time isnâ€™t real, everything feels surreal. Letâ€™s get into it. #TimsTwitterListeningParty https://t.co/s8ElrXmPJ1" data-datetime="8:02 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1417575669014441988"
+                 data-text="RT @LlSTENlNG_PARTY: You know the drill by now.
+
+@Ganserband are in our green room and theyâ€™re wondering where you all are around the worldâ€¦" data-datetime="8:02 PM Jul 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417575496607543298"
+                 data-text="If you listen closely thereâ€™s an easter egg from the demo that made it into the final song. It\'s a voice line from Brian. -Charlie #TimsTwitterListeningParty https://t.co/8IevYYjVSP" data-datetime="8:01 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417575315648434185"
+                 data-text="Lucky
+One of those songs that came together pretty quickly, written before our dates with Daughters back in 2018. We finally got to play this with the rest of the album at our first shows back last week, wild. -Brian #TimsTwitterListeningParty" data-datetime="8:01 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FGanserband%2Fstatus%2F1417575123377401856"
+                 data-text="Okay, hit play on Just Look at That Sky in 20 seconds. #TimsTwitterListeningParty
+https://t.co/Qoa0Uw7GHJ" data-datetime="8:00 PM Jul 20, 2021"> 
+                Ganserband            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1417575050153271302"
+                 data-text="Time to jump into the @LlSTENlNG_PARTY 
+
+Our special guests are @Ganserband 
+
+And their special guests are @Andybebop and Mia @electrelaneyeah 
+
+Go!! https://t.co/dKjNAtPuFb" data-datetime="8:00 PM Jul 20, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
