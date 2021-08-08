@@ -1,0 +1,396 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1b9X8S1gflcRRRfhTHcxs3" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02e8b06a04041f9e15c81b91b2" alt="The World Within Our Bedrooms" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Drug Store Romeos</span><br/><span class="sub-colour">The World Within Our Bedrooms</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(8854489)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1b9X8S1gflcRRRfhTHcxs3" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_8854489_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 51 tweets from Sunday 8th August 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/DrugStoreRomeos" target="_blank"><img src="https://pbs.twimg.com/profile_images/1404750215656218624/zb11PKVL_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/DrugStoreRomeos.jpg'"><br/>@DrugStoreRomeos</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1416025920511557636/rm9TQm_a_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/JohnKennedy" target="_blank"><img src="https://pbs.twimg.com/profile_images/378800000735115631/aa4459ab9a1718c65a6ed038695822c5_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/JohnKennedy.jpg'"><br/>@JohnKennedy</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Building Song" data-start="0"
+             data-duration="243" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Secret Plan" data-start="244"
+             data-duration="209" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Bow Wow" data-start="454"
+             data-duration="198" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Elevator" data-start="653"
+             data-duration="225" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Walking Talking Marathon" data-start="879"
+             data-duration="211" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Frame Of Reference" data-start="1091"
+             data-duration="153" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Feedback Loop" data-start="1245"
+             data-duration="177" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="What's On Your Mind" data-start="1423"
+             data-duration="257" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="No Placing" data-start="1681"
+             data-duration="195" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Vibrate" data-start="1877"
+             data-duration="154" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Electric Silence" data-start="2032"
+             data-duration="181" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Kites" data-start="2214"
+             data-duration="186" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Put Me On The Finish Line" data-start="2401"
+             data-duration="178" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="Cycle of Life" data-start="2580"
+             data-duration="106" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="Adult Glamour" data-start="2687"
+             data-duration="237" style="display:none"></div>
+                        <div id="track-16" class="track-list"
+                     data-name="Finished" data-start="2925"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851e8b06a04041f9e15c81b91b2" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-51" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="261000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1424443594782515204"
+                 data-text="Next up at The @LlSTENlNG_PARTY (in seven minutes time) itâ€™s @ModRebels with If You See Something That Doesn\'t Look Right: II (thatâ€™s part II - not I or III) followed by two extra tracks, Perfect Grey Day &amp; Higher Than The Hierarchy." data-datetime="6:53 PM Aug 8, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424442499381309441"
+                 data-text="Thank you @JohnKennedy and @Tim_Burgess for having us and everyone who joined, what a crowd! I never knew streaming an album could be so live, thank you for your kind words and if your near any of the record stores we\'re playing around England next week, we\'d love to see you! x" data-datetime="6:48 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="132000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424442324508200966"
+                 data-text="Big thanks to @DrugStoreRomeos for kicking tonightâ€™s @JohnKennedy curated @LlSTENlNG_PARTY extravaganza off in such style ; )" data-datetime="6:48 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424441770683797504"
+                 data-text="Adult Glamour - This one is an oldie and will always feel like family to me. It was going to be our first single of which we mixed for months on end in Fleet adding layer upon layer with the aim of being as encompassed within the song as possible -S #TimsTwitterListeningPart" data-datetime="6:45 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424441729143431179"
+                 data-text="Adult Glamour, The oldest song on the album Adult Glamour is seeped in nostalgia for the early days of playing in the band for me. I still find it beautiful to listen to and love playing it after what\'s almost 4 years - J #TimsTwitterListeningParty" data-datetime="6:45 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424441448422858753"
+                 data-text="Cycle of life - This was written in about half an hour at Jonnys house. Jonny had just watched a documentary called the Cycle Of Life and copied it the the wall, my eyes happened to catch it as I was playing a little synth line and the song was made -S #TimsTwitterListeningParty" data-datetime="6:44 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424441382190649345"
+                 data-text="Cycle of life, We left the song quite minimal to stay true to the very core of the track which is that improvised interaction between Sarah, her keyboard and the piece of paper she\'d found in her surroundings to draw inspiration from - J #TimsTwitterListeningParty" data-datetime="6:44 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424441269426823172"
+                 data-text="Cycle of life was written in a single go by Sarah when she was improvising vocals over a keyboard line she\'d written - J #TimsTwitterListeningParty" data-datetime="6:43 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424441119237189634"
+                 data-text="Put me on the finish line. My favourite moment in this track is the lyric \'you catch I spin round again, you know I give to sound again\' section. The imagery makes me feel like I\'m swearing down a purple and pink whirlpool - J  #TimsTwitterListeningParty" data-datetime="6:43 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424440792060514304"
+                 data-text="@SharmanSomerset Thank you Sharman : -) love Jonathon &lt;3" data-datetime="6:42 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424440641455542272"
+                 data-text="Put me on the finish line - This song had been laying around unfinished for a while and so the chorus feels like it was written almost by a different person, thankfully they both seem to get along. Spot the Doors of Perception reference! -S #TimsTwitterListeningParty" data-datetime="6:41 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424440527286636544"
+                 data-text="@PeterMallett3 @LlSTENlNG_PARTY I\'m with you Peter!" data-datetime="6:41 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="114000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424440438531018756"
+                 data-text="@Birmingham_81 @RamsgateMH @simonwoodgate @LlSTENlNG_PARTY @JohnKennedy See you there!" data-datetime="6:40 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424439961185566722"
+                 data-text="Kites was one of Sarah\'s lockdown creations, during the time when we were having to work more independently. I again enjoy how well Sarah\'s personality and songwriting come together on this track, it\'s one that builds to a beautiful crescendo - J #TimsTwitterListeningParty" data-datetime="6:38 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424439674186182662"
+                 data-text="Kites - Largely inspired by a hill I took a daily pilgrimage to at my Dad\'s place in Winchester over Lockdown, I wanted to write a version of Virna Lindt - Underwater boy but in the element of air. #TimsTwitterListeningParty" data-datetime="6:37 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424439270501232646"
+                 data-text="Electric Silence - This ones stuck around for so long mostly I\'m sure for the choreographed dance routines I whip out live - \"I\'m hanging upside down, I\'m hanging upside down\" let your imagination take you there #TimsTwitterListeningParty" data-datetime="6:36 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="143000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424438837619707906"
+                 data-text="Electric Silence was finished at Sarah on Charlie\'s laptop with parts that Sarah had previously created, as well as the middle breakdown that was workshopped at Sarahs upon finalising the song - J #TimsTwitterListeningParty" data-datetime="6:34 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="202000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424438239423864840"
+                 data-text="Vibrates was made back in Fleet at the rehearsal space in my parents old study. When jamming we stumbled on the verse that C phone recorded and we later crafted the bridge and ending for, as well as adding the chorus from another song C was writing -J #TimsTwitterListeningParty" data-datetime="6:31 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424437392375693317"
+                 data-text="No Placing was first conceived between C &amp; J on a late night stoned writing session at Charlie\'s house in Fleet that Jonny proceeded to forget about until Charlie came to Sarah and him with the full formed track ready for Sarah to added her magic to - J #TimsTwitterListeningParty" data-datetime="6:28 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="126000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424437163706441732"
+                 data-text="Vibrate - 
+For me this is the song on the album that sits stylistically the most apart from the rest. Though pulling in the darkness from No placing and Now Your Moving and the minimalism of the verses of Elevator, I think we managed it #TimsTwitterListeningParty" data-datetime="6:27 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424436635391901699"
+                 data-text="@LacLaurent1 I\'ve been waiting for my first Laurie Anderson reference, Laurence, thank you" data-datetime="6:25 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424436484296355847"
+                 data-text="Whats on your mind, we wrote the end of this track when playing about with it in the studio as George set everything up to record. He then managed to combine them in a way that we all loved so the part was added to the song - J #TimsTwitterListeningParty" data-datetime="6:24 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424436333364355073"
+                 data-text="Whats on your mind - 
+The last half of the song was totally improvised over in the studio and I\'m damn glad we went there - S #TimsTwitterListeningParty" data-datetime="6:24 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424436016983773184"
+                 data-text="@murrell_simon @DrugStoreRomeos Thanks Simon!ðŸ’šðŸ™" data-datetime="6:23 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424435930706989056"
+                 data-text="Feedback loop - This song is largely about the way things loose their impact and power over time, Charlie\'s beautiful baby of a song - S #TimsTwitterListeningParty" data-datetime="6:22 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424435610866130945"
+                 data-text="Feedback Loop, I always feel very pleased with how the drums come in on the track. I really enjoy the timing and presence that they come in with - J #TimsTwitterListeningParty" data-datetime="6:21 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1424435563977969675"
+                 data-text="Wow! This @DrugStoreRomeos album is https://t.co/B2VeP3OB3p" data-datetime="6:21 PM Aug 8, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424435549750939655"
+                 data-text="Frame of reference - When Charlie brought this to the jam room, Charlie asked me to do the vocals for the verses. I did a improvised take and â€œIâ€™m the best course eat me lastâ€  came out of nowhere, I thought it was pretty corny but they all loved it #TimsTwitterListeningParty" data-datetime="6:21 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424435143289225219"
+                 data-text="@GaryTwisted @JohnKennedy @Tim_Burgess @LlSTENlNG_PARTY Secretly one of my favs too hehe" data-datetime="6:19 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424435085449773056"
+                 data-text="RT @LlSTENlNG_PARTY: September 17th
+9pm (U.K. time)
+
+Weâ€™ll be listening to The Fat Of The Land by The Prodigy on Keith Flintâ€™s birthday.
+
+Nâ€¦" data-datetime="6:19 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424434983716917254"
+                 data-text="Frame of Reference, A less major part of this song that I really like is timing and sound of the drum fills that the track drops out to as it transitions through sections of the track - J #TimsTwitterListeningParty" data-datetime="6:18 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="206000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424434915043594242"
+                 data-text="Walking Talking Marathon - This song is basically one big improvisation only going over a few modifications and harmonies in post. I wanted to create one evolving piece of confusing poetry - S #TimsTwitterListeningParty" data-datetime="6:18 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="143000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424434051126120449"
+                 data-text="Walking Talking Marathon, The biggest highlight for me is the way the lyrics are written and ordered, as well as their imagery. Also, for me, having a song where Sarah\'s personality comes through so well was really exciting for people to hear - J #TimsTwitterListeningParty" data-datetime="6:15 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424433451944579074"
+                 data-text="@Birmingham_81 @JohnKennedy @Tim_Burgess @LlSTENlNG_PARTY Aw baby Romeos! I miss everyone confusing me and Charlie for siblings when we had the same hair" data-datetime="6:12 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424433280489766920"
+                 data-text="â¤ï¸ Elevator by @DrugStoreRomeos â¤ï¸" data-datetime="6:12 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424433193420312576"
+                 data-text="Elevator - This is a sound thats filled with warmth and all those yellows - it\'s taken on many different turns but was originally written the same time as quotations using the cut up method I learnt whilst heavily researching Tristan Tzara and Dada - S #TimsTwitterListeningParty" data-datetime="6:11 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424433091712520193"
+                 data-text="Elevator, I like the production on this one as you can really feel the space, which for me works perfectly for the elevator section. And then the sound fills up which gives added impact to the ending where the two verses meld - J #TimsTwitterListeningParty" data-datetime="6:11 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424433000951988228"
+                 data-text="Me ðŸ™‹â€â™‚ï¸ Love it! https://t.co/1Sl8mIdGYG" data-datetime="6:11 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1424432930995179534"
+                 data-text="Fell in love with Drug Store Romeos when I first saw and photographed them back in Jan 2018 - it\'s been a long wait for this LP, but it\'s been worth it #timstwitterlisteningparty @DrugStoreRomeos @JohnKennedy @Tim_Burgess @LlSTENlNG_PARTY https://t.co/PBjMVNr6d4" data-datetime="6:10 PM Aug 8, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="127000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424432795829641221"
+                 data-text="Bow wow - If you listen closely enough to the middle section of this track you can just about heart my heartbeat jumping above the drum beat -S #TimsTwitterListeningParty" data-datetime="6:10 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424432262750347265"
+                 data-text="Bow wow, the start is one of the most powerful parts we have when it comes to making me dance, or move my limbs at least. Also the middle for me is one of the most satisfying breakdowns we have on the album - J #TimsTwitterListeningParty" data-datetime="6:08 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424432151181905920"
+                 data-text="@lucazdeV_ Gotta love a bit of twee!" data-datetime="6:07 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424432075529142272"
+                 data-text="Yes @DrugStoreRomeos, the perfect album for right now. Thanks x" data-datetime="6:07 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424431940699140107"
+                 data-text="Secret plan - Whenever we play it I find myself taken to my old bedroom were we used to write. The words I have a secret plan connecting me to the dreams I would keep so closely locked away in those 4 walls #TimsTwitterListeningParty" data-datetime="6:06 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424431790022877184"
+                 data-text="@LlSTENlNG_PARTY @JohnKennedy @DrugStoreRomeos @ModRebels @SueTompkins2018 @rdg_music Not long back from our trip to Sheffield" data-datetime="6:06 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="201000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424431398115581962"
+                 data-text="Secret Plan, I like the lyrics of this song the most, especially the range of imagery that a \'secret plan\' can connote. Also the groove in the grass grows section, it throws me into a slower, dreamier world, from the previous upbeat dancier section - J #TimsTwitterListeningParty" data-datetime="6:04 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1424430554066432001"
+                 data-text="Letâ€™s go @DrugStoreRomeos @LlSTENlNG_PARTY @JohnKennedy. My fave debut LP of the year so far https://t.co/Re8ayqF7JT" data-datetime="6:01 PM Aug 8, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424430514899935233"
+                 data-text="Building song - A song with a working title that managed to slip through the door unnoticed. I quite like building song though, it does what it says on the tin and with each layer I see the layers of the landscape are painted around you #TimsTwitterListeningParty" data-datetime="6:01 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424430421375324160"
+                 data-text="Here we go! Everyone press play 3 2 1... Jonny and I are joining you this evening, let us begin! #TimsTwitterListeningParty" data-datetime="6:00 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDrugStoreRomeos%2Fstatus%2F1424430248817528833"
+                 data-text="Building song, my favourite part of this song is when the quicker guitar park comes in altering the groove, it makes what is the exact same drum beat sound like it\'s switched up grooves as well #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="6:00 PM Aug 8, 2021"> 
+                DrugStoreRomeos            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424430224960282627"
+                 data-text="Over to @DrugStoreRomeos for our @LlSTENlNG_PARTY featuring 
+The World Within Our Bedrooms
+
+(Hi and thanks to @JohnKennedy) https://t.co/1v3qP7KJd6" data-datetime="6:00 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

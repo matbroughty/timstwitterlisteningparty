@@ -1,0 +1,680 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1c7eigkoEcDAKKhkajY3Br" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02f557471eedfbd9a7ab55d75b" alt="Any Other City" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Life Without Buildings</span><br/><span class="sub-colour">Any Other City</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(256171)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1c7eigkoEcDAKKhkajY3Br" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_256171_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 151 tweets from Sunday 8th August 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/SueTompkins2018" target="_blank"><img src="https://pbs.twimg.com/profile_images/1424039615149838337/4NyzCwcX_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/SueTompkins2018.jpg'"><br/>@SueTompkins2018</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/rdg_music" target="_blank"><img src="https://pbs.twimg.com/profile_images/1365253234089148418/hANdOoXj_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/rdg_music.jpg'"><br/>@rdg_music</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/JohnKennedy" target="_blank"><img src="https://pbs.twimg.com/profile_images/378800000735115631/aa4459ab9a1718c65a6ed038695822c5_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/JohnKennedy.jpg'"><br/>@JohnKennedy</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1416025920511557636/rm9TQm_a_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="PS Exclusive" data-start="0"
+             data-duration="256" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Let's Get Out" data-start="257"
+             data-duration="237" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Juno" data-start="495"
+             data-duration="307" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="The Leanover" data-start="803"
+             data-duration="323" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Young Offenders" data-start="1127"
+             data-duration="189" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Philip" data-start="1317"
+             data-duration="149" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Envoys" data-start="1467"
+             data-duration="248" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="14 Days" data-start="1716"
+             data-duration="191" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="New Town" data-start="1908"
+             data-duration="353" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Sorrow" data-start="2262"
+             data-duration="413" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2676"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851f557471eedfbd9a7ab55d75b" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-151" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424472951131418629"
+                 data-text="@robevs yeah I used that tuning more than anything else -- liked the way the open strings rang. it\'s kind of halfway to DADGAD, so you get little melodies really easily." data-datetime="8:49 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424472884097994759"
+                 data-text="Will going military on drums love that @LlSTENlNG_PARTY" data-datetime="8:49 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424472842146656258"
+                 data-text="Love Ireland https://t.co/MlRzbODaHc" data-datetime="8:49 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424472778070183936"
+                 data-text="Keep X ING @LlSTENlNG_PARTY" data-datetime="8:49 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424472706389532672"
+                 data-text="@anyothercity @SueTompkins2018 oh I remember we got billed as Life With Outbuildings lol" data-datetime="8:48 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424472685481009152"
+                 data-text="Keep x ing" data-datetime="8:48 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424472602148589572"
+                 data-text="Still going on about SALT#but love it really and the salt keeps coming @LlSTENlNG_PARTY xxx" data-datetime="8:48 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424472594665951240"
+                 data-text="@JohnKennedy @rdg_music @SueTompkins2018 @LlSTENlNG_PARTY ðŸ¤˜â¤ï¸ðŸ”¥" data-datetime="8:48 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424472461668753413"
+                 data-text="That was flipping brilliant! Thanks @rdg_music &amp; @SueTompkins2018 (I think Sue is still listening to the album somewhere)" data-datetime="8:47 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424472440093171712"
+                 data-text="Woah! \'Sorrow\'! So good! Massive massive thanks to @rdg_music &amp; @SueTompkins2018 for hosting the \'Any Other City\' for me &amp; @Tim_Burgess @LlSTENlNG_PARTY! Massive thanks to all who listened too! What a brilliant community Tim has created! ðŸ’šðŸ’šðŸ’š #TimsTwitterListeningParty" data-datetime="8:47 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424472433017430017"
+                 data-text="@anyothercity quite rare now!" data-datetime="8:47 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424472362569830401"
+                 data-text="@joel_ca_c nah I love it too :)" data-datetime="8:47 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424472319641149444"
+                 data-text="#TimsTwitterListeningParty https://t.co/9wVXZH4xN6" data-datetime="8:47 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424472301127487494"
+                 data-text="Chris soloooooooi love this bit wish we had more of that, really" data-datetime="8:47 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424472264943210496"
+                 data-text="@GaryTwisted @SueTompkins2018 @JohnKennedy @Tim_Burgess @LlSTENlNG_PARTY if I remember rightly we gave you a round of applause for feeding us a nice pasta! it was mostly crisps on that tour ha ha" data-datetime="8:47 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424472255912890371"
+                 data-text="#TimsTwitterListeningParty https://t.co/1FryUnro57" data-datetime="8:47 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424472154817564676"
+                 data-text="Hi hat hi hat bash will" data-datetime="8:46 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424472080154861579"
+                 data-text="A brilliant evening of Listening Parties, brought to you by the maestro @JohnKennedy 
+
+Much love x x" data-datetime="8:46 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424471985355112448"
+                 data-text="@LlSTENlNG_PARTY envoys xxx wanted to do a song about mass" data-datetime="8:46 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424471913842282502"
+                 data-text="@outletarchive â¤ï¸" data-datetime="8:45 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424471790303207425"
+                 data-text="https://t.co/Uw4mhAqWFR" data-datetime="8:45 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424471542826774529"
+                 data-text="@rdg_music Absolutely brilliant. Thanks so much" data-datetime="8:44 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424471494462160909"
+                 data-text="and I\'ll try and answer some of the questions now there\'s time #TimsTwitterListeningParty" data-datetime="8:44 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424471403894562816"
+                 data-text="@LlSTENlNG_PARTY love drums will/ Chris/ Robert jangly" data-datetime="8:43 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424471396961464323"
+                 data-text="that\'s it for me! I\'ll hang around until sue gets to the end ha ha #TimsTwitterListeningParty" data-datetime="8:43 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424471220108550155"
+                 data-text="if you listen hard enough you can hear us all looking at each other there #TimsTwitterListeningParty" data-datetime="8:42 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424471203457216516"
+                 data-text="@LlSTENlNG_PARTY wanted to say goodbye in a song halfway thru xxx" data-datetime="8:42 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424470963828232193"
+                 data-text="(yes the velvets were the touchstone for how we played this, especially the 1969 live album) #TimsTwitterListeningParty" data-datetime="8:41 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424470942315651080"
+                 data-text="@LlSTENlNG_PARTY tracing the edge of it ...thinking about people. Minds, outlined, edges of drums , guitars,,,â¤ï¸@LlSTENlNG_PARTY" data-datetime="8:41 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424470822027202568"
+                 data-text="#TimsTwitterListeningParty https://t.co/II70cKrzqK" data-datetime="8:41 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424470676275073024"
+                 data-text="@LlSTENlNG_PARTY scared of physics and electricity but loved it too x  Philip" data-datetime="8:40 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424470472549441537"
+                 data-text="this is another chris bass melody classic #TimsTwitterListeningParty" data-datetime="8:40 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424470396351438852"
+                 data-text="I was always thinking about science , I love science , but canâ€™t do it alllll?!! 37 percent in chemistry at school â¤ï¸" data-datetime="8:39 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424470357440962564"
+                 data-text="#TimsTwitterListeningParty https://t.co/0ErFLMCrHk" data-datetime="8:39 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424470158379298817"
+                 data-text="Bouncy loving I hope Philip @LlSTENlNG_PARTY" data-datetime="8:38 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424470041223892993"
+                 data-text="Philip xxxif I ever listen to our songs this is the one I put on @LlSTENlNG_PARTY" data-datetime="8:38 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424469905521446913"
+                 data-text="#TimsTwitterListeningParty https://t.co/GkuVlnVKDf" data-datetime="8:37 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424469874890493972"
+                 data-text="EADGBD #TimsTwitterListeningParty" data-datetime="8:37 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424469797144862726"
+                 data-text="sorrow. incredible lyric and vocal performance. I donâ€™t know if my memoryâ€™s faulty on this but I *think* this was pretty much the first time we played this right through, we were just following vocal cues from sue for when to change #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:37 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424469495310077952"
+                 data-text="#RhythmAndKnowledge #TimsTwitterListeningParty" data-datetime="8:36 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424469442453549058"
+                 data-text="https://t.co/USdo7014YK" data-datetime="8:35 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424469429115662338"
+                 data-text="#TimsTwitterListeningParty https://t.co/FxvjKeAQSZ" data-datetime="8:35 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424469344956919811"
+                 data-text="never quite occurred to me how exhausting these songs must have been to sing #TimsTwitterListeningParty" data-datetime="8:35 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424469331216322562"
+                 data-text="https://t.co/vOw8auE5rU" data-datetime="8:35 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424469226971140101"
+                 data-text="#TimsTwitterListeningParty https://t.co/PtnSplvLZW" data-datetime="8:35 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424468985375039493"
+                 data-text="Some sort of balance between happy and sad erased memories â¤ï¸â¤ï¸â¤ï¸@LlSTENlNG_PARTY" data-datetime="8:34 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424468970929889293"
+                 data-text="such amazing lines that stick in your head for your whole life -- I saw you today, you were like snow #TimsTwitterListeningParty" data-datetime="8:34 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDuglasTStewart%2Fstatus%2F1424468872971882504"
+                 data-text="@rdg_music @SueTompkins2018 New Town still sounds as remarkable, exciting and unique as the first time I heard it. #TimsTwitterListeningParty" data-datetime="8:33 PM Aug 8, 2021"> 
+                DuglasTStewart            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424468834623369219"
+                 data-text="Donâ€™t remember this forget it 
+I remember trying to ask as if asking u to forget it, brainwash something out x @LlSTENlNG_PARTY" data-datetime="8:33 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424468429759778818"
+                 data-text="#TimsTwitterListeningParty https://t.co/cnWIrSeGnx" data-datetime="8:31 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424468347551420418"
+                 data-text="Always lots of things about calls // phones// numbers// forgotten or trying to rememberâ¤ï¸@LlSTENlNG_PARTY" data-datetime="8:31 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424468277082959876"
+                 data-text="#TimsTwitterListeningParty https://t.co/rOW7ZkkHXJ" data-datetime="8:31 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424468276000739332"
+                 data-text="and it\'s standard tuning! #TimsTwitterListeningParty" data-datetime="8:31 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424468222124994566"
+                 data-text="the songs kind of fall into two categories, the guitar tunes I brought in, which tend to be melodic and a bit fussy maybe, and the ones that came out of chris playing a groove. this is the classic example of a â€˜chrisâ€™ song #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:31 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424468074581925896"
+                 data-text="Leighton buzzard where I was brought up at night xxx @LlSTENlNG_PARTY" data-datetime="8:30 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424468072342114309"
+                 data-text="new town again was one of the first things we wrote #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:30 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424468068101771266"
+                 data-text="#TimsTwitterListeningParty https://t.co/grPPRUN1tV" data-datetime="8:30 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424468011013091329"
+                 data-text="#TimsTwitterListeningParty https://t.co/ldrg1Jbzpp" data-datetime="8:30 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424467877722312705"
+                 data-text="One of our fast ones @LlSTENlNG_PARTY" data-datetime="8:29 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424467862471725062"
+                 data-text="#TimsTwitterListeningParty https://t.co/WxKylrqkFL" data-datetime="8:29 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424467786894561285"
+                 data-text="#TimsTwitterListeningParty https://t.co/EW5aRlvxEr" data-datetime="8:29 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424467739234770954"
+                 data-text="I think in about five minutes behind everyone yay!!!!" data-datetime="8:29 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424467643831136264"
+                 data-text="oh and 14 days is EADGBD I think #TimsTwitterListeningParty" data-datetime="8:28 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424467627028541441"
+                 data-text="https://t.co/HyF3F5I2FN" data-datetime="8:28 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424467371784278018"
+                 data-text="#TimsTwitterListeningParty https://t.co/v17uD28BOm" data-datetime="8:27 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424467330881445895"
+                 data-text="#TimsTwitterListeningParty https://t.co/ByIFN2B6LO" data-datetime="8:27 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424467313424834566"
+                 data-text="14 days is a really fun pop song, kind of modern lovers-ish. I really like the guitar solo, they all looked at me like Iâ€™d lost my mind when I was playing it in the control room but it worked #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:27 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424467312598568962"
+                 data-text="Air Montserrat , always  loved , love reading about studios , London," data-datetime="8:27 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424467272584810500"
+                 data-text="#TimsTwitterListeningParty https://t.co/FEtUKXm5SA" data-datetime="8:27 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424467059459698694"
+                 data-text="#TimsTwitterListeningParty https://t.co/t6wrtukxqI" data-datetime="8:26 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424467056049668099"
+                 data-text="Air" data-datetime="8:26 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424467023665434630"
+                 data-text="Love, records, the past, closeness, love" data-datetime="8:26 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424467019949346822"
+                 data-text="#TimsTwitterListeningParty https://t.co/BXnizodRAw" data-datetime="8:26 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424466984150896647"
+                 data-text="#TimsTwitterListeningParty https://t.co/kb0ctjWalC" data-datetime="8:26 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424466932103880707"
+                 data-text="#TimsTwitterListeningParty https://t.co/3uN75XSHu6" data-datetime="8:25 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424466894841683979"
+                 data-text="Always singing in the breakdown bits woooooo" data-datetime="8:25 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424466792194453515"
+                 data-text="and envoys is standard tuning #TimsTwitterListeningParty" data-datetime="8:25 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424466752415670275"
+                 data-text="Je suis remember ðŸ’•ðŸ’•ðŸ’•" data-datetime="8:25 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424466661424381952"
+                 data-text="So random but v deliberate yay!!!" data-datetime="8:24 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424466599113863168"
+                 data-text="Dddddddddd bread I liked saying words I liked" data-datetime="8:24 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424466465999233025"
+                 data-text="it was john cheaves who shot that, who was a really good friend and always let us stay at his place in london when were down. I recall the engineer looking a bit green when sue hit the loud bit #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:24 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424466414111535114"
+                 data-text="thereâ€™s a great video of us doing a live acoustic version of this on johnâ€™s show on xfm â€” https://t.co/52NZ6kRW8i #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:23 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424466401780248585"
+                 data-text="The leanover @LlSTENlNG_PARTY I wanted to count down from ten to one" data-datetime="8:23 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424466324974194693"
+                 data-text="we hardly ever played envoys live because it was so hard to get right, but itâ€™s become one of my favourites. sueâ€™s lyric and performance on it is just extraordinary #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:23 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424466261652746252"
+                 data-text="sorry about the tunings, someone asked! #TimsTwitterListeningParty" data-datetime="8:23 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424466162377793537"
+                 data-text="The leanover xxx" data-datetime="8:22 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424466151845863424"
+                 data-text="oh and it\'s EADGAE, so is young offenders #TimsTwitterListeningParty" data-datetime="8:22 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424465851680534531"
+                 data-text="#TimsTwitterListeningParty https://t.co/0iA3QABFhn" data-datetime="8:21 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424465764686442497"
+                 data-text="https://t.co/GjsPaDO0IE" data-datetime="8:21 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424465671186964482"
+                 data-text="can hear the smiths influence in the guitar line, but thereâ€™s mission of burma and unwound in there too #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:20 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424465592782884867"
+                 data-text="@LlSTENlNG_PARTY bass buildup xxx lots of repeat ahh , dunno, always liked doing things Over and Over again" data-datetime="8:20 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424465590425632775"
+                 data-text="philip is like two and a half minutes long and it was so hard to get a take! will eventually lost patience with us and just recorded the drum track on his own, from memory #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:20 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424465550265176072"
+                 data-text="#TimsTwitterListeningParty https://t.co/7ANaXHGVxC" data-datetime="8:20 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424465285080391684"
+                 data-text="@LlSTENlNG_PARTY sweet thing fr you he wrote no tests ahh" data-datetime="8:19 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424465238485880832"
+                 data-text="I remember will laughing at me cos Iâ€™d â€˜written a middle elevenâ€™. the lyricâ€™s great, full of really vivid phrases #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:19 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424465200955133957"
+                 data-text="@LlSTENlNG_PARTY sweet thing Chaka Khan my favourite â¤ï¸" data-datetime="8:19 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424465132294492162"
+                 data-text="#TimsTwitterListeningParty https://t.co/EVxtuL4sXg" data-datetime="8:18 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424465115156451328"
+                 data-text="@LlSTENlNG_PARTY I donâ€™t wanna be a player , this comes back to me a lot xxx" data-datetime="8:18 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424465078506692615"
+                 data-text="#TimsTwitterListeningParty https://t.co/Tb2jSDhaHq" data-datetime="8:18 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424465019077599238"
+                 data-text="#TimsTwitterListeningParty https://t.co/PyB65XuwMG" data-datetime="8:18 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424465008981860359"
+                 data-text="more australia. tour coping mechanisms #TimsTwitterListeningParty https://t.co/gMwn5oITs8" data-datetime="8:18 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424464951914160131"
+                 data-text="#TimsTwitterListeningParty https://t.co/E9qq3hIfF4" data-datetime="8:18 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424464891268800514"
+                 data-text="#TimsTwitterListeningParty https://t.co/sDFn4WkBhI" data-datetime="8:17 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424464835618693131"
+                 data-text="#TimsTwitterListeningParty https://t.co/kBPcMfKipX" data-datetime="8:17 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424464782829232134"
+                 data-text="young offenders, trying to be the jam and the smiths and the heartbreakers all at the same time #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:17 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424464753636872194"
+                 data-text="#TimsTwitterListeningParty https://t.co/TJx84yKmEh" data-datetime="8:17 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424464539324715019"
+                 data-text="props to andy miller for capturing this so perfectly #TimsTwitterListeningParty" data-datetime="8:16 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424464423499018245"
+                 data-text="Sadness -+ - love â¤ï¸" data-datetime="8:15 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424464261997207562"
+                 data-text="Look backkkk oohhhhhh shit" data-datetime="8:15 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424464190647975937"
+                 data-text="sue sang this on an sm58 because she had to move around so much doing it. it sounds really live #TimsTwitterListeningParty" data-datetime="8:15 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424464150261125123"
+                 data-text="Used to bounce up and down in the cupboard recording box I loved it" data-datetime="8:14 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FJohnKennedy%2Fstatus%2F1424464071362023432"
+                 data-text="@rdg_music I did try &amp; let them know!" data-datetime="8:14 PM Aug 8, 2021"> 
+                JohnKennedy            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424464007440785416"
+                 data-text="Vivid. â¤ï¸â¤ï¸â¤ï¸" data-datetime="8:14 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424463885638242313"
+                 data-text="Letâ€™s get out  I wanted to do a song where u could call it by short hand xxx yay LGO" data-datetime="8:13 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424463741077311488"
+                 data-text="also EADGAE :) #TimsTwitterListeningParty" data-datetime="8:13 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424463664325738506"
+                 data-text="https://t.co/bPBdKWk5LB" data-datetime="8:12 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424463570025201672"
+                 data-text="the way sue works around the beat still amazes me, and again the drums are just so musical. it sounds like walking in a city at night, to me #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:12 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424463519584555009"
+                 data-text="the leanover is always going to be my favourite. it was the first thing we did that made us think we actually were making our own sound #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:12 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424463512269639685"
+                 data-text="https://t.co/5l4SWwNbTD" data-datetime="8:12 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424463488722907138"
+                 data-text="are the tiktok kids tuning in? #TimsTwitterListeningParty" data-datetime="8:12 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424463176834428930"
+                 data-text="https://t.co/5BtZGHsxKZ" data-datetime="8:11 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1424463094647033866"
+                 data-text="This is @LlSTENlNG_PARTY number nine hundred and seventeen" data-datetime="8:10 PM Aug 8, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424463040506904583"
+                 data-text="oh this is EADGAE as well! it was a bastard hitting that high harmonic ha ha #TimsTwitterListeningParty" data-datetime="8:10 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424462866510397443"
+                 data-text="another absolutely incredible vocal #TimsTwitterListeningParty" data-datetime="8:09 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424462600063131651"
+                 data-text="https://t.co/tgaA3XRkav" data-datetime="8:08 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424462501467598857"
+                 data-text="ðŸ”¥ðŸ”¥Juno by Life Without Buildings ðŸ”¥ðŸ”¥" data-datetime="8:08 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424462481506844679"
+                 data-text="us in australia, meeting the wildlife and various luminaries #TimsTwitterListeningParty @SueTompkins2018 https://t.co/NuOh9GrNvm" data-datetime="8:08 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424462465207836677"
+                 data-text="https://t.co/mkBP1cXJGw" data-datetime="8:08 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424462292448579590"
+                 data-text="@LlSTENlNG_PARTY was quite long song and puffy making!!" data-datetime="8:07 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424462138828066816"
+                 data-text="some people said we were math-rocky or kind of 90s emo or something â€” I guess juno is the closest we get to that, a big mission of burma/sonic youth rock epic. love the drums #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:06 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424461944346619906"
+                 data-text="what a performance! #TimsTwitterListeningParty" data-datetime="8:06 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424461868198940675"
+                 data-text="we left a vocal fluff in this and I still love it #TimsTwitterListeningParty" data-datetime="8:05 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424461844312465410"
+                 data-text="@LlSTENlNG_PARTY winter sun winter sun  coming again" data-datetime="8:05 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424461774452105217"
+                 data-text="will does his keith moon thing #TimsTwitterListeningParty" data-datetime="8:05 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424461732060270601"
+                 data-text="@LlSTENlNG_PARTY 139 days till xmas again ah." data-datetime="8:05 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424461668462039045"
+                 data-text="think this is the only thing on the album that\'d been previously released -- it\'s the same version as on the 7\" with Is Is &amp; the IRS #TimsTwitterListeningParty" data-datetime="8:05 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424461581354737664"
+                 data-text="@LlSTENlNG_PARTY in the win   terrrr" data-datetime="8:04 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424461418343112709"
+                 data-text="@LlSTENlNG_PARTY Boy, man, boy, love in general" data-datetime="8:04 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424461262684147713"
+                 data-text="oh and EADGAE :) #TimsTwitterListeningParty" data-datetime="8:03 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424461163874693123"
+                 data-text="love the lyric for letâ€™s get out. something about lwb that Iâ€™m still really proud of is that we could express joy â€” the lyric is just full of delight and amazement at just mundanely being alive in the world #TimsTwitterListeningParty @SueTompkins2018" data-datetime="8:03 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424461091472560134"
+                 data-text="@LlSTENlNG_PARTY MMMMN HISTORICAL LOVE" data-datetime="8:02 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424461019347357701"
+                 data-text="@SueTompkins2018 tag with #TimsTwitterListeningParty sue! x" data-datetime="8:02 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424460853907267585"
+                 data-text="Tonio! Tonio ! I was thinking of a boy/ man/ tonio, Italian, ... death in Venice my favourite xxx but it was really Tadzio" data-datetime="8:01 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424460598952316938"
+                 data-text="soul breakdown #TimsTwitterListeningParty" data-datetime="8:00 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424460473152442373"
+                 data-text="us in the chem19 studio in hamilton, now gargleblast. sue watched a lot of big brother and we ate a lot of crisps #TimsTwitterListeningParty @SueTompkins2018 https://t.co/sGVsO5quxv" data-datetime="8:00 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1424460423374516224"
+                 data-text="Iâ€™ve been looking forward to this
+
+Any Other City by Life Without Buildings
+
+Handing over to @SueTompkins2018 &amp; @rdg_music
+
+#TimsTwitterListeningParty https://t.co/3a6IYlcEn0" data-datetime="8:00 PM Aug 8, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424460294240284678"
+                 data-text="for the nerds, this is in EADGBD ha ha #TimsTwitterListeningParty" data-datetime="7:59 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSueTompkins2018%2Fstatus%2F1424460206776389640"
+                 data-text="@GraySorcha @LlSTENlNG_PARTY Hahha I canâ€™t actually hear anything yet !" data-datetime="7:59 PM Aug 8, 2021"> 
+                SueTompkins2018            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424460172844539915"
+                 data-text="perfect opener I think, almost like a northern soul stomper, and sueâ€™s lyric is like a statement of intent #TimsTwitterListeningParty @SueTompkins2018" data-datetime="7:59 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424460101889445891"
+                 data-text="this almost wasnâ€™t on the record â€” it was due for release in october 2000 but it got moved back and we went back in and did ps exclusive #TimsTwitterListeningParty @SueTompkins2018" data-datetime="7:58 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Frdg_music%2Fstatus%2F1424460007119130627"
+                 data-text="ok ... hitting play! #TimsTwitterListeningParty" data-datetime="7:58 PM Aug 8, 2021"> 
+                rdg_music            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
