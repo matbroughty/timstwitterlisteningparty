@@ -232,7 +232,7 @@ class TweetUtils {
 
   fun createCollection(name: String, description: String, order: String = "tweet_chron"): String {
 
-    val response = getTwittered().collectionsCreate(name, description, "", TimeLineOrder.CHRONOLOGICAL_REVERSE)
+    val response = getTwittered().collectionsCreate(name, description, "", TimeLineOrder.CHRONOLOGICAL)
     logger.info("response from collection create $name is ${response.response.timeLineId}")
     if (response != null && !response.hasErrors()) {
       return response.response.timeLineId
