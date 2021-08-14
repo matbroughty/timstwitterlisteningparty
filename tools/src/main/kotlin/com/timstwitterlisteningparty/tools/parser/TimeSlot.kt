@@ -150,7 +150,7 @@ data class TimeSlot(val dateStr: String = "?",
    * check we haven't already generated it
    */
   fun requiresTwitterCollection(): Boolean {
-    return !isEmpty() && replayLink.isNotEmpty() && (twitterCollectionLink.isEmpty() || replayId().toInt() > 790)
+    return !isEmpty() && replayLink.isNotEmpty() && twitterCollectionLink.isEmpty()
   }
 
   @Suppress("unused")
