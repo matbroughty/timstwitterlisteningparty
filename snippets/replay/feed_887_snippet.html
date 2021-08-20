@@ -1,0 +1,661 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3ZQADQPZ1l3xcEEMW06DAy" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02447bb6a98e4ad1002c7b209e" alt="The Clock Comes Down The Stairs" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Microdisney</span><br/><span class="sub-colour">The Clock Comes Down The Stairs</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(115103)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3ZQADQPZ1l3xcEEMW06DAy" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_115103_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 120 tweets from Friday 20th August 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/realcathalc" target="_blank"><img src="https://pbs.twimg.com/profile_images/1332754138749427716/pa_PBv9d_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/realcathalc.jpg'"><br/>@realcathalc</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/seanohaganmusic" target="_blank"><img src="https://pbs.twimg.com/profile_images/1356398609265287175/vX7gBeN4_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/seanohaganmusic.jpg'"><br/>@seanohaganmusic</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/jonfell3" target="_blank"><img src="https://pbs.twimg.com/profile_images/1178371099358322688/6qYuEB5m_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/jonfell3.jpg'"><br/>@jonfell3</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1416025920511557636/rm9TQm_a_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Horse Overboard" data-start="0"
+             data-duration="236" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Birthday Girl" data-start="237"
+             data-duration="251" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Past" data-start="489"
+             data-duration="272" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Humane" data-start="762"
+             data-duration="193" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Are You Happy" data-start="956"
+             data-duration="329" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Genius" data-start="1286"
+             data-duration="263" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Begging Bowl" data-start="1550"
+             data-duration="339" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="A Friend with a Big Mouth" data-start="1890"
+             data-duration="211" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Goodbye It's 1987" data-start="2102"
+             data-duration="254" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="And" data-start="2357"
+             data-duration="272" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Harmony Time" data-start="2630"
+             data-duration="304" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Money for Trams" data-start="2935"
+             data-duration="412" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3348"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851447bb6a98e4ad1002c7b209e" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-120" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428809497271840773"
+                 data-text="@jonfell3 @realcathalc @seanohaganmusic ðŸ”¥it certainly was. Thanks!" data-datetime="8:01 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428809184439582723"
+                 data-text="@Tim_Burgess @realcathalc @seanohaganmusic thank you so much. Great funðŸ™ðŸ™" data-datetime="8:00 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428808969154400258"
+                 data-text="@SeanMacGabhann @seanohaganmusic @jonfell3 @EileenGogan @rhodri @LlSTENlNG_PARTY Thanks for hopping on, a SheÃ¡in :-)" data-datetime="7:59 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428808878045765644"
+                 data-text="@realcathalc @LlSTENlNG_PARTY ðŸ™â¤ï¸ðŸ”¥" data-datetime="7:59 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428808419067273218"
+                 data-text="Thanks, Tim, and thanks to all who took part tonight &amp; previously! 
+#TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:57 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428808210585210898"
+                 data-text="So much love and thanks to @realcathalc @seanohaganmusic &amp; @jonfell3 - that was the perfect way to spend an evening. Thanks to everyone around the world who joined in. Forza Microdisney" data-datetime="7:56 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428807983673364486"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+Verse chorus mid 8 verse chorus and out........or this" data-datetime="7:55 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1428807881906921479"
+                 data-text="Letâ€™s listen to this while the credits roll https://t.co/9N6BZkzGUr" data-datetime="7:55 PM Aug 20, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428807623109918723"
+                 data-text="The album would be a very different propostion without the cover pic. It took a lot of walking through many cemeteries with indefatigable photog Felicia Cohen before we arrived at this wondrous panorama â€“ inc. a London skyline now gone #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:54 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428807560002510849"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+We stood in the control room and Cathal performed this vocal...so thrilling. All new to us ,we were amazed." data-datetime="7:54 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428807457921458193"
+                 data-text="@LlSTENlNG_PARTY #timstwitterlisteningparty https://t.co/83KGnn7gES" data-datetime="7:53 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428807329412169746"
+                 data-text="A sort of Harmony Time pt 2, but it sure ain\'t James Brown. Or Harold Melvin #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:53 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428807245974970374"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+Hi Paul" data-datetime="7:52 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Flearnandsing%2Fstatus%2F1428807243676504075"
+                 data-text="and the #Microdisney #TimsTwitterListeningParty 
+@LlSTENlNG_PARTY Iron Fist in Velvet Glove radio doc is here:  https://t.co/OceGNC80Gj" data-datetime="7:52 PM Aug 20, 2021"> 
+                learnandsing            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428807152056078339"
+                 data-text="Oh god, not the â€œheroinâ€ bulllshit. Come back PJ &amp; Duncan. &lt;&lt;Cringe&gt;&gt;&gt;  #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:52 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428807148226727937"
+                 data-text="In other news mus press pics are thanks to micro doc in production. Crowdfunder here:
+
+https://t.co/KnvtNHE3WY. #timstwitterlisteningparty @LlSTENlNG_PARTY" data-datetime="7:52 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428807062075682818"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+Hangovers from cherry vodka...one chord mostly ,Alan Vega and much more." data-datetime="7:52 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428806861835411464"
+                 data-text="MFTT - I suppose this was an effort to see things from a parent\'s point of view, in a world without mercy for child or parent. That\'s being kind. #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:51 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428806630913855490"
+                 data-text="MONEY FOR THE TRAMS - a bit Ray Bloody Purchase, for me anyway.... #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:50 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428806478471864320"
+                 data-text="@LlSTENlNG_PARTY #timstwitterlisteningparty great to hear harmony time again after long time" data-datetime="7:49 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428806369659035649"
+                 data-text="I am shouting, \"WHERE DID YOU GET ON?\"  #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:49 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428806287517757443"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+cathal hits Jerry Lee mode on the piano." data-datetime="7:48 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428806235311194113"
+                 data-text="Jon gets a bit Cale - Waiting For The Man on the end of this... #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:48 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428806114368528387"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+This all happened before Clock. It was the prerecord record" data-datetime="7:48 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428806110102818826"
+                 data-text="@StringBeanJen @LlSTENlNG_PARTY Thank you" data-datetime="7:48 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428805746326704128"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+Ploland 1984. It was extraordinary to think what we saw as history has rooled out." data-datetime="7:46 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428805624637313026"
+                 data-text="Love Sean\'s refrain at the end of the chorus #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:46 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428805521101004813"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+So Harmony Time
+Was the band excercising post Polish blues." data-datetime="7:45 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428805492378374154"
+                 data-text="The ur-Hamony Time, for those who don\'t know, was a sex shop (stewing in permanent terminal decay â€“ on the outside, anyway) near Kings X LDN, which was then a very different (very hairy) place from the corporate theme park of today. #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:45 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428805371372654594"
+                 data-text="Harmony Time, weird one. Recorded _before_ the main album, also possibly in Hoxton. Possibly more like what we\'d been like live prior then #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:45 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428805336920739844"
+                 data-text="#timstwitterlisteningparty @listeningparty  in bass news, tracks recorded on red 1961 Fender, bought after 1972 mint Fender lent to  5 Go Down to Sea &amp; they left at bustop" data-datetime="7:45 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428805313638064130"
+                 data-text="Harmony Time. Underrated banger @realcathalc" data-datetime="7:45 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428805275016908803"
+                 data-text="Here endeth the album proper, but we go on.... #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:44 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428805257258229764"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+The grey of the 80s as we experienced it is at the fron of my mind as I listen to And" data-datetime="7:44 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428805011094528006"
+                 data-text="@EileenGogan @Tim_Burgess @jonfell3 @seanohaganmusic Why, it\'s the digital zydeco concertina, Eileen!" data-datetime="7:43 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428804993591693317"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+3 songs in one ...again" data-datetime="7:43 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428804848137515015"
+                 data-text="Cathal had great v8dion on And.Â #timstwitterlisteningparty@LlSTENlNG_PARTY" data-datetime="7:43 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428804593325064194"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+We learnt a lot on this tune." data-datetime="7:42 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428804502216482823"
+                 data-text="Never played live until 2018, when it was a blast to sing it with @EileenGogan #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:41 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428804416451268609"
+                 data-text="The words, an afterthought: be careful where you put your horizons, and those of your loved ones, I regret to sayâ€¦ #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:41 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428804270938284036"
+                 data-text="AND: In the arrangement, were thinking a bit of \'The Beach Boys Love You\' and Cale\'s \'Endless Plain Of Fortune\' #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:40 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428804216076779528"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+Thanks Enda" data-datetime="7:40 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428804174192517133"
+                 data-text="Early press, post-SA, taken near wormwood scrubs #timstwitterlisteningparty â¦@LlSTENlNG_PARTYâ© https://t.co/1nnuaMDjKe" data-datetime="7:40 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428804109679972359"
+                 data-text="SO\'H is OUTLAW on that one  #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:40 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428803981338349586"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+Sorry for fat text finger everyone" data-datetime="7:39 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428803797313261577"
+                 data-text="@sheehan_gary @NCH_Music @seanohaganmusic @jonfell3 Your role, and the kindness of all at @NCH_Music were pivotal, and never forgotten" data-datetime="7:39 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428803742460219404"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+That was hard" data-datetime="7:38 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428803595311386631"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+The back best came from nowhere.
+Love jons bass here" data-datetime="7:38 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428803456035393541"
+                 data-text="Listening party gold from @realcathalc https://t.co/ghsau78oc1" data-datetime="7:37 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428803411613560837"
+                 data-text="Winter 2018 â¦@nomusGâ© spent considerable effort trying recreate the album cover. Seems that it canâ€™t be done. Perch from which Felicia took it not there â¦@LlSTENlNG_PARTYâ©  #timstwitterlisteningparty https://t.co/MHYrHMlE0X" data-datetime="7:37 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428803228540473351"
+                 data-text="W11 later did just fine &amp; dandy as the home of Cameron, Osborne and the other vultures. No tanks, no drama, just gurning spam-faced catastrophe #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:36 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428803195296432128"
+                 data-text="â€œThe phone is ringing, the kettleâ€™s singing
+This humid heaven is west eleven
+The airless silence- June 87
+The grey bed, next to the wall holds them
+Tense but still asleep, dreaming.
+They only wanted to want each other,
+But that can never, ever happenâ€ #timstwitterlisteningparty" data-datetime="7:36 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428803076358557702"
+                 data-text="The lyrics guy imagined still living in a Jerry Cornelius &amp; Nic Roeg W11. Could only stretch the budget to semi-adjacent Kensal Rise, which had \'character\' but no iconoclasts except King Kurt\'s flour &amp; egg-centric audience (one time) #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:36 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428802822087249931"
+                 data-text="@learnandsing @LlSTENlNG_PARTY Hence we preceded them onto the US stadium circuit, a fact now forgotten - by me" data-datetime="7:35 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1428802529211600899"
+                 data-text="Albums like this are what The @LlSTENlNG_PARTY is all about https://t.co/LMWRNxwfi5" data-datetime="7:34 PM Aug 20, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428802498651955204"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTYÂ 
+
+Â Yes drums were last" data-datetime="7:33 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428802409040646153"
+                 data-text="The formative power of showing up to a series of seemingly glitzy A&amp;R offices in shabby clothes, hung over &amp; embarrassed #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:33 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428802107222659075"
+                 data-text="â€œFriendâ€ - if you turn up the intro very loud, you\'ll hear the burglar alarm down the street which we tried &amp; failed to get turned down all through that critical final weekend #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:32 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428802094388088833"
+                 data-text="That bass â¤ï¸ðŸ”¥" data-datetime="7:32 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428802088235151367"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTYÂ 
+
+Yes Anton. Say hi to Tim. Grest to hear from you" data-datetime="7:32 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428801821791895555"
+                 data-text="@realcathalc @LlSTENlNG_PARTY Didnâ€™t we have to do the drums last? #timstwitterlisteningparty @LlSTENlNG_PARTY" data-datetime="7:31 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428801638622445568"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTYÂ 
+
+Â Realky loved playing And in the shows a few years back." data-datetime="7:30 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428801529973194762"
+                 data-text="Seem to remember guitar sound was partly down to difficulty of recording fingerpicked electric of Everybody is in loud band context @LlSTENlNG_PARTY #timstwitterlisteningparty" data-datetime="7:30 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428801518585720837"
+                 data-text="That the rhythm section sounds so good throughout under the circumstances of recording this album is really something  #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:30 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428801341422546949"
+                 data-text="@MirrorKissesVA @LlSTENlNG_PARTY Love that, coming from one of my total faves. Hope youâ€™re well x x" data-datetime="7:29 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428801224342704133"
+                 data-text="Becker and Fagen??????
+
+Â #timstwitterlisteningparty@LlSTENlNG_PARTYÂ 
+
+Â Sean O\'HaganÂ /Â 07952 415 062Â /Â 0207 635 8363" data-datetime="7:28 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428801017966120966"
+                 data-text="Paisley tele solo?" data-datetime="7:28 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428800915058962442"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTYÂ 
+
+Â I can still seeCathal in front of the Mike as this unravelled. None of us new what he was doing. It was thrilling." data-datetime="7:27 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428800822100611073"
+                 data-text="Begging Bowl -  much gigged before recording. Getting those low notes (in verses) across on bad PA systems was an education, and bad for the neck. #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:27 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428800645365215233"
+                 data-text="All of Clock songs (bar maybe Humane?) were backbone of set both before and after recording of album - is my memory. In 2019 they came back very quickly @LlSTENlNG_PARTY #timstwitterlisteningparty" data-datetime="7:26 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428800529065467907"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTYÂ 
+
+Â What do they think of this tune in Gdansk today. Cherry vodka...more  Cherry Vodka" data-datetime="7:26 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428800485440565251"
+                 data-text="Self-evaluation on Genius outro: Yeah, PICNIC yourself, you dickhead amadÃ¡n fuckwad @realcathalc #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:25 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428800092627144707"
+                 data-text="Unfair to William Blake. Hubert Parry, though, different matter. He was a one-hit wonder &amp; hence FUCK HIM, give me Question Mark &amp; Mysterians any day. So they say on Radio Three. #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:24 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428800065238409217"
+                 data-text="Oh but what is this.
+
+Money For The Trams.
+This was recorded inthe Bass Cleff studio in Hoxton. 
+
+Â #timstwitterlisteningparty@LlSTENlNG_PARTY" data-datetime="7:24 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428799721997541386"
+                 data-text="Genius - think we debuted this at the Hacienda, of all places, when opening there for the Go-Betweens in \'84. The (in)famous Fac 51 live acoustics were not gentle with it. #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:22 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428799632382046213"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTYÂ 
+
+End if side one" data-datetime="7:22 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FMirrorKissesVA%2Fstatus%2F1428799615885668358"
+                 data-text="No exaggeration, literally my favorite band
+#timstwitterlisteningparty 
+@LlSTENlNG_PARTY 
+Thanks @Tim_Burgess https://t.co/hX9DjHgoCa" data-datetime="7:22 PM Aug 20, 2021"> 
+                MirrorKissesVA            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428799479419969537"
+                 data-text="#timstwitterlisteningparty â¦@LlSTENlNG_PARTYâ©  for some reason this Smash Hits piece featured prominent picture of extra from video https://t.co/zNiwjnZOQv" data-datetime="7:21 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428799443021795335"
+                 data-text="Shout out to John Bennett for playing the slide guitar outro (that Sean wrote &amp; played) on this so winningly on the 18/19 shows  #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:21 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428799341863620621"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTYÂ 
+Geoff!!" data-datetime="7:21 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428799198787407873"
+                 data-text="Remember playing this on live TV in Barcelona 1985.
+
+Â #timstwitterlisteningparty@LlSTENlNG_PARTY" data-datetime="7:20 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428799179770433546"
+                 data-text="@jonfell3 @LlSTENlNG_PARTY Is it where you did your shot for the back cover?" data-datetime="7:20 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428799005614657537"
+                 data-text="@seanohaganmusic Angel Casas show!" data-datetime="7:20 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428798788186083336"
+                 data-text="Remember playing this on live TV in Barcelona 1985." data-datetime="7:19 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428798779155787776"
+                 data-text="We met June Miles Kingston (vox on choruses) when she was with Everything But The Girl and we toured a little with them. Had a hunch this might work. It did. @EileenGogan also did this a treat (diff style) at the shows in 2018/19 #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:19 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428798527086419973"
+                 data-text="Possibly our finest hour. Remember being pretty taken aback when we demo\'d this at Jamie Lane\'s place. Jamie showed us that we could make an actual record, without driving half-into the ditch, and supported us all the way #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:18 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428798509654892544"
+                 data-text="#timstwitterlisteningparty @LlSTENlNG_PARTY  in other news, what is connection between this and album cover? https://t.co/f5M0f41Sl3" data-datetime="7:18 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428798375848251408"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+Geoff Richardson?????" data-datetime="7:17 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428798332630151177"
+                 data-text="This is one of the ones we hadn\'t played live (I think?) despite having gigged to exhaustion on the UK college circuit and the weirder parts of the Continent â€“ plotting to become zloty billionaires  #TimsTwitterListeningParty @LlSTENlNG_PARTY https://t.co/SjmxkoOtEZ" data-datetime="7:17 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428798231333453825"
+                 data-text="Loving the fact that lots of people around the world are listening to Microdisney right now â¤ï¸" data-datetime="7:16 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428798148034633736"
+                 data-text="This fade deffo influence d by John Barry" data-datetime="7:16 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428798021848940548"
+                 data-text="Digital zydeco concertina. How did humanity get to this? #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:16 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428797999757594633"
+                 data-text="#timstwitterlisteningparty@LlSTENlNG_PARTY
+
+This tune was reworked in a. Rehearsal space in Camberwell. Cathal and Sean were cobfused by the Elephant and Castle every day" data-datetime="7:16 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428797834862673926"
+                 data-text="No mention of this album would be complete without our thanks to supporters including @tomhappens, @sheehan_gary, @NCH_Music and @learnandsing - and a fair-sized chunk of those on this thread - for keeping it people\'s minds #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:15 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FMichael63048654%2Fstatus%2F1428797657699561472"
+                 data-text="@LlSTENlNG_PARTY I have only ever tweeted once. Only this record could make me break that.  A day in the sun for this record at last." data-datetime="7:14 PM Aug 20, 2021"> 
+                Michael63048654            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428797643841576962"
+                 data-text="Clock even. But click as well" data-datetime="7:14 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428797642264481792"
+                 data-text="â€œHumane, the Humane
+Will die with a smile
+Firemen and Barmen
+Must eat their dinnerâ€" data-datetime="7:14 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428797560593035265"
+                 data-text="Ridiculous guitars followed by music that bounces to a srate if embarrassment." data-datetime="7:14 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428797444817575939"
+                 data-text="Humane: Softcore nationalism traduced by proto-oligarchs, the use of pig carcasses as furniture â€“ it\'s a poptastic smash! #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:13 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428797250784858113"
+                 data-text="Love this guitar outro, always will #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:13 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1428797143494676491"
+                 data-text="Anyone at The @LlSTENlNG_PARTY new to the incredible songs of Microdisney? Whatâ€™re we saying?" data-datetime="7:12 PM Aug 20, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428797076490571778"
+                 data-text="#timstwitterlisteningparty @listeningparty in one of these upstairs front rooms in Balham was click recorded https://t.co/geZx9jQbfC" data-datetime="7:12 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428796786857103364"
+                 data-text="Im here #timstwitterlisteningparty@LlSTENlNG_PARTY" data-datetime="7:11 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428796691185086467"
+                 data-text="Great SOH falsettos bank (possibly also featuring producer Jamie Lane?) on the chorus! Again, a thrill to be able to get much closer than in days of yore to this, at those 2018/9 gigs. Like here: https://t.co/fouySBNTOT #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:10 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428796505243148294"
+                 data-text="Everyone say hi to Sean ðŸ‘‹ https://t.co/czXNp6XzT8" data-datetime="7:10 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428796360883638276"
+                 data-text="I think this one came out of endless revisions to a song called All Of The Time, which we took on the road, extensively, in 1984 #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:09 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fjonfell3%2Fstatus%2F1428796109896421386"
+                 data-text="@realcathalc @LlSTENlNG_PARTY For quite a while was convinced this song inspired by Horse Underwater by Len Deighton" data-datetime="7:08 PM Aug 20, 2021"> 
+                jonfell3            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428796067840237575"
+                 data-text="Violas from Caravan\'s Geoffrey Richardson! #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:08 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fseanohaganmusic%2Fstatus%2F1428795950848520194"
+                 data-text="Im here really" data-datetime="7:07 PM Aug 20, 2021"> 
+                seanohaganmusic            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FDuglasTStewart%2Fstatus%2F1428795629292199936"
+                 data-text="@Tim_Burgess What an opener." data-datetime="7:06 PM Aug 20, 2021"> 
+                DuglasTStewart            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428795440816955397"
+                 data-text="The existence of death seems like such a glammy toy when you\'re 25. Now, not so much :-) #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:05 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428795125963141125"
+                 data-text="Was great to be able to play this one with the full coda at the gigs in 2018/19 â€“ in no small part due to the sonic ingenuity of @rhodri #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:04 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428795015552241667"
+                 data-text="Classic O\'Hagan salvo no. 1 
+#TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:04 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428794731702669316"
+                 data-text="RT @jonfell3: @LlSTENlNG_PARTY @realcathalc @seanohaganmusic possibly Hackney Town Hall March 85" data-datetime="7:03 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428794694801235975"
+                 data-text="Also influenced by my being caught waltzing with a mid-sized family saloon on the Fulham Rd, with negative effects on the kneecaps. I was/am an idiot. #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:02 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428794401946492940"
+                 data-text="â¤ï¸Horse Overboardâ¤ï¸" data-datetime="7:01 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428794389518856198"
+                 data-text="Not a gritty voice back then, was it? :-) Lyric consisting of a list of things I thought I\'d never do, smug thing that I was/am. #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:01 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428794284627697665"
+                 data-text="Yamaha SK10 â€“ rockin\' #TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="7:01 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Frealcathalc%2Fstatus%2F1428794179371536384"
+                 data-text="@Tim_Burgess @jonfell3 @seanohaganmusic OK&lt; here we go...." data-datetime="7:00 PM Aug 20, 2021"> 
+                realcathalc            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1428794057870958592"
+                 data-text="Itâ€™s time
+
+Handing over to
+@realcathalc @jonfell3 @seanohaganmusic &amp; Tom Fenner (if he got a Twitter profile sorted)
+
+The Clock Comes Down The Stairs
+
+#TimsTwitterListeningParty #Microdisney https://t.co/k4ibv4K36g" data-datetime="7:00 PM Aug 20, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
