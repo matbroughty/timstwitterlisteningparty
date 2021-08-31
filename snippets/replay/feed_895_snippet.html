@@ -1,0 +1,778 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/2AAC54hhi2XzPvIk7IWpgg" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0294335d8e186a2d5995345203" alt="These Four Walls" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">We Were Promised Jetpacks</span><br/><span class="sub-colour">These Four Walls</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(587119)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/2AAC54hhi2XzPvIk7IWpgg" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_587119_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 185 tweets from Tuesday 31st August 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/wwpj" target="_blank"><img src="https://pbs.twimg.com/profile_images/1384168955544150018/xWaLY7ZW_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/wwpj.jpg'"><br/>@wwpj</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/mikewwpj" target="_blank"><img src="https://pbs.twimg.com/profile_images/1166400630941986817/AfTdj8wO_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/mikewwpj.jpg'"><br/>@mikewwpj</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1416025920511557636/rm9TQm_a_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="It's Thunder and It's Lightning" data-start="0"
+             data-duration="288" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Ships with Holes Will Sink" data-start="289"
+             data-duration="202" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Roll up Your Sleeves" data-start="492"
+             data-duration="256" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Conductor" data-start="749"
+             data-duration="328" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="A Half Built House" data-start="1078"
+             data-duration="161" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="This Is My House, This Is My Home" data-start="1240"
+             data-duration="197" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Quiet Little Voices" data-start="1438"
+             data-duration="257" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Moving Clocks Run Slow" data-start="1696"
+             data-duration="296" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Short Bursts" data-start="1993"
+             data-duration="280" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Keeping Warm" data-start="2274"
+             data-duration="492" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="An Almighty Thud" data-start="2767"
+             data-duration="214" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2982"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485194335d8e186a2d5995345203" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-185" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-184" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432809136576737284"
+                 data-text="that was fun! haven\'t listened to that start to end for so long, probably since we made it #timstwitterlisteningparty" data-datetime="8:54 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-183" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1432809105559785474"
+                 data-text="ðŸ¤˜ðŸ”¥ https://t.co/RLp64fzfGn" data-datetime="8:54 PM Aug 31, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-182" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432809039688310789"
+                 data-text="Thank you @dltdesigner canâ€™t believe how perfect everything you did was for this album! https://t.co/UUGWA536Yc" data-datetime="8:54 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-181" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1432808945173864448"
+                 data-text="@wwpj ðŸ”¥ðŸ”¥ðŸ”¥ðŸ¤˜â¤ï¸â¤ï¸â¤ï¸â¤ï¸" data-datetime="8:54 PM Aug 31, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-180" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432808726755487750"
+                 data-text="Thank you so much for joining us! Weâ€™re gonna go back through all your tweets tomorrow and respond to as many of you as we can. That was a fun trip down memory lane! DL #timstwitterlisteningparty https://t.co/J5scD6vlA3" data-datetime="8:53 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-179" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1432808705016406025"
+                 data-text="Seven minutes to go until our @Museumoflove @LlSTENlNG_PARTY https://t.co/kvuChCyRV0" data-datetime="8:53 PM Aug 31, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-178" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432808646405132290"
+                 data-text="Thank you so much @Tim_Burgess what a wonderful thing you and everyone following have created. Feel like a million bucks right now! https://t.co/xP6wCtXBro" data-datetime="8:52 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-177" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432808226660171776"
+                 data-text="Woaaah. And that\'s the album done! That\'s the first time we\'ve listened to it all the way through for years! DL #timstwitterlisteningparty" data-datetime="8:51 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-176" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432808035508965381"
+                 data-text="i love the ending of this, i remember being desperate that we used a take that included an accidental muted string because i thought it was lovely #timstwitterlisteningparty" data-datetime="8:50 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-175" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432807958790955008"
+                 data-text="@itsmckenney Remix!" data-datetime="8:50 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-174" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1432807943632736257"
+                 data-text="HUGE thanks to @wwpj. Theyâ€™ll be back on Sunday September 12th with Enjoy The View ðŸ¤˜ðŸ”¥" data-datetime="8:50 PM Aug 31, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-173" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432807800531525632"
+                 data-text="We used to do a live version of this song as a full band with big drums that I played with mallets. On the 10 year anniversary tour we decided to take it back to its original form. DL" data-datetime="8:49 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-172" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432807527494922241"
+                 data-text="Lyrically it\'s a little different to what I normally write. Felt like I was telling a story from the perspective of someone else from a long time ago. Might try that again! AT #TimsTwitterListeningParty" data-datetime="8:48 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-171" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432807504522752003"
+                 data-text="i thiiiiiiiink that sound is me scraping a drum stick against my guitar string #timstwitterlisteningparty #almightythud" data-datetime="8:48 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-170" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432807444414140423"
+                 data-text="Over the course of the month I finished this song. Added to it in Prague, Budapest, Berlin, Ljubljana, Florence and Split. All places with a lot of history and older architecture. Perhaps it influenced it? Perhaps talking shite? AT #TimsTwitterListeningParty" data-datetime="8:48 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-169" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fdltdesigner%2Fstatus%2F1432807313996488712"
+                 data-text="Leaving Imber in the dark after taking the cover photo.  Always loved the tank signpost! @wwpj #timstwitterlisteningparty #thesefourwalls https://t.co/5j3XHSlRGH" data-datetime="8:47 PM Aug 31, 2021"> 
+                dltdesigner            </div>
+                        <div id="tweet-feed-168" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432807248535990275"
+                 data-text="I went travelling around Europe for a month with Sean and some pals and bought a really cheap guitar to play. The guitar is tuned down a step in An Almighty Thud. AT #TimsTwitterListeningParty" data-datetime="8:47 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-167" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432807091379613696"
+                 data-text="#timstwitterlisteningparty https://t.co/jGmLmNHBn1" data-datetime="8:46 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-166" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432806986043826176"
+                 data-text="outro is intro reversed because circles innit #timstwitterlisteningparty" data-datetime="8:46 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-165" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432806936416763909"
+                 data-text="ðŸ¤¯ðŸ¤¯ðŸ¤¯ðŸ¤¯ https://t.co/E1k9lx7NeZ" data-datetime="8:46 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-164" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432806873539956739"
+                 data-text="What is the end of this song! I donâ€™t remember that at all! AT #TimsTwitterListeningParty" data-datetime="8:45 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-163" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432806777901420545"
+                 data-text="@LlSTENlNG_PARTY @mikewwpj There was a show we did @MusicHallofWB in 2013/14 that was unreal. We didnâ€™t have an encore prepared and could hear the crowd from the green room that was miles away. Whole building was shaking" data-datetime="8:45 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-162" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432806722834505734"
+                 data-text="Thanks to anyone who has joined us in a POGO at the end of this song. SS #TimsTwitterListeningParty  #POGO" data-datetime="8:45 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-161" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432806670225268736"
+                 data-text="â¤ï¸ https://t.co/m9an5dUcbI" data-datetime="8:45 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-160" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432806605222031362"
+                 data-text="this middle bit is another direct @The_Longcut ripoff #timstwitterlisteningparty #keepingwarm" data-datetime="8:44 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-159" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432806581557661699"
+                 data-text="Still love that snare drum build up. One of my favourite parts to play live. It just opens up so nicely afterwards! DL #timstwitterlisteningparty" data-datetime="8:44 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-158" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432806324224598026"
+                 data-text="@wwpj i could feel yous looking at me so i kept avoiding eye contact" data-datetime="8:43 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-157" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432806280352124931"
+                 data-text="I hadnâ€™t heard of @FRabbits song Keep Yourself Warm before writing the lyrics for this. It was a happy coincidence! AT #TimsTwitterListeningParty" data-datetime="8:43 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-156" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432806193215455235"
+                 data-text="It was also used in the trailer for The Kings of Summer and Going The Distance with @DrewBarrymore !!" data-datetime="8:43 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-155" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432806189230866434"
+                 data-text="@scotfiction984 You just made me grin ear to ear! Thank you! AT" data-datetime="8:43 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432806148642676741"
+                 data-text="one of my best memories is playing this intro at the arches with scott frabbits playing guitar looking at me like he had no idea what was going on as we didn\'t practice it  #timstwitterlisteningparty" data-datetime="8:43 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432806129772417026"
+                 data-text="Yeah I think we did! We played them both to our managers (Jamie &amp; Sharon) in a horrendous sounding practice room. They were cheesing though SS https://t.co/UL184hRPyP" data-datetime="8:42 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805916211036166"
+                 data-text="Haha! We were all dying!!! ðŸ¤£ðŸ¤£ https://t.co/ncqhEpKKxS" data-datetime="8:42 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1432805913652518915"
+                 data-text="All true https://t.co/9UE8a99Zcq" data-datetime="8:42 PM Aug 31, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432805879095644160"
+                 data-text="as long as it\'s one more than a multiple of 4 (that\'s when you expect it) then ðŸ‘ by me! #timstwitterlisteningparty https://t.co/XVB8MO6o97" data-datetime="8:41 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805862314233865"
+                 data-text="https://t.co/fNj1UtmX5Z" data-datetime="8:41 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805789736087560"
+                 data-text="Fun fact: This song was used in a Superbowl halftime commercial for Budweiser back in 2012. DL #TimsTwitterListeningParty #TheSuccesfulYears" data-datetime="8:41 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805690041671693"
+                 data-text="I think I used to play the ride cymbal at the start of this song for ages before the bass came in. I think it was something James (@thetwilightsad) was doing at the time. Weâ€™ll never know who did it first... SS #TimsTwitterListeningParty" data-datetime="8:41 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432805624765616130"
+                 data-text="the keeping warm intro is 13 \"rotations\" im pretty sure and i got to be in charge of how long we did it for live. my record was my last show in new york when i got to 25 ðŸ˜¬ #timstwitterlisteningparty" data-datetime="8:40 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805609829711876"
+                 data-text="Cool!!!! https://t.co/npRBPeaJkl" data-datetime="8:40 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805560412475399"
+                 data-text="Really!! What a week! AT https://t.co/UL184hRPyP" data-datetime="8:40 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805538082041856"
+                 data-text="The bass going out of time makes me throw up instantly. I canâ€™t believe we used that take. SS #TimsTwitterListeningParty" data-datetime="8:40 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805467605057542"
+                 data-text="I remember playing Darren this song in his computer room at his mum and dadâ€™s house! Tune only started to get good when we would play the intro for ages! AT #TimsTwitterListeningParty" data-datetime="8:40 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432805371240927236"
+                 data-text="these are all so good! #timstwitterlisteningparty https://t.co/ejDSLmzjXy" data-datetime="8:39 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805355575259143"
+                 data-text="There used to always be a discrepancy on how many times we repeat the build up in Keeping Warm when we play it live. 13 is what we settled onâ€¦ I think. Is that right @mikewwpj? DL #TimsTwitterListeningParty" data-datetime="8:39 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432805165279678464"
+                 data-text="i\'m like 80% sure we wrote short bursts and keeping warm the same week? @wwpj  #timstwitterlisteningparty" data-datetime="8:39 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805135005143046"
+                 data-text="#timstwitterlisteningparty https://t.co/XBJjNtR3Wj" data-datetime="8:38 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432805104370032649"
+                 data-text="Short Bursts was one of the only tracks on the album not mixed by Peter Katis. Thatâ€™s why it sounds a bit mad! SS" data-datetime="8:38 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804993095110657"
+                 data-text="https://t.co/TEFis2mqWJ" data-datetime="8:38 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432804907434786826"
+                 data-text="still absolutely love the bit at 4mins when we want it to get EVEN LOUDER #shortbursts #timstwitterlisteningparty" data-datetime="8:38 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804770876645393"
+                 data-text="The guys describe my drumming in this song as \'The Windmill.\" DL #timstwitterlisteningparty" data-datetime="8:37 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432804663947145216"
+                 data-text="two short-but-slightly-different delays, a distortion and a bass-overdrive to push it #timstwitterlisteningparty" data-datetime="8:37 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804637673988097"
+                 data-text="This was easy to sing in my early 20â€™s. Not so easy anymore!! AT #TimsTwitterListeningParty" data-datetime="8:37 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804540433289220"
+                 data-text="Haha yes!! Exactly what I was thinking AT https://t.co/YqtyqwVNbC" data-datetime="8:36 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804500797018115"
+                 data-text="Had just recently gotten into @thetwilightsad and we wanted to make a racket as well! AT #TimsTwitterListeningParty" data-datetime="8:36 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804401815691277"
+                 data-text="@Hoorayforfoxes Thank you â¤ï¸" data-datetime="8:36 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804273373470722"
+                 data-text="This is so interesting for us Dave! Really feel lucky that we get to work with you ðŸ˜ https://t.co/ySSzM6q8r8" data-datetime="8:35 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804255816196096"
+                 data-text="I love screaming along with Big Adam in this tune. I feel like even I put on a Scottish accent for this one. DL #timstwitterlisteningparty" data-datetime="8:35 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432804192956166145"
+                 data-text="wrote my part for this after getting into @thetwilightsad and just wanted to make a fuckin andy-like NOISE #timstwitterlisteningparty" data-datetime="8:35 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804118343659521"
+                 data-text="@dannyjepson @Devils_Finger ðŸ¤£" data-datetime="8:34 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804101742546949"
+                 data-text="First played Short Bursts supporting @frabbits at the barfly in Glasgow in 2008. Feel really lucky to have seen @frabbits blowing up from so close. SS #TimsTwitterListeningParty" data-datetime="8:34 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432804085791666181"
+                 data-text="@Devils_Finger Congratulations!!" data-datetime="8:34 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432803951041302538"
+                 data-text="Weâ€™d had a few gigs supporting great bands. Getting out of the play-to-pay cycle and it felt like things were happening for us. Short Bursts was written about that time. Imagining ourselves playing bigger and better venues. And not just to our pals. AT #TimsTwitterListeningParty" data-datetime="8:34 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432803943705423878"
+                 data-text="weird choice putting this here, that\'s still sequencing kids! #timstwitterlisteningparty" data-datetime="8:34 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fdltdesigner%2Fstatus%2F1432803940379381763"
+                 data-text="This was the slightly different angle / wider photo i took, just before \'the one\' we used on the album cover.  Was getting very dark at this point, so a few minutes longer i maybe i would\'nt have had enough light @wwpj #timstwitterlisteningparty #thesefourwalls https://t.co/EIHVYSYYUD" data-datetime="8:34 PM Aug 31, 2021"> 
+                dltdesigner            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432803691476791305"
+                 data-text="Absolutely love playing this one live! So much fun! DL #timstwitterlisteningparty" data-datetime="8:33 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432803489202253832"
+                 data-text="@wwpj im a playful guy" data-datetime="8:32 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432803415969705985"
+                 data-text="That bass delay is pretty wild. SS #TimsTwitterListeningParty" data-datetime="8:32 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432803370251739140"
+                 data-text="cos @hotclubdeparis did them! #timstwitterlisteningparty https://t.co/R41gT49Bob" data-datetime="8:31 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432803364295921672"
+                 data-text="Middle section: Is everyone okay if we play this weird 90s dance section for at least 10 minutes on the next tour? SS #TimsTwitterListeningParty" data-datetime="8:31 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432803266694352899"
+                 data-text="sean\'s the best bassist i know and this is another sean charles fuckin clinic #timstwitterlisteningparty" data-datetime="8:31 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432803215158951937"
+                 data-text="Not sure why I wanted to record a â€œwhooâ€ there but I did. Just a bit of fun eh. AT #TimsTwitterListeningParty" data-datetime="8:31 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432803168337989634"
+                 data-text="100% https://t.co/4fDhvcg5dA" data-datetime="8:31 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432803115439468544"
+                 data-text="verse/chorus/verse/chorus/different section. There\'s a theme here... Love the playfulness of the guitars with Mike on this one. AT #TimsTwitterListeningParty" data-datetime="8:30 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432803047642697729"
+                 data-text="@michelle_rose Me too!! AT" data-datetime="8:30 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432802955799957505"
+                 data-text="I continued it with a very simple drum beat ðŸ˜¬ DL" data-datetime="8:30 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432802839844335617"
+                 data-text="#timstwitterlisteningparty remember writing this in a different flat me/adam/sean shared on acoustic guitars and playing it for the first time live in ayr #facts" data-datetime="8:29 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432802796743626758"
+                 data-text="Me, Sean and Mike lived together in Glasgow whilst Darren was in Stirling at University. We started this song by jamming along to a very simple drum program until we could get in a room with Darren! AT  #TimsTwitterListeningParty" data-datetime="8:29 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432802678577508361"
+                 data-text="I couldnâ€™t remember! Can remember playing it early on at GU at Glasgow uni! AT https://t.co/Ig3Vknq9gO" data-datetime="8:29 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432802669807165443"
+                 data-text="Moving Clocks Run Slow came from a list of possible band names. I liked it as a song name and wrote lyrics based around that. @fatcat hooked us up with Peter Katis to mix most of this album and he added some great touches to this song AT #TimsTwitterListeningParty" data-datetime="8:29 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432802416072798209"
+                 data-text="WOAAAHHHHH OOOOO OHHHH AHHHH AOOOOOO #timstwitterlisteningparty" data-datetime="8:28 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432802312641257481"
+                 data-text="in a pub across from bannerman\'s in edinburgh if i remember properly #timstwitterlisteningparty https://t.co/TDaG6hVKJt" data-datetime="8:27 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432802296723910660"
+                 data-text="This song definitely opened a bunch of doors for us. Might play it twice when we start gigging again! AT #TimsTwitterListeningParty" data-datetime="8:27 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432802203618746368"
+                 data-text="Big thanks to @kexp for picking this song up super early as their song of the day. At the time we had no idea how massive that was. Introduced so many people to our band. SS #TimsTwitterListeningParty" data-datetime="8:27 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432802152255266818"
+                 data-text="https://t.co/utSRPqidfd" data-datetime="8:27 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432802078687211523"
+                 data-text="second fun qlv fact: my part is me ripping off @BlocParty\'s like eating glass, it\'s a different key i think but the same chord shape ðŸ˜¬ #timstwitterlisteningparty" data-datetime="8:26 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432802041630449669"
+                 data-text="On the day we recorded the video for this, the water in Adam, Sean and Mikeâ€™s flat stopped working. I had to wash shampoo out of my hair with old kettle water. DL #TimsTwitterListeningParty" data-datetime="8:26 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801888672567296"
+                 data-text="When I play the high bass run at the end of the chorus Adam likes to sing Lake Titicaca, Lake Titicaca. Feel free to sing along. Maybe not at gigs though. SS #TimsTwitterListeningParty" data-datetime="8:26 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801710649511940"
+                 data-text="As soon as we played this song for the first time I remember people loving it. Was weird. Usually when our pals came to see us they were just being nice but they seemed to really dig this song! AT #TimsTwitterListeningParty" data-datetime="8:25 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432801695977910273"
+                 data-text="fun QLV fact: i didn\'t play for the first part of the song because i was still setting my pedals up in the room when we started jamming it. when i finally got ready and came in at the chorus part i figured i\'d just keep it #timstwitterlisteningparty" data-datetime="8:25 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2F_KatiePalmer%2Fstatus%2F1432801646434824194"
+                 data-text="@wwpj @mikewwpj lol I just tried to join in late  #timstwitterlisteningparty https://t.co/BXg6vovgTB" data-datetime="8:25 PM Aug 31, 2021"> 
+                _KatiePalmer            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801582782033927"
+                 data-text="Pretty much three chords and written in one band practice. Funny how it works out that Quiet Little Voices is our biggest tune! So much fun watching a room go nuts for this song. AT #TimsTwitterListeningParty" data-datetime="8:24 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801579690770452"
+                 data-text="@tonytucker1985 Thank you Tony!" data-datetime="8:24 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801506282070018"
+                 data-text="My mum/our business manager/utter legend!! AT https://t.co/sKyu86Y3OW" data-datetime="8:24 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801498988154888"
+                 data-text="HWFG! DL #timstwitterlisteningparty" data-datetime="8:24 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801341236203523"
+                 data-text="@darkenthememory @jacksquibb ðŸ¤˜" data-datetime="8:23 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801325822226436"
+                 data-text="Hey guitar players... tune the bottom E string to Eb if you wanna play it! AT #TimsTwitterListeningParty" data-datetime="8:23 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432801303055540231"
+                 data-text="also, again this will be a theme, this is so fast #timstwitterlisteningparty" data-datetime="8:23 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801302619299850"
+                 data-text="@Mooseniac @FRabbits 100%. Huge inspiration for us. Scottish band killing it. Us and all our pals adore them" data-datetime="8:23 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801226505195527"
+                 data-text="This sounds so much bigger than I remember! Belter. DL #timstwitterlisteningparty" data-datetime="8:23 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fdltdesigner%2Fstatus%2F1432801224529784840"
+                 data-text="@mikewwpj @wwpj ha!  @mikewwpj yeah, there was pretty much one photo i took that day i thought was \'the one\' for the cover.  thankfully you all thought so too :)" data-datetime="8:23 PM Aug 31, 2021"> 
+                dltdesigner            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432801217185472513"
+                 data-text="we were so fucking excited when we wrote this #timstwitterlisteningparty https://t.co/7IAuWWWoAz" data-datetime="8:23 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801138110341126"
+                 data-text="Felt pressure to finish the lyrics. Remember drinking so much Bellâ€™s whisky and trying to finish them that night to record the next day! The attic is a metaphor for the mind my friends. AT #TimsTwitterListeningParty" data-datetime="8:23 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432801116497059852"
+                 data-text="i wanted to strum an open chord during the big parts, so the tuning here is SUPER weird. i honestly can\'t remember it right now, it\'s been a wee while.  #timstwitterlisteningparty" data-datetime="8:23 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432801010821570561"
+                 data-text="I remember feeling like it was the final piece of the puzzle and would complete the album. Itâ€™s a song that I would always want to hear again immediately if I listened to it! AT #TimsTwitterListeningParty" data-datetime="8:22 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432800876423524353"
+                 data-text="Sean and Mike joined us after weâ€™d got a couple different parts of the song started and we finished it in an hour or so! AT #TimsTwitterListeningParty" data-datetime="8:22 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432800852977360905"
+                 data-text="@francisbain @LIQUIDROOMS Thank you!!" data-datetime="8:21 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432800771754635276"
+                 data-text="omg the house in the wild! #timstwitterlisteningparty https://t.co/IMEGOpq8kW" data-datetime="8:21 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432800750502092814"
+                 data-text="I love this song (This is my house, this is my home). We were sleeping in the studio and were able to make noise as late as we wanted. Remember me and Darren going to jam after dinner (pot noodles). AT #TimsTwitterListeningParty" data-datetime="8:21 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432800689231646728"
+                 data-text="So cool, Dave! https://t.co/j5JrlDy3xq" data-datetime="8:21 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432800668415365124"
+                 data-text="remember finishing it at like 4am and playing you it because you were still up then going to uni at 9 and just thinking \"that\'ll sound great on the album\" instead of concentrating #timstwitterlisteningparty https://t.co/lDWtuw3Krg" data-datetime="8:21 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432800573456330761"
+                 data-text="#timstwitterlisteningparty https://t.co/6oz6qpYD7D" data-datetime="8:20 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fdltdesigner%2Fstatus%2F1432800495505223680"
+                 data-text="Imber is only open to the public a few days a year. I visited to take photos at xmas 2008.  Typically, it was already getting dark by the time i got there.  Here are some of the other photos i took that day. @wwpj #timstwitterlisteningparty #thesefourwalls https://t.co/bm5btkMvn5" data-datetime="8:20 PM Aug 31, 2021"> 
+                dltdesigner            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432800390265909250"
+                 data-text="lots of fun sounds here: my park road flat keys jangling, some scrunched up paper, a waves sample #timstwitterlisteningparty" data-datetime="8:20 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432800348767506432"
+                 data-text="We are huge fans of @frabbits and enjoyed their musical interludes on their albums so this track was definitely inspired by that. AT #TimsTwitterListeningParty" data-datetime="8:19 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432800295562715136"
+                 data-text="We played HBH live for the very first time on the 10 year anniversary tour in 2019. DL #TimsTwitterListeningParty" data-datetime="8:19 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432800198036762624"
+                 data-text="I recorded the guitar part late one night at my uni bedroom. Lived with Sean and Mike at the time. Sent it to Mike and he did his magic and added the keys jangling/samples to complete the track. AT #TimsTwitterListeningParty" data-datetime="8:19 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432800112271667204"
+                 data-text="the length of time between tracks there always bugged me! that\'s like 2 seconds of silence! #timstwitterlisteningparty" data-datetime="8:19 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432800076607406087"
+                 data-text="The title for Half-Built House came from an idea of what we wanted the artwork to look like. AT #TimsTwitterListeningParty" data-datetime="8:18 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432799786818842626"
+                 data-text="Those backing vox from DL ðŸ˜²" data-datetime="8:17 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432799771987783683"
+                 data-text="Played conductor for the first time @oranmorglasgow stripped back. DL was studying in Germany at the time we wrote it. I remember Andy from the band Lyons saying it was a great tune! AT #TimsTwitterListeningParty #neverforgetacompliment" data-datetime="8:17 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432799623639339009"
+                 data-text="I think we should apologise for not playing this live for so many years. We wanted to rock out as much as possible. We loved bringing it back for the anniversary tours. SS #TimsTwitterListeningParty" data-datetime="8:17 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432799606405009414"
+                 data-text="@luamericas @TheSinclair @BHalco @LlSTENlNG_PARTY â¤ï¸" data-datetime="8:17 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432799541347209224"
+                 data-text="@inremotepart @FRabbits Lexington I think! AT" data-datetime="8:16 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432799485571256329"
+                 data-text="#timstwitterlisteningparty https://t.co/HAeJzE5LHc" data-datetime="8:16 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432799312363335684"
+                 data-text="mel bought us these too!!! https://t.co/4ILy9K1E3J" data-datetime="8:15 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432799194427928589"
+                 data-text="I can hear the note on the glockenspiel that doesnâ€™t ring out properly. I think itâ€™s the g sharp. SS #TimsTwitterListeningParty" data-datetime="8:15 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1432799191756115972"
+                 data-text="So amazing to see the tweets of all those people falling in love wig @wwpj all around the world tonight" data-datetime="8:15 PM Aug 31, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432799095131934722"
+                 data-text="Ah, the glockenspiel. A few bands in Glasgow at the time we were coming up were into the old glockenspiel. Shout out to Glasgow Legends @helptheendorly AT #TimsTwitterListeningParty" data-datetime="8:14 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432799094662127616"
+                 data-text="we did an acoustic version of this with my sis down here playing violin on it! #timstwitterlisteningparty https://t.co/aFFSnVokXV" data-datetime="8:14 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798934297157635"
+                 data-text="Album launch show poster! Hanging proudly in my mum and dads house! AT https://t.co/vtrtzuI5o8" data-datetime="8:14 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432798913585729547"
+                 data-text="oh yeah! i remember the producer telling me to play it \"like i didn\'t know how to play piano\" and i was like \"i\'ll try pal\" (I can\'t play piano AT ALL) #timstwitterlisteningparty https://t.co/3BbKotoMed" data-datetime="8:14 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdltdesigner%2Fstatus%2F1432798873152540673"
+                 data-text="I knew about an abandoned village called Imber on sailsbury plain.  It is on MOD land and the original inhabitants were removed from their homes during WWII, never allowed to return. Read  about it here. https://t.co/EV1Oc9IyBR @wwpj #timstwitterlisteningparty #thesefourwalls" data-datetime="8:14 PM Aug 31, 2021"> 
+                dltdesigner            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798813794734081"
+                 data-text="I remember Sean recording the bell sounds on these cute little colourful bells that were in the studio. Definitely some sort of kids toy. [photo] SS #TimsTwitterListeningParty" data-datetime="8:13 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798691648319489"
+                 data-text="Oh yeah!! Cannot remember for the life of me! AT https://t.co/Y6c7z44N67" data-datetime="8:13 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798666910314499"
+                 data-text="Conductor is the only song for this album that we didnâ€™t record live together in the same room. We built it up step by step AT #TimsTwitterListeningParty" data-datetime="8:13 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432798612132712448"
+                 data-text="#timstwitterlisteningparty slow calm-down end into a quiet tune, that\'s sequencing kids!" data-datetime="8:13 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798512694054922"
+                 data-text="@stevenredcircle Cool!" data-datetime="8:12 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798466116362240"
+                 data-text="A bit of @mikewwpj tickling the ivories! AT #TimsTwitterListeningParty" data-datetime="8:12 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798402899816454"
+                 data-text="@jacksquibb Haha not again, Jack!" data-datetime="8:12 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432798358893174784"
+                 data-text="this last section was another song slowed down and moved here. was it just called \"stay calm?\" what was the title of the other tune @wwpj? #timstwitterlisteningparty" data-datetime="8:12 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1432798352404619269"
+                 data-text="@LlSTENlNG_PARTY @wwpj London" data-datetime="8:12 PM Aug 31, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798321970712579"
+                 data-text="@stevenredcircle @FRabbits @thetwilightsad The Disastour!" data-datetime="8:11 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798320859226118"
+                 data-text="Still terrifies me to this day doing those backing vocals live. Itâ€™s so quiet on stage and I have to wail all alone. Adam often turns and does a silent intro to make sure everyone is looking at me. Arsehole that he is. DL #TimsTwitterListeningParty" data-datetime="8:11 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798193020981252"
+                 data-text="@darkenthememory @MCH_Tong Hahahha!!!" data-datetime="8:11 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798152319541257"
+                 data-text="Yes we can!! AT https://t.co/J7HDA8JrkQ" data-datetime="8:11 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798146975969282"
+                 data-text="Listen carefully and you can hear the kick drum pedal squeak! AT #TimsTwitterListeningParty" data-datetime="8:11 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432798082685669376"
+                 data-text="i remember seeing @The_Longcut (i rip lee off constantly btw) and seeing him change his delay pedal settings as he was playing and being \"huh shit i didn\'t realise you could do that\" then doing it on the next song we wrote (this one) #sleeves #timstwitterlisteningparty" data-datetime="8:10 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798061693181952"
+                 data-text="#timstwitterlisteningparty https://t.co/cH6OiXOlq3" data-datetime="8:10 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432798039060754433"
+                 data-text="@ManMegaman9 Thank you! â¤ï¸" data-datetime="8:10 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797965761003522"
+                 data-text="@TrudyAWhite @LlSTENlNG_PARTY Hi Trudy!! ðŸ‘‹" data-datetime="8:10 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797963642937347"
+                 data-text="Love that Sean Smith party bass in this middle section! AT #TimsTwitterListeningParty" data-datetime="8:10 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797854939164677"
+                 data-text="@AMWmichael @LIQUIDROOMS @cabaretvoltaire https://t.co/n6Eng4P48g" data-datetime="8:10 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797831119740933"
+                 data-text="We were all in the same year at high school and wrote these songs between ages 18-21. Just seems so young!! Remember being so surprised when we got the email with all our tours. Couldnâ€™t believe it, we were going to USA. AT #TimsTwitterListeningParty" data-datetime="8:09 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797712836173824"
+                 data-text="First verse of Roll Up Your Sleeves: woah do you do all these clicks live Darren? â€œIâ€™ll take more clicks in my monitors pleaseâ€ SS  #TimsTwitterListeningParty" data-datetime="8:09 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797630816571398"
+                 data-text="@scotfiction984 Thank you!!" data-datetime="8:09 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797570707898370"
+                 data-text="Geezer https://t.co/HDczPy4r1k" data-datetime="8:08 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432797484619808772"
+                 data-text="@dltdesigner @wwpj you might remember differently but my memory is you just absolutely nailed it on the first go and we were all just like \"yeah perfect\"" data-datetime="8:08 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797376599805960"
+                 data-text="ðŸ‘Š https://t.co/2egcmx8XUH" data-datetime="8:08 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797370845179909"
+                 data-text="At this time I would often have a title for the song first before writing the lyrics. No idea why Ships With Holes Will Sink popped into my head AT #TimsTwitterListeningParty" data-datetime="8:08 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797270613897223"
+                 data-text="#timstwitterlisteningparty https://t.co/3VL3dVjHiJ" data-datetime="8:07 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432797212992491525"
+                 data-text="a bloc party impression is going to be a bit of a theme... #staytuned #timstwitterlisteningparty https://t.co/1RdcHeUg94" data-datetime="8:07 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797162509897729"
+                 data-text="@dustindrury Yes!! March 2009" data-datetime="8:07 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797065067761665"
+                 data-text="@morayswan @_PaulaSwan ðŸ¤£ðŸ¤£ðŸ¤£" data-datetime="8:06 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fdltdesigner%2Fstatus%2F1432797033207943171"
+                 data-text="The idea for the cover image for @wwpj \'these four walls\' came from a note that the band sent me. \"really like the theme of having Places where there should be people but there are not\".  That got me thinking about abandoned places. #timstwitterlisteningparty #thesefourwalls" data-datetime="8:06 PM Aug 31, 2021"> 
+                dltdesigner            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432797010235625473"
+                 data-text="1:34 this bit sounds like pre These Four Walls. AKA The Winkle Experience. Yes, that was our name. SS #TimsTwitterListeningParty" data-datetime="8:06 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432796999909314571"
+                 data-text="remember being in the studio when you did that and all being like \"fuccccck man!\" https://t.co/i0O7TuqSgf" data-datetime="8:06 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432796864450109447"
+                 data-text="Definitely doing my best (@MCH_Tong) Bloc Party impression in this song. This feels so fast listening back to it. DL #TimsTwitterListeningParty" data-datetime="8:06 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432796828219625475"
+                 data-text="jesus christ how fast is this?! ðŸ¤£ #shipswithholes #timstwitterlisteningparty" data-datetime="8:05 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432796796196212737"
+                 data-text="@mikewwpj 100% have a bit of that!" data-datetime="8:05 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1432796706484244487"
+                 data-text="Where are we all at around the world for our @wwpj @LlSTENlNG_PARTY? Shout up https://t.co/qEPLvSslg5" data-datetime="8:05 PM Aug 31, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="114000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432796686779404301"
+                 data-text="Weâ€™d made a demo of Ships and Iâ€™d sung it really sweetly and didnâ€™t like it at all. When recording the album we thought we had the take but I wanted to try one more that was super aggressive and glad I did. Sounds like I soaked the microphone! AT #TimsTwitterListeningParty" data-datetime="8:05 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432796209148743692"
+                 data-text="this was always always always going to be how we opened the album, right from when we wrote it eh @wwpj? #timstwitterlisteningparty" data-datetime="8:03 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432796198835036160"
+                 data-text="Love hearing people screaming this song back at us! Always fun hearing the Scottish accent attempts AT #TimsTwitterListeningParty #yerboadywasblacknbluhu" data-datetime="8:03 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432796192275156998"
+                 data-text="I remember that! I remember you saying how do we make it different! AT https://t.co/DyuNDU4LVr" data-datetime="8:03 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432796067410726918"
+                 data-text="The Glockenspiel is still the same one we use on stage today. A little piece of history thatâ€™s survived all this time. DL #TimsTwitterListeningParty" data-datetime="8:02 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fsleafordmods%2Fstatus%2F1432796021801750529"
+                 data-text="Itâ€™s here. @Tim_Burgess â€˜s #timstwitterlisteningparty The Book! Out on Sept 2nd and features our 4th album English Tapas, along with loads of other goodies. The books also raising money for @musicvenuetrust https://t.co/KlFek2Cb4I" data-datetime="8:02 PM Aug 31, 2021"> 
+                sleafordmods            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432795891627343878"
+                 data-text="Remember the day we finished writing Itâ€™s Thunder and Itâ€™s Lightning together. Wanted to make the song different to the others we had. The extra long build up to the release made sure that happened. AT #TimsTwitterListeningParty" data-datetime="8:02 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432795857439662090"
+                 data-text="i can still totally remember standing in Ad\'s room in our flat on park road in glasgow when he was playing me these chords, saying \"i wont come in yet... still not... still not... and HERE!\" and figuring out that\'s when it would get loud â¤ï¸ #TimsTwitterListeningParty" data-datetime="8:02 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432795799377915916"
+                 data-text="i got that glockenspiel for my birthday from my now-wife and was desperate to use it in a tune, so there it is #iconic #timstwitterlisteningparty" data-datetime="8:01 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432795693022916610"
+                 data-text="Recorded the album @earthterminal studios in Hampshire with @jolyonthomas and Ken Thomas. Tracked everything in 10 days . AT #TimsTwitterListeningParty" data-datetime="8:01 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1432795683703164932"
+                 data-text="Anyone at The @LlSTENlNG_PARTY new to the amazingness of @wwpj??? Strap in, itâ€™ll be quite a trip" data-datetime="8:01 PM Aug 31, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fmikewwpj%2Fstatus%2F1432795525955342339"
+                 data-text="let\'s goooooooo #timstwitterlisteningparty" data-datetime="8:00 PM Aug 31, 2021"> 
+                mikewwpj            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fwwpj%2Fstatus%2F1432795354634850309"
+                 data-text="Let\'s go: https://t.co/GSMzRZfhYu" data-datetime="8:00 PM Aug 31, 2021"> 
+                wwpj            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1432795352252420099"
+                 data-text="Over to @wwpj and @mikewwpj for our @LlSTENlNG_PARTY featuring These Four Walls 
+
+Go!! https://t.co/ZylTzcD6JL" data-datetime="8:00 PM Aug 31, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
