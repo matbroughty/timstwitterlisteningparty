@@ -1,0 +1,502 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/6NlU7ZtjDMNSEfxfjzDnwL" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02a6713bc41f9cb7344295018c" alt="The Beginning Stages Of…The Polyphonic Spree" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Polyphonic Spree</span><br/><span class="sub-colour">The Beginning Stages Of…The Polyphonic Spree</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(296180)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/6NlU7ZtjDMNSEfxfjzDnwL" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_296180_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 89 tweets from Sunday 19th September 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/PolySpree" target="_blank"><img src="https://pbs.twimg.com/profile_images/858750617065533440/GWcbXsUP_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/PolySpree.jpg'"><br/>@PolySpree</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/TimDeLaughter" target="_blank"><img src="https://pbs.twimg.com/profile_images/378800000552144706/0c9c77facf53949f085e4f35444bd963_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/TimDeLaughter.jpg'"><br/>@TimDeLaughter</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1438137556026200071/W9gbs8qh_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Have a Day / Celebratory" data-start="0"
+             data-duration="280" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="It's the Sun" data-start="281"
+             data-duration="334" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Days Like This Keep Me Warm" data-start="616"
+             data-duration="245" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="La La" data-start="862"
+             data-duration="130" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Middle of the Day" data-start="993"
+             data-duration="166" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Hanging Around the Day, Pt. 1" data-start="1160"
+             data-duration="158" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Hanging Around the Day, Pt. 2" data-start="1319"
+             data-duration="159" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Soldier Girl" data-start="1479"
+             data-duration="239" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Light & Day / Reach for the Sun" data-start="1719"
+             data-duration="202" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="A Long Day" data-start="1922"
+             data-duration="2191" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="4114"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851a6713bc41f9cb7344295018c" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-89" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439699275772989442"
+                 data-text="Was fun…more to come down the road! #timstwitterlisteningparty https://t.co/HWOpyaltwx" data-datetime="9:13 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1439699253954326529"
+                 data-text="RT @BenIllustrator: This time next week it\'s going to be a blast of a Listening Party with Andrew Innes and Martin Duffy celebrating 30 yea…" data-datetime="9:13 PM Sep 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439699002396643328"
+                 data-text="@Nickthestone @TimDeLaughter @LlSTENlNG_PARTY ❤️❤️❤️" data-datetime="9:12 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1439698994347773953"
+                 data-text="Thanks @TimDeLaughter https://t.co/jQ4yF8JHlh" data-datetime="9:12 PM Sep 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439698784456486922"
+                 data-text="@DLTKMW @LlSTENlNG_PARTY @TimDeLaughter @Tim_Burgess ❤️" data-datetime="9:11 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fantonnewcombe%2Fstatus%2F1439698426673963008"
+                 data-text="@TimDeLaughter @Tim_Burgess Great album" data-datetime="9:10 PM Sep 19, 2021"> 
+                antonnewcombe            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439698404448391172"
+                 data-text="Thanks for your ears these past 21 years.  Have a GOOD day!!! See you soon. #salvageenterprise #timstwitterlisteningparty" data-datetime="9:10 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439698079343685648"
+                 data-text="We did it!!!!!!!!!!!
+Thank you @Tim_Burgess !!!!
+#TimsTwitterListeningParty" data-datetime="9:09 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439698077066141699"
+                 data-text="15th Anniversary Tour Edition when we played TBSO in its entirety. #timstwitterlisteningparty https://t.co/EYzEM2oRmV" data-datetime="9:09 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FDLTKMW%2Fstatus%2F1439697854524796931"
+                 data-text="@LlSTENlNG_PARTY @TimDeLaughter @PolySpree Ta-da! Banana 🍌 for scale. I carried this home from a gig. Thank you @Tim_Burgess - and most of all @PolySpree @TimDeLaughter. Your music has made life better. https://t.co/wAeWujZlUI" data-datetime="9:08 PM Sep 19, 2021"> 
+                DLTKMW            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439697559551889409"
+                 data-text="Early sticker. #timstwitterlisteningparty https://t.co/HhU5w6IPvp" data-datetime="9:07 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439697397270163460"
+                 data-text="@gonzo6664 @Eve6 @maxinebgarcia @StacyGlenJones @max_e_bernstein Present" data-datetime="9:06 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439697108907577356"
+                 data-text="@DLTKMW @LlSTENlNG_PARTY @TimDeLaughter 😂" data-datetime="9:05 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439696874533961728"
+                 data-text="Drawing by @TimDeLaughter #timstwitterlisteningparty https://t.co/kdZqJu7R6m" data-datetime="9:04 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1439696710868127747"
+                 data-text="Huuuge thanks to @TimDeLaughter and the chorus of amazingness that is the @PolySpree ✊" data-datetime="9:03 PM Sep 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439696468236021762"
+                 data-text="Ghosts… #timstwitterlisteningparty https://t.co/XAb1eH9XjC" data-datetime="9:02 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439696297838223362"
+                 data-text="John Cameron Mitchell, at the Warsaw in Brooklyn, he joined us on stage..
+#TimsTwitterListeningParty https://t.co/E2TZMHCHRF" data-datetime="9:02 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439696244193042433"
+                 data-text="Thanks to @sxsw for all your support over the years. #timstwitterlisteningparty https://t.co/e5UVCja3DE" data-datetime="9:01 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="249000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439696010025050117"
+                 data-text="A show like no other!!!#timstwitterlisteningparty https://t.co/wbTBoTspf1" data-datetime="9:00 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439694963437080578"
+                 data-text="Sometimes we didn’t have the paper sleeves… #timstwitterlisteningparty https://t.co/wNZDmzXvy7" data-datetime="8:56 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439694666253934592"
+                 data-text="One of our go to poses from the playbook. #timstwitterlisteningparty https://t.co/Fujq6fhe5V" data-datetime="8:55 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1439694538663206913"
+                 data-text="Yep! https://t.co/oDSWSF7PPu" data-datetime="8:55 PM Sep 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439694372740681728"
+                 data-text="TBSO cdr art by @jennie_kelley #timstwitterlisteningparty https://t.co/RThv0JF7eM" data-datetime="8:54 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439694332634837001"
+                 data-text="You still here?
+#TimsTwitterListeningParty" data-datetime="8:54 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439694061447876610"
+                 data-text="One of CP\'S faves. #timstwitterlisteningparty https://t.co/ZSBg0lOsxw" data-datetime="8:53 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439693955638104066"
+                 data-text="@maureenjohnson 😉" data-datetime="8:52 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439693851531300869"
+                 data-text="Look for @oscardelaughter #timstwitterlisteningparty https://t.co/O9Ttx4jk9n" data-datetime="8:52 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439693594479271939"
+                 data-text="We love you Evan Hisey ❤️#timstwitterlisteningparty https://t.co/uZ8hH08lLt" data-datetime="8:51 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439693342363815942"
+                 data-text="@TrudyAWhite @soozworld Yes!!!" data-datetime="8:50 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439693283500904449"
+                 data-text="@JAM_WAH Yep" data-datetime="8:50 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439693199468072960"
+                 data-text="@___Kazza___ Congratulations!!" data-datetime="8:49 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439692939433807874"
+                 data-text="@DLTKMW @WaterlooRecords Get it!!" data-datetime="8:48 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439692923851923458"
+                 data-text="Art by @julieadoyle3 One show we had each band member design@5 cooies each of TBSO #timstwitterlisteningparty https://t.co/7tgedu45Au" data-datetime="8:48 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439692710059913220"
+                 data-text="@DLTKMW @Nickthestone @LlSTENlNG_PARTY @PolySpree I did that design on my old computer." data-datetime="8:47 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="131000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439692212661587970"
+                 data-text="Shot in Austin near @WaterlooRecords #timstwitterlisteningparty https://t.co/IbMxd3eVUI" data-datetime="8:45 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439691662272380934"
+                 data-text="Scotland. #timstwitterlisteningparty https://t.co/rgwZB2Jxyh" data-datetime="8:43 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439691568139624448"
+                 data-text="@antonnewcombe @Tim_Burgess 😂🤣😂🤣😂" data-datetime="8:43 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439691363575115780"
+                 data-text="Fort Worth 2001 #timstwitterlisteningparty https://t.co/0oE2zX0SIA" data-datetime="8:42 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439691044904476672"
+                 data-text="Sands through the hour glass… #timstwitterlisteningparty https://t.co/rpUKEbVeWv" data-datetime="8:41 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1439690762074087430"
+                 data-text="Love how uplifting this @PolySpree album is https://t.co/cuZMlKGQdr" data-datetime="8:40 PM Sep 19, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439690740448350209"
+                 data-text="#timstwitterlisteningparty https://t.co/zxNdCSayfY" data-datetime="8:39 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439690389276004363"
+                 data-text="We love our second home… #timstwitterlisteningparty https://t.co/Sw0wps4gNb" data-datetime="8:38 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439690363388706825"
+                 data-text="There it is! https://t.co/am19sZEKzG" data-datetime="8:38 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439690297370464262"
+                 data-text="I don’t think I’ve ever sat through this, outside of laying it down.#TimsTwitterListeningParty" data-datetime="8:38 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439690038162464770"
+                 data-text="We have @bossinfoglobal Dr. Sample &amp; @TimDeLaughter’s sleep depravation to thank for Section 10 A Long Day #timstwitterlisteningparty https://t.co/K7AMKWIKUw" data-datetime="8:37 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439689905555267584"
+                 data-text="https://t.co/kFbxfDyv1e" data-datetime="8:36 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439689497357193216"
+                 data-text="@BenIllustrator @LlSTENlNG_PARTY @reallyjcocker Indeed he was!" data-datetime="8:34 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439689235200622596"
+                 data-text="a sample of 4 octaves of my voice I had on a card in a Dr. Sampler. left from a Tripping Daisy show, would play it before the show. Wanted to fill up the rest of the tape of this recording so I sat there and randomly pressed the buttons to fill it. #TimsTwitterListeningParty" data-datetime="8:33 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439689229127274506"
+                 data-text="Residencies coming back 2022-2023 #timstwitterlisteningparty https://t.co/8dCy1I6n8N" data-datetime="8:33 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439688845545676800"
+                 data-text="Thanks @avose for all the photos over the years #timstwitterlisteningparty https://t.co/XgBoqrsaE5" data-datetime="8:32 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439688450349977606"
+                 data-text="Early show fliers #timstwitterlisteningparty https://t.co/arsU5MAHxC" data-datetime="8:30 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439688273551626241"
+                 data-text="This song has had an incredible life, never in a million years did I ever think it would resonate as much as it has.
+#timstwitterlisteningparty" data-datetime="8:30 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439688197932527619"
+                 data-text="Thanks be to the Gloom Brothers #timstwitterlisteningparty https://t.co/isu6cCIrb0" data-datetime="8:29 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439687826711457795"
+                 data-text="Huh… #timstwitterlisteningparty https://t.co/E3Hwvs7fDc" data-datetime="8:28 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439687671450902537"
+                 data-text="Light and day almost wasn’t on the record, I thought the tempo was too fast for the overall tone, Julie made sure it was on there, no question in her mind. Sometimes it’s best to get out of the way of yourself..#timstwitterlisteningparty" data-datetime="8:27 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439687537769992200"
+                 data-text="You can hear Jennifer Jobe’s operatic voice sounding like a Theremin at the end.. We had friends and family in the room singing all the gang choir vocals about 30 of us all together.. This song was basically a mantra. #TimsTwitterListeningParty" data-datetime="8:27 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439687500562317317"
+                 data-text="Soldier Girl…love the outro #timstwitterlisteningparty https://t.co/M9OfmhWueT" data-datetime="8:27 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439687350217498624"
+                 data-text="Here goes @dj_ewi seducing everyone with her Flute again. We couldn’t go anywhere without someone in the audience yelling “Soldier Girl”! at the top of their lungs. We would later re-record a single version for @_FiercePanda which was pretty great.
+#TimsTwitterListeningParty" data-datetime="8:26 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439687204587155467"
+                 data-text="Another cdr cover from the Phaidon book Boring Potcards #timstwitterlisteningparty https://t.co/RciRxkGcr2" data-datetime="8:25 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439687029881806848"
+                 data-text="@Davidbowiereal invited us to play the Meltdown Festival he was curating in London, a few of the folks in the band had never been outside of Texas and some had never flown before, little did they know we would spend the next 4 years in the UK, Europe #TimsTwitterListeningParty" data-datetime="8:25 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439686869348925445"
+                 data-text="@reallyjcocker did our video for this song, in London, in a huge balloon instillation, took over a football field to film it. We recorded this record in 3 days with some studio time we had left over from Tripping Daisy #TimsTwitterListeningParty" data-datetime="8:24 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439686790483517442"
+                 data-text="More from the first show #timstwitterlisteningparty https://t.co/CRQjUtZXiG" data-datetime="8:24 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="135000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439686442456948744"
+                 data-text="Thanks to @ArchitectsofAir &amp; Jarvis Cocker for Hanging Around with us for a day #timstwitterlisteningparty https://t.co/jplzvuMNWY" data-datetime="8:22 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439685874602676225"
+                 data-text="Thanks to @NME for the love @hallornothingpr #timstwitterlisteningparty https://t.co/2vTFJBeoLP" data-datetime="8:20 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439685611762376707"
+                 data-text="Hanging Around the day, Carlos Jackson on the Farfisa, Carlos was an employee @GoodRecords at the time. Andrew Tinker on the French Horn who was 16, did scissor kicks with the French horn swinging in the air.#TimsTwitterListeningParty" data-datetime="8:19 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439685292752056321"
+                 data-text="Middle of the day psychedelia #timstwitterlisteningparty https://t.co/NaBrLLWrVH" data-datetime="8:18 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439685159574544395"
+                 data-text="Middle was the collapse of La La, Julie decided to give it its own ID track.. @Julieadoyle3 and Paul Williams mixed this record. That’s Chris Curiel on the Trumpet, squeezing the most out of that horn and Jeff Bouck on Percussion laying it out. #TimsTwitterListeningParty" data-datetime="8:17 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439684839435915267"
+                 data-text="Just in case… #timstwitterlisteningparty https://t.co/owLU33UjXZ" data-datetime="8:16 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439684570513920000"
+                 data-text="Steve Keene rendition of TBSO #timstwitterlisteningparty https://t.co/xutc5rBMbS" data-datetime="8:15 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439684435759321099"
+                 data-text="La La was just a energetic chord progression that I just improvised on top of, the lyrics we’re never set until this record came out.. You have to remember this was a demo.. #TimsTwitterListeningParty" data-datetime="8:14 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439684309682737156"
+                 data-text="https://t.co/yoqDDbA2Ns" data-datetime="8:14 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439684121123557376"
+                 data-text="Another cdr cover #timstwitterlisteningparty https://t.co/DuzcOn3fVl" data-datetime="8:13 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439683902742966272"
+                 data-text="Tim, Jennifer, &amp; Audrey shine… Days Like This #timstwitterlisteningparty https://t.co/eQwKtcHx1h" data-datetime="8:12 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439683825286660104"
+                 data-text="@antonnewcombe Ha!! For sure!" data-datetime="8:12 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439683510307065860"
+                 data-text="Days Like this keep me warm, I love this song. @djewieflute parts in this song, are so heartfelt and playful, perfectly captures the essence of the mood and Jennifer Jobe’s sweet voice added an innocence that tied it all together #TimsTwitterListeningParty" data-datetime="8:11 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439683446079692801"
+                 data-text="First @PolySpree show ticket stub with @Grandaddy &amp; @brighteyesband Thanks @jasonlytle Miss ya Gypsy Tea Room #timstwitterlisteningparty https://t.co/4C0oC0G9Rd" data-datetime="8:10 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="156000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439683360318689284"
+                 data-text="The Sun is one of many things I find God in, I feel it’s power and am moved daily by the wonders it provides. That’s why it’s used in so many of my lyrics, it’s hard for me not to include it somehow.
+#TimsTwitterListeningParty" data-datetime="8:10 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439682705948614656"
+                 data-text="Went to friends and family, youngest member my niece Kelly was 14, she quit school and joined the band. Talked to her the other day, she said she had no regrets. Whew!  #TimsTwitterListeningParty" data-datetime="8:07 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439682522691035144"
+                 data-text="It’s The Sun #timstwitterlisteningparty https://t.co/8UanSe7pWr" data-datetime="8:07 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439682350506467339"
+                 data-text="Hey It’s the sun!!!! My friend and partner Chris Penn @goodrecords booked Our first show opening for @Grandaddy had  3 weeks to put a band together. #TimsTwitterListeningParty" data-datetime="8:06 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439682260500979716"
+                 data-text="The early @PolySpree lineup #timstwitterlisteningparty https://t.co/YX6Si8cTfh" data-datetime="8:06 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439681920359600130"
+                 data-text="@antonnewcombe @mercuryrevvd YES!!!" data-datetime="8:04 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439681894778605574"
+                 data-text="First show choir notes #timstwitterlisteningparty https://t.co/qjs1rITBcB" data-datetime="8:04 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439681860066594818"
+                 data-text="Started in our (Julie and I) bedroom, were the first songs I started writing after Wes died. Finding life again through these songs working my way back. You can hear the healing process in the the lyrics, it was cathartic for me and our family. #TimsTwitterListeningParty" data-datetime="8:04 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439681566528188421"
+                 data-text="Early TBSO cdr album art by @TimDeLaughter #timstwitterlisteningparty https://t.co/TSPQayvHt4" data-datetime="8:03 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439681078822948864"
+                 data-text="This record was a set list and that determined the order. A demo that never intended to be a release, became our first record.
+“Sections” were how I described to the band going from one part to another, this was section 1. and so on.  #TimsTwitterListeningParty" data-datetime="8:01 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FPolySpree%2Fstatus%2F1439681064788692993"
+                 data-text="Website art by Rolyn Barthelman #timstwitterlisteningparty https://t.co/CCNRxs53KP" data-datetime="8:01 PM Sep 19, 2021"> 
+                PolySpree            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FTimDeLaughter%2Fstatus%2F1439681014167707656"
+                 data-text="This record was a set list and that determined the order. A demo that never intended to be a release, became our first record.
+“Sections” were how I described to the band going from one part to another, this was section 1. and so on.  #TimsTwitterListeningParty https://t.co/3Eg80IRLxG" data-datetime="8:01 PM Sep 19, 2021"> 
+                TimDeLaughter            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1439680705781436422"
+                 data-text="It’s time 
+
+Let’s give ourselves over to the power of The Polyphonic Spree
+
+Raise your hands in the air and let the music rain down on you 
+
+BELIEVE!!! 
+
+Over to the one they call  @TimDeLaughter https://t.co/uDrqi57mLn" data-datetime="8:00 PM Sep 19, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
