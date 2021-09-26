@@ -1,0 +1,515 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5MpSEsDO02dg1McQDcDjAE" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e025e0d40d33de3f9260c4b455c" alt="Bright Magic" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Public Service Broadcasting</span><br/><span class="sub-colour">Bright Magic</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(2588971)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5MpSEsDO02dg1McQDcDjAE" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_2588971_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 93 tweets from Sunday 26th September 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/PSB_HQ" target="_blank"><img src="https://pbs.twimg.com/profile_images/1392888508579303431/jJYqIFN9_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/PSB_HQ.jpg'"><br/>@PSB_HQ</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/psb_wriggles" target="_blank"><img src="https://pbs.twimg.com/profile_images/637925035181780993/n5SCpT9V_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/psb_wriggles.jpg'"><br/>@psb_wriggles</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1442186449978286082/h8TKmyID_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Der Sumpf (Sinfonie der Großstadt)" data-start="0"
+             data-duration="155" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Im Licht" data-start="156"
+             data-duration="244" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Der Rhythmus der Maschinen" data-start="401"
+             data-duration="234" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="People, Let's Dance" data-start="636"
+             data-duration="331" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Blue Heaven" data-start="968"
+             data-duration="257" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Gib mir das Licht" data-start="1226"
+             data-duration="264" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="The Visitor" data-start="1491"
+             data-duration="193" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Lichtspiel I: Opus" data-start="1685"
+             data-duration="343" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Lichtspiel II: Schwarz Weiss Grau" data-start="2029"
+             data-duration="245" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Lichtspiel III: Symphonie Diagonale" data-start="2275"
+             data-duration="236" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Ich und die Stadt" data-start="2512"
+             data-duration="234" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2747"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048515e0d40d33de3f9260c4b455c" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-93" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="195000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442094367036956676"
+                 data-text="Thanks, and quite. \'To a wise man, the whole earth is open, because the true country of a virtuous soul is the entire universe.\' - Democritus https://t.co/GNg0qEmrSa" data-datetime="11:51 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442093549491834883"
+                 data-text="Thanks, as ever, to @PSB_HQ 
+
+Another brilliant @LlSTENlNG_PARTY from them ✊🔥❤️" data-datetime="11:47 AM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442093234612838401"
+                 data-text=".. but if you’re interested in more though stay tuned for the podcast series we’ve recorded (Rory MacLean &amp; JW talking about Berlin &amp; about the album) - it’s genuinely quite interesting, honest! More info next week. Thanks folks &amp; thanks @Tim_Burgess! #timstwitterlisteningparty" data-datetime="11:46 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442093100806012935"
+                 data-text="And that’s it - ‘vorbei, verweht, nie wieder’ - thanks for listening. This album is pretty dense and there’s a lot going on and a lot of references (plus a lot of German) - it definitely asks more of the listener and won’t be for everyone… #timstwitterlisteningparty" data-datetime="11:46 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442092671539957765"
+                 data-text="It’s definitely worth looking up the poem &amp; having a read of a translation as it sums up so much of life in a big city - opportunity, alienation, chances gone in a flash, collisions, happiness. Recording it during the pandemic felt even more bittersweet #timstwitterlisteningparty" data-datetime="11:44 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442092606716977164"
+                 data-text="RT @Tim_Burgess: If you’re going to gigs, more than ever, try to arrive in time to see the support bands. Musicians have had a rough couple…" data-datetime="11:44 AM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442092413879832577"
+                 data-text="Carrying on the Blade Runner parallels we end with the  sound of rainfall, recorded in Schöneberg where we stayed during the recording. The cars driving past sounded like rushes of white noise or waves - serendipity #timstwitterlisteningparty" data-datetime="11:43 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442092297773068291"
+                 data-text="The wonderful German actor Nina Hoss is reading the equally wonderful Kurt Tucholsky poem ‘Augen in der Großstadt’ here (‘eyes in the big city’). I don’t think you need to be able to speak or understand German to hear the beauty in it #timstwitterlisteningparty" data-datetime="11:42 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442092197332099073"
+                 data-text="11. ICH UND DIE STADT
+This is named after Ludwig Meidner’s extraordinary painting of the same name #timstwitterlisteningparty https://t.co/lx9yx7coXz" data-datetime="11:42 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442091979593199619"
+                 data-text="I faded out the synths, reverbs, atmospherics and so on for the end to leave it very delicate and exposed - I’ve often done the same trick in reverse but I think it works very nicely like this to bring things into sharper focus #timstwitterlisteningparty" data-datetime="11:41 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442091775250755588"
+                 data-text="The ‘Blade Runner’ synth is all over this again - it adds such a mournful, evocative character to the whole record I think. Lang\'s Metropolis was a big influence on BR (and on this record) so in my mind there’s a thread / connection #timstwitterlisteningparty" data-datetime="11:40 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442091660935147523"
+                 data-text="I originally intended to use only ‘diagonal’ waveforms for the track as some kind of high-concept mirror of the film, but it was too limiting as well as being far too pretentious, so I went back to tinkling on the piano again instead #timstwitterlisteningparty" data-datetime="11:40 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442091582002454528"
+                 data-text="@PedroBlairzo The second and third ones are of most concern https://t.co/Ey5Xcj8hJA" data-datetime="11:40 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442091216959533061"
+                 data-text="10. LICHTSPIEL III: SYMPHONIE DIAGONALE
+This is my favourite of the three films we wrote about, Viking Eggeling’s Symphonie Diagonale, which premiered in Berlin in 1925: https://t.co/ZTAjmXmNZg #timstwitterlisteningparty" data-datetime="11:38 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442090954232668165"
+                 data-text="@SharmanSomerset Steve Gadd inspired groove. Lovely to play." data-datetime="11:37 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442090928974479366"
+                 data-text="I had to be quite careful on the vocoder to say ‘Schwarz’ very clearly, as ‘schwanz’ apparently means something quite different in German #timstwitterlisteningparty" data-datetime="11:37 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442090823831769088"
+                 data-text="@waxandbeans @LlSTENlNG_PARTY 🖤🧡🖤🧡" data-datetime="11:36 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442090697864138754"
+                 data-text="The ‘theme’ from earlier in the record resurfaces here, modified slightly… I think it pops up a good four or five times across the album proper #timstwitterlisteningparty" data-datetime="11:36 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442090568876797953"
+                 data-text="I originally thought I’d make the song just three chords, one for each colour, and that’s how I started writing it - that became limiting, though (and boring), so it expanded into this more full piece #timstwitterlisteningparty" data-datetime="11:35 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442090474265726980"
+                 data-text="The film is a document of his Light Space Modulator, a contraption he built to refract and reflect light and create all these shimmering reflections. The main, floaty, endlessly changing refrain is an attempt to mirror that process #timstwitterlisteningparty" data-datetime="11:35 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442090363573866502"
+                 data-text="Moholy-Nagy was a Hungarian who moved to Berlin &amp; became a key part of the Bauhaus movement (later founding the New Bauhaus in Chicago when he left Germany before WWII). His photos, paintings and photograms are incredible #timstwitterlisteningparty" data-datetime="11:35 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442090220820783104"
+                 data-text="9. LICHTSPIEL II: SCHWARZ WEISS GRAU
+Named after László Moholy-Nagy’s film of the same name, another one I’d recommend viewing in full - it\'s a beauty: https://t.co/5QJ5F4Re5T #timstwitterlisteningparty" data-datetime="11:34 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442089874782240772"
+                 data-text="The clarinet section is on this track as well, towards the end. It’s a little hard to hear due to the saturation and general busy-ness of the mix but their Steve Reich-esque pulses fit in quite well I think #timstwitterlisteningparty" data-datetime="11:33 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442089713163067401"
+                 data-text="Ruttmann wrote that his film was ‘develop[ing] the formal motif with time’ and I think that’s what I tried to do here, perhaps subconsciously - a 32 bar phrase which moves between keys and adds layers as it goes #timstwitterlisteningparty" data-datetime="11:32 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442089550788976643"
+                 data-text="Most of this track is just one synth track from the Deckard’s Dream, with me ‘playing’ the organ-style pitch control to create some of the high shimmers. Using physical instruments like this is a very satisfying, tactile &amp; inspiring way of working #timstwitterlisteningparty" data-datetime="11:31 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442089406022705155"
+                 data-text="Stills don’t really do the film justice (I’d recommend watching it in full: https://t.co/auzwlSBBXm) but some of the shapes definitely inspired Studio Posselt’s amazing album artwork and illustrations  #timstwitterlisteningparty https://t.co/Ce8h7Hysmn" data-datetime="11:31 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442089294496088072"
+                 data-text="@clausym Self-reported. Just made a tenner" data-datetime="11:30 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442089235939569666"
+                 data-text="I found these films on a day off in Berlin on our November 2018 tour, at the Berlinische Galerie (my favourite gallery in Berlin). I had the title Bright Magic in my head but no clear idea of why or how.. then saw these and the lightbulb went off  #timstwitterlisteningparty" data-datetime="11:30 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442088942661103625"
+                 data-text="Having laid the foundations of the city and some of its mythic figures, we make the creative leap through Kubrick’s stargate, off into pure abstraction &amp; expressionism and our own previously mentioned leap into the unknown. Plus Pseuds Corner too #timstwitterlisteningparty" data-datetime="11:29 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442088785206988800"
+                 data-text="8. LICHTSPIEL I: OPUS
+We’re into the first of the three Lichtspiel (‘light-play’) pieces now and this is the \'bright magic\' of the title. This piece is based on Ruttmann’s film of the same name, the first abstract animated film in history #timstwitterlisteningparty" data-datetime="11:28 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442088618735120384"
+                 data-text="We had originally wanted to use a sample of Bowie (‘I’m not an original thinker… what I’m best at doing is synthesising those things in society… refracting them’) but it didn’t work out. I think for the best as it’d be too on the nose #timstwitterlisteningparty" data-datetime="11:28 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442088497175793665"
+                 data-text="I’m not much of a pianist but I was never going to pass up the opportunity to record some grand piano in the Meistersaal - here I am, somewhat ham-fistedly tinkling the ivories (photo by Andrew MacColl) #timstwitterlisteningparty https://t.co/pMGLk2nvvf" data-datetime="11:27 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442088351272734721"
+                 data-text="Sonically it aims to recall Warszawa from Low with the piano and synths, as well as the sustained bends on the guitars (‘Heroes’) and the pitched down snare drum (most of side A of Low), while still being new and ‘ours’ #timstwitterlisteningparty" data-datetime="11:27 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442088223266717698"
+                 data-text="There he is. Just hanging out at Hansa.  #timstwitterlisteningparty https://t.co/n4m638Z0vd" data-datetime="11:26 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442088127510704128"
+                 data-text="Low\'s side B is such an inspiration; I wanted our Bowie tribute to kick off our own side B of sonic exploration - nearly all instrumental with no samples (and no English). Berlin has acted as a muse for so many &amp; I wanted to see where it would take us #timstwitterlisteningparty" data-datetime="11:26 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442087941845700613"
+                 data-text="7. THE VISITOR
+This is named after the album that Bowie’s character produces at the end of The Man Who Fell To Earth. If ever there was an ultimate ‘visitor’ to Berlin from a creative perspective, there’s a strong argument for it being Bowie #timstwitterlisteningparty" data-datetime="11:25 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442087673741545487"
+                 data-text="Plus, of course, @EERAmusic\'s vocals take it all the way up the ladders to heaven #timstwitterlisteningparty" data-datetime="11:24 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442087671900172291"
+                 data-text="The ending of the song starts to fragment - the guitar glitches, there are audible tape artefacts on the strummed guitar, the tempo starts to wobble around and the whole thing starts to dissolve a bit, an attempt to mirror the dream falling to pieces #timstwitterlisteningparty" data-datetime="11:24 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442087424968912900"
+                 data-text="We recorded an 8-piece clarinet section in the famous Meistersaal (the big hall by the wall) for this one - they were amazing and I love the textures that they brought to the song (photo by Andrew MacColl). Arranged &amp; conducted by our man @rittipo #timstwitterlisteningparty https://t.co/NQWiTUSBht" data-datetime="11:23 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442087250561482754"
+                 data-text="Reading Alexandra Richie’s ‘Faust’s Metropolis: A History of Berlin’ led me to Berber. Richie described her as the ultimate metaphor for the Weimar age, a ‘shimmering dream’, and that’s how I wanted this song to sound #timstwitterlisteningparty" data-datetime="11:22 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442087115920068612"
+                 data-text="The painter Otto Dix captured her in his ‘Portrait of the dancer Anita Berber’ - it’s a remarkable painting #timstwitterlisteningparty https://t.co/PINMYw16Fh" data-datetime="11:22 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442086976123965440"
+                 data-text="She was famously addicted to cocaine, morphine, opium and alcohol, and most fond of chloroform too. She died very young, aged 29, of pulmonary tuberculosis (presumably the above didn’t help either) #timstwitterlisteningparty" data-datetime="11:21 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442086891545710602"
+                 data-text="6. GIB MIR DAS LICHT
+This (‘give me the light’) is about Anita Berber, the epitome of the Weimar era and a symbol of beauty, excess and debauchery. The lyrics are based on a poem she wrote called ‘kokain’ (it’s not great, but @EERAmusic\'s lyrics are) #timstwitterlisteningparty" data-datetime="11:21 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442086786067570690"
+                 data-text="She (like Bowie) controlled her myth to such an extent that she even turned her death into a beautiful theatrical performance of sorts. Amazing. If you don’t know her story, please, read more about her (Rory MacLean’s book is a great start) #timstwitterlisteningparty" data-datetime="11:20 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442086730878783497"
+                 data-text="‘Ich hab noch einen Koffer in Berlin’ - I still keep a suitcase in Berlin, a famous line from one of her songs, but also in my mind a nod to her decision to be buried in Berlin despite living in self-imposed exile for so long…  #timstwitterlisteningparty" data-datetime="11:20 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442086555405979651"
+                 data-text="The drop-down section is very much inspired by Just Like Honey by The Jesus &amp; Mary Chain, a song we both loved #timstwitterlisteningparty" data-datetime="11:20 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442086419925712898"
+                 data-text="Thoroughly enjoying the various dancing GIFs being posted here! #timstwitterlisteningparty" data-datetime="11:19 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442086397947498498"
+                 data-text="@LlSTENlNG_PARTY @PSB_HQ Coach C" data-datetime="11:19 AM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442086355538960386"
+                 data-text="Andreya Casablanca is one half of Berlin-based band Gurr. She did such a sensational job on this song - her energy and punky spirit were exactly what we were after to pay tribute to Dietrich and her take-no-prisoners approach #timstwitterlisteningparty" data-datetime="11:19 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442086249100107776"
+                 data-text="‘Am I the moth or a flame’ - again tying back to Im Licht, Berlin as a city / source of light attracting people from all over the world but also echoing Dietrich’s ‘Falling in Love Again’ from the Blue Angel (blue again, obviously) #timstwitterlisteningparty" data-datetime="11:18 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442086141298159616"
+                 data-text="This is named after My Blue Heaven, a song she performed and which she said first made her dream of moving to America. At the same time it ties into the idea of her as a kind of serene, untouchable celestial being to be worshipped by us mere mortals #timstwitterlisteningparty" data-datetime="11:18 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442085977753677828"
+                 data-text="There was a sample over the start from The Blue Angel - \'I knew you\'d come back... they always come back to me\', but we were turned down by a very officious response.. so just imagine that if you can #timstwitterlisteningparty" data-datetime="11:17 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442085972791816194"
+                 data-text="Absolutely loved getting to use this @masshoffdrums beast of a kit at Hansa! #timstwitterlisteningparty https://t.co/E96UrtC3sv" data-datetime="11:17 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442085804491350018"
+                 data-text="@PedroBlairzo @neworder Love that song!" data-datetime="11:17 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442085803610439680"
+                 data-text="5. BLUE HEAVEN
+This is about Marlene Dietrich, her self-made image, her power, her myth, her illusion. She’s simply one of the most extraordinary figures of popular culture of the entire 20th century in my book #timstwitterlisteningparty" data-datetime="11:17 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442085571229364224"
+                 data-text="I love the way @EERAmusic takes it up and away for the outro - I asked her to do something Liz Fraser-esque, but I think it reminds me most of Annie Lennox\'s Eurythmics vocals (There Must Be An Angel especially) #timstwitterlisteningparty" data-datetime="11:16 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442085390639194113"
+                 data-text="Same https://t.co/4zSdfhrgM4" data-datetime="11:15 AM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442085351921700866"
+                 data-text="This song turned into a bit of a monster.. about 250 different tracks in the project, but weirdly it felt wrong taking any of them out as they all play a role in the energy and feel of the song #timstwitterlisteningparty" data-datetime="11:15 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442085153610809347"
+                 data-text="I must like this one as I\'ve just turned it up #timstwitterlisteningparty" data-datetime="11:14 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442084932252176388"
+                 data-text="‘Komm tanzen / und loslassen’ - come, dance, and lose yourself. I was once told by a dance teacher (don’t ask) that there aren’t many shortcuts to joy in life, but dancing is one of them. She was 100% right #timstwitterlisteningparty" data-datetime="11:13 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442084690689617920"
+                 data-text="The trickiest PSB song for me to play I think. It has overtaken E.V.A. The chart itself is a bit of an eyesore. #timstwitterlisteningparty https://t.co/4BISkSbbYQ" data-datetime="11:12 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442084659836248064"
+                 data-text="Depeche Mode were very kind to let us use the riff to People Are People, also recorded at Hansa &amp; one of the biggest gay anthems of the 80s. Our track is about permissibility, acceptance, the joy of movement, so it\'s an honour to reference theirs #timstwitterlisteningparty" data-datetime="11:12 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442084593197203465"
+                 data-text="This was the second track we recorded with @EERAmusic, after Gib mir das Licht (more on that later). Her vocals in the verses are pitched down and re-played about 5 semitones below where she sang them which helps with the androgynous feel  #timstwitterlisteningparty" data-datetime="11:12 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442084469326835716"
+                 data-text="The title is taken from Rory MacLean’s book Berlin: Imagine a City (with kind permission!), which I can’t recommend enough. His approach to summing up the history of Berlin in such an imaginative and creative way was a massive inspiration for the record #timstwitterlisteningparty" data-datetime="11:11 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442084387907010565"
+                 data-text="4. PEOPLE, LET’S DANCE
+We’ve moved now from the first part of the record - the physical building of the city and its industry and status as a city of light - into the second, building the myth of Berlin. The nightlife is obviously a massive part of that #timstwitterlisteningparty" data-datetime="11:11 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442084236769566722"
+                 data-text="The ‘theme’ from Der Sumpf has re-emerged here, played on the modern CS-80 (Vangelis’ ‘Blade Runner’ synth), the Deckard’s Dream. It’s on every track on the record and is a real beauty #timstwitterlisteningparty" data-datetime="11:10 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442083976177463296"
+                 data-text="Working with Blixa was as intimidating and interesting as you might imagine. He was perfectly nice, &amp; collaborative, but obviously I was terrified and didn’t want to come across like an idiot. I was amazed he said yes to the track #timstwitterlisteningparty" data-datetime="11:09 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442083789161713664"
+                 data-text="Shred🔥! I look forward to getting this repeatedly, and awfully, wrong on tour every night this autumn #timstwitterlisteningparty" data-datetime="11:09 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442083761806585856"
+                 data-text="Me trying to look all serious, whilst hitting various metal objects. It turns out a brake disc from a scrap yard makes a great, anvil like sound. Helped out by the wonderful Matt Davies. #timstwitterlisteningparty https://t.co/kB7PsHaxNr" data-datetime="11:08 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442083588795768832"
+                 data-text="These industrial sounds are all from Wochenende so are all original Berlin sounds from 1928, cut up and rearranged into rhythmic parts. They add a lot of atmosphere to the track #timstwitterlisteningparty" data-datetime="11:08 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442083495950618626"
+                 data-text="I always enjoy echoes of earlier works in other bands’ albums so putting in these samples from Progress was an attempt to do just that here - plus it tied in so well with the song #timstwitterlisteningparty" data-datetime="11:07 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442083428556423171"
+                 data-text="3. DER RHYTHMUS DER MASCHINEN
+This is another track about the building of the city itself - the heavy industry and railways which drove so much of the expansion of Berlin in the late 19th and early 20th centuries (‘the rhythm of the machines’) #timstwitterlisteningparty" data-datetime="11:07 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442083319064064001"
+                 data-text="We smashed a big lightbulb for the end of the song - here’s @psb_wriggles at the key moment (photo by Andrew MacColl) #timstwitterlisteningparty https://t.co/VGxxMDndQi" data-datetime="11:07 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442083311950643202"
+                 data-text="Let us know whereabouts in the world you are for our Bright Magic @PSB_HQ @LlSTENlNG_PARTY https://t.co/catWky2PsX" data-datetime="11:07 AM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442083272310280193"
+                 data-text="After...#timstwitterlisteningparty https://t.co/kYW3e2IZ6V" data-datetime="11:06 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442083181973413888"
+                 data-text="Just wait for this big guy to end with! Before...#timstwitterlisteningparty https://t.co/NBlonu1JYF" data-datetime="11:06 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442083128122675201"
+                 data-text="@PSB_HQ As modelled here by @psb_wriggles" data-datetime="11:06 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442083083491201026"
+                 data-text="Leipzigerstrasse was the first in Berlin to be fully electrified with streetlights. I thought picking up these pulses &amp; adding them to the track would be a cool and very geeky idea. The static bursts, bass drum &amp; hi hat are all formed from these sounds #timstwitterlisteningparty" data-datetime="11:06 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442082959117492229"
+                 data-text="I also wandered up and down Leipzigerstrasse with one of these (https://t.co/zYPmSrJCxH), ‘a wide-band receiver that makes it possible to perceive the electromagnetic landscape around you’ #timstwitterlisteningparty" data-datetime="11:05 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442082836828282880"
+                 data-text="… there’s no better symbol of creative inspiration or an imaginative breakthrough than the humble lightbulb after all. We used a lot of lightbulbs as percussion in this track (photo by Andrew MacColl) #timstwitterlisteningparty https://t.co/ILuXUe1ibV" data-datetime="11:05 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442082689733906443"
+                 data-text="As well as hosting the exhibition, Berlin (via AEG and Siemens) manufactured most of the lightbulbs for Europe at the time &amp; was known as the City of Light. I loved the way the lightbulb worked as both a literal figure for the city &amp; a metaphorical one #timstwitterlisteningparty" data-datetime="11:04 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442082609044074496"
+                 data-text="The lady at the start says ‘mach schon!’, by the way, which means ‘get ready’, but also sounds a bit like The Beatles’ famous Hamburg instruction to ‘mach schau’. It’s also from Wochenende #timstwitterlisteningparty" data-datetime="11:04 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442082555390431234"
+                 data-text="Apparently the city didn’t sleep for the duration of the exhibition - here are a few photos of the time. One of the melodies in the chorus (the repeated 4 notes) is a nod to Kurt Weill’s song ‘Berlin im Licht’ which he wrote for the exhibition #timstwitterlisteningparty https://t.co/eQaPiayV2w" data-datetime="11:04 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442082543470215175"
+                 data-text="Proof that I played actual lightbulbs on this track. Another thing to add to my CV. @PSB_HQ  #timstwitterlisteningparty https://t.co/RdgXVg32Mx" data-datetime="11:04 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442082323164401670"
+                 data-text="2. IM LICHT
+This was meant as a kind of 2001-esque jump cut - from the primeval swamp to the light, noise and excitement of the early 20th century. It means ‘in the light’ and is named after the Berlin Im Licht exhibition in 1928 #timstwitterlisteningparty" data-datetime="11:03 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442082229144809475"
+                 data-text="Nearly all the acoustic elements in this track (piano, timpani, percussion) were recorded to tape at normal speed then played back at half speed. Everything sounds much beefier and a bit more melancholic like that #timstwitterlisteningparty" data-datetime="11:02 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442082147838402561"
+                 data-text="On the train with Bright Magic by @PSB_HQ soundtracking the journey. A perfect start" data-datetime="11:02 AM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442082084500107269"
+                 data-text="I recorded the birdsong &amp; water effects down by the Pfaueninsel (‘Peacock Island’) by the Havel… very keen for any birdwatchers out there to identify birdsong. So far I have buzzard, chiffchaff, wren and allegedly a willow warbler #timstwitterlisteningparty" data-datetime="11:02 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442082008344117254"
+                 data-text="This was intended to be a very murky, bubbly, primeval-sounding intro, then the city starts to emerge from the swamp and we start hearing industrial &amp; electronic sounds (the industrial sounds taken from Ruttmann’s pioneering ‘Wochenende’ audio collage) #timstwitterlisteningparty" data-datetime="11:01 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442081839942934529"
+                 data-text="As for ‘Symphony of a Great City’, that comes from Walter Ruttmann’s film of the same name from 1927. The theme which emerges in this song, on piano, is inspired by music from Edmund Meisel’s original score for that film &amp; repeats across the record #timstwitterlisteningparty" data-datetime="11:01 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FPSB_HQ%2Fstatus%2F1442081685391151104"
+                 data-text="1. DER SUMPF (SINFONIE DER GROßSTADT)
+This translates as ‘The Swamp (Symphony of a Great City)’. Berlin is built on very sandy soil which was originally marshland / swamp - named by the Slavic peoples who first settled it (brl = swamp in Slavic) #timstwitterlisteningparty" data-datetime="11:00 AM Sep 26, 2021"> 
+                PSB_HQ            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fpsb_wriggles%2Fstatus%2F1442081629271437321"
+                 data-text="Here we go! #timstwitterlisteningparty" data-datetime="11:00 AM Sep 26, 2021"> 
+                psb_wriggles            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442081542243696646"
+                 data-text="Going in with a first listen to Bright Magic 
+
+Handing over to @PSB_HQ for an early afternoon start at The @LlSTENlNG_PARTY https://t.co/zg5ObQ1MPe" data-datetime="11:00 AM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

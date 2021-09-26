@@ -1,0 +1,511 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5PORx6PL7CdOywSJuGVrnc" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0239180b45808493a1f687c91d" alt="Screamadelica" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Primal Scream</span><br/><span class="sub-colour">Screamadelica</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(80557)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5PORx6PL7CdOywSJuGVrnc" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_80557_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 76 tweets from Sunday 26th September 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/ScreamOfficial" target="_blank"><img src="https://pbs.twimg.com/profile_images/1420781252882411520/4uQQfQ1z_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/ScreamOfficial.jpg'"><br/>@ScreamOfficial</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1401913725288960003/n_dKSg1J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1442186449978286082/h8TKmyID_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Movin' on Up" data-start="0"
+             data-duration="228" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Slip Inside This House" data-start="229"
+             data-duration="314" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Don't Fight It, Feel It" data-start="544"
+             data-duration="411" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Higher Than the Sun - Higher Than the Orb Mix" data-start="956"
+             data-duration="216" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Inner Flight" data-start="1173"
+             data-duration="300" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Come Together" data-start="1474"
+             data-duration="619" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Loaded - Andy Weatherall Mix" data-start="2094"
+             data-duration="421" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Damaged" data-start="2516"
+             data-duration="337" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="I'm Comin' Down" data-start="2854"
+             data-duration="359" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Higher Than the Sun (feat. Jah Wobble) - A Dub Symphony in Two Parts" data-start="3214"
+             data-duration="457" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Shine Like Stars" data-start="3672"
+             data-duration="225" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="3898"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485139180b45808493a1f687c91d" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-76" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442219666097725442"
+                 data-text="Right back atcha @ScreamOfficial https://t.co/Fo9Xp0flhk" data-datetime="8:08 PM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442219284529360896"
+                 data-text="❤️ https://t.co/dTNRXDxSDz" data-datetime="8:07 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442219058347319300"
+                 data-text="And that is and was Screamadelica. Hope you enjoyed our @LlSTENlNG_PARTY 
+
+Much love to @Tim_Burgess 
+
+See you out in the world sometime x x https://t.co/KgqrpybXRC" data-datetime="8:06 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="150000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442218604515115011"
+                 data-text="Bobby and @ScreamOfficial helped save @thecharlatans - we were broken after Rob’s death. Gigs looming but no desire to play or continue. Bobby suggested that Duffy would learn our songs and join us to help us through. Never forgotten - we were saved. Thanks Bob, thanks Duffy x x" data-datetime="8:04 PM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442217975076073473"
+                 data-text="11. Shine like stars….. For those we have lost are now found
+
+Duffy x x" data-datetime="8:02 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442217718330105859"
+                 data-text="Shine Like Stars. Spiritual rebirth. Back in the womb. See again with the eyes of a new born child. Rise and dance in the dawn of a new day. Spaced out / star child - SCREAMADELICA !
+
+Bobby" data-datetime="8:01 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442217709819809793"
+                 data-text="Hail Jah Wobble - what a bassline  #HigherThanTheSun #Screamadelica #timstwitterlisteningparty @LlSTENlNG_PARTY Photos taken in 2016 https://t.co/QkNluuxneM" data-datetime="8:01 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FMr_Dave_Haslam%2Fstatus%2F1442217518429581313"
+                 data-text="RT @lordmaccrington: @Mr_Dave_Haslam This is such a beautifully composed photo that was used on Facebook without a credit. Anyone know who…" data-datetime="8:00 PM Sep 26, 2021"> 
+                Mr_Dave_Haslam            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnicsmy%2Fstatus%2F1442217513123827712"
+                 data-text="@LlSTENlNG_PARTY @ScreamOfficial Ironworks in Inverness dec 19, front row https://t.co/8OxqlnRXy2" data-datetime="8:00 PM Sep 26, 2021"> 
+                nicsmy            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FStevenG86234901%2Fstatus%2F1442217465476493321"
+                 data-text="@LlSTENlNG_PARTY @ScreamOfficial OTD Aberdeen https://t.co/Un3Wr05Cv8" data-datetime="8:00 PM Sep 26, 2021"> 
+                StevenG86234901            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="241000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442217098067861506"
+                 data-text="Fave ever @ScreamOfficial gig??? https://t.co/BPoaAFY2oV" data-datetime="7:58 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442216085810413568"
+                 data-text="Higher Than the Sun ( A Dub Symphony in Two Parts ) - Trapped in the void. Voices in the radiators. Electronic shivers. Burned out circuits. @realjahwobble’s depth charge dub bass penetrates yr skull. A bedsit Icarus - wings melting.
+Psychic shipwreck.
+
+Bobby" data-datetime="7:54 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="111000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442215964829884419"
+                 data-text="@73nat @Tim_Burgess Just spotted in my Filofax that I saw The Charlatans for the first time at The Powerhaus pub in Islington later that week!" data-datetime="7:54 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442215497261531137"
+                 data-text="@PGMatta @LlSTENlNG_PARTY Possibly because they\'re brilliant" data-datetime="7:52 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442215204171894787"
+                 data-text="@grievousangels @LlSTENlNG_PARTY @Tim_Burgess @ScreamOfficial Sadly not. Loved them and saw them lots back then, but no pics. I wasn\'t really taking photos at that time and only had my camera at the ICA as Mighty Mighty wanted some snaps. Also took some of Primal Scream, Mighty Lemon Drops and The Pastels, but that was it" data-datetime="7:51 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442214945786040326"
+                 data-text="Anyone hearing Screamadelica all the way through for the first time ever at The @LlSTENlNG_PARTY?? https://t.co/ydGr4Yrac1" data-datetime="7:50 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442214729146044421"
+                 data-text="9. Coming down …… No Regret Sounds
+
+Duffy" data-datetime="7:49 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442214427676250114"
+                 data-text="I\'m Coming Down - Was the going up worth the coming down ? Yes !!!! No
+
+Bobby" data-datetime="7:48 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442214058833457152"
+                 data-text="Screamadelica at number three in the NME writers’ chart of the best albums of 1991 #timstwitterlisteningparty @LlSTENlNG_PARTY https://t.co/NJMcXQ8raM" data-datetime="7:46 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442213632092381185"
+                 data-text="https://t.co/wvdoVckI4s" data-datetime="7:44 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442213445772873734"
+                 data-text="Damaged - Country soul - Celtic style. Robert Young didn\'t have \'Heart &amp; Soul\' tattooed on his arm for nothing you know.
+
+Bobby" data-datetime="7:44 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442213432011329541"
+                 data-text="@BbaTomasz @LlSTENlNG_PARTY @Tim_Burgess @ScreamOfficial This was part of the NME C86 week - they were great. Loved them back then" data-datetime="7:44 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442213176125366272"
+                 data-text="8. Damaged….Thieves &amp; Spiders tend to agree.. A mist in the morning Luck sweet mystery
+
+Duffy" data-datetime="7:43 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442213072588795905"
+                 data-text="Damaged by @ScreamOfficial 
+
+Anyone crying yet? https://t.co/wKIL2vd2CF" data-datetime="7:42 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442212874034712577"
+                 data-text="https://t.co/MS1XdLTm4T" data-datetime="7:41 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442212625853648901"
+                 data-text="Loaded - totally transformed by the magic touch of Andrew Weatherall. Here’s my white label copy &amp; original press release from Jan 1990 - things were about to take off... #timstwitterlisteningparty @LlSTENlNG_PARTY @ScreamOfficial @Tim_Burgess https://t.co/LrEZcSKrqS" data-datetime="7:40 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442212486841835527"
+                 data-text="Listen to a tape recording of my 1990 interview with Andrew Weatherall about the creation of Loaded here 
+https://t.co/VVnboGUNEI https://t.co/FS8KEKEmGK" data-datetime="7:40 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="116000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442212357506097161"
+                 data-text="Remember that very first time you ever heard Loaded by @ScreamOfficial?? Yeah, me too https://t.co/nTKjVNRGpO" data-datetime="7:39 PM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442211870111268865"
+                 data-text="👆Duffy" data-datetime="7:37 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442211776075075595"
+                 data-text="7. Loaded… Our Walls of Jericho Boogie Crashed &amp; Blasted &amp; Blessed All Night" data-datetime="7:37 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442211683024310276"
+                 data-text="Loaded - Weatherall\'s dark alchemy transforms cheating blues ballad into Acid House national anthem. \"You must destroy to create\" - Malcolm McClaren
+
+Bobby" data-datetime="7:37 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442211578741460993"
+                 data-text="Andrew Weatherall press photos taken by Grant Peden #timstwitterlisteningparty https://t.co/deAPh32B8k" data-datetime="7:36 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442211534701309957"
+                 data-text="https://t.co/fjTbTZ0vuM" data-datetime="7:36 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442211230735818753"
+                 data-text="Unedited transcripts of my interviews with Bobby Gillespie &amp; Andrew Weatherall discussing the creation of Primal Scream\'s Loaded in Jan 1990, a month before it was released #timstwitterlisteningparty  @LlSTENlNG_PARTY @Tim_Burgess @ScreamOfficial https://t.co/jdZe6Fqoft" data-datetime="7:35 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442211115841122305"
+                 data-text="https://t.co/MMpETMHR7J" data-datetime="7:34 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="151000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442210746784440325"
+                 data-text="Gospel, Gospel, Gospel, we are together https://t.co/yre8nvRmy0" data-datetime="7:33 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Fbluebeard69%2Fstatus%2F1442210113649926144"
+                 data-text="@LlSTENlNG_PARTY @ScreamOfficial 
+#Screamadelica https://t.co/GDSetxVswr" data-datetime="7:31 PM Sep 26, 2021"> 
+                bluebeard69            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442209847852867588"
+                 data-text="Come together as one" data-datetime="7:29 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442209770186756100"
+                 data-text="Thought I couldn’t love Duffy more, turns out I can https://t.co/CxPljV1RrD" data-datetime="7:29 PM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442209727925133312"
+                 data-text="Come Together - here’s the Creation press release which arrived with my copy of the 12” #timstwitterlisteningparty @LlSTENlNG_PARTY #screamadelica https://t.co/F7LgJM2Wjf" data-datetime="7:29 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442209602288984066"
+                 data-text="6. Come Together… Sly Stone &amp; Vera Lynn 
+
+Duffy" data-datetime="7:28 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442209513453539332"
+                 data-text="Come Together- Acid communism for real. Glimpses of a world transformed. Before the dream faded.
+
+Bobby https://t.co/9HGLkGADaP" data-datetime="7:28 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442209109906845699"
+                 data-text="Bonus 500 points if you have Screamadelica on cassette https://t.co/QLHK7rTWRC" data-datetime="7:27 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442208805002137602"
+                 data-text="Pics please if you’re listening to Screamadelica on vinyl, here at The @LlSTENlNG_PARTY https://t.co/toxmUU8fM5" data-datetime="7:25 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442208769769807876"
+                 data-text="Here are some of my photos of Primal Scream taken at the ICA in the summer of 1986, five years before Screamadelica #timstwitterlisteningparty @LlSTENlNG_PARTY @Tim_Burgess @ScreamOfficial https://t.co/fEhRO5fc1o" data-datetime="7:25 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="149000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442208446485520385"
+                 data-text="https://t.co/k3jMMBV63V" data-datetime="7:24 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442207822566076417"
+                 data-text="Inner Flight - The sound of free. Melodic poetry. We will meet someday on the terminal beach.
+
+Bobby x x" data-datetime="7:21 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442207709139554305"
+                 data-text="Inner Flight 
+
+An American promotional cassette bucket for Screamadelica 
+
+Duffy https://t.co/UOoybJxQIR" data-datetime="7:21 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442207688226713600"
+                 data-text="Higher Than The Sun topping the NME writers’ chart of the best singles of 1991 #timstwitterlisteningparty @Tim_Burgess @LlSTENlNG_PARTY @ScreamOfficial Here’s a playlist based on the chart https://t.co/KtFzB8SyBR https://t.co/lumq85S2uK" data-datetime="7:21 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442207241193598976"
+                 data-text="4. Higher … Thy Dark Particles splatter human fountains Over &amp; Beyond the lessons of the Laws.
+
+Duffy" data-datetime="7:19 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442207068975476738"
+                 data-text="Higher Than the Sun - Blakean epiphanies for starsailors. Our best song.
+
+Bobby" data-datetime="7:18 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442206930299203585"
+                 data-text="Screamadelica at number one in the Melody Maker writers’ chart of the best albums of 1991 #timstwitterlisteningparty @LlSTENlNG_PARTY @Tim_Burgess @ScreamOfficial #PrimalScream https://t.co/SvNTBZl0kw" data-datetime="7:18 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442206882840653825"
+                 data-text="Easy to forget but Screamadelica is such a work of genius. It changed so many things that we’ve taken for granted since https://t.co/gCP9Gh8qWg" data-datetime="7:18 PM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1442206694541430786"
+                 data-text="@Tim_Burgess https://t.co/7rf8Q5lbpO" data-datetime="7:17 PM Sep 26, 2021"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1442206537343135746"
+                 data-text="@Tim_Burgess https://t.co/qRizv9HYQa" data-datetime="7:16 PM Sep 26, 2021"> 
+                soozworld            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442206317356228609"
+                 data-text="https://t.co/GZvKPFR9lx" data-datetime="7:15 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1442206081023946753"
+                 data-text="Denise 💔 #timstwitterlisteningparty #screamadelica @LlSTENlNG_PARTY https://t.co/CmkqcJ6FqG" data-datetime="7:14 PM Sep 26, 2021"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442206066872365062"
+                 data-text="Thanks for joining us tonight x x" data-datetime="7:14 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fpodcastdoors%2Fstatus%2F1442205979316158471"
+                 data-text="@Tim_Burgess https://t.co/wOQtuqpmvA" data-datetime="7:14 PM Sep 26, 2021"> 
+                podcastdoors            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442205774659395584"
+                 data-text="Rama lama lama fa fa fa
+Gonna get high \'til the day I die" data-datetime="7:13 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="130000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442205623299493888"
+                 data-text="Screamadelica as a gif please 
+
+I’ll start https://t.co/6OPJWNPrfd" data-datetime="7:13 PM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442205081370120202"
+                 data-text="Don\'t Fight It, Feel it - Erotic nihilism never sounded so good. Maybe Weatherall\'s finest mix. Denise Johnson sings the shit out of it. Perfection.
+
+Bobby" data-datetime="7:11 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442204995403673607"
+                 data-text="3. Don’t fight it …. No time to blink for a moment …We will not slow down
+
+Duffy" data-datetime="7:10 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442204887924740103"
+                 data-text="❤️ https://t.co/qL97DdMwr3" data-datetime="7:10 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="109000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442204732546854912"
+                 data-text="https://t.co/Tslhf2S8cJ" data-datetime="7:09 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442204272175693826"
+                 data-text="Anyone dancing?" data-datetime="7:07 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1442204181339672576"
+                 data-text="Where’s everybody at around the world for our Screamadelica @LlSTENlNG_PARTY?
+
+Let us know https://t.co/kTVW6e89fj" data-datetime="7:07 PM Sep 26, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442203952074960896"
+                 data-text="Thinking of Denise tonight https://t.co/Qq5AJ7FzZm" data-datetime="7:06 PM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442203710352855045"
+                 data-text="Let’s raise a glass to The Scream and to Andrew Weatherall https://t.co/JhOwtCGT5J" data-datetime="7:05 PM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442203409885577218"
+                 data-text="2. Slip inside . The Spirit of Saint Roky… still blows our minds.
+
+D" data-datetime="7:04 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442203288393355267"
+                 data-text="Slip Inside This House - Acid House evangelism. An invocation for all the demon brothers and sisters to partake in ecstatic communion. Shed the old skin and dance in the new.
+
+Bobby" data-datetime="7:03 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442202979621351433"
+                 data-text="Movin on Up - A Bo Diddley rhythm powered Scottish gospel-pop ecstatic hymn of joyous affirmation. Get born or die sinner !
+
+Bobby" data-datetime="7:02 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442202848742100993"
+                 data-text="1 movin on up. Square Jaw Guitar Ascension Gospel …Lifts a burning candle Up instead of down in the redemption of the Soul
+
+D" data-datetime="7:02 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442202569078501384"
+                 data-text="https://t.co/nclmkHd1Qp" data-datetime="7:01 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FScreamOfficial%2Fstatus%2F1442202500581376000"
+                 data-text="It’s time 
+
+Screamadelica @LlSTENlNG_PARTY 
+
+Here we go https://t.co/T2aTOLQ3uv" data-datetime="7:00 PM Sep 26, 2021"> 
+                ScreamOfficial            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1442202342531739651"
+                 data-text="Let’s do this 
+
+@ScreamOfficial https://t.co/S41uYFfcMq" data-datetime="7:00 PM Sep 26, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
