@@ -1,0 +1,679 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4YK1cvgJhHh65sezMuYLGv" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02f5f9fd62ebd2e3a0e8b1b3b1" alt="Imagine (The Ultimate Mixes)" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">John Lennon</span><br/><span class="sub-colour">Imagine (The Ultimate Mixes)</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(131344)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4YK1cvgJhHh65sezMuYLGv" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_131344_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 88 tweets from Saturday 9th October 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/johnlennon" target="_blank"><img src="https://pbs.twimg.com/profile_images/1425937251318521861/APv9vgPY_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/johnlennon.jpg'"><br/>@johnlennon</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/yokoono" target="_blank"><img src="https://pbs.twimg.com/profile_images/1425937498119811072/AtKuzNTe_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/yokoono.jpg'"><br/>@yokoono</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1442186449978286082/h8TKmyID_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Imagine - Ultimate Mix" data-start="0"
+             data-duration="186" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Crippled Inside - Ultimate Mix" data-start="187"
+             data-duration="231" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Jealous Guy - Ultimate Mix" data-start="419"
+             data-duration="254" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="It's So Hard - Ultimate Mix" data-start="674"
+             data-duration="149" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="I Don’t Wanna Be A Soldier Mama I Don’t Wanna Die - Ultimate Mix" data-start="824"
+             data-duration="368" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Gimme Some Truth - Ultimate Mix" data-start="1193"
+             data-duration="198" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Oh My Love - Ultimate Mix" data-start="1392"
+             data-duration="167" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="How Do You Sleep? - Ultimate Mix" data-start="1560"
+             data-duration="339" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="How? - Ultimate Mix" data-start="1900"
+             data-duration="225" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Oh Yoko! - Ultimate Mix" data-start="2126"
+             data-duration="260" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2387"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851f5f9fd62ebd2e3a0e8b1b3b1" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-88" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="205000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1446939287191232516"
+                 data-text="What a brilliant album
+#Imagine50 
+
+Huge thanks to @yokoono and everyone at the @johnlennon estate
+
+x x https://t.co/fQuuLiAVVg" data-datetime="8:43 PM Oct 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446938426067099654"
+                 data-text="Listen to \'God\' on @SongExploder
+Recorded #onthisday 9 October 1970 https://t.co/c43B6jiA5Q" data-datetime="8:39 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446938410141290498"
+                 data-text="Thankyou for joining our #TimsTwitterListeningParty for Imagine.
+Happy BIrthday John!
+Happy Birthday Sean!
+I love you!
+yoko
+
+#IMAGINE50 https://t.co/KcSIrgZrGZ" data-datetime="8:39 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446938335528824834"
+                 data-text="OUTRO.
+\'I\'d just like to add a special thankyou...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/ZoP4tPlXvm" data-datetime="8:39 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446938273537003526"
+                 data-text="In our 14 years together John never stopped trying to improve himself from within. We were best friends. To me, he is still alive. Death alone doesn’t extinguish a flame and a spirit like John.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/GkzHtDZ0f3" data-datetime="8:39 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446938147254902785"
+                 data-text="Every day was different because he made it well for me.  He knew what I was going through, being a certain race and being a woman. At home he was a very gentle person and extremely concerned about me but also concerned about the world too. 
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/xQHbWjrxhk" data-datetime="8:38 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446938019710357504"
+                 data-text="\'My ultimate goal is for Yoko and I to be happy and try and make other people happy through our happiness. I’d like everyone to remember us with a smile.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/vdVQMEFLS8" data-datetime="8:38 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446937896871727105"
+                 data-text="\'There is nothing more important than our relationship, nothing. We dig being together all the time, and both of us could survive apart, but what for? Nothing works better than to have somebody you love hold you.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/DwjQmU2MDa" data-datetime="8:37 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446937767607427073"
+                 data-text="Between us, we were very psychic. We knew all the time what the other was thinking, what was going to be said by the other, our responses, everything. It was sometimes unnerving.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/wzrY1pGgpC" data-datetime="8:37 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446937644445929472"
+                 data-text="\'If I had to do all the things I did in life – 
+a troubled childhood, a troubled teenage life &amp; an amazing whirlwind life with the Beatles and then finally coming to land meeting Yoko – it was worth it.
+Yoko is the beginning of life for me.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/318K1n0lI8" data-datetime="8:36 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446937517694111745"
+                 data-text="\'My most happy moments are since I met Yoko. Before we met, we were half a person. Half the way I’m thinking – musically, philosophically and every other way – is her influence both as a woman and an artist.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/aoSx6DMWjE" data-datetime="8:36 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446937405525831680"
+                 data-text="OH YOKO!
+\'An easy come easy go song - like whistling down the lane to meet your lover. She\'s mine and I\'m always singing/thinking/being about her - it came naturally, we did one take and enjoyed it...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/VoQq8HInTh" data-datetime="8:35 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446937263791910924"
+                 data-text="\'If one just spends time concentrating on a problem, that’s all you do. But if one puts one’s mind on the solution, the problem tends to go away.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/DFVusH5LG2" data-datetime="8:35 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446937138805809152"
+                 data-text="\'When you run fast, which is usually what you do as a youth, you think you have to run fast to stay ahead of the game. But all you’re really doing is running fast, which is fun, you know, but you’re running fast, that’s all.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/Oh2OtAcrxU" data-datetime="8:34 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446937022157963273"
+                 data-text="\'There’s no other time but the present. Anything else is a waste of time.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/qZzuEKKYfp" data-datetime="8:34 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446936887973793795"
+                 data-text="\'My philosophy is ‘You Are Here’. All the bibles, Jesuses, gurus, poets and artists have ever said to people is that this minute is the one that counts; not tomorrow or yesterday. That’s the whole game.\'
+
+#TimsTwitterListeningParty #Imagine50 https://t.co/FjPPi8CHP3" data-datetime="8:33 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446936761008107524"
+                 data-text="\'I always write music to do with my feelings – stripping myself mentally and singing about it. ‘Help!’, ‘I’m A Loser’, ‘In My Life’ - those songs are just the same style. Simple lyrics. They’re all like personalised diaries.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/kkzdEtd5Ci" data-datetime="8:33 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446936637955616781"
+                 data-text="\'I think the more relationships you have, the more you learn about other people. I think whatever love is (and it’s many, many things) it is constant. It’s been the same forever. I don’t think it’ll ever change.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/BQDRfphfhU" data-datetime="8:32 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446936509848956929"
+                 data-text="HOW?
+\'George\'s favourite song, I\'m proud to say. (He also digs the strings on IT\'S SO HARD - maybe a few of his fans will follow his taste and buy it! heh! heh!)...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/83BGrhvati" data-datetime="8:32 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446936356211634180"
+                 data-text="\'It was an emotional thing to split with people after you’ve practically lived in each other’s pockets for a long time.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/C5aZoTRlJR" data-datetime="8:31 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446936258635255814"
+                 data-text="\'I blab me mouth off more than any of them, ’cause I’m an emotional freak. So I was the one that did all the screaming, y’know, but they know me better. They say, \"Sure he screams, but that’s his problem.\"\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/Wv22TNOW5X" data-datetime="8:31 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446936131640119297"
+                 data-text="\'I think there’s none of us that wouldn’t say that the other three are their best friends.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/epasJyg27n" data-datetime="8:30 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446936008969314308"
+                 data-text="\'So I don’t care what they say about that, you know? I’ve always been a little, you know, loose. And I hope it’ll change because I’m fed up of waking up in the papers. 
+But if it doesn’t, my friends are my friends whatever way.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/7POx6nbkdy" data-datetime="8:30 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446935866941771780"
+                 data-text="\'The only thing that matters is how he &amp; I feel about those things &amp; not what the writer or the commentator thinks about it, you know?
+Him and me are OK. If I can’t have a fight with my best friend, I don’t know who I can have a fight with.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/ybVHnKMJ6s" data-datetime="8:29 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446935775279558656"
+                 data-text="\'And I should’ve kept me mouth shut – not on the song, it could’ve been about anybody, you know? And when you look at them back, Dylan said it about his stuff, you know, most of it’s about him.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/tTmaXnxgcn" data-datetime="8:29 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446935715430944779"
+                 data-text="\'George Harrison’s best guitar solo to date on this cut – as good as anything I’ve heard from anyone – anywhere. Nice piano from Nicky – I’m singing sharp again – but the rhythm guitar makes up for it!\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/cIC5FKgINz" data-datetime="8:28 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446935505820655620"
+                 data-text="\'Somebody said the other day ‘It’s about me’. You know, there’s two things I regret. One is that there was so much talk about Paul on it, they missed the song. It was a good track.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/zGWe5jjGrq" data-datetime="8:28 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446935386303967235"
+                 data-text="John and Paul are very close to each other and when they were doing a session, they used to kid each other with words that may sound harsh to other people. I think it would have sounded very different to Paul.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/OcALFrQuuO" data-datetime="8:27 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446935252434313223"
+                 data-text="\'There were a few digs on his album before mine. He’s so obscure other people didn’t notice them, but I heard them. I thought, well, I’m not obscure, I just get right down to the nitty-gritty.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/tuoLJDHNeR" data-datetime="8:27 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446935162185474052"
+                 data-text="\'I used my resentment against Paul (a kind of sibling rivalry resentment from youth) and withdrawing from Paul and the Beatles, and the relationship with Paul, to write ‘How Do You Sleep?’\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/OBkgmq3OKs" data-datetime="8:26 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446935055146827779"
+                 data-text="HOW DO YOU SLEEP?
+\'I know you\'ll all be wondering about this one! It\'s been around since late \'69 in a similar form to this - but not quite, (i.e. more abstract.) I\'d always envisioned that heavy kind of beat for it...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/tnUf00hxZv" data-datetime="8:26 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446934880479219720"
+                 data-text="\'She encouraged me to be myself because it was me that she fell in love with, not the Beatles or whatever I was. She reminded me that there was light. And when you remember there’s light, you don’t want to get back in the dark again.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/fFC4XKB4Nw" data-datetime="8:25 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446934752729128968"
+                 data-text="\'I was lonely and didn’t have full communication with anybody and it took a bit of adjusting. She rediscovered the thing that existed in me before I left Liverpool and recultivated the natural John Lennon that had been lost in the Beatles.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/FJBRo0FYTE" data-datetime="8:25 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446934627470520323"
+                 data-text="I was a very lonely person before I met him. When I met John, I started to open up a little through love and that’s the greatest thing that happened to me yet. I never met anybody else who could understand me.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/VypxA69e96" data-datetime="8:24 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446934525699895299"
+                 data-text="He’s saying, ‘I see it clearly for the first time.’ It’s not so much about sexual interest or ‘I miss you’ – it’s more to do with true love. What is love then? Love is when you understand each other so well that you finally relax.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/ZkRAsoswIb" data-datetime="8:24 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446934458762993670"
+                 data-text="\'In \'Oh My Love\' you can hear the classical influence of Yoko has influenced me on this. And this is 80% her lyric and 50% her tune.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/A4S9NLMf3R" data-datetime="8:23 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446934378840530944"
+                 data-text="OH MY LOVE.
+\'A joy to write and a joy to sing and record! Written with Yoko - based on her original lyric - we finished it very quickly one late night together...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/ZcEzpdo0T7" data-datetime="8:23 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446934124476915716"
+                 data-text="\'Art is a functional part of society. If you don’t have artists, you don’t have society. We’re not some kind of decadent strip show that appears on the side. We’re as important as prime ministers or policemen.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/xOppU3na4N" data-datetime="8:22 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446933997146230787"
+                 data-text="\'My function in society is to be an artist. The artist’s function is to be as true to himself (and therefore the people he communicates with through his art) as he can, and survive.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/s8JPjsb9pQ" data-datetime="8:22 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446933867248640004"
+                 data-text="\'Register to vote. It doesn’t mean you have to vote. At least you have it. Then if there’s somebody around that you can believe in, you’ve got that vote. But if you don’t register and it comes, and you wanna do something, you’ve missed it.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/0L83AusMBd" data-datetime="8:21 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1446933829655146500"
+                 data-text="#Imagine50 https://t.co/SUXRQWct00" data-datetime="8:21 PM Oct 9, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446933743130877961"
+                 data-text="\'There is nothing to hide. Not really. I mean, we all like to shit in private and we certainly have things we prefer to do in private, privately. But in general what is there to hide? I mean, what is the big secret?\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/B415n7b72s" data-datetime="8:21 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446933621202370571"
+                 data-text="\'It’s about politicians, newspaper men and all the hypocrites of the world. And male chauvinists, it’s about them too.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/PsaT4wHQJJ" data-datetime="8:20 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446933513761181697"
+                 data-text="GIMME SOME TRUTH.
+\'Another \'oldie\' (India again) with words finished recently, I was wondering what truth was after I was in India. George does a sharp solo with his steel finger...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/ffJ3gffvMZ" data-datetime="8:20 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446933396517707783"
+                 data-text="John designed the inner sleeve for the Imagine album and our Fluxus friend George Maciunas did the typography. There\'s a key to who all the photographs on the Imagine LP inner sleeve in the Imagine John Yoko book.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/yd4JKSWbbz" data-datetime="8:19 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446933249897402371"
+                 data-text="\'And then I lay down on the windowsill to get a sort-of ‘lying down’ picture for the back side, which she wanted, with the cloud above my head, right, and I’m ‘imagining’.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/OUF6JlKU98" data-datetime="8:19 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446933113519624192"
+                 data-text="John\'s Imagine and my FLY album covers were from polaroids we took of each other.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/xdhzQUdtMh" data-datetime="8:18 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446932991603875840"
+                 data-text="\'It wasn’t planned for the album, the one she did of me. It’s a new camera called a Polaroid close-up. It’s fantastic. You can take full-face, like we’ve done, right? They only made a few of them.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/4NnQLytsF9" data-datetime="8:18 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446932875023159298"
+                 data-text="\'Yoko took a photo of me, and then we had this painting by a guy called Geoff Hendricks who only paints sky. And she superimposed it on me after, so I was in the cloud with my head.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/syti6i0nRz" data-datetime="8:17 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446932775072903168"
+                 data-text="\'My album front and back is taken by Yoko as a Polaroid. And her album (FLY), front and back is taken by me with a Polaroid.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/dpHXfLaE4y" data-datetime="8:17 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446932682747924486"
+                 data-text="\'There’s lots of echo on it, and on the solo bits there’s three King Curtises on each solo – we recorded him three times on each solo – so that’s really far out.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/1UFgC9lI0l" data-datetime="8:16 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446932654486659075"
+                 data-text="King Curtis was fantastic. He came in and played wild, funky saxophone for many takes, different every time. We all loved every one of his takes and couldn\'t decide so Phil mixed all of them together and it sounded great!
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/qMFR9Xsb5d" data-datetime="8:16 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446932357349580802"
+                 data-text="\'War is big business. They like war because it keeps them fat and happy. We’re all responsible for war. We all must do something to change the attitudes. The people must be made aware that it’s up to them.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/h0FhOeT6rx" data-datetime="8:15 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446932234699747330"
+                 data-text="\'That’s what I mean when I suddenly get reminded that it’s to do with oil in Biafra. What’s the street fighter going to do about that? How can you fight big business? Only by attacking the shares or their image.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/yzzkKL37SN" data-datetime="8:15 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446932113631105027"
+                 data-text="\'I can’t understand how highly educated people, middle-class mainly, are so unaware as to think the game is really down to street fighting, because the game is a lot subtler than they imagine.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/t6FHPgSVVU" data-datetime="8:14 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446931976125026309"
+                 data-text="I DON\'T WANNA BE A SOLDIER MAMA, I DON\'T WANNA DIE.
+\'Started off in the \'Working Class Hero\' days, finished virtually in the studio. It has a peculiar rhythm and Jim Keltner and the rest of them do a fantastic job keeping up...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/La79izKdt1" data-datetime="8:14 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446931873494708226"
+                 data-text="\'My auntie who brought me up all me life, all the time she was saying, ‘The guitar is all right as a hobby, John, but you’ll never make a living at it.’ So I got that on a plaque for her and sent it to her in the house I bought her.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/kLKGoF1BjW" data-datetime="8:13 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446931730905055232"
+                 data-text="\'In 1958 when I heard ‘Long Tall Sally’, ‘Johnny B. Goode’, Bo Diddley, that changed my life completely. I dropped my art, I dropped out of school, I got me guitar and that was the end of it. I dropped everything.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/Q9vk7xSRkN" data-datetime="8:13 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446931603759013893"
+                 data-text="\'When we came to America in \'64 all the reporters said \'What kind of music do you like?\' Everything we said was black except Elvis Presley &amp; Jerry Lee Lewis. They didn’t know what it was &amp; we didn’t know about all this race record business.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/ff1zWZsItV" data-datetime="8:12 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446931490789548038"
+                 data-text="\'Black music started the revolution. This so-called youth revolution, the whole change of style was started by rock ’n’ roll. And rock ’n’ roll was Black. They created the best art that released more people than any other kind of art, ever.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/ptVQJP7j3j" data-datetime="8:12 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446931415623512071"
+                 data-text="\'Apart from meeting Yoko, the biggest experience of my life was hearing rock ’n’ roll and black rock ’n’ roll. The sailors would bring it in. We were hearing old funky blues records in Liverpool that people across Europe had never heard.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/M7PPrvSShy" data-datetime="8:11 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446931335654821900"
+                 data-text="IT\'S SO HARD.
+\'I like to sing blues-rock or whatever it is, the words were written with the sound in mind rather than the meaning...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/wl0RWM13AT" data-datetime="8:11 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446931102665478147"
+                 data-text="Even now, I think there are people who still cannot reconcile themselves to the idea that I had been in John’s life. To those people, I’d like to say, I’m sorry that we had hurt you, But that’s what happened. That’s how it was.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/fCTAnuIApd" data-datetime="8:10 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446930979243925508"
+                 data-text="They say that Venus is jealous of lovers. Forget Venus. In our case it was the whole world. But as far as we were concerned, we felt so lucky that we had found each other.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/qteFBrsvNW" data-datetime="8:10 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446930863065903104"
+                 data-text="John and I stood for peace and love but standing for peace doesn’t make either of us holier than thou. John and I together were human beings. When we met we were like two driven people and it was like a fantastic meeting of two crazy souls.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/glXSWnWPoK" data-datetime="8:09 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446930723122860033"
+                 data-text="\'All that ‘I used to be cruel to my woman, I beat her and kept her apart from the things that she loved’ was me.
+I sincerely believe in love and peace. I am a violent man who has learned not to be violent and regrets his violence.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/bDw4D5Qfv1" data-datetime="8:09 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446930596974977024"
+                 data-text="\'I don’t believe these tight-skinned people who are ‘never jealous’. I love Yoko. I want to possess her completely. I don’t want to stifle her. That’s the danger, that you want to possess them to death!\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/WwgUiCbAoj" data-datetime="8:08 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446930475210133507"
+                 data-text="\'I was a very jealous, possessive guy. And the lyrics explained that pretty clearly. Not just jealous towards Yoko, but towards everything male and female. Incredibly possessive. It’s partly to do with childhood. So this is facing up to it.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/4PMV2YM1Kx" data-datetime="8:08 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446930347011317764"
+                 data-text="‘Jealous Guy’ was different: ‘on the road to Marrakesh\'
+I said to John, ‘That’s a beautiful melody, but you have to think about something more sensitive - it’s in you.’
+Whenever I hear it now, I think ‘Oh my god!’ because he really did that.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/bHISwQH3QY" data-datetime="8:07 PM Oct 9, 2021"> 
+                yokoono            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446930250437468160"
+                 data-text="JEALOUS GUY.
+\'The melody came from a \'cod\' 30\'s type idea I had a few years ago (India) I never did anything with it but always liked the melody...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/EGNMv9cvNI" data-datetime="8:07 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446930095780909064"
+                 data-text="\'Part of me would like to be accepted by all facets of society and not be this loudmouth lunatic poet musician. But I cannot be what I’m not. You want to belong but you don’t want to belong, because you cannot belong.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/63DKMi1YI4" data-datetime="8:06 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446929967766454280"
+                 data-text="\'I was a rebel because of whatever sociological thing gave me a chip on the shoulder in that respect. But on the other hand, I want to be loved and accepted. That’s why I am on stage and performing.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/1834cuoZpo" data-datetime="8:06 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1446929959176577025"
+                 data-text="Anyone at The @LlSTENlNG_PARTY hearing Imagine (the album) for the first time in full??" data-datetime="8:05 PM Oct 9, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446929842772094982"
+                 data-text="\'Everybody’s uptight and they’re always building these walls around themselves. All you can do is try and break down the walls and show that there’s nothing there but people. It’s just like looking in the mirror.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/86OUxbgu24" data-datetime="8:05 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1446929788061560832"
+                 data-text="@mattkerslake @Tim_Burgess @johnlennon Yep" data-datetime="8:05 PM Oct 9, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446929714883534856"
+                 data-text="\'People hide from each other all the time. Everybody’s frightened of saying something nice about somebody in case they don’t say something nice back or in case they get hurt.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/j9xMPgFEjI" data-datetime="8:05 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446929577926868998"
+                 data-text="\'It’s like whatever suit you’re wearing, tie you’re wearing, whatever face you’re putting on, it always shows really in your face, in your eyes, what’s really going on in your soul. And there’s nothing you can hide.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/NdkjZ3cjEH" data-datetime="8:04 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446929470758195204"
+                 data-text="\'‘Crippled Inside’ is a social comment. It talks about people having false fronts in society and really underneath there’s something else. Satire.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/CTfGWC3v49" data-datetime="8:04 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446929315329892353"
+                 data-text="CRIPPLED INSIDE.
+\'Crippled Inside arrived in bed with nary a thought to whether it was \'done before,\' \'witty,\' or such like bullshit...\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/T3T4DvRd6i" data-datetime="8:03 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446929223457853444"
+                 data-text="\'One great dream of mankind was to fly. It took somebody to imagine it first. The second was reach the Moon, right? Which we reached. What we are doing is projecting the future in a positive way: \"Let’s imagine a nice future.\"\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/t3yg4Y5ZbN" data-datetime="8:03 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446929138405806084"
+                 data-text="\'It’s one world, one people. And it’s a statement as well as a wish. We’re one world, one people whether we like it or not. We can pretend we’re divided into races and countries, and we can carry on pretending that until we stop doing it.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/2VyYIpxgOH" data-datetime="8:02 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446929017723101186"
+                 data-text="\'Most people are choked to death by concepts and ideas that they carry around with them. Usually not their own. Usually their parents’ and society’s. And those are the possessions you’ve got to get rid of. It has absolutely nothing to do with physical possessions.\'
+
+#IMAGINE50 https://t.co/zRt6skEJTr" data-datetime="8:02 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446928877775953922"
+                 data-text="\'If you can imagine a world with no denominations of religion – not without religion, whatever religion is – but without this divisive ‘My god is bigger than your god’ business… If you can imagine the possibility, then it can be true.\'
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/aAVq3Agotg" data-datetime="8:01 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1446928848608714762"
+                 data-text="You can sometimes forget what an incredibly beautiful song Imagine is" data-datetime="8:01 PM Oct 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446928797790621700"
+                 data-text="\'We’re not the first to say, ‘Imagine no countries’ or, ‘Give peace a chance’, but we’re carrying that torch, like the Olympic torch, passing it hand to hand, to each other, to each country, to each generation…and that’s our job.\' 
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/QeEygQmOcA" data-datetime="8:01 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnlennon%2Fstatus%2F1446928689887916034"
+                 data-text="LENNON ON IMAGINE.
+\'Imagine is a song conceived in my head without melody... It\'s a song for children...\'
+
+CRAWDADDY\'S THING
+Typewritten &amp; signed notes by @JohnLennon from Sept \'71 for publication in the 5th Dec issue of Crawdaddy Magazine.
+
+#TimsTwitterListeningParty #IMAGINE50 https://t.co/PRebYrwqOh" data-datetime="8:00 PM Oct 9, 2021"> 
+                johnlennon            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1446928465740107776"
+                 data-text="Handing over to @yokoono with archive tweets from @johnlennon too
+
+#Imagine50
+
+Remembering John on his birthday. Wishing @seanonolennon many happy returns too x x https://t.co/gvPHGMVY0t" data-datetime="8:00 PM Oct 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Fyokoono%2Fstatus%2F1446928457884131330"
+                 data-text="Hello everyone &amp; welcome to a very special Listening Party for IMAGINE - The Ultimate Mixes.
+I\'m very happy we are all listening to the 10 tracks from the IMAGINE album together. 
+Please join in with your tweets &amp; photos using the hashtags #TimsTwitterListeningParty &amp; #IMAGINE50 https://t.co/L2X0pacHf5" data-datetime="8:00 PM Oct 9, 2021"> 
+                yokoono            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
