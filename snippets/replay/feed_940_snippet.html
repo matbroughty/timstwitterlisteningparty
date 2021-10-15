@@ -1,0 +1,457 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4WzTXHp8bVKkKNu3UQ2Fqu" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e025d6121285c42ea4535e59048" alt="Fever" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Kylie Minogue</span><br/><span class="sub-colour">Fever</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(345678)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4WzTXHp8bVKkKNu3UQ2Fqu" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_345678_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 66 tweets from Friday 15th October 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/kylieminogue" target="_blank"><img src="https://pbs.twimg.com/profile_images/1445291004114919426/LlQrwOcT_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/kylieminogue.jpg'"><br/>@kylieminogue</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1401913725288960003/n_dKSg1J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1449037379533217796/rVu0Ae3G_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="More More More" data-start="0"
+             data-duration="281" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Love at First Sight" data-start="282"
+             data-duration="238" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Can't Get You out of My Head" data-start="521"
+             data-duration="230" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Fever" data-start="752"
+             data-duration="211" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Give It to Me" data-start="964"
+             data-duration="169" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Fragile" data-start="1134"
+             data-duration="227" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Come into My World - Radio Edit [Radio Edit]" data-start="1362"
+             data-duration="246" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="In Your Eyes" data-start="1609"
+             data-duration="197" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Dancefloor" data-start="1807"
+             data-duration="205" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Love Affair" data-start="2013"
+             data-duration="229" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Your Love" data-start="2243"
+             data-duration="230" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Burning Up" data-start="2474"
+             data-duration="238" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="2713"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048515d6121285c42ea4535e59048" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-66" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="95000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449100296106414085"
+                 data-text="That was off the scale. We love you @kylieminogue https://t.co/1ISmyzHava" data-datetime="7:50 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1449099897140088834"
+                 data-text="@kylieminogue @LlSTENlNG_PARTY 🔥❤️🙌" data-datetime="7:48 PM Oct 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1449099824876462081"
+                 data-text="Thanks so much @kylieminogue! That was immense. What an album, what a @LlSTENlNG_PARTY - what a Friday night
+
+Now I’ve got Can\'t Get Blue Monday Out of My Head in my headphones and I love it
+
+Night everyone x x x" data-datetime="7:48 PM Oct 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="163000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449099572454821901"
+                 data-text="Thank you for joining me on this trip back to Fever and thank you @Tim_Burgess  @LlSTENlNG_PARTY for hosting!!!!! #TimsTwitterListeningParty" data-datetime="7:47 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449098886568718337"
+                 data-text="Burning Up closing the album like an espresso after a meal!!!! #TimsTwitterListeningParty" data-datetime="7:44 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FLoveisLove_2020%2Fstatus%2F1449098826527252489"
+                 data-text="@kylieminogue @LlSTENlNG_PARTY i love the performance of #burningup on the #fevertour which my first #kylie tour. #FEVER20 https://t.co/lRqB0oBk7O" data-datetime="7:44 PM Oct 15, 2021"> 
+                LoveisLove_2020            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDaveEngland75%2Fstatus%2F1449098815143911430"
+                 data-text="Heck, I could even play the whole album on the piano! @kylieminogue, can I be in your band?? 😂 #TimsTwitterListeningParty @LlSTENlNG_PARTY #kyliefever #KylieFever20 https://t.co/AfPw9wklpj" data-datetime="7:44 PM Oct 15, 2021"> 
+                DaveEngland75            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449098814133055498"
+                 data-text="Retweeeeet
+
+#Fever @kylieminogue #Kylie #TimsTwitterListeningParty #KylieFever20 #Fever @kylieminogue #Kylie #TimsTwitterListeningParty #KylieFever20 #Fever @kylieminogue #Kylie #TimsTwitterListeningParty #KylieFever20 #Fever @kylieminogue #Kylie #TimsTwitterListeningParty" data-datetime="7:44 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449098350570188802"
+                 data-text="I LOVE this one. It’s written and produced by the same team who did Fever ❤️  #TimsTwitterListeningParty" data-datetime="7:42 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449098184274464773"
+                 data-text="Wait! Pretty much every song on Fever could have been a single 
+
+@kylieminogue @AlbumDayUK https://t.co/8ux9miThYc" data-datetime="7:41 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="135000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449097856409821187"
+                 data-text="This is another one that was almost a single! Would love to have done a music video for this song #TimsTwitterListeningParty" data-datetime="7:40 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449097290644402178"
+                 data-text="YOUR LOVE! I love this song. It’s such a nice chilled moment before the big album closer
+#TimsTwitterListeningParty" data-datetime="7:38 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1449097204497530880"
+                 data-text="Same! ❤️ https://t.co/OvLnmJbDa2" data-datetime="7:37 PM Oct 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449097163812872196"
+                 data-text="Ahhh … the mems! https://t.co/gqeQKfCbe5" data-datetime="7:37 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449096950112993280"
+                 data-text="Oh hello @kylieminogue 
+
+@AlbumDayUK https://t.co/FFIEh0P3SW" data-datetime="7:36 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449096810216177668"
+                 data-text="Loving this @LlSTENlNG_PARTY @Tim_Burgess!!! 💖" data-datetime="7:36 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449096689093054474"
+                 data-text="Love Affair is the under rated banger on Fever
+
+Don’t @ us https://t.co/BC3dMcoGqx" data-datetime="7:35 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449096534595940359"
+                 data-text="Live your Love Affair!!!!  #TimsTwitterListeningParty" data-datetime="7:35 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449096102159036416"
+                 data-text="Now we’re getting into the final few songs? What are everyone’s faves on this album?  #TimsTwitterListeningParty" data-datetime="7:33 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="125000" data-url="https%3A%2F%2Ftwitter.com%2Fjonholmes1%2Fstatus%2F1449096084219912195"
+                 data-text="As the brilliant @kylieminogue is tweeting about this album, I give you the BEST* recreation you could wish for.
+
+*most disturbing 
+
+#TimsTwitterListeningParty https://t.co/Qubi7lVaZO https://t.co/efTv9UYGu4" data-datetime="7:33 PM Oct 15, 2021"> 
+                jonholmes1            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449095561815207938"
+                 data-text="On the dance floor 💃🏼 Gonna lose it in the music #TimsTwitterListeningParty" data-datetime="7:31 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2FSimoneHendry%2Fstatus%2F1449095546283696130"
+                 data-text="@LlSTENlNG_PARTY @kylieminogue @AlbumDayUK Me ❤️ https://t.co/GfZsctksLz" data-datetime="7:31 PM Oct 15, 2021"> 
+                SimoneHendry            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449095113435713539"
+                 data-text="The In Your Eyes video is colour overload. Yessssss!!!! How many times have you seen me perform this on tour? #TimsTwitterListeningParty" data-datetime="7:29 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449094721138270211"
+                 data-text="In Your Eyes is DEFINITELY a fan favourite (even when the album came out so many people told me it was their fave). Written by the dream team who also did Love At First Sight ❤️#TimsTwitterListeningParty" data-datetime="7:27 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449094640452448261"
+                 data-text="#TimsTwitterListeningParty https://t.co/c3pNkWlJtY" data-datetime="7:27 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449094408213762050"
+                 data-text="Do it!! https://t.co/D726aO4WxM" data-datetime="7:26 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449094200256049153"
+                 data-text="I won a Grammy for this song ✨ wahhooooo!!! That was such a career highlight for me and it’s crazy to think we almost didn’t have this song for the album. #TimsTwitterListeningParty" data-datetime="7:25 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FxStephBx%2Fstatus%2F1449094007129313282"
+                 data-text="What more could a girl ask for? @kylieminogue galaxy cookie crumble and Jack Daniels @LlSTENlNG_PARTY https://t.co/iH8wWgZykI" data-datetime="7:25 PM Oct 15, 2021"> 
+                xStephBx            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449093969586098176"
+                 data-text="https://t.co/qdq44s7wOT" data-datetime="7:24 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Femerym1%2Fstatus%2F1449093944495775753"
+                 data-text="@kylieminogue @LlSTENlNG_PARTY What. An. Album. https://t.co/JcJMDyI9Ns" data-datetime="7:24 PM Oct 15, 2021"> 
+                emerym1            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449093665054412803"
+                 data-text="Come Into My World was the last song we did for Fever! My A&amp;R at the time wanted a follow up Can’t Get You Out Of My Head and when this came in… WOW! I’ve never turned around a song so quickly
+#TimsTwitterListeningParty" data-datetime="7:23 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449093507482804230"
+                 data-text="#TimsTwitterListeningParty https://t.co/XWaWhrtoor" data-datetime="7:23 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449093240553156610"
+                 data-text="RT @Bernicessities: @LlSTENlNG_PARTY @kylieminogue My fav @kylieminogue that I caught on cam from Manchester Oct 2018 Golden Tour. Singing…" data-datetime="7:22 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449093230222532612"
+                 data-text="I still LOVE this song ❤️ #TimsTwitterListeningParty" data-datetime="7:22 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449092834037018625"
+                 data-text="RT @LlSTENlNG_PARTY: 🙌 @BenIllustrator Fever Cover Version
+
+@kylieminogue @AlbumDayUK https://t.co/RCpXtECCCu" data-datetime="7:20 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449092822490046466"
+                 data-text="Fragile is a song written and produced by Rob Davis, who also did Can’t Get You Out Of My Head AND Come Into My World ✨ #TimsTwitterListeningParty" data-datetime="7:20 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fsven111%2Fstatus%2F1449092746304708611"
+                 data-text="@LlSTENlNG_PARTY @kylieminogue @AlbumDayUK I got the silver vinyl today https://t.co/UF7QpdrDBn" data-datetime="7:20 PM Oct 15, 2021"> 
+                sven111            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frussell_trench%2Fstatus%2F1449092715631755266"
+                 data-text="@LlSTENlNG_PARTY @kylieminogue The Netherlands @ the Zandvoort beach. 👋 https://t.co/wApLv5sTZP" data-datetime="7:20 PM Oct 15, 2021"> 
+                russell_trench            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1449092597079810049"
+                 data-text="@LlSTENlNG_PARTY @kylieminogue Feile 95 in Cork 🇮🇪✌️ https://t.co/NLkAH6Gwn9" data-datetime="7:19 PM Oct 15, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449092284973207556"
+                 data-text="I worked with @MrSteveAnderson and @MarkPicchiotti  on this one. We also did Butterfly together on Light Years 🦋#TimsTwitterListeningParty" data-datetime="7:18 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="99000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449091958685802498"
+                 data-text="No that’s not your phone ringing 😂 It’s Give It To Me #TimsTwitterListeningParty" data-datetime="7:17 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449091543885881348"
+                 data-text="RT @LlSTENlNG_PARTY: OKAY! Let’s find out where everyone is for our #Fever20 @LlSTENlNG_PARTY 
+
+@kylieminogue has a map and some very glam…" data-datetime="7:15 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449091482091233294"
+                 data-text="I love the singles we released from Fever but if I could have released one more I think this would have been the one. IMAGINE the music video #TimsTwitterListeningParty" data-datetime="7:15 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FPammy_74%2Fstatus%2F1449091209117458433"
+                 data-text="@kylieminogue @LlSTENlNG_PARTY Feel the Fever! #KylieFever20 #TimsTwitterListeningParty" data-datetime="7:14 PM Oct 15, 2021"> 
+                Pammy_74            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449091129077641242"
+                 data-text="Fever sure has got me good
+What you do when fever takes hold? 🌡
+#TimsTwitterListeningParty" data-datetime="7:13 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449090688784683014"
+                 data-text="Thanks @Independent, who recently said this is the best pop song of the 21st century ❤️ WHAAAAAT!!!???? It makes me so happy to see people still loving it today #TimsTwitterListeningParty" data-datetime="7:11 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1449090414766608395"
+                 data-text="LA LA LA LA LA https://t.co/pFDT3BlZKG" data-datetime="7:10 PM Oct 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449090348043673602"
+                 data-text="https://t.co/DGiu0nepuL" data-datetime="7:10 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449090282323054594"
+                 data-text="There is so much I could say about this song! It was such a huge moment in my life and I’m eternally grateful that @cathydennis and Rob Davis &amp; all the creatives who took this song to the next level!!! #TimsTwitterListeningParty" data-datetime="7:10 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449089988486914048"
+                 data-text="LA LA LA! #TimsTwitterListeningParty" data-datetime="7:09 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449089986159124490"
+                 data-text="#TimsTwitterListeningParty https://t.co/01swMxq87z" data-datetime="7:09 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1449089804449292298"
+                 data-text="Me and Kylie had a chat on the ramp up to the stage ; ) https://t.co/WIr0vsqniZ https://t.co/OUSQyyEGNb" data-datetime="7:08 PM Oct 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449089564245692424"
+                 data-text="I wrote LAFS in Dublin with @biffco, Julian, Ash and Martin ❤️ I think the song came quickly but we spent some time juggling the pre and the chorus. We felt we had something special but only time would tell!
+#TimsTwitterListeningParty" data-datetime="7:07 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449089412898381832"
+                 data-text="https://t.co/kz8yc9KqGG" data-datetime="7:06 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FBernicessities%2Fstatus%2F1449089219532623872"
+                 data-text="@LlSTENlNG_PARTY @kylieminogue @AlbumDayUK https://t.co/3MaCwSXx7I" data-datetime="7:06 PM Oct 15, 2021"> 
+                Bernicessities            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449089070425051141"
+                 data-text="Love At First Sight! Still one of my favourite songs I’ve ever done AND just adore performing for all of you
+#TimsTwitterListeningParty" data-datetime="7:05 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449089052486127624"
+                 data-text="#TimsTwitterListeningParty https://t.co/RjNHEqaM4x" data-datetime="7:05 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fciaranc77%2Fstatus%2F1449088831991554056"
+                 data-text="Love At First Sight 🙌 One of my top 3 @kylieminogue songs (depending on the day!) @LlSTENlNG_PARTY #TimsTwitterListeningParty https://t.co/k5Sc7H42C2" data-datetime="7:04 PM Oct 15, 2021"> 
+                ciaranc77            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FLollybee99%2Fstatus%2F1449088779818618885"
+                 data-text="@LlSTENlNG_PARTY @kylieminogue @AlbumDayUK https://t.co/Dw3ScpTZ14" data-datetime="7:04 PM Oct 15, 2021"> 
+                Lollybee99            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Faphroditexkylie%2Fstatus%2F1449088700932046848"
+                 data-text="LETS ROCK FROM BRAZIL!! 🇧🇷💖
+@kylieminogue @LlSTENlNG_PARTY #TimsTwitterListeningParty  #Fever20 https://t.co/FLsCkEEHBP" data-datetime="7:04 PM Oct 15, 2021"> 
+                aphroditexkylie            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449088587660681221"
+                 data-text="Fever by @kylieminogue as one gif please
+
+Off you go!
+
+@AlbumDayUK https://t.co/umKlb7DGpU" data-datetime="7:03 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449088525266309120"
+                 data-text="This one swimming in disco influence… and now here we are 20 years later with DISCO! #TimsTwitterListeningParty" data-datetime="7:03 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1449088207769976836"
+                 data-text="#TimsTwitterListeningParty https://t.co/9n77OZ8sCf" data-datetime="7:02 PM Oct 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449088156830244865"
+                 data-text="Give it UP! Give It UP! #TimsTwitterListeningParty" data-datetime="7:01 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fkylieminogue%2Fstatus%2F1449087803552370695"
+                 data-text="LET’S GO! @Tim_Burgess @LlSTENlNG_PARTY! The first song on Fever is MORE MORE MORE #TimsTwitterListeningParty" data-datetime="7:00 PM Oct 15, 2021"> 
+                kylieminogue            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1449087697696575496"
+                 data-text="Say hi to @kylieminogue 
+
+Press play / drop the needle on the record on Fever and let’s enjoy the next 45 minutes and 20 seconds 🕺
+
+@AlbumDayUK https://t.co/GmjeYQsXOx" data-datetime="7:00 PM Oct 15, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
