@@ -224,11 +224,19 @@ data class TimeSlot(val dateStr: String = "?",
 
   @Suppress("unused")
   fun timeDisplayString(): String {
+    if(onePastMidnight()){
+      return ""
+    }
     return isoDate.format(DateTimeFormatter.ofPattern("h:mm"))
   }
 
+
+
   @Suppress("unused")
   fun amPmDisplayString(): String {
+    if(onePastMidnight()){
+      return ""
+    }
     return isoDate.format(DateTimeFormatter.ofPattern("a"))
   }
 
@@ -320,6 +328,13 @@ data class TimeSlot(val dateStr: String = "?",
     logger.debug("tweeters String = $tweetString")
     return tweetString;
 
+  }
+
+  /**
+   * A time of 00:01 counts as one past midnight - which can be used to mean no time
+   */
+  private fun onePastMidnight(): Boolean {
+    return isoDate.hour == 0 && isoDate.minute == 1
   }
 
 

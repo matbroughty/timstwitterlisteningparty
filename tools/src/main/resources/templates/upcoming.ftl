@@ -70,7 +70,7 @@
                     <#if slot.spotifyImgLink?has_content >
                       src="${slot.spotifyImgLink}"
                     <#else>
-                      src="https://timstwitterlisteningparty.com/img/blankcd.png"
+                      src="https://timstwitterlisteningparty.com/img/blan˜kcd.png"
                     </#if>
 
                      alt="${slot.album} spotify album"
