@@ -1,0 +1,530 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3USQKOw0se5pBNEndu82Rb" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02db8e38addb58131f77b48377" alt="Loveless" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">My Bloody Valentine</span><br/><span class="sub-colour">Loveless</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(399500)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3USQKOw0se5pBNEndu82Rb" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_399500_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 95 tweets from Thursday 4th November 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/MBVofficial" target="_blank"><img src="https://pbs.twimg.com/profile_images/1377151023362404354/08f_n6_A_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/MBVofficial.jpg'"><br/>@MBVofficial</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1455061133665177600/_PWYSUmN_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="only shallow" data-start="0"
+             data-duration="256" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="loomer" data-start="257"
+             data-duration="158" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="touched" data-start="416"
+             data-duration="56" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="to here knows when" data-start="473"
+             data-duration="331" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="when you sleep" data-start="805"
+             data-duration="251" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="i only said" data-start="1057"
+             data-duration="334" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="come in alone" data-start="1392"
+             data-duration="238" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="sometimes" data-start="1631"
+             data-duration="319" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="blown a wish" data-start="1951"
+             data-duration="216" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="what you want" data-start="2168"
+             data-duration="333" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="soon" data-start="2502"
+             data-duration="419" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2922"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851db8e38addb58131f77b48377" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-95" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="119000" data-url="https%3A%2F%2Ftwitter.com%2Fimandyprice%2Fstatus%2F1456393646085918729"
+                 data-text="Saw @MBVofficial as part of Meltdown at the Southbank Centre where they sounded like a JUMBO JET taking off @LlSTENlNG_PARTY @Tim_Burgess #TimsTwitterListeningParty https://t.co/uEzQYPLLrP" data-datetime="10:51 PM Nov 4, 2021"> 
+                imandyprice            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456393148725399553"
+                 data-text="Thanks everyone mbv xxxx" data-datetime="10:49 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456393079192182785"
+                 data-text="And with that, it’s over
+
+@MBVofficial - that was the most incredible 48 minutes and 35 seconds 
+
+We love you xx https://t.co/RC6rCo5Oal" data-datetime="10:49 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456393027598045186"
+                 data-text="https://t.co/JVaC06gvIL" data-datetime="10:48 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456392980907151361"
+                 data-text="https://t.co/QiKAXwjLc5" data-datetime="10:48 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456392949978259473"
+                 data-text="https://t.co/P2Fzc6emMv" data-datetime="10:48 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456392915266281475"
+                 data-text="there was also an incredibly strong sense of how everything needed to be done , everything else was just a distraction #timstwitterlisteningparty" data-datetime="10:48 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456392819258634240"
+                 data-text="One of the main overriding memorises from the recording of loveless was this kind of overwhelming love and sense of protection for all the songs , like they were a bunch of living things #timstwitterlisteningparty" data-datetime="10:48 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456392778678689798"
+                 data-text="the 1/2, inch reissue from 2012 and the vinyl version from 2018 , probably another on the way sometime #timstwitterlisteningparty" data-datetime="10:47 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456392616979963904"
+                 data-text="https://t.co/MSbeHeXbqc" data-datetime="10:47 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456392584780259330"
+                 data-text="https://t.co/dMchzQbG5r" data-datetime="10:47 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="124000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456392546977042434"
+                 data-text="https://t.co/924nTy93bD" data-datetime="10:46 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="146000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456392029043400712"
+                 data-text="https://t.co/RnjquU7pqF" data-datetime="10:44 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456391416540708870"
+                 data-text="This was one of the first songs written for loveless , there actually 4 different mixes of it out there , the original on the ep , the first loveless from 1991  #timstwitterlisteningparty" data-datetime="10:42 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FMissElizabeth_M%2Fstatus%2F1456391288216068112"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY @MBVofficial I’m so lost in the sound I forgot to read along!" data-datetime="10:41 PM Nov 4, 2021"> 
+                MissElizabeth_M            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456391021303111685"
+                 data-text="and Kevin spent most of the time painting a guitar and I spent a couple days trying to find a surge suppressor unit, which frankly in Tralee, in 1990 was about as successful as tracking down a dodo #timstwitterlisteningparty" data-datetime="10:40 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456391018329395203"
+                 data-text="Eventually we got to this place, I think it was in Tralee, where we just holed up in this hotel ballroom for a couple days, I don’t even think we played a gig, I think we just hung there #timstwitterlisteningparty" data-datetime="10:40 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456391015791800325"
+                 data-text="The second place was booked in a pub, where the stage was so small we could barely fit the drum kit let alone the rest of our gear, so we couldn’t play there either #timstwitterlisteningparty" data-datetime="10:40 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456391011475808257"
+                 data-text="The first gig I seem to remember was at some student union place where they had no idea we were supposed to be there! #timstwitterlisteningparty" data-datetime="10:40 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456391009009537032"
+                 data-text="DEB
+In 1990 we took a break from recording to go out and tour to promote the Glider EP. The tour started in Ireland and was kind of disastrous #timstwitterlisteningparty" data-datetime="10:40 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456390746345455616"
+                 data-text="https://t.co/U24KYrR4s1" data-datetime="10:39 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456390623691423754"
+                 data-text="https://t.co/zIwULowAWl" data-datetime="10:39 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456390540539437058"
+                 data-text="This is a @LlSTENlNG_PARTY masterclass from @MBVofficial" data-datetime="10:38 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456390540396802052"
+                 data-text="https://t.co/8BANUPEomn" data-datetime="10:38 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456390243683287046"
+                 data-text="https://t.co/CYXYBklSNz" data-datetime="10:37 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456390189241315340"
+                 data-text="https://t.co/ORiSY278OG" data-datetime="10:37 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456390062132940811"
+                 data-text="which was usually when we were just getting into recording , it was the only studio we had ever worked in that had daily cleaners #timstwitterlisteningparty" data-datetime="10:37 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456390059872161797"
+                 data-text="Doing the vocals for loveless was a fairly simple process although we did have to leave the studio we were in before we finished all the songs due to the studio cleaners coming in everyday at 7am #timstwitterlisteningparty" data-datetime="10:37 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456389987646255108"
+                 data-text="The main memory of this song is that it was nearly scrapped because I couldn’t get usable guitar sound for it , something to do with the tuning, it was saved by a vintage ampeg amp that used to belong to black sabbath #timstwitterlisteningparty" data-datetime="10:36 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456389875897446414"
+                 data-text="https://t.co/fjfbqKPhw9" data-datetime="10:36 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456389685664788489"
+                 data-text="https://t.co/uHM4oQwmjs" data-datetime="10:35 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456389516156145666"
+                 data-text="COLM 
+ ... One of the engineers broke down after a frequency disagreement and said all he wanted to do was open a pizza place #timstwitterlisteningparty" data-datetime="10:34 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456389439496785920"
+                 data-text="COLM
+1 ... Kevin is so electrically charged that during a guitar take he had to ground himself by having his feet in a bucket of water #timstwitterlisteningparty" data-datetime="10:34 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456389388380803075"
+                 data-text="I often wound up in a puddle of water by the time we finished recording #timstwitterlisteningparty" data-datetime="10:34 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456389348774002691"
+                 data-text="The recording for this was mostly done in a studio where Alan Moulder sometimes had to spray me with a light mist of water while I was recording to get rid of my extreme static , it was ruining the recordings so I had to be damp to play #timstwitterlisteningparty" data-datetime="10:34 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456389252569305092"
+                 data-text="Doing the vocals for this one was the only time i built an actual tent in the live room , it did sound better this way #timstwitterlisteningparty" data-datetime="10:33 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456389211121201157"
+                 data-text="🔥🔥🔥🔥 https://t.co/1HWD4PQo8y" data-datetime="10:33 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456388994057621507"
+                 data-text="@LlSTENlNG_PARTY @MBVofficial https://t.co/z8S82yNtlA" data-datetime="10:32 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456388967788601357"
+                 data-text="https://t.co/SB1zIu7xKO" data-datetime="10:32 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456388691308462082"
+                 data-text="the distorted guitar is the reamped acoustic thru our trusty vox fuzz , this pedal was pretty much the only fuzz or distortion used on loveless I think #timstwitterlisteningparty" data-datetime="10:31 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="99000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456388391872913409"
+                 data-text="Sometimes by @MBVofficial https://t.co/Vt735RZaEw" data-datetime="10:30 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456387977777713157"
+                 data-text="the distorted guitar is the reamped acoustic thru our trusty vox fuzz , this pedal was pretty much the only fuzz or distortion used on loveless I think #timstwitterlisteningparty" data-datetime="10:28 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456387975399493634"
+                 data-text="The acoustic guitar is actually 7 tracks each with a different sound panned like a fan left to right so it sounds like one track if that makes any sense #timstwitterlisteningparty" data-datetime="10:28 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456387802992676865"
+                 data-text="Sometimes was unusual in that it was a song written and recorded near the end of the loveless sessions , i had wanted to write a certain type of song and just had to wait until it arrived ( it finally did after about a year ) #timstwitterlisteningparty" data-datetime="10:28 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456387588621799433"
+                 data-text="Over one thousand listening parties so far. @MBVofficial blowing my mind more than any of the others. It’s like another world" data-datetime="10:27 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456387484980502538"
+                 data-text="DEB
+Here’s a little Loveless joke from me:
+The making of Loveless was when Kevin started his infamous ‘tent’ building’, constructing little dens out of blankets, curtains and foam….it was baffling! #timstwitterlisteningparty" data-datetime="10:26 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456387159351570435"
+                 data-text="https://t.co/yVTxnz1378" data-datetime="10:25 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456387083518500866"
+                 data-text="https://t.co/q8RpEhij4g" data-datetime="10:25 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456386923077976065"
+                 data-text="The vocals are varisped , like quite a few others , we usually recorded the vocals where it felt comfortable pitch wise , then played back at the pitch that felt correct , mostly quite subtle but occasionally extreme like this #timstwitterlisteningparty" data-datetime="10:24 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456386838869024773"
+                 data-text="This one was remarkably easy to record , also the only song we could play at first attempt when we reformed in 2008 #timstwitterlisteningparty" data-datetime="10:24 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456386502448099331"
+                 data-text="timeless / loveless https://t.co/RjpgZdc6Nn" data-datetime="10:22 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456386445531287563"
+                 data-text="https://t.co/e4P0h5k5VB" data-datetime="10:22 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456386221509431302"
+                 data-text="I enjoyed writing the lyrics despite a sadness to some of them but the album is bigger than any of its parts and is timeless #timstwitterlisteningparty" data-datetime="10:21 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456386186893737986"
+                 data-text="We were a bit like ships in the night because I had my son to look after and didn’t go into the studio until I did the vocals #timstwitterlisteningparty" data-datetime="10:21 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456386145340825603"
+                 data-text="There were battles to get things done but Kevin took the brunt of all that and still remained positive about the album #timstwitterlisteningparty" data-datetime="10:21 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456386101384519685"
+                 data-text="BILINDA 
+I do really love Loveless
+and cherish those songs. I always enjoy singing them and if they mean a lot to other people it’s probably because  they were done with love and honesty #timstwitterlisteningparty" data-datetime="10:21 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456385816477978630"
+                 data-text="All while texting Kevin Shields. Living the dream ; )" data-datetime="10:20 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456385772773384193"
+                 data-text="After getting over the shock we realised it was the perfect amount of sound change to allow the sampled part to come out properly #timstwitterlisteningparty" data-datetime="10:20 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456385770307063821"
+                 data-text="The instrumental bit in the middle of this one took about 20hrs to record and because we kept going over the same part of tape so much it kind of wore that part of the tape out a bit #timstwitterlisteningparty" data-datetime="10:20 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456385620008374273"
+                 data-text="https://t.co/V8R2UFmhw5" data-datetime="10:19 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456385501922041856"
+                 data-text="https://t.co/skHQnTr7TV" data-datetime="10:18 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456385478303920136"
+                 data-text="In Dublin. Listening to @MBVofficial - drinking @GuinnessIreland 0.0 
+
+What a night! https://t.co/YxZSmxqUET" data-datetime="10:18 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456385332472123399"
+                 data-text="the main guitar on this was processed by hand using the parametric eq on the recording console as a wah wah kind of effect #timstwitterlisteningparty" data-datetime="10:18 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456385076317630478"
+                 data-text="https://t.co/JlXLOEPCSh" data-datetime="10:17 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456384880586149896"
+                 data-text="https://t.co/YcTEQuBjqA" data-datetime="10:16 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456384676973760513"
+                 data-text="https://t.co/cSqpWkeQRa" data-datetime="10:15 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456384529191608322"
+                 data-text="https://t.co/PuwuWaIdBV" data-datetime="10:15 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456384241961472008"
+                 data-text="The main keyboard part of this song is made using samples of Bilinda’s voice among other things , we did this a lot , usually a mixture of guitar feedback , Bilinda’s voice , a flute sample and a obo sample #timstwitterlisteningparty" data-datetime="10:13 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="180000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456384085463547905"
+                 data-text="Favourite track on loveless??? https://t.co/xcSmziOiu7" data-datetime="10:13 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456383328135913476"
+                 data-text="https://t.co/u5l7Dup9lJ" data-datetime="10:10 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456383217376890889"
+                 data-text="https://t.co/aMPQ6XSoDj" data-datetime="10:09 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456383187400241152"
+                 data-text="It’s like listening to @MBVofficial in 4D https://t.co/jzHsr5X7Uw" data-datetime="10:09 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456383038770794496"
+                 data-text="https://t.co/bHwf2iF9Ld" data-datetime="10:09 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456382952196218880"
+                 data-text="This song was the one where everything went off the rails for awhile , 2 weeks trying to program a tambourine track which was then played by hand in 10 m
+3 weeks sampling guitar feedback
+2 weeks on drum samples experiments #timstwitterlisteningparty" data-datetime="10:08 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456382858034024452"
+                 data-text="This was first take on guitar , it was lucky as the engineer passed out around 2 minutes in while I was playing it , it put him in a mild coma basically , he had to go home afterwards, he was also smoking too much weed #timstwitterlisteningparty" data-datetime="10:08 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456382721933123584"
+                 data-text="COLM
+Touched is story of a sexual encounter.. the first part is anxiety followed by the release then the sadness and the title has another soft meaning. Written in two hours with string and timpani samples #timstwitterlisteningparty" data-datetime="10:07 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456382646720897034"
+                 data-text="❤️ https://t.co/zxlKCreEcx" data-datetime="10:07 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456382638437044224"
+                 data-text="This was originally made as a link between tracks but it was really its own thing so I got Colm to give it a title #timstwitterlisteningparty" data-datetime="10:07 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1456382471256293378"
+                 data-text="RETWEEET PLEASE loveless @MBVofficial #MyBloodyValentine MBV loveless @MBVofficial #MyBloodyValentine MBV loveless @MBVofficial #MyBloodyValentine MBV loveless @MBVofficial #MyBloodyValentine MBV loveless @MBVofficial #MyBloodyValentine MBV loveless @MBVofficial" data-datetime="10:06 PM Nov 4, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456382395481985027"
+                 data-text="https://t.co/JewblVl2mH" data-datetime="10:06 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456382267027177486"
+                 data-text="I was trying to make a sound like fire sounds , also train noises #timstwitterlisteningparty" data-datetime="10:06 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456382151411347458"
+                 data-text="https://t.co/z7WIcm5eYM" data-datetime="10:05 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456382080078819329"
+                 data-text="Follow @MBVofficial y’all ❤️🔥✌️" data-datetime="10:05 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456382022016962566"
+                 data-text="https://t.co/DerZmVkjfK" data-datetime="10:05 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456381908787531784"
+                 data-text="Big love to @MBVofficial and every single one of you around the world, sharing this incredible experience with us right now https://t.co/uERN1DbrnB" data-datetime="10:04 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456381895093141511"
+                 data-text="This song was recorded using a guitar that was my attempt to improve the fender jaguar , it had a strat neck and fender lace active pickups , I dismantled it just after I recorded it #timstwitterlisteningparty" data-datetime="10:04 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456381513055064066"
+                 data-text="BILINDA
+Colm’s silver trousers were great. He sprayed them himself and I was inspired to spray my boots silver too! 💕Xx #timstwitterlisteningparty" data-datetime="10:03 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456381395471831044"
+                 data-text="Colm’s silver trousers were great. He sprayed them himself and I was inspired to spray my boots silver too! 💕Xx #timstwitterlisteningparty" data-datetime="10:02 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456381268917166082"
+                 data-text="https://t.co/6y1tEVf00c" data-datetime="10:02 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456381160192294915"
+                 data-text="The main guitar part ( where there is no singing ) was 2 valve amplifiers with tremolo facing each other , played a few times then sampled and played backwards and an octave higher along with the original part ‘ possibly ‘ #timstwitterlisteningparty" data-datetime="10:01 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456381059386560525"
+                 data-text="https://t.co/AOZNrInVSD" data-datetime="10:01 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456380997524762631"
+                 data-text="❤️ happy birthday loveless. Let’s do this https://t.co/2H02o71seQ" data-datetime="10:01 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456380889362014210"
+                 data-text="Only shallow was recorded 2nd take
+The last verse has the original guide guitar in the final mix , virtually all parts were always 2nd take for some reason , although we rarely did more that 3 takes of anything , never comped anything or fixed things #timstwitterlisteningparty" data-datetime="10:00 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FMBVofficial%2Fstatus%2F1456380772433211402"
+                 data-text="Hi all, thanks for having us back Tim, hope everyone’s feeling good, i guess we just start #timstwitterlisteningparty" data-datetime="10:00 PM Nov 4, 2021"> 
+                MBVofficial            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1456380743731580930"
+                 data-text="Ready????
+
+Dive in
+
+loveless by @MBVofficial 
+
+See you on the other side https://t.co/xcPwA4TXDU" data-datetime="10:00 PM Nov 4, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
