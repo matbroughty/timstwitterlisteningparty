@@ -1,0 +1,691 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4qm3Qamjfbv5sgw2qDSrup" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02fe27ef5d9014b74b341bb10e" alt="Beautiful Garbage" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Garbage</span><br/><span class="sub-colour">Beautiful Garbage</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(555961)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4qm3Qamjfbv5sgw2qDSrup" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_555961_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 143 tweets from Tuesday 9th November 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/garbage" target="_blank"><img src="https://pbs.twimg.com/profile_images/1376564453508935686/1O3761VE_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/garbage.jpg'"><br/>@garbage</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1455061133665177600/_PWYSUmN_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/ambushinc" target="_blank"><img src="https://pbs.twimg.com/profile_images/853314916186443776/LQZMV6ch_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/ambushinc.jpg'"><br/>@ambushinc</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Shut Your Mouth" data-start="0"
+             data-duration="205" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Androgyny" data-start="206"
+             data-duration="189" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Can't Cry These Tears" data-start="396"
+             data-duration="256" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Til the Day I Die" data-start="653"
+             data-duration="208" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Cup of Coffee" data-start="862"
+             data-duration="271" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Silence Is Golden" data-start="1134"
+             data-duration="229" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Cherry Lips (Go Baby Go!)" data-start="1364"
+             data-duration="192" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Breaking Up the Girl" data-start="1557"
+             data-duration="213" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Drive You Home" data-start="1771"
+             data-duration="238" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Parade" data-start="2010"
+             data-duration="246" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Nobody Loves You" data-start="2257"
+             data-duration="307" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Untouchable" data-start="2565"
+             data-duration="242" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="So Like a Rose" data-start="2808"
+             data-duration="377" style="display:none"></div>
+                        <div id="track-14" class="track-list"
+                     data-name="Finished" data-start="3186"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851fe27ef5d9014b74b341bb10e" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-143" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1458161289562361860"
+                 data-text="RT @garbage: Our ‘beautifulgarbage’ 20th Anniversary edition is out now!! So many memories surround this album. We are elated to finally sh…" data-datetime="7:55 PM Nov 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458161031411343372"
+                 data-text="Well that’s us come to the end of this listening session for our most beloved record. Thank you to each and everyone of you for listening. We love you. Happy 20th Anniversary. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:54 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fambushinc%2Fstatus%2F1458160932484521985"
+                 data-text="MASTERPIECE. Thanks @Tim_Burgess for putting on the @garbage  #timstwitterlisteningparty" data-datetime="7:53 PM Nov 9, 2021"> 
+                ambushinc            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458160791111102466"
+                 data-text="Thanks for listening, everyone. We hope to play some of these songs on tour next year. Be safe! @butchvig #TimsTwitterListeningParty" data-datetime="7:53 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1458160720487518209"
+                 data-text="So. It turns out that @garbage are the new kings and queen of the @LlSTENlNG_PARTY.
+
+Shirley, Duke, Steve &amp; 
+Butch, we can’t thank you enough
+
+That was beautiful indeed.
+
+And @butchvig will be back with us on Saturday
+
+Stay safe. Much love x x" data-datetime="7:53 PM Nov 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458160410733912064"
+                 data-text="Shirl w GTR #timstwitterlisteningparty https://t.co/DTZfnmHlZy" data-datetime="7:51 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458160354953814026"
+                 data-text="At the very end of this, we flipped the entire mix backwards and cross faded between the original mix as we drifted off. @butchvig #TimsTwitterListeningParty" data-datetime="7:51 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458160312654385152"
+                 data-text="This song reminds me so much ( among others)of my dear Auntie Betty, my classmate Mark Malone, our photographer and video director Matt Irwin and my lost friend Saul Fletcher. Mental illness is a heartbreak. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:51 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458160068533260291"
+                 data-text="Jesus those were some dark times... steve #TimsTwitterListeningParty" data-datetime="7:50 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458159862668414979"
+                 data-text="We mixed the Ebows REALLY loud in the bridge. We wanted to shake you from your dream state. @butchvig #TimsTwitterListeningParty" data-datetime="7:49 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1458159792728559616"
+                 data-text="@garbage @LlSTENlNG_PARTY ❤️" data-datetime="7:49 PM Nov 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458159667142483973"
+                 data-text="Enjoyed doing the guitar bit in the middle….(It’s off!!!) - Duke #TimsTwitterListeningParty" data-datetime="7:48 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458159580966387712"
+                 data-text="We usually end each album with a quiet song. This is a slow burn. Channeling a bit of Mazzy Star. @butchvig #TimsTwitterListeningParty" data-datetime="7:48 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458159501262016513"
+                 data-text="So Like A Rose: In the course of my lifetime I’ve lost far too many people I have loved to suicide.This song is in honour of all those who were far too fragile for this world.👩🏼‍🦰#timstwitterlisteningparty https://t.co/Sjw9D5hDKw" data-datetime="7:48 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458159223716544514"
+                 data-text="disco party #timstwitterlisteningparty https://t.co/ClsYX2nMRm" data-datetime="7:47 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458159174127214592"
+                 data-text="Track 13: So Like A Rose #TimsTwitterListeningParty" data-datetime="7:46 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158992316936201"
+                 data-text="We wrote this whilst obsessed with Timberland and Dallas Austin. Still obsessed to be honest. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:46 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158972620312577"
+                 data-text="Festival #timstwitterlisteningparty https://t.co/hTYDNQO9Tb" data-datetime="7:46 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158846816382982"
+                 data-text="I hear a little modern pop R&amp;B sneaking into this song.
+We never played this song live. Maybe we should. Just to keep us on our toes. @butchvig #TimsTwitterListeningParty" data-datetime="7:45 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158636446806016"
+                 data-text="Catchy and fun. Should have been a single - Duke #TimsTwitterListeningParty" data-datetime="7:44 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158559221272580"
+                 data-text="Billy #timstwitterlisteningparty https://t.co/CN1aMrnNFA" data-datetime="7:44 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158525725749255"
+                 data-text="Untouchable : I live this song. I know EXACTLY who this song is written about but of course a lady never spats and tells. This is both a reprimand and a warning. This lady was not signing up for anymore bullshit after this. 👩🏼‍🦰#timstwitterlisteningparty https://t.co/zKiwBVApMl" data-datetime="7:44 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158515306991616"
+                 data-text="As I remember, Shirl wrote these lyrics about a real jackass that we knew in the music biz. Who shall go nameless. @butchvig #TimsTwitterListeningParty" data-datetime="7:44 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158287753383937"
+                 data-text="Duke Halo #timstwitterlisteningparty https://t.co/ZdixXnLnMe" data-datetime="7:43 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158229930881042"
+                 data-text="The hole inside my heart has shrunk considerably since I was young………..have faith.👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:43 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158166282149888"
+                 data-text="Track 12: Untouchable #TimsTwitterListeningParty" data-datetime="7:42 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158034006405120"
+                 data-text="Dan bass StudioB #timstwitterlisteningparty https://t.co/cyc3CUSAAn" data-datetime="7:42 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458158020983025664"
+                 data-text="What kind of music is this? steve #TimsTwitterListeningParty" data-datetime="7:42 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458157805320425473"
+                 data-text="Staying in love takes monumental effort. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:41 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458157703260368898"
+                 data-text="Also hear some Trip Hop textures in this. Lots of scene changes. 
+
+Another track where the drums were bussed through the good old Roger Mayer. @butchvig #TimsTwitterListeningParty" data-datetime="7:41 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458157453892149251"
+                 data-text="Young Frankenstein (that’s all I’m gonna say) - Duke #TimsTwitterListeningParty" data-datetime="7:40 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458157349705760770"
+                 data-text="Nobody Loves You: I was going through a painful divorce at the time of writing these words. I was drowning in shame, sadness and excruciating loneliness. The line everyone asks about in the break is “ I cracked a piece of broken glass.”👩🏼‍🦰#timstwitterlisteningparty https://t.co/SYyFWPtIQ3" data-datetime="7:39 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458157304444907522"
+                 data-text="Weird, listening to this now, I can hear a bit of a Radiohead influence in Duke and Steve’s guitars. But wait, that’s not weird because we love Radiohead. @butchvig #TimsTwitterListeningParty" data-datetime="7:39 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156845088993285"
+                 data-text="Track 11: Nobody Loves You #TimsTwitterListeningParty" data-datetime="7:37 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156728181272576"
+                 data-text="This should have been the lead off single on this record. 
+👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:37 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156675446104064"
+                 data-text="Festival in Oz #timstwitterlisteningparty https://t.co/vVnUPu8Z4y" data-datetime="7:36 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156599172763652"
+                 data-text="I channeled a bit of @the_prodigy into the drums on this one. 
+
+There’s a lot of weird pitch shifted guitars on this track, especially in the verses. @butchvig #TimsTwitterListeningParty" data-datetime="7:36 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156472928378885"
+                 data-text="Reminds me of all the times we played this opening up for U2 back then- what a time that was in the world... steve#TimsTwitterListeningParty" data-datetime="7:36 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156333815910403"
+                 data-text="The fastest song we had recorded up to that point 
+
+Fun to play live - Duke #TimsTwitterListeningParty" data-datetime="7:35 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156318087286784"
+                 data-text="Shirl and Jack #timstwitterlisteningparty https://t.co/MWG9lOjWRM" data-datetime="7:35 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156253574729742"
+                 data-text="Parade: This is the closest we have ( in my opinion )ever gotten to writing a kind of hymn , a prayer or a mantra. I love this song. It’s so full of joyful celebration. 👩🏼‍🦰#timstwitterlisteningparty https://t.co/2CkyXgFNXO" data-datetime="7:35 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156211572936704"
+                 data-text="Rocky #timstwitterlisteningparty https://t.co/h7IoFdLM9y" data-datetime="7:35 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458156161652314117"
+                 data-text="I remember playing this at The Metro in Melbourne to a packed room and WE PUT THE HAMMER DOWN. KA BOOM. @butchvig #TimsTwitterListeningParty" data-datetime="7:34 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458155816863760389"
+                 data-text="Track 10: Parade #TimsTwitterListeningParty" data-datetime="7:33 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458155670599974917"
+                 data-text="We used to put this in our setlist on the BG Tour, maybe we should work it in next summer? @butchvig #TimsTwitterListeningParty" data-datetime="7:32 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458155669786267651"
+                 data-text="Queen\'s GTR #timstwitterlisteningparty https://t.co/UvCzLp3B7d" data-datetime="7:32 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458155648139550725"
+                 data-text="Confession: I am still guilty of getting down on myself. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:32 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458155534947799044"
+                 data-text="Wonderful and moving vocal by Shirl - Duke #TimsTwitterListeningParty" data-datetime="7:32 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458155471974588419"
+                 data-text="But I still really love this vocal. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:32 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458155308702916611"
+                 data-text="Listening to Drive you Home still makes me feel a bit sick. It’s so so desperately sad……👩🏼‍🦰 #TimsTwitterListeningParty" data-datetime="7:31 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458155251542867968"
+                 data-text="I really love this track, there’s a lot of vulnerability in Shirl’s vocals and lyrics.
+
+I guess I’m a sucker for dark, bittersweet pop songs. I’d love to make an entire Garbage album of stripped down bummer songs! @butchvig #TimsTwitterListeningParty" data-datetime="7:31 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458155069338177540"
+                 data-text="Drive You Home: This song concerns the slow breakdown of a relationship. The misery and heartbreak of it all. It still kills me. 👩🏼‍🦰#timstwitterlisteningparty https://t.co/YUsF7NsRS7" data-datetime="7:30 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154992624300032"
+                 data-text="BUTG rocking #timstwitterlisteningparty https://t.co/7y865gbNEH" data-datetime="7:30 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154973636677634"
+                 data-text="We should do this live! - Duke #TimsTwitterListeningParty" data-datetime="7:30 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154889595559950"
+                 data-text="BUTG Drums #timstwitterlisteningparty https://t.co/9G4DEpC4eN" data-datetime="7:29 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154823329542145"
+                 data-text="Track 9: Drive You Home #TimsTwitterListeningParty" data-datetime="7:29 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154797383643136"
+                 data-text="Queen #timstwitterlisteningparty https://t.co/5lpVvAWzGH" data-datetime="7:29 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154726747357185"
+                 data-text="It was tricky recording Shirl’s vocals for this track. The arrangement we came up with, the 1st verse starts really low in her register, and keeps rising up through the song, even modulating up at the end. As I remember, there were a lot of takes! @butchvig" data-datetime="7:29 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154724486643714"
+                 data-text="Fun fact: We thought Cherry Lips was going to be a single in the US, instead MTV REALLY REALLY wanted us to make a video for BUTG. So we did. But it flopped as a single. And Cherry Lips was NEVER released in the US, but went on to be one of our biggest international singles. WTF" data-datetime="7:29 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154720338452482"
+                 data-text="Rooftop #timstwitterlisteningparty https://t.co/0yiKG5DMPY" data-datetime="7:29 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154714634211331"
+                 data-text="key change! steve #TimsTwitterListeningParty" data-datetime="7:29 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154653988892674"
+                 data-text="My mum always used to tell me I’d better keep my shit together or I would end up in the gutter. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:28 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154455061475330"
+                 data-text="Duke thinks I hate this song. But I don’t. I just don’t love it as much as all our other children. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:28 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154386375397378"
+                 data-text="BUTG is Pure Power Pop. Love it! @butchvig #TimsTwitterListeningParty" data-datetime="7:27 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154366020423686"
+                 data-text="I LOVE THIS TRACK TOO 
+DUKE   BV#timstwitterlisteningparty" data-datetime="7:27 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154214413283335"
+                 data-text="Breaking Up The Girl: Either Butch or Duke came up with this title . I can’t remember!Then I wrote around it’s theme. I kept asking them what the title meant but they never were able to come up with a satisfactory answer. 😂👩🏼‍🦰
+#timstwitterlisteningparty https://t.co/fE8LCuoQDd" data-datetime="7:27 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154164677013504"
+                 data-text="A brazen attempt to write a catchy pop song - Duke #TimsTwitterListeningParty" data-datetime="7:26 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458154089175392261"
+                 data-text="I’m the only one in the band who likes this song - Duke #TimsTwitterListeningParty" data-datetime="7:26 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153959743315973"
+                 data-text="pop is not a dirty word. steve #TimsTwitterListeningParty" data-datetime="7:26 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153935403847681"
+                 data-text="Track 8: Breaking Up The Girl #TimsTwitterListeningParty" data-datetime="7:26 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153768264949763"
+                 data-text="I went into Smart on a Sunday afternoon and recorded the main riff for this. It’s actually a sped up horn sample (tuba?) that I ran through a wah wah pedal. @butchvig #TimsTwitterListeningParty" data-datetime="7:25 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153762200203272"
+                 data-text="Strangely this song was licensed by a yogurt company in Italy. Nothing is stranger than life. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:25 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1458153631866368001"
+                 data-text="Forgot how much I like @garbage 🙌" data-datetime="7:24 PM Nov 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153631820042243"
+                 data-text="Not so fun fact: when we shot the video for this, I was recovering from Hep A, having terrible migraines. So I’m only in the very start of the video, because we wore green screen suits, we had a body double fill in for me. @butchvig #TimsTwitterListeningParty" data-datetime="7:24 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153565097127940"
+                 data-text="Love the harp and bells on the bridge - Duke #TimsTwitterListeningParty" data-datetime="7:24 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153470163185665"
+                 data-text="One of the things I love about this song is Shirl’s vocal. We slowed the track down for her when she sang, so at regular speed it’s pitched up quite a bit. Makes her sound like an alien. Which she might be. @butchvig #TimsTwitterListeningParty" data-datetime="7:24 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153425334677504"
+                 data-text="Come on you know you want to dance. 👩🏼‍🦰🍒#TimsTwitterListeningParty" data-datetime="7:24 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1458153385656561671"
+                 data-text="❤️ https://t.co/eKguXBkJwC" data-datetime="7:23 PM Nov 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153351711842308"
+                 data-text="Van #timstwitterlisteningparty https://t.co/k34KDGJIdZ" data-datetime="7:23 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153274914258956"
+                 data-text="Cherry Lips: I was so inspired by the writings of JT Leroy during the making of this whole record. Cherry Lips was directly influenced by their novel “ Sarah” and has become a kind of trans anthem for so many of our fans .👩🏼‍🦰#timstwitterlisteningparty https://t.co/v4WDeGHJWa" data-datetime="7:23 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458153136007176195"
+                 data-text="Track 7: Cherry Lips (Go Baby Go!) #TimsTwitterListeningParty" data-datetime="7:22 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152928368279553"
+                 data-text="Listening to Silence is Golden is still very hard for me. Sending you all so much love tonight in this tricky old world of ours . 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:22 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152840916963329"
+                 data-text="MSG #timstwitterlisteningparty https://t.co/v1n6CPQCQO" data-datetime="7:21 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152836915609605"
+                 data-text="This is one of the most fun Garbage songs to play on guitar btw. steve #TimsTwitterListeningParty" data-datetime="7:21 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152756393299980"
+                 data-text="Shirl’s vocals on the outro, “Won’t someone listen” starting when the ringy guitars kick in, are a first take. We had no idea what she was going to do, she sang so hard the vocal gets really distorted, but the performance was so kick ass we kept it. @butchvig" data-datetime="7:21 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152748797493248"
+                 data-text="StudioB #timstwitterlisteningparty https://t.co/8FeAsBy4vl" data-datetime="7:21 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152536808951809"
+                 data-text="We came up with the idea for this song in a van in Denver, after hearing Wings “Let Me Roll It” on the radio.
+
+I dig the meter changes in this, the front half is 6/8 and the end is in 4/4. It is tricky to perform live! @butchvig #TimsTwitterListeningParty" data-datetime="7:20 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152494912131073"
+                 data-text="#timslisteningparty 👩🏼‍🦰 https://t.co/z5EhCmBv6R" data-datetime="7:20 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152408266133506"
+                 data-text="Memory of sitting in the control room and being wowed while Shirl laid down the incredibly powerful vocal - Duke #TimsTwitterListeningParty" data-datetime="7:19 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152330352726017"
+                 data-text="backstage #timstwitterlisteningparty https://t.co/C8juTzgmmG" data-datetime="7:19 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152224866115588"
+                 data-text="Silence is Golden: This is a song dedicated to all victims of domestic and sexual violence. 👩🏼‍🦰#timstwitterlisteningparty https://t.co/deHys3Z3X6" data-datetime="7:19 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152178800070661"
+                 data-text="😭 #TimsTwitterListeningParty" data-datetime="7:19 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458152155961970694"
+                 data-text="Track 6: Silence Is Golden #TimsTwitterListeningParty" data-datetime="7:18 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458151804915503106"
+                 data-text="Tokyo #timstwitterlisteningparty https://t.co/3qPjfAaErx" data-datetime="7:17 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458151669607268353"
+                 data-text="Matt Chamberlain, our friend and drummer savant, played on this. He is the king of groovy grace notes. 
+
+Duke came up with the circular piano at the start of the song, it has sort of a Philip Glass vibe. @butchvig #TimsTwitterListeningParty" data-datetime="7:17 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458151439478366208"
+                 data-text="Our beloved drum tech on BG. Miss you T #timstwitterlisteningparty https://t.co/hcr8MNg00Q" data-datetime="7:16 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458151429277773830"
+                 data-text="This is one of our saddest songs. We played this quite a bit on tour this summer. It still gives me the chills. @butchvig #TimsTwitterListeningParty" data-datetime="7:16 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458151426987802624"
+                 data-text="This is my favourite slow song we have ever written. One day I want us to perform this with a live orchestra ….Nelson Riddle style. 👩🏼‍🦰
+#TimsTwitterListeningParty" data-datetime="7:16 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1458151356666101761"
+                 data-text="This @garbage @LlSTENlNG_PARTY is 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥" data-datetime="7:15 PM Nov 9, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458151298742697987"
+                 data-text="Came up with the orchestral break idea in my little studio at home and wondered if I should show it to the band. Glad I did! - Duke #TimsTwitterListeningParty" data-datetime="7:15 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458151110103949319"
+                 data-text="Cup of Coffee: Ugh. The saddest song in our entire discography. Even to this day I can get emotional whilst singing it live. It’s is an amalgamation of numerous breakups I endured. Lost love sucks. 👩🏼‍🦰#timstwitterlisteningparty https://t.co/Im55C882rt" data-datetime="7:14 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458151068785790976"
+                 data-text="Steve Studio A #timstwitterlisteningparty https://t.co/8dKEz23fym" data-datetime="7:14 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458151026356219912"
+                 data-text="Track 5: Cup Of Coffee #TimsTwitterListeningParty" data-datetime="7:14 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458150965706518529"
+                 data-text="DukeGTR #timstwitterlisteningparty https://t.co/4qdHZmI9Mv" data-datetime="7:14 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458150852053581834"
+                 data-text="We really wanted to get a gospel choir to sing on the choruses for this song but for reasons too boring to explain here……it didn’t work out. 👩🏼‍🦰
+#TimsTwitterListeningParty" data-datetime="7:13 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458150727918833667"
+                 data-text="Little known fact: we brought a choir into Smart to sing on the choruses with Shirl, but they didn’t make the final mix as we thought is was too out of context. Instead we mixed Shirl’s BK Vox with a Mellotron. @butchvig #TimsTwitterListeningParty" data-datetime="7:13 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458150566153097218"
+                 data-text="We really wanted to get a gospel choir singing along on the choruses on this but it just didn’t work out……👩🏼‍🦰" data-datetime="7:12 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458150561639911429"
+                 data-text="Enjoyed recording this song - Duke #TimsTwitterListeningParty" data-datetime="7:12 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458150458724212740"
+                 data-text="Duke playing a Keith Richards riff in the verse, going toe to toe with DJ Sloppy! I hear Shirl channeling some Chrissie Hynde into this track. We are all massive Pretenders fans! @butchvig #TimsTwitterListeningParty" data-datetime="7:12 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458150223625089031"
+                 data-text="Bow Ties #timstwitterlisteningparty https://t.co/Q61zqtyG8B" data-datetime="7:11 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458150180096815105"
+                 data-text="Til the day I die: I think it was Duke who came up with the line “ ‘til the day I die” and the chords of the song but I can’t be sure. I tried to match the lyrics to the rock and roll swagger of the music. The demo of this is really good.👩🏼‍🦰#timstwitterlisteningparty https://t.co/ZNDxiy7ELx" data-datetime="7:11 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458150145166503939"
+                 data-text="Track 4: Till The Day I Die #TimsTwitterListeningParty" data-datetime="7:11 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149874306801670"
+                 data-text="This song is a tribute to the production of Phil Spector but also singers like Ronnie Spector and Lesley Gore.👩🏼‍🦰
+#TimsTwitterListeningParty" data-datetime="7:09 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149832682467331"
+                 data-text="This one almost made it into the setlist this year.  Maybe someday! steve #timstwitterlisteningparty" data-datetime="7:09 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149739917049856"
+                 data-text="Video #timstwitterlisteningparty https://t.co/TM4N3YhyPr" data-datetime="7:09 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149639048208388"
+                 data-text="I believe this is the only song we’ve used sleigh bells! @butchvig #TimsTwitterListeningParty" data-datetime="7:08 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149558987358208"
+                 data-text="We recently worked this up to play live.  I hope we will do so at some point! - Duke #TimsTwitterListeningParty" data-datetime="7:08 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149479685640194"
+                 data-text="This is our homage to the fabulous girl groups of the late 50’s early 60’s, The Shirelles, Ronettes, Shangri-Las and Crystals. @butchvig #TimsTwitterListeningParty" data-datetime="7:08 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149393383583744"
+                 data-text="The bridge is pure Shangri-Las - Duke #TimsTwitterListeningParty" data-datetime="7:08 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1458149246830583811"
+                 data-text="🔥🔥🔥🔥Androgyny by @garbage 🔥🔥🔥🔥" data-datetime="7:07 PM Nov 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149210725896195"
+                 data-text="SYM Promo #TimsTwitterListeningParty https://t.co/jDX63Vrkxe" data-datetime="7:07 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149150286045192"
+                 data-text="Can’t cry these tears anymore: My favourite moment in the entire song is on the line “ It’s time that I told you so” during the double chorus at the end . That “so”. It’s a moment for me . 👩🏼‍🦰
+#timstwitterlisteningparty https://t.co/RoqlSG5hnp" data-datetime="7:07 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458149087346192389"
+                 data-text="Track 3: Can’t Cry These Tears #TimsTwitterListeningParty" data-datetime="7:06 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148958526525442"
+                 data-text="Felix Da Housecat’s THEE GLITZ Remix is also pretty damn cool! We used to open some of our gigs with a snippet. It’s included in the Deluxe BG Remixes. @butchvig 
+https://t.co/VOkzBB7wbd" data-datetime="7:06 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148955603095559"
+                 data-text=".@Pharrell Williams and the Neptunes did a pretty cool remix of the track. @butchvig #TimsTwitterListeningParty
+https://t.co/H0zbUOxA9w" data-datetime="7:06 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148832038948872"
+                 data-text="Roger Mayer Secret Weapon #timstwitterlisteningparty" data-datetime="7:05 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148797629059079"
+                 data-text="Sometimes I think I am half boy half woman. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:05 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148753416732675"
+                 data-text="The bridge melody and lyric Shirl came up with are lovely - Duke #TimsTwitterListeningParty" data-datetime="7:05 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148682088558596"
+                 data-text="Androgyny is a hard song for us to perform live for some reason which is why we don’t play it very often. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:05 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148593148170247"
+                 data-text="One of the most eclectic tracks on BG, we intentionally wrote the verses chorus bridge with completely different vibes. That kind of set the tone for the whole album. @butchvig #TimsTwitterListeningParty" data-datetime="7:04 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1458148415020359686"
+                 data-text="https://t.co/PjNxZBdVJE" data-datetime="7:04 PM Nov 9, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148341913686024"
+                 data-text="Androgyny: So proud we were ahead of the curve in encouraging the mainstream acknowledgement of non binary gender and sexual identities. We also fully support the LGBTQIA community. Always have. Always will. 👩🏼‍🦰#timstwitterlisteningparty https://t.co/q2V5Ux1LRX" data-datetime="7:03 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148318375153667"
+                 data-text="Track 2: Androgyny #TimsTwitterListeningParty" data-datetime="7:03 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148281058349056"
+                 data-text="I think some of Shirl’s lyrics came from too many people in the music biz giving us their “opinions” about what BG should sound like. “We don’t give a f**king damn” @butchvig #TimsTwitterListeningParty" data-datetime="7:03 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148279095422976"
+                 data-text="Duke played some stellar Wah Wah, and DJ Sloppy makes an appearance after each chorus." data-datetime="7:03 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148017928761347"
+                 data-text="We discussed how, since the title was going to be Shut Your Mouth, the lyrics should be really ‘wordy’ - Duke #TimsTwitterListeningParty" data-datetime="7:02 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458148008047128584"
+                 data-text="The best live version of this song was on Australian TV show Rove where Cameron Diaz was the host. Love her. 👩🏼‍🦰#TimsTwitterListeningParty" data-datetime="7:02 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458147872600248322"
+                 data-text="I love the drums in SYM, they were bussed through the Roger Mayer RM 58 compressor, lofi and crunchy. I still have it, it’s crusty but it works! @butchvig #TimsTwitterListeningParty" data-datetime="7:01 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1458147774650847239"
+                 data-text="👋 https://t.co/5qoS7SkOdz" data-datetime="7:01 PM Nov 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458147572372103168"
+                 data-text="Shut your mouth: This is really about the growing resentment I met as our success continued to grow as a band. People say and do terrible things out of jealousy. 👩🏼‍🦰#timstwitterlisteningparty https://t.co/Whm12q1W8d" data-datetime="7:00 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1458147407171043335"
+                 data-text="Handing over to Shirley, Duke, Steve &amp; 
+Butch a.k.a @garbage
+
+It’s time for some Beautiful Garbage https://t.co/4HSVqeAX2k" data-datetime="7:00 PM Nov 9, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458147388636286982"
+                 data-text="Track 1: Shut Your Mouth #TimsTwitterListeningParty" data-datetime="7:00 PM Nov 9, 2021"> 
+                garbage            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Fgarbage%2Fstatus%2F1458147382097588224"
+                 data-text="Hi everyone. This is Shirley . 👩🏼‍🦰Thanks so much for joining us! Get ready. 
+#TimsTwitterListeningParty" data-datetime="7:00 PM Nov 9, 2021"> 
+                garbage            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
