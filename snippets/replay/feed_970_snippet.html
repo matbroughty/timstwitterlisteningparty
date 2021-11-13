@@ -1,0 +1,787 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/2UJcKiJxNryhL050F5Z1Fk" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02fbc71c99f9c1296c56dd51b6" alt="Nevermind" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Nirvana</span><br/><span class="sub-colour">Nevermind</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(250695)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/2UJcKiJxNryhL050F5Z1Fk" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_250695_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 172 tweets from Saturday 13th November 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Nirvana" target="_blank"><img src="https://pbs.twimg.com/profile_images/833732185962147841/d-jB6Yy2_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Nirvana.jpg'"><br/>@Nirvana</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1401913725288960003/n_dKSg1J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1455061133665177600/_PWYSUmN_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Smells Like Teen Spirit" data-start="0"
+             data-duration="301" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="In Bloom" data-start="302"
+             data-duration="255" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Come As You Are" data-start="558"
+             data-duration="218" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Breed" data-start="777"
+             data-duration="184" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Lithium" data-start="962"
+             data-duration="257" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Polly" data-start="1220"
+             data-duration="173" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Territorial Pissings" data-start="1394"
+             data-duration="142" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Drain You" data-start="1537"
+             data-duration="223" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Lounge Act" data-start="1761"
+             data-duration="156" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Stay Away" data-start="1918"
+             data-duration="211" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="On A Plain" data-start="2130"
+             data-duration="194" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Something In The Way" data-start="2325"
+             data-duration="232" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Endless, Nameless" data-start="2558"
+             data-duration="403" style="display:none"></div>
+                        <div id="track-14" class="track-list"
+                     data-name="Finished" data-start="2962"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851fbc71c99f9c1296c56dd51b6" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-172" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-171" style="display:none;font-size:smallest" data-delay="130000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1459640696130920452"
+                 data-text="Who’d have thought 18 months ago, that we’d be saying thanks to @shakira and @butchvig and @Nirvana for a Saturday night @LlSTENlNG_PARTY double bill. Here’s to all who have joined us along the way x x" data-datetime="9:53 PM Nov 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-170" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459640151949279234"
+                 data-text="Now please enjoy the rest of the Nevermind 30th Anniversary Super Deluxe including 4 live performances. https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:51 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-169" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459640070621646853"
+                 data-text="Be safe y\'all! @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/bFdmWNHcCp" data-datetime="9:51 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-168" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459639739955302400"
+                 data-text="And that\'s all folks @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/H1GjZFowFT" data-datetime="9:50 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-167" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459639683487436802"
+                 data-text="Thanks so much everyone! I hope Nevermind still touches you the way it does me! Be Safe! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:49 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-166" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459639636779696128"
+                 data-text="this guitar is toast @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/YK9xrw7tM4" data-datetime="9:49 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-165" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459639154162036738"
+                 data-text="I decided to let the band get behind the console and tweak the knobs, so you can hear some crazy panning and EFX during the song. They had blast mixing it! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:47 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-164" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1459638974662721542"
+                 data-text="An absolute @LlSTENlNG_PARTY masterclass from @butchvig 
+
+Thanks for joining us to celebrate Nevermind. Still sounding amazingly powerful all these years later
+
+@Nirvana https://t.co/GIC9otrsKn" data-datetime="9:47 PM Nov 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-163" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459638917737549826"
+                 data-text="end of the set @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/CgDLKEhwXq" data-datetime="9:46 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-162" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459638719724457986"
+                 data-text="Rage @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/rgjWtC2xeh" data-datetime="9:46 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-161" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459638645388763142"
+                 data-text="Endless Nameless was the last track we mixed with Andy Wallace (who did a brilliant job!)…@butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:45 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-160" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459638403566223365"
+                 data-text="But was accidentally left off the first pressing because there was so much silence after Something In The Way, the mastering engineer Howie Weinberg didn’t know the track existed! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:44 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-159" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459638276965351428"
+                 data-text="As many of you might know, Endless Nameless was added as a secret “bonus track” to the CD master. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:44 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-158" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FAntiMan71%2Fstatus%2F1459638166038659079"
+                 data-text="Kurt knew how to write a melody... #TimsTwitterListeningParty" data-datetime="9:43 PM Nov 13, 2021"> 
+                AntiMan71            </div>
+                        <div id="tweet-feed-157" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459638155783512067"
+                 data-text="This is entirely live, a take that erupted after several aborted attempts at tracking Lithium. I was smart enough to have kept the tape rolling. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:43 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-156" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459638035130118145"
+                 data-text="Track 13 - Endless, Nameless
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:43 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-155" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637932004818944"
+                 data-text="Studio B @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/1gZZjBsT4F" data-datetime="9:42 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459637888077996040"
+                 data-text="RT @LlSTENlNG_PARTY: https://t.co/AKMmmAcGCa" data-datetime="9:42 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637878510604295"
+                 data-text="I love how it turned out. I think it’s the most intense song on Nevermind. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:42 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459637833732435971"
+                 data-text="RT @LlSTENlNG_PARTY: Robert Fisher… https://t.co/oKIG6N5PXH" data-datetime="9:42 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637783778062336"
+                 data-text="When we finally had the basic master we overdubbed vocals and added Kirk Canning on cello. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:42 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637741033975811"
+                 data-text="Track sheet @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/uEzxFGslp0" data-datetime="9:42 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637709866037250"
+                 data-text="Also really hard for them as they were used to playing live and had to adjust to Kurt’s performance. I kept saying to Dave, “play more wimpy!” I had them do A LOT of takes. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:42 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637590533939200"
+                 data-text="And that was very difficult as Kurt had not played to a click so the performances varied. After extensive editing, we moved into Studio B and I had Dave and Krist overdub their parts @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:41 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637479288434691"
+                 data-text="He did 3 takes that were soooo quiet, I felt like I held my breath during each performance. There was not one complete take that I felt was strong enough, so I had to edit the performances together to get a master. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:41 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637363768922114"
+                 data-text="After 3 or 4 aborted takes, Kurt came into the control room and started playing the song while lying on the sofa. So I put a 414 mic on Kurt and told him to play the song “how you hear it in your head.” @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:40 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637232453574657"
+                 data-text="This was the last and hardest song to record on Nevermind. We tried tracking in Studio A, but no matter how quietly the band played, the space was too overwhelming for the intimacy the song needed. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:40 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fgraham_habben%2Fstatus%2F1459637117496221700"
+                 data-text="Krist’s bass playing is off the scale, all the way through #Nevermind30 #timstwitterlisteningparty" data-datetime="9:39 PM Nov 13, 2021"> 
+                graham_habben            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637088848994304"
+                 data-text="One of my fave songs on the album, and one of the darkest. I think Kurt had the fantasy he was the guy living under the bridge. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:39 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459637017113874434"
+                 data-text="Track 12 - Something In The Way
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:39 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdelfranklin%2Fstatus%2F1459637003478310917"
+                 data-text="and here it is, the song which makes me cry.... #TimsTwitterListeningParty" data-datetime="9:39 PM Nov 13, 2021"> 
+                delfranklin            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636946821533698"
+                 data-text="But I think it really works great in this track, we’re left with just Kurt and Dave’s dreamy bk vox as the band drifts off. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:39 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636912096878595"
+                 data-text="DG BV @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/pzg5RGFaX9" data-datetime="9:38 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636817448243201"
+                 data-text="In general, I don’t like fade outs (although I have mixed my share of songs with fades), I think it’s lame, a song needs an END right? @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:38 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636683100409856"
+                 data-text="Great guitar tones, think it was the Bassman. And also great singing by Kurt with Dave on harmonies. It was effortless. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:37 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636483615178753"
+                 data-text="Cheers! @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/BlLETjoQyS" data-datetime="9:37 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636348059455488"
+                 data-text="I LOVE Kurt’s vocal melody juxtaposed over the guitar chords! It’s pure pop! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:36 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636302215716864"
+                 data-text="Jack (Bleach) DG BV @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/ieOaTNGGbO" data-datetime="9:36 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636218715533316"
+                 data-text="Track 11 - On A Plain
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:36 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1459636057587298306"
+                 data-text="On A Plain 🙌🙌🙌" data-datetime="9:35 PM Nov 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636018580049925"
+                 data-text="Fun fact: The original version I recorded at Smart was titled “Pay To Play”. Kurt changed the lyrics at the last minute the day we tracked at Sound City. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:35 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459636008345952258"
+                 data-text="at 20th @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/8ystm656Dq" data-datetime="9:35 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459635687167172610"
+                 data-text="Krist DG BV @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/5a0tHittDl" data-datetime="9:34 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459635631236128771"
+                 data-text="I had Kurt overdub a “stab” gtr on this also, mixing it with so vocal “I Don’t know Why”…it’ pretty cool, very abrasive, it leaps out of the speaker. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:33 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459635521987268616"
+                 data-text="https://t.co/xH58S2JCjj" data-datetime="9:33 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459635377170354177"
+                 data-text="Another killer bass riff from Krist! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:32 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459635315237212161"
+                 data-text="Track 10 - Stay Away
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:32 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459635218944458754"
+                 data-text="The vocals on this were tough, the end choruses are just a bit out of Kurt’s range. But I think it gives the song a lot of urgency. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:32 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459635138044719107"
+                 data-text="I recorded two tracks of guitar with the Bassman, one clean and one distorted. And I had Kurt overdub the “stab” guitar before the chorus, I felt like it needed a jolt of adrenalin. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:31 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FJLvsEverything%2Fstatus%2F1459635095351054339"
+                 data-text="Opening with probably one of Krist\'s best bass riffs, which pairs up perfectly with Kurt\'s lead \"Lounge Act\" is purely underated. Kurt\'s growl on this too! #TimsTwitterListeningParty #Nirvana30" data-datetime="9:31 PM Nov 13, 2021"> 
+                JLvsEverything            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FAdamQuinnin%2Fstatus%2F1459635032646209537"
+                 data-text="In another 30 years I will still be blasting this album.  #TimsTwitterListeningParty" data-datetime="9:31 PM Nov 13, 2021"> 
+                AdamQuinnin            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459634926110740483"
+                 data-text="Krist @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/1OBI0znVPA" data-datetime="9:30 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459634811333582851"
+                 data-text="Krist’s bass really drives this song. In fact, through all of Nevermind, his riffs are stellar: they are just as hooky as Kurt’s vocals and Dave’s drum fills. (Yes drums fills are hooks!) @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:30 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459634690378268674"
+                 data-text="Track 9 - Lounge Act
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:30 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459634450657021952"
+                 data-text="Best lyrics ever: Chew your meat for you/Pass it back and forth/In a passionate kiss/From my mouth to yours/I like you. Kurt wrote the lyrics after meeting Courtney. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:29 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459634299234258944"
+                 data-text="Neve at Stun Volume @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/nuHmYxYlKD" data-datetime="9:28 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459634218607149059"
+                 data-text="We recorded a couple guitar overdubs with the Mesa Boogie, but I didn’t like the sound, so we did one pass with the Bassman and dbled it with a Rat/Bassman combo, we ended up with a killer gtr sound for this song. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:28 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459634187355385860"
+                 data-text="The pool @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/7sHAUwCe3f" data-datetime="9:28 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459634100633964544"
+                 data-text="Kurt @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/6O4b8Jcxr5" data-datetime="9:27 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fsisterwinter_73%2Fstatus%2F1459634041381134345"
+                 data-text="The anticipation is this break is so good @Nirvana @LlSTENlNG_PARTY #TimsTwitterListeningParty #Nevermind30" data-datetime="9:27 PM Nov 13, 2021"> 
+                sisterwinter_73            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459634005746204675"
+                 data-text="Jabberjaw @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/t4vFg0kOgF" data-datetime="9:27 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633970975428609"
+                 data-text="After figuring out the verse/chorus sections, we decided to let the bridge be a “hypnotic breakdown” &amp; layered a lot of abstract vocal &amp; sound EFX over DG’s drum groove. Kurt did 3 vocal overdubs in the bridge w/ weird vocal noises. #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:27 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633782336761857"
+                 data-text="This was one of the songs we worked on quite a bit in pre pro and during the sessions, it was really arranged in the studio. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:26 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633721481383941"
+                 data-text="Track 8 - Drain You
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:26 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633705903738881"
+                 data-text="Sound City @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/meVJrKxlAJ" data-datetime="9:26 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633642901176321"
+                 data-text="It was a wild show, and really cool for me to see the crowd reaction from the band’s point of view. The band got pretty loaded on Jack, and when they left, someone followed them to the Oakwood Apts and stole the gear in their van. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:25 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fbenjihoops_%2Fstatus%2F1459633614925320194"
+                 data-text="Territorial Pissings is such a killer song! Always gets me hyped up 🤟  @Nirvana @butchvig @LlSTENlNG_PARTY #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:25 PM Nov 13, 2021"> 
+                benjihoops_            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633597250355200"
+                 data-text="w L7 @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/K8P6QlMR9D" data-datetime="9:25 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633584327696386"
+                 data-text="I climbed up onstage behind Dave’s drum kit along with Jennifer Finch to watch the gig, we were so close to DG we could reach out and flick his hair during the songs. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:25 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633538517520388"
+                 data-text="Speaking of @L7officialhq, Nirvana played a “secret” show at Jabberjaw on Pico toward the end of the recording sessions. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:25 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633474558590977"
+                 data-text="When I walked into the lounge, Nirvana and @L7officialhq were in the midst of a food fight, it was crazy, chicken, brisket, beans and cole slaw everywhere! I felt sorry for the studio assistant who had to clean up the mess. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:25 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633431785009165"
+                 data-text="Fun Fact: I think the day we tracked this song, @L7officialhq stopped by the studio. I sent out for B B Cue from Dr. Hogly Wogly’s, and by the time we finished getting a master take, the food had arrived. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:25 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633345885720579"
+                 data-text="The guitar tone on this is a mix of Kurt plugging his Rat pedal directly into a Neve preamp and mixing that in with his guitar amp. It’s abrasive! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:24 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633271822716929"
+                 data-text="Krist went in and recorded a terrible rendition of The Youngblood’s “Get Together”, an ode to the 60’s if there ever was one. It’s funny, and perfect! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:24 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633227883106306"
+                 data-text="We wanted to add an intro to the song that would be a counterpoint to the punk energy, so I suggested “Why not sing something really lame?” @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:24 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633122513854466"
+                 data-text="Track 7 - Territorial Pissings
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:23 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633064364048388"
+                 data-text="Nirvana 1990 @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/u1g4uoDBmO" data-datetime="9:23 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459633042964705281"
+                 data-text="Kurt came back one afternoon and said “That’s the best grilled cheese sandwich I’ve ever eaten.” American Cheese on Wonder Bread. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:23 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632971627974656"
+                 data-text="Fun fact: when Nirvana were recording at Smart Studios, I would send them over to the Friendly Tavern, right across the street from the studio, they could order lunch, get beers, play pool, and put it on the studio tab. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:23 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632802333220872"
+                 data-text="There was point recording Nevermind where we discussed if we should re-record Polly. But we all agreed that, despite the lofi sound, there was magic in the performance. I’m glad we left it as is. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:22 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632794049544193"
+                 data-text="Stella 12 String with only 5 strings @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/uSRAAVeXEy" data-datetime="9:22 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632640093396995"
+                 data-text="The strings were so old they didn\'t have any tone to them, which gave it a dark, plunky sound. Kurt and Krist recorded live, then we overdubbed lead and harmony vocals, and then Chad Channing added the cymbal crashes. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:21 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632555343290373"
+                 data-text="This track was originally recorded at Smart Studios in April 1990. Kurt playing a Stella guitar with only 5 strings that barely stayed in tune. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:21 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632442868834308"
+                 data-text="This is one of Nirvana’s darkest songs. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:21 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632390419062785"
+                 data-text="Track 6 - Polly
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:20 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632384760946689"
+                 data-text="BV at 606 @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/7zI6MwCLEx" data-datetime="9:20 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632233539518467"
+                 data-text="Fun fact: DG bought the Neve 8028 from Sound City when it closed and had it installed in the Foo’s Studio 606, so it’s still being used, and still sounds killer! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:20 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632180968128522"
+                 data-text="The other defining characteristic of Sound City is its recording console, the custom Neve 8028, the sound was huge and punchy, the harder you hit the preamps the better it sounded. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:20 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632100378759168"
+                 data-text="Studio A was nothing more than a giant box with parallel walls, which would normally have been a terrible boomy echo chamber, instead it was one of the best tracking rooms I’d ever heard. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:19 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1459632072977440770"
+                 data-text="🔥🔥 https://t.co/5rfjXMN56I" data-datetime="9:19 PM Nov 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459632005209935875"
+                 data-text="Three different rooms were used for tracking at the studio: the live large room called Studio A, the small dead room Studio B, and the control room (for Something In The Way). @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:19 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631977171075075"
+                 data-text="Neve! @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/J04YMc6BvK" data-datetime="9:19 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FDanielWiklander%2Fstatus%2F1459631958959472652"
+                 data-text="@inremotepart @Nirvana Quite remarkable, being a teenager watching your favorite indie scene (the acts on Sub Pop) blow up into this supernova. Thing is, we were never hipster about it. Nirvana getting a hit was like ”FINALLY! OUR music is in the charts!”" data-datetime="9:19 PM Nov 13, 2021"> 
+                DanielWiklander            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631937404891136"
+                 data-text="Nevermind was tracked on 24 track reel-to-reel tape over the course 16 days at Sound City Studios in Los Angeles. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:19 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631834040442880"
+                 data-text="This is another track where we recorded the guitars with the Big Muff into the Fender Bassman. You should try it sometime! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:18 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631772723941377"
+                 data-text="DG @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/TiMCI3iELX" data-datetime="9:18 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631766235344897"
+                 data-text="He did. The band came in the next day, and they nailed the song on the 2nd take. Years later, DG told me I broke his heart that night. But he forgave me. And he’s a monster, he f**king nailed it! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:18 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631671024578560"
+                 data-text="I quietly pulled Dave aside and asked him if he’d ever used a click track. He said no, so I gave him my Roland Drum Machine, which had a shaker/tambourine loop, and asked him to try practicing with it. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:18 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631572613664771"
+                 data-text="BV studio notes @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/LzJkkkfAsu" data-datetime="9:17 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631571338555392"
+                 data-text="At the end of the song Kurt smashed his guitar to bits. And that was the end of the session. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:17 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631500043841536"
+                 data-text="I could feel Kurt getting frustrated, and after the last aborted attempt, while the tape was still rolling, Kurt launched into Endless Nameless. I’ve never seen so much rage in a person’s face, it was scary. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:17 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1459631498366173187"
+                 data-text="Lithium https://t.co/JQgh0rbmhc" data-datetime="9:17 PM Nov 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631413167202309"
+                 data-text="This was one of the hardest songs to record. The band did a lot of takes, they kept speeding up, and they were pretty loose. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:17 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frobevs%2Fstatus%2F1459631383954006022"
+                 data-text="Lithium. First saw this on the MTV Europe awards. Started it all fir me, went out and bought a guitar the next day  #TimsTwitterListeningParty" data-datetime="9:16 PM Nov 13, 2021"> 
+                robevs            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459631367013163015"
+                 data-text="#TimsTwitterListeningParty https://t.co/DMlc4jCjL4" data-datetime="9:16 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631310738051072"
+                 data-text="Track 5 - Lithium
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:16 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631225987993601"
+                 data-text="I used a U89 on Kurt’s vocal, as it has a thicker tone, the U67 sounded too thin for that song. He did 4 takes, but his voice quickly deteriorated, so I used the 1st take as the master. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:16 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631211308101632"
+                 data-text="Nirvana jamming @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/lubpRCFHd1" data-datetime="9:16 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631083792654337"
+                 data-text="1991 @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/pDccY9tg93" data-datetime="9:15 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FVeronaSerena%2Fstatus%2F1459631025915678721"
+                 data-text="@Tim_Burgess @Nirvana Breed is just catchy, abrasive pop punk at its absolute finest, oh I just love getting lost in this - that rhythm section! ❤️🔥
+#TimsTwitterListeningParty" data-datetime="9:15 PM Nov 13, 2021"> 
+                VeronaSerena            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459631013131214849"
+                 data-text="The gtr solo is so crazy, during the mix I grabbed the pan knob on the console and swept it left and right. There was no automation for that, I had to nail it every time, “old school.” @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:15 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630984106631169"
+                 data-text="On tour 1991 @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/jAckQmWkEl" data-datetime="9:15 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459630871447842818"
+                 data-text="Fave track on Nevermind by @Nirvana???" data-datetime="9:14 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630860454350848"
+                 data-text="I panned the bass (run through a fuzz pedal) hard left, and the main gtr panned hard right. I was referencing the extreme panning on the first Ramones album. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:14 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1459630771048755220"
+                 data-text="🔥🔥🔥Breed by @nirvana 🔥🔥🔥" data-datetime="9:14 PM Nov 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630638961598465"
+                 data-text="Damn, this is f**king tight! What a KILLER riff! Mute the right speaker and listen to Krist’s bass, it’s insane! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:13 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630602638954496"
+                 data-text="BV at Studio @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/6GFdKBWl1N" data-datetime="9:13 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630552193986560"
+                 data-text="Track 4 - Breed
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:13 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630420325138432"
+                 data-text="During the vocal overdubs Kurt accidentally sang the phrase \"And I don\'t have a gun\" too early before the last chorus, but I loved it, so we left it in the final mix. @butchvig #Nirvana30 #TimsTwitterListeningParty" data-datetime="9:13 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630249394651136"
+                 data-text="I love the guitar “solo” in the bridge, it’s basically following the vocal melody, the same approach we used in Teen Spirit. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:12 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630215164878848"
+                 data-text="Track sheet @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/Oju7e4xr24" data-datetime="9:12 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fkehdabra%2Fstatus%2F1459630155232649226"
+                 data-text="#TimsTwitterListeningParty https://t.co/SlU1uVERkQ" data-datetime="9:12 PM Nov 13, 2021"> 
+                kehdabra            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630068473339905"
+                 data-text="Small Clone! @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/XPOwCAfT8f" data-datetime="9:11 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459630067315658753"
+                 data-text="I told Kurt I’d like to dbl track his vocals throughout the entire song, at first he said no, thought it sounded “fake”…but I reminded him that John Lennon dbl tracked most of his vocals, and he acquiesced. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:11 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629980594307073"
+                 data-text="The bass is dbl tracked, high and low octaves, and we dbl tracked the guitars. Kurt recorded his guitar solo in two takes, as well as three takes of vocals. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:11 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459629867222413318"
+                 data-text="RT @LlSTENlNG_PARTY: We have a bag of pins and a map. Shout up where you are in the world for our @Nirvana @LlSTENlNG_PARTY hosted by @butc…" data-datetime="9:10 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629864672133123"
+                 data-text="The track has a psychedelic vibe to it, it really shimmers, and a lot of that is because I had both Kurt and Krist used the Small Clone pedal for all the overdubs. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:10 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459629753372233729"
+                 data-text="#TimsTwitterListeningParty https://t.co/7unbB6F2nk" data-datetime="9:10 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629707993903104"
+                 data-text="This was one of the few new songs Nirvana recorded onto a rehearsal cassette tape the group sent to me before I flew to LA, so I knew they had written something special. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:10 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FDabizasN%2Fstatus%2F1459629644043460621"
+                 data-text="This album just has so much presence. Every song emanates massively.  #TimsTwitterListeningParty" data-datetime="9:10 PM Nov 13, 2021"> 
+                DabizasN            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629624640430083"
+                 data-text="Track 3 - Come As You Are
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:09 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629524446957568"
+                 data-text="This is such a great song, it’s really powerful, but super hooky! I also love the “Ed Sullivan” variety show video, it shows their sense of humor. @butchvig #Nevermind30  #TimsTwitterListeningParty" data-datetime="9:09 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629466259394561"
+                 data-text="After each one he’d take a pull off a cigarette, then take a shot of Jack Daniels, pause, &amp; say in a low raspy voice “I’m ready Butch.” Needless to say, the session got a little crazy. Between DG &amp; Krist, they polished off the whole bottle! #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:09 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629415072026626"
+                 data-text="In Bloom Vox comp notes @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/wulpV1wVUW" data-datetime="9:09 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629378846040074"
+                 data-text="The high notes in the chorus were right at the top of DG’s range, his voice kept breaking up, I had him do a lot of takes. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:08 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629243541848066"
+                 data-text="We added Dave’s vocal harmonies toward the end of the sessions, after we had moved to Studio B. His voice really complimented Kurt’s. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:08 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459629155251888141"
+                 data-text="RT @Nirvana: Released September 24, 1991.
+#Nevermind30 https://t.co/4X7JiAh6gm" data-datetime="9:08 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629138126376964"
+                 data-text="Nirvana at WORT @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/ZqZkUH5LUe" data-datetime="9:07 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459629021633732615"
+                 data-text="I tracked the heavy guitars using a Fender Bassman amp that I had rented, possibly using the Big Muff. I wanted a smooth, deep guitar tone. The Bassman to me kind of defined a “grunge” guitar sound.@butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:07 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628972371628033"
+                 data-text="BV and DC at Smart @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/uLOCQuMbpr" data-datetime="9:07 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FCal_Roberts_%2Fstatus%2F1459628907926282242"
+                 data-text="Who else was at Reading 92
+What a weekend that was. My mum literally hosed me down on my eventual return
+@Nirvana #timstwitterlisteningparty
+@LlSTENlNG_PARTY #Nevermind30 https://t.co/dTAPrDM5cC" data-datetime="9:07 PM Nov 13, 2021"> 
+                Cal_Roberts_            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fsisterwinter_73%2Fstatus%2F1459628849273188364"
+                 data-text="Nature is a whore @Nirvana @butchvig @LlSTENlNG_PARTY #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:06 PM Nov 13, 2021"> 
+                sisterwinter_73            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628785158950918"
+                 data-text="Smart Studios @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/Q1ap4FzEeR" data-datetime="9:06 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628742049812481"
+                 data-text="In Bloom was one of the 1st songs we tracked at Sound City because I was really familiar with the arrangement, it didn’t need any tinkering. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:06 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459628741492154369"
+                 data-text="#TimsTwitterListeningParty https://t.co/RcyuU5cO5p" data-datetime="9:06 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628688312393729"
+                 data-text="And we added a few harmonies on the chorus. @butchvig #TimsTwitterListeningParty" data-datetime="9:06 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628638236676096"
+                 data-text="I recorded the first version of In Bloom at Smart in April of 1990 with Chad Channing on drums. The version I produced at Sound City is pretty much the exact same arrangement as the original version, just tighter and more focused sonically. #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:06 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628555113930754"
+                 data-text="Track 2 - In Bloom
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:05 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628469311004675"
+                 data-text="A lot of people say this track reminds them of Boston’s “More Than A Feeling”….nothing wrong with that, it’s a great song to ref. The scratchy guitar on the intro reminds me of the James Gang! @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:05 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628403636654083"
+                 data-text="I made a lead vocal comp from the takes and bounced them to track 15, then made a vocal dbl for the choruses by using one of the other takes. We overdubbed the “hello hello” sections last. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:05 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628322812432385"
+                 data-text="When we were finished tracking guitars, we overdubbed Kurt’s vocals, recorded thru U67 mic / Neve Preamp /LA2A compressor. He did 3 takes. I rarely got more than 4 takes on a song because Kurt would sing so hard he would blow his voice out. #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:04 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628250020286465"
+                 data-text="I set up a vocal mic in the studio for Kurt to track with, but we didn’t use the live vocals on any of the main songs (only on Endless Nameless). @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:04 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628212216942595"
+                 data-text="Vox Comp sheet @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/IDU2goD2iv" data-datetime="9:04 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628152452358144"
+                 data-text="…and the solo, think it was also through Mesa with either Rat or Boss DS1. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:04 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1459628131933990924"
+                 data-text="Smells Like Teen Spirit. Never short of fucking amazing" data-datetime="9:03 PM Nov 13, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628094256345088"
+                 data-text="Then I had Kurt go back and redo his guitars: clean intro through a Vox AC30, dbl tracked big gtrs though his Mesa Boogie, Dbl tracked verse ringy guitars through AC30 with Small Clone and Boss DS1 (during “hello hello”)... @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:03 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628016313667588"
+                 data-text="DG\'s drums @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/BDNOjn08w5" data-datetime="9:03 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459628015676051458"
+                 data-text="Kurt and Krist were standing close to DG, all wearing headphones. I think we got a master on the 2nd take. After I knew I had the master drum take, I had Krist punch in any notes that he thought needed fixing. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:03 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fimandyprice%2Fstatus%2F1459627992653737987"
+                 data-text="No matter how many times you hear it, Smells Like Teen Spirit is still incredible @butchvig @Nirvana @Tim_Burgess @LlSTENlNG_PARTY #TimsTwitterListeningParty" data-datetime="9:03 PM Nov 13, 2021"> 
+                imandyprice            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459627931647438848"
+                 data-text="The production on Teen Spirit was actually very simple. We tracked the song live. Dave’s kit was in the middle of Studio A in Sound City, the bass and guitar amps were in iso booths. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:03 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459627860507848704"
+                 data-text="Drum setup @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/pDIMgZ4Vzu" data-datetime="9:02 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459627828480073728"
+                 data-text="I was impressed with how tight and LOUD he played. He clearly had elevated the band to a new level. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:02 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459627727913472002"
+                 data-text="https://t.co/T0iPyttoKo" data-datetime="9:02 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459627726139056131"
+                 data-text="I paused for a few seconds, then said “play it again. And they did. During the 2nd pass I got focused and started scribbling down production notes. I was a monster of a song. And it was the first time I met Dave Grohl.  @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:02 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Finremotepart%2Fstatus%2F1459627693805350912"
+                 data-text="Here we are now
+ENTERTAIN US!!!! 
+#TimsTwitterListeningParty https://t.co/47UWrcpPkl" data-datetime="9:02 PM Nov 13, 2021"> 
+                inremotepart            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459627631813357568"
+                 data-text="The first time I heard Teen Spirit live was in a rehearsal studio in North Hollywood it was the first song Nirvana played for me. I was blown away, paced around the room, taking the song in. When they finished Kurt said “what do you think?” #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:02 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459627609990438917"
+                 data-text="Teen Spirit track sheet @butchvig #Nevermind30 #TimsTwitterListeningParty https://t.co/Pjpt2doBxq" data-datetime="9:01 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1459627457108185102"
+                 data-text="#TimsTwitterListeningParty https://t.co/p81ibHoWAF" data-datetime="9:01 PM Nov 13, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459627414653263872"
+                 data-text="What can I say about this song. It started a revolution, it changed my life. And probably some of your lives too. @butchvig #Nevermind30 #TimsTwitterListeningParty" data-datetime="9:01 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459627325209780224"
+                 data-text="Track 1 - Smells Like Teen Spirit
+https://t.co/J1lLWPAfAL 
+#Nevermind30 #TimsTwitterListeningParty" data-datetime="9:00 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FNirvana%2Fstatus%2F1459627250614034434"
+                 data-text="Welcome everyone! Excited to have you all here today. It’s crazy that it’s been 30 years. Crank it up to STUN VOLUME and let’s go! @butchvig #Nevermind30 #TimsTwitterListeningParty 
+
+https://t.co/J1lLWPAfAL" data-datetime="9:00 PM Nov 13, 2021"> 
+                Nirvana            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1459627164970668038"
+                 data-text="Hello, hello, hello!
+
+Over to @butchvig for our Nevermind @LlSTENlNG_PARTY 
+
+@Nirvana https://t.co/b04qLHkbwU" data-datetime="9:00 PM Nov 13, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
