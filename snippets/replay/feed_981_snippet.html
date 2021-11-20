@@ -1,0 +1,541 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/0SLzwxGYeOdJYbjxbE9plW" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02f037fddc8f7dc10a36ade0ef" alt="Live at the The Checkerboard Lounge" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Muddy Waters</span><br/><span class="sub-colour">Live at the The Checkerboard Lounge</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(136309)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/0SLzwxGYeOdJYbjxbE9plW" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_136309_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 62 tweets from Saturday 20th November 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/CHlCAGO_BLUES" target="_blank"><img src="https://pbs.twimg.com/profile_images/1461827973628190721/_YSg8RQV_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/CHlCAGO_BLUES.jpg'"><br/>@CHlCAGO_BLUES</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1401913725288960003/n_dKSg1J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1455061133665177600/_PWYSUmN_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="You’re Gonna Miss Me When I’m Gone - Live" data-start="0"
+             data-duration="329" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Sweet Little Angel - Live" data-start="330"
+             data-duration="216" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Flip Flop And Fly - Live" data-start="547"
+             data-duration="110" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Introduction - Live" data-start="658"
+             data-duration="102" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="You Don't Have To Go - Live" data-start="761"
+             data-duration="339" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Country Boy - Live" data-start="1101"
+             data-duration="613" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="I’m A King Bee - Live" data-start="1715"
+             data-duration="272" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Trouble No More - Live" data-start="1988"
+             data-duration="168" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="County Jail - Live" data-start="2157"
+             data-duration="293" style="display:none"></div>
+                        <div id="track-10" class="track-list"
+                     data-name="Finished" data-start="2451"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851f037fddc8f7dc10a36ade0ef" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-62" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1462190830094106626"
+                 data-text="He forgot to say but it’s a tweet from the amazing Rick Kreher https://t.co/a07dzLEHif" data-datetime="10:47 PM Nov 20, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462190463142838276"
+                 data-text="#TimsTwitterListeningParty
+
+Dave Hewitt and The Black Truck that recorded this masterpiece. https://t.co/Tal4YrtWms" data-datetime="10:45 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462189967740973059"
+                 data-text="Thank you for a great time @Tim_Burgess, I love you and there ain\'t nothing you can do about it. Keep up the good work. Call me when you\'re in Chicago, I\'ll show you some blues clubs.
+
+Congratulations John and Rick. Muddy would be proud of you both
+
+Freddie xx" data-datetime="10:43 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462189914137767936"
+                 data-text="#TimsTwitterListeningParty
+
+The slide I got from Keith Richards that night. Still use it. It has mojo. https://t.co/969grGnPo3" data-datetime="10:43 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462189486419415042"
+                 data-text="and, the Stones is still going strong. They on tour right now.
+ 
+See you all in January when I come over with Billy Branch.
+ 
+Everyone in Chicago respects the Stones for what they did that night
+
+JP #TimsTwitterListeningParty" data-datetime="10:41 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462189373827469322"
+                 data-text="If you use 50 gauge strings you can tune one guitar to all the open keys. 
+ 
+Play the Blues, you\'ll learn something every day
+ 
+We want to thank y’all for doing this, it\'s been a great trip down memory lane. 
+
+JP #TimsTwitterListeningParty" data-datetime="10:41 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462189239295266820"
+                 data-text="I came up from Mississippi when I was 18 and I learned open D playing for Elmore James. I thought that was how you played. Then I learned open G from Muddy.  After that, I learned to play open in all the keys
+
+JP #TimsTwitterListeningParty" data-datetime="10:40 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462189201106124808"
+                 data-text="#TimsTwitterListeningParty
+
+John Primer somewhere in Europe last week. https://t.co/z1ajCYLr9g" data-datetime="10:40 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462189171783745543"
+                 data-text="Couple of instrumentals for you now. So I’ll keep tweeting 
+
+JP #TimsTwitterListeningParty" data-datetime="10:40 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462188902161256452"
+                 data-text="A guy in Oslo said I got spider fingers when he saw me recently.
+ 
+JP
+
+#TimsTwitterListeningParty" data-datetime="10:39 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462188717209182221"
+                 data-text="The great Buddy Guy. Still going strong
+
+#TimsTwitterListeningParty https://t.co/kePIpcjzUq" data-datetime="10:38 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462188709202305028"
+                 data-text="Lefty Dizz sat in for a while, too https://t.co/hDUgIvnLyl" data-datetime="10:38 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462188706899632136"
+                 data-text="Lovie Lee on Piano
+
+#TimsTwitterListeningParty https://t.co/udKq8s9zMD" data-datetime="10:38 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462188469732712454"
+                 data-text="I want the young cats to hear the Blues like it\'s supposed to sound
+ 
+Blues is so simple, it\'s hard
+ 
+Let your fingers do the work
+ 
+Let your eyes tell you what to do, don\'t think too much.
+
+JP #TimsTwitterListeningParty" data-datetime="10:37 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462188246847401997"
+                 data-text="Back then, Blues was Blues. Players today didn\'t experience such hard times. 
+
+JP #TimsTwitterListeningParty" data-datetime="10:36 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462188007969234951"
+                 data-text="Listening to it now, I wish it was still like that. Lots of clubs playing Blues with great performers all over. It\'s changed so much.
+
+JP #TimsTwitterListeningParty" data-datetime="10:36 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462187925412659205"
+                 data-text="Muddy quit smoking the reefer when he realized he wasn\'t doing what he thought he was doing on his guitar.
+ 
+JP #TimsTwitterListeningParty" data-datetime="10:35 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462187664082411523"
+                 data-text="It was never cheap champagne!
+ 
+JP #TimsTwitterListeningParty" data-datetime="10:34 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462187567865024522"
+                 data-text="Champagne and Reefer Muddy had Champagne at every show. Sometimes he would let others drink it with him but he only ever gave them a little glass.
+
+JP #TimsTwitterListeningParty" data-datetime="10:34 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462187187919851529"
+                 data-text="If you’re listening via Spotify. Skip to Champagne And Reefer when Mojo ends. Sticking to vinyl release running order #TimsTwitterListeningParty" data-datetime="10:32 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462187114599272454"
+                 data-text="Junior Wells, the great harp player
+
+#TimsTwitterListeningParty https://t.co/Uzgd4qqhMl" data-datetime="10:32 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462186870788562949"
+                 data-text="Muddy, Buddy &amp;Mick
+#TimsTwitterListeningParty https://t.co/9KrSTWaxN3" data-datetime="10:31 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462186820771459077"
+                 data-text="Ray is playing the beat in that Big Eyes Smith style. Not all drummers can handle that beat.
+
+JP #TimsTwitterListeningParty" data-datetime="10:31 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462186609764360198"
+                 data-text="Got My Mojo Working I thought this was the end but everyone was crowding the stage and it went on longer. We usually close the set with this one.
+
+JP #TimsTwitterListeningParty" data-datetime="10:30 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462186315160633346"
+                 data-text="Killer Ray Allison on drums. Another legend of the Southside.
+
+#TimsTwitterListeningParty" data-datetime="10:29 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462185989691031561"
+                 data-text="Mojo Buford on harp played with Muddy for years. He was there at the beginning and the end. Stood in whenever needed.
+
+#TimsTwitterListeningParty" data-datetime="10:28 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462185819536568324"
+                 data-text="#TimsTwitterListeningParty https://t.co/zdHqRLCGiI" data-datetime="10:27 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462185581463715843"
+                 data-text="https://t.co/7XxREDanYK" data-datetime="10:26 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462185332368191497"
+                 data-text="#TimsTwitterListeningParty
+
+Mick Jagger can really sing the blues JP" data-datetime="10:25 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FDIreland02%2Fstatus%2F1462185038414585864"
+                 data-text="@CHlCAGO_BLUES Loving it everywhere 👏👏👏#TimsTwitterListeningParty @LlSTENlNG_PARTY" data-datetime="10:24 PM Nov 20, 2021"> 
+                DIreland02            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="113000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462184849503043586"
+                 data-text="We\'re loving this in Chicago" data-datetime="10:23 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="139000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462184375508942849"
+                 data-text="Mannish Boy 
+
+Another great job by the English cats. Mojo Buford sounding good too on the harp. Mojo was a real good singer too 
+
+JP #TimsTwitterListeningParty" data-datetime="10:21 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462183789891932167"
+                 data-text="The origins of their name. First recording on Chess. 1425 was the start of the catalogue numbering. https://t.co/Lr67HsQnka" data-datetime="10:19 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTrudyAWhite%2Fstatus%2F1462183587088896003"
+                 data-text="@Tim_Burgess @RollingStones @LlSTENlNG_PARTY @CHlCAGO_BLUES Suffolk 😎" data-datetime="10:18 PM Nov 20, 2021"> 
+                TrudyAWhite            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462183555266756619"
+                 data-text="I know Muddy was real proud The Rolling Stones was named after his song.
+ 
+they boosted the Blues higher and Muddy, Wolf and everyone got more famous after the Stones came.
+
+JP #TimsTwitterListeningParty" data-datetime="10:18 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462183325095895051"
+                 data-text="One thing I know for sure is that my father sure was glad he wrote this song.
+ 
+Muddy had his own groove. Only Muddy played and sang like that
+
+Freddie #TimsTwitterListeningParty" data-datetime="10:17 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462183112138444810"
+                 data-text="Willie Dixon. The poet laureate of the Blues https://t.co/yHzsEN065i" data-datetime="10:16 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462182924057563143"
+                 data-text="Long Distance Call. I like the way Mick sings this.
+ 
+Looooooong
+ 
+Yeah, great job
+ 
+Muddy always liked the Stones after they came to Chess in \'64
+
+JP #TimsTwitterListeningParty" data-datetime="10:15 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462182821796134912"
+                 data-text="I still play a lot of Muddy in my set today. I try to keep it close to the original. JP
+
+#TimsTwitterListeningParty" data-datetime="10:15 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FPeterMallett3%2Fstatus%2F1462182748462981128"
+                 data-text="@Tim_Burgess @RollingStones @LlSTENlNG_PARTY @CHlCAGO_BLUES Maidenhead UK 🌜 🌍🌛" data-datetime="10:15 PM Nov 20, 2021"> 
+                PeterMallett3            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1462182569764605953"
+                 data-text="Let us know where you are for our Muddy Waters  @RollingStones @LlSTENlNG_PARTY with Rick, John &amp; Freddie @CHlCAGO_BLUES https://t.co/axeBYOKVMy" data-datetime="10:14 PM Nov 20, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462182126447742976"
+                 data-text="When I played for Willie Dixon in \'79 I learned how Willie liked it and then I played it with Muddy. I still play it today in the same way I learned from the man who wrote the song for Muddy.
+ JP #TimsTwitterListeningParty" data-datetime="10:12 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462181918481559557"
+                 data-text="Greetings from Freddie Dixon https://t.co/Mr1Tt8gXug" data-datetime="10:11 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462181907077214214"
+                 data-text="I still play this song in my set. In fact, everyone I know does this song.
+ 
+I started playing down at The Checkerboard in my teens. I\'d be there from midday to 2am almost every day. The Checkerboard was the place to be.
+
+Freddie" data-datetime="10:11 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462181713921155077"
+                 data-text="Hoochie Coochie Man was one of Muddy\'s favorite songs to do. He did it every set.
+ 
+JP #TimsTwitterListeningParty" data-datetime="10:11 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="196000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462181633780596750"
+                 data-text="Hoochie Coochie Man
+
+This is one of my favorite songs that my father wrote
+ 
+That riff still sounds amazing.
+ 
+My father often wrote songs in his car using the windshield wipers as a metronome
+ 
+Freddie Dixon #TimsTwitterListeningParty" data-datetime="10:10 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462180811386540034"
+                 data-text="Blow, blow, blow" data-datetime="10:07 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462180521602076673"
+                 data-text="Magnificent" data-datetime="10:06 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462180481546526728"
+                 data-text="Muddy was so happy; you could see it on his face. He was really on form that night.
+
+It was kinda cool, to say the least, to watch the show from the front row
+
+RK #TimsTwitterListeningParty" data-datetime="10:06 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462180410486579209"
+                 data-text="MICK JAGGER! JP #TimsTwitterListeningParty" data-datetime="10:05 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462180196795265031"
+                 data-text="I could tell that Ronnie had watched Muddy a lot because he played slide in a similar style to Muddy.
+ 
+Muddy never changed his style. He played always in that traditional style.
+ 
+Everyone got a kick out of Mick singing.
+ 
+JP #TimsTwitterListeningParty" data-datetime="10:04 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462180089811156994"
+                 data-text="Keith and Ronnie both knew what to do. They can really play the Blues.
+
+JP #TimsTwitterListeningParty" data-datetime="10:04 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462179943404691465"
+                 data-text="Mojo Buford. https://t.co/ao7itonDbd" data-datetime="10:03 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1462179942662291457"
+                 data-text="It got pretty loud.
+ 
+Keith gave me a cigarette which I took and put in my mouth but I don\'t smoke. I only took it because it was him. I wish I still had that cigarette today.
+
+JP #TimsTwitterListeningParty" data-datetime="10:03 PM Nov 20, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462179736042541056"
+                 data-text="Beautiful harp from Mojo Buford https://t.co/L2qTL2XkwV" data-datetime="10:03 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462179693071851523"
+                 data-text="There was a short time when there were four guitars but then Muddy quit playing his and I played lead all night.
+ 
+Keith and Ronnie were looking at my hands to get the key right.
+ 
+JP #TimsTwitterListeningParty" data-datetime="10:02 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462179581696356361"
+                 data-text="I was going to sit down when Ron Wood came up but Muddy told me to stay there so he would have the songs played in his way.
+
+JP #TimsTwitterListeningParty" data-datetime="10:02 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1462179422497386505"
+                 data-text="@CHlCAGO_BLUES I remember watching Keith\'s playing avidly to see if I could learn anything.
+
+Muddy inspired Keith to play in Open G tuning.
+
+RK #TimsTwitterListeningParty" data-datetime="10:01 PM Nov 20, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462179415488614400"
+                 data-text="John Primer here. Enjoy. https://t.co/UeFzFsJ0VP" data-datetime="10:01 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462179241181818880"
+                 data-text="Buddy Guy\'s Checkerboard Lounge. Capacity 65. 
+Where history was made on November 22, 1981 https://t.co/dMEH6c5HMw" data-datetime="10:01 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FCHlCAGO_BLUES%2Fstatus%2F1462179165646606348"
+                 data-text="(Baby Please don\'t go)
+Muddy called up Mick Jagger and the Keith. I remember Keith walking down the table top to get to the stage.
+
+That\'s when I relinquished my place and Keith took over. I just sat down with my wife and watched.
+
+RK #TimsTwitterListeningParty" data-datetime="10:00 PM Nov 20, 2021"> 
+                CHlCAGO_BLUES            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1462178959727153152"
+                 data-text="Going in
+
+Handing over to Rick Kreher, John Primer and Freddie Dixon over at @CHlCAGO_BLUES 
+
+Muddy Waters &amp; The @RollingStones Live At The Checkerboard 
+
+#TimsTwitterListeningParty https://t.co/yUk8zMpWSO" data-datetime="10:00 PM Nov 20, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
