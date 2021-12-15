@@ -1,0 +1,272 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://www.bbc.co.uk/sounds/play/m0012f4l" target="_blank">                <img src="img/feed_996.png" alt="6 Music Live Listening Party" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Tim Burgess, Steve Lamacq</span><br/><span class="sub-colour">6 Music Live Listening Party</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 36 tweets from Wednesday 15th December 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1455061133665177600/_PWYSUmN_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1401913725288960003/n_dKSg1J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/steve_lamacq" target="_blank"><img src="https://pbs.twimg.com/profile_images/914130060688412673/ek7DJAb9_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/steve_lamacq.jpg'"><br/>@steve_lamacq</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/BBC6Music" target="_blank"><img src="https://pbs.twimg.com/profile_images/1300685032936308737/BxpAcWxo_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/BBC6Music.jpg'"><br/>@BBC6Music</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                </div>
+        <div id="tweet-feed-36" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471193091822526467"
+                 data-text="Well that was quite a thing. Thanks to everyone who listened along. And to @steve_lamacq &amp; everyone at @BBC6Music ❤️" data-datetime="6:59 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471192687894269956"
+                 data-text="…to release a 12” acetate cut on the lathe at Abbey Road. Only 50 were made. Half given to good causes / half to independent record shops. I saw an auction for one and it was currently at £4,000. This one’s for Simon Hilton, Yoko &amp; Sean who worked so hard to make this happen https://t.co/zolXxS7KUb" data-datetime="6:57 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="405000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471192484294402051"
+                 data-text="Happy Xmas [War Is Over] @johnlennon &amp; @yokoono I’ve always loved this song but it has extra significance now. After our Plastic Ono Band @LlSTENlNG_PARTY, The John Lennon estate folks heard about our Vinyl Adventures Record Fair and came up with an idea…" data-datetime="6:56 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="188000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471190785089544195"
+                 data-text="❤️🙌 https://t.co/jkwiC4GmBH" data-datetime="6:49 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471189999563464706"
+                 data-text="One of the best albums of 2021. Magic Mirror by @pearl_charles. You can replay the @LlSTENlNG_PARTY here
+
+https://t.co/NMDBRfnCW1" data-datetime="6:46 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="229000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471189585178804234"
+                 data-text="Only For Tonight by @pearl_charles on @BBC6Music - Pearl is singing on my new solo album, we connected through the @LlSTENlNG_PARTY and we made an absolute peach of a track. Can’t wait for you to hear it. Anyway, let’s just bust out some moves to this one for now https://t.co/3NhBPH6P5q" data-datetime="6:45 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471188625882861569"
+                 data-text="How’re we enjoying the @BBC6Music @LlSTENlNG_PARTY show? We’re having fun here ; )" data-datetime="6:41 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="362000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471188279877791747"
+                 data-text="The Blue Orchids - Sun Connection now playing on @BBC6Music - another @LlSTENlNG_PARTY wish list coming true, loved them for years. Una Baines is playing at this year’s Tim Peaks at @KendalCalling with her new project, Poppycock" data-datetime="6:39 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="284000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471186758947774468"
+                 data-text="I Was Born On Christmas Day @bobpetesarah et moi. I love hearing this supermarkets &amp; shopping malls in December. I get a lot of tweets on Christmas Day wishing me happy birthday but mine’s in May. It’s actually @rocking_bob’s birthday on Xmas Day - he wrote the song. https://t.co/fCskWpIp3X" data-datetime="6:33 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1471185568444956681"
+                 data-text="Divine Hammer #NowPlaying on @BBC6Music 
+
+Last Splash by @thebreeders - here for your @LlSTENlNG_PARTY replay needs 
+https://t.co/mmj7CXjxqn" data-datetime="6:29 PM Dec 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="380000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471185244091002881"
+                 data-text="Divine Hammer - @thebreeders. I’ve known Kim &amp; Kelley for aaaages. Absolute innovators - it’d be ace to record with them one day. They headlined our first @LlSTENlNG_PARTY all dayer with The Last Splash. It was quite a #TimsTwitterListeningParty moment https://t.co/MyckppxU1I" data-datetime="6:27 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471183653803806724"
+                 data-text="Here’s the @LlSTENlNG_PARTY replay for Bebey. Jump in when you get chance https://t.co/5tQBdIIJ65" data-datetime="6:21 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471183365625819138"
+                 data-text="Anyone new to @TheophilusL listening on @BBC6Music just now? He’s one of my faves" data-datetime="6:20 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="255000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471183074713034753"
+                 data-text="Theophilus London - Only You 
+@TheophilusL is addictive - it’s the kind of music you put on to set up the best night ever. I love introducing people to newer artists via The @LlSTENlNG_PARTY, it’s always such a thrill" data-datetime="6:19 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="121000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471182003160686596"
+                 data-text="❤️ https://t.co/TkQrS9Bd2m" data-datetime="6:14 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1471181497738612744"
+                 data-text="A Pair Of Brown Eyes #NowPlaying on @BBC6Music 
+
+Rum, Sodomy &amp; The Lash  replay, ready when you are https://t.co/nPmgyaRfKz" data-datetime="6:12 PM Dec 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="289000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471181186953363463"
+                 data-text="The Pogues - A Pair Of Brown Eyes on @BBC6Music. I first saw them play live in 1987. I used to follow them round and would talk to them in pubs in Camden became friends with Cait and hung out with Spider quite a lot over the years. Their 3 listening parties have been legendary" data-datetime="6:11 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="114000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1471179972308090890"
+                 data-text="Sunday Girl #NowPlaying on the @BBC6Music #TimsTwitterListeningParty special with @steve_lamacq - Parallel Lines was our 1,000th @LlSTENlNG_PARTY. You can replay it right here https://t.co/DFNcQeRSQU" data-datetime="6:06 PM Dec 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="402000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471179495407239174"
+                 data-text="Next up on @BBC6Music - Sunday Girl by @BlondieOfficial. From our 1,000th @LlSTENlNG_PARTY. We celebrated with an event at @southbankcentre and Parallel Lines was the perfect album - ace tweets from @chrissteinplays &amp; Debbie Harry #TimsTwitterListeningParty https://t.co/IoGHiObyEP" data-datetime="6:04 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471177807992610816"
+                 data-text="This is brilliant fun, right? Much love to @steve_lamacq and everyone at @BBC6Music" data-datetime="5:58 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTrudyAWhite%2Fstatus%2F1471177565792575506"
+                 data-text="@Tim_Burgess @BBC6Music Was late to the party but have attended every single #timstwitterlisteningparty since 1st January 2021 (432). Plus Co-created &amp; Co-host the #ListeningPartyRevelationsPodcast with @soozworld. So many favourites❤" data-datetime="5:57 PM Dec 15, 2021"> 
+                TrudyAWhite            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="391000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471177540375040000"
+                 data-text="The Fall - Living Too Late. A highlight of this year was when @Brixsmithstart @JohnLeckie7 @Stephenhanley6 &amp; @simonWolstencr1 joined me at @AbbeyRoad for a @LlSTENlNG_PARTY. Most Fall tracks fit a certain mood and I’m currently obsessed with this song #TimsTwitterListeningParty" data-datetime="5:57 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1471175901694074888"
+                 data-text="Overpowered replay right here https://t.co/DfmL9qFSHi
+
+@roisinmurphy sounding glorious on @BBC6Music right now #TimsTwitterListeningParty" data-datetime="5:50 PM Dec 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1471175692880695303"
+                 data-text="@Tim_Burgess @BBC6Music @stevelamacq I’ve attended all of them, with much effort!! Loved it all, really can’t pick only one 🎶🎶🎶 All of @thecharlatans &amp; @Tim_Burgess solo among the best 🙌🏼" data-datetime="5:49 PM Dec 15, 2021"> 
+                soozworld            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fsteve_lamacq%2Fstatus%2F1471175625910202371"
+                 data-text="And mine! https://t.co/GEIs8bPtRR https://t.co/GjmF7noxb2" data-datetime="5:49 PM Dec 15, 2021"> 
+                steve_lamacq            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="206000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471175488362188804"
+                 data-text="Overpowered by @roisinmurphy on @BBC6Music. 
+Queen of the listening party. I was always a fan. Who wouldn’t be? But that fandom was elevated with each album where Roisin shared her stories and dance moves. You can also dance with Pixel Roisin in our ace new platform game https://t.co/mOvvD2trNP" data-datetime="5:49 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="104000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471174625077960709"
+                 data-text="Can someone text @anmlcollective and ask them to do a @LlSTENlNG_PARTY please?" data-datetime="5:45 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471174189302358018"
+                 data-text="Quick couple of question for our @BBC6Music #TimsTwitterListeningParty show:
+
+How many of our Listening Parties have you joined in with?
+
+Which was your favourite?" data-datetime="5:43 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471173812108644352"
+                 data-text="My current view. Spot the @steve_lamacq https://t.co/ov1FMSzhHW" data-datetime="5:42 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471173654226558980"
+                 data-text="#TimsTwitterListeningParty @BBC6Music https://t.co/Vaesb9bCxy" data-datetime="5:41 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="224000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471173469513695240"
+                 data-text="Animal Collective - Summertime Clothes. Not yet the subject of a @LlSTENlNG_PARTY but this is kind of a plea to @anmlcollective if they would like to join us at some point. Played this one at my last DJ set, after @thecharlatans gig in Manchester. It was great to hear it again" data-datetime="5:41 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471172529360412674"
+                 data-text="Shout up if you were at our Some Friendly @LlSTENlNG_PARTY 
+
+We’ve done 1,049 since then!" data-datetime="5:37 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471172073443766284"
+                 data-text="Loved playing this on the Charlatans tour" data-datetime="5:35 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="107000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1471171949393059850"
+                 data-text="Now Playing on @BBC6Music 
+
+Then by @thecharlatans 
+
+Our Some Friendly @LlSTENlNG_PARTY available to replay right here https://t.co/NLIyndqDtj" data-datetime="5:35 PM Dec 15, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1471171499696574466"
+                 data-text="Now Playing on @BBC6Music.
+Then by @thecharlatans - waaaay back on March 23rd 2020, we kicked off #TimsTwitterListeningParty with Some Friendly. We’ve been playing this song on our current tour. It’s like spending time with a favourite old friend https://t.co/jvG01qOW17" data-datetime="5:33 PM Dec 15, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Fandrewb1970%2Fstatus%2F1471171499696574465"
+                 data-text="Go to 1:32:56 on <a href=\'https://www.bbc.co.uk/sounds/play/m0012f4l\' target=\'_blank\'>this BBC Sounds link</a> and press play. Start the replay feed and Tim\'s tweets will then be in sync with the show." data-datetime="5:33 PM Dec 15, 2021"> 
+                andrewb1970            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
