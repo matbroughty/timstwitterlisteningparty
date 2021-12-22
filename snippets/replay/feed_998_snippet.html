@@ -1,0 +1,506 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4xDnTYCmE6L5WAxEDEk1U4" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0253bfc8dbd5ff9020153a9337" alt="We Love The City" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Hefner</span><br/><span class="sub-colour">We Love The City</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(112393)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4xDnTYCmE6L5WAxEDEk1U4" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_112393_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 91 tweets from Wednesday 22nd December 2021 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/darrenhayman" target="_blank"><img src="https://pbs.twimg.com/profile_images/1434860344820764678/P4iQ0Hgo_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/darrenhayman.jpg'"><br/>@darrenhayman</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/JackHayter1" target="_blank"><img src="https://pbs.twimg.com/profile_images/1282103494/lippy_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/JackHayter1.jpg'"><br/>@JackHayter1</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/catenarywires" target="_blank"><img src="https://pbs.twimg.com/profile_images/1110616379995181060/GgaWVfZe_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/catenarywires.jpg'"><br/>@catenarywires</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1473718383409614863/Emqpm3KO_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="We Love the City" data-start="0"
+             data-duration="300" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Greedy Ugly People" data-start="301"
+             data-duration="243" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Good Fruit" data-start="545"
+             data-duration="208" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Painting and Kissing" data-start="754"
+             data-duration="327" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Hold Me Closer" data-start="1082"
+             data-duration="226" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Don't Go" data-start="1309"
+             data-duration="250" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="The Greater London Radio" data-start="1560"
+             data-duration="276" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="As Soon As You're Ready" data-start="1837"
+             data-duration="239" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="She Can't Sleep No More" data-start="2077"
+             data-duration="236" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="The Cure for Evil" data-start="2314"
+             data-duration="288" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="The Day That Thatcher Dies" data-start="2603"
+             data-duration="238" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Your Head to Your Toes" data-start="2842"
+             data-duration="256" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3099"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485153bfc8dbd5ff9020153a9337" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-91" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="191000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473759243853606917"
+                 data-text="@ClaireGemma Ictually had a friend  Michelle Cox, a member of the SWP, &amp; when I heard the song for the 1st time I thought \"small world\" &amp;was convinced that it was about her, posted her a cassette with a rehearsal of it. She said it couldnt possibly be her.Who knows.#timstwitterlisteningparty" data-datetime="8:55 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473758444310175745"
+                 data-text="@Tim_Burgess @darrenhayman @JackHayter1 This last song even sounds quite Christmassy in this context. Many thanks to you too!" data-datetime="8:52 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="99000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473758430003437572"
+                 data-text="Get the vinyl re-issue of We Love The City from https://t.co/BQ99HAVqrw Thankyou," data-datetime="8:52 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473758014339432453"
+                 data-text="Maybe Hefner should have ended just here maybe, that might have been ok. We did one more confused record. Thankyou for listening with me. I appreciate every person that ever took the time to listen to Hefner. We were always grateful. #TimsTwitterListeningParty" data-datetime="8:51 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1473757811922604032"
+                 data-text="A fine way to spend a Christmassy evening 
+
+Much love and thanks to 
+
+@darrenhayman @JackHayter1 &amp; Amelia @catenarywires 
+
+❤️🔥" data-datetime="8:50 PM Dec 22, 2021"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473757467662340110"
+                 data-text="‘Your Head to Your Toes’. This slightly broken English folk is where I gradually moved to and where I reside now. Most of that backing is Ant and Jack on various instruments, harmonising with each other. They were always the most rural of the Hefners. #TimsTwitterListeningParty" data-datetime="8:48 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473757389375606794"
+                 data-text="@backwards7 SCSNM is a bit of a mess though? I think it should have been far messier still. I just remember it was huge fun to play though I think we maybe only did it live once or twice if ever. #TimsTwitterListeningParty" data-datetime="8:48 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473757284589309961"
+                 data-text="@catenarywires Nah, it made no difference. Just, oh she’s gone, we had new villains by then." data-datetime="8:48 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473757076635725829"
+                 data-text="James and Owen after getting into many scrapes and adventures in the parts of the world most people don’t care to go to are now a bar manager in Manchester and a paramedic in Hackney. They both play a variety of instruments and are good drummers. #Timstwitterlisteningparty" data-datetime="8:47 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473756995090010121"
+                 data-text="@darrenhayman I like sloganeering in pop. But the obvious question is: Did you laugh and dance?" data-datetime="8:47 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473756919282212867"
+                 data-text="@wiaiwya It was the only time I asked Lucy to say no rather than say yes, she only contacted me once during the day with a £1000 gig offer for that night." data-datetime="8:46 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473756899422187524"
+                 data-text="I wrote a complicated scored brass part for Thatcher thinking I was Brian Wilson. John Morrison said, no, everybody should play my bass line. If you listen, everyone is. It’s perfect. #TimsTwitterListeningParty" data-datetime="8:46 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473756780798824459"
+                 data-text="@extreme_rice Of all Darren\'s words, and not just on this album, that\'s the line that has always seemed to me..i dunno..genuinely powerful #TimsTwitterListeningParty" data-datetime="8:46 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473756747147919365"
+                 data-text="The kids singing are Jack’s boys, James and Owen. Owen also drew the artwork on the inner label. #TimsTwitterListeningParty" data-datetime="8:46 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473756511067414534"
+                 data-text="On the actual day that Thatcher died I was drinking in the Chequers in Walthamstow. The pub was empty. The landlord played this song to almost no-one and I sat there without telling him who I was. #TimsTwitterListeningParty" data-datetime="8:45 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473756213833785349"
+                 data-text="‘The Day That Thatcher Dies’ I do regret writing this. I know you’re not supposed to say things like this, you’re supposed to like all the songs in front of the audience, not show a preference, but, this is sloganeering. Grow up Darren. #TimsTwitterListeningParty" data-datetime="8:43 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473756106711351304"
+                 data-text="@eastlmark 39. Maybe? Not sure, a lower flat. Lots of FW written there." data-datetime="8:43 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473756025895460876"
+                 data-text="@backwards7 Though I dont know if it\'s me playing that line on the record though I did when we played GLR live #TimsTwitterListeningParty" data-datetime="8:43 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473755968190226442"
+                 data-text="Just thought I might mention that @darrenhayman does great art these days, alongside his continuing music. I bought this one recently, and really love it. (Apologies for the poor pic, it was taken very quickly - I only just thought to to do it). https://t.co/pdUiAyVFPB" data-datetime="8:42 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473755787080212486"
+                 data-text="@backwards7 I think its the little old Moog Rogue we had. Of all the instruments I got my hands on in Hefner that was my absolute favourite. Probably because,like me, it always seemed incapable of playing the same thing or making the same sound twice.#TimsTwitterListeningParty" data-datetime="8:42 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473755770361716748"
+                 data-text="Listening to it now, this is Hefner’s best album, isn’t it? Maybe not mine, but also maybe. This song has some jazz flute at the end. #TimsTwitterListeningParty" data-datetime="8:42 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="112000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473755708390785034"
+                 data-text="@eastlmark I lived in Edward Road before Warner Road." data-datetime="8:41 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473755237366259719"
+                 data-text="‘The Cure for Evil’ so many parts, so many chords, what was I thinking of? Written on piano in Warner Road in Walthamstow. I just kept writing another bit, then another bit, then another bit. #TimsTwitterListeningParty" data-datetime="8:40 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473754797673267204"
+                 data-text="The album is recorded by Miti Adhikari and Simon Askew who we stole from the BBC and who recorded most of our Peel/Lamacq sessions. Our first Peel/Lamacq sessions are being released on vinyl 7” soon and can be pre-ordered from https://t.co/lIjhDkBV66 #TimsTwitterListeningParty" data-datetime="8:38 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473754697731293187"
+                 data-text="@darrenhayman And the upturned pedal bin from the kitchen. #timstwitterlisteningparty" data-datetime="8:37 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473754586787819523"
+                 data-text="@chrisclarkcpfc @LlSTENlNG_PARTY @JackHayter1 @catenarywires You were there?" data-datetime="8:37 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473754393136844807"
+                 data-text="Is that me on piano there? That sounds kind of ok for me. #TimsTwitterListeningParty" data-datetime="8:36 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473754335716728855"
+                 data-text="@jonmsutton @weddingpresent Ah good point. Probably. And deservedly. Although they did best once I was no longer singing with them!" data-datetime="8:36 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473754329484079109"
+                 data-text="@darrenhayman That pealing bell thing they did is glorious.#TimsTwitterListeningParty" data-datetime="8:36 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473754237868064768"
+                 data-text="Louisiana Bristol, two amazing Valencia ones, and always Barcelona. https://t.co/gtZ62XpDMI" data-datetime="8:36 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473754022108672014"
+                 data-text="\'She Can’t Sleep No More’ For me, this is maybe the only misstep on the album. An awkward attempt at ‘70s Kinks character observation. Jack collected all the field recordings for WLTC when he wasn’t needed in the studio. It’s all from around Farringdon. #TimsTwitterListeningParty" data-datetime="8:35 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Frobertrotifer%2Fstatus%2F1473753970179031058"
+                 data-text="The great lost London song to these ears. Also because back then GLR was one of my main routes INTO London as an immigrant (with @gidcoe as one of our guides, have to mention). https://t.co/kTsUs7OLdr" data-datetime="8:35 PM Dec 22, 2021"> 
+                robertrotifer            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473753588216258562"
+                 data-text="The vocal outro on ASAYR by me, Jack, Ant and Amy took as long as it would have to record three more songs. Miti would not let it be until we had it right. I remember Antony drawing diagrams to show him where his voice went. #TimsTwitterListeningParty" data-datetime="8:33 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473753231863996417"
+                 data-text="@extreme_rice @AlabasterMiss I\'m waiting for a pic to come up of one of the ones where either Ant or I pretended to go backstage, hid behind a pillar and faked the other\'s signatures. This isnt one of them! #TimsTwitterListeningParty" data-datetime="8:32 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="119000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473753191401635851"
+                 data-text="‘As Soon As You’re Ready’ is the only Hefner song to feature all four of us as writers. It came about in the studio and I scribbled the words as the others found the simplest of grooves. The guitar solo has only one note. #TimsTwitterListeningParty" data-datetime="8:31 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473752690601697285"
+                 data-text="@charliechar @LlSTENlNG_PARTY No we were! It was actually a hugely fun day!" data-datetime="8:29 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473752636289691661"
+                 data-text="This bell-like ‘round’ thing the brass does on GLR was not my idea. I think it was one of the brass section. It’s beautiful. #TimsTwitterListeningParty" data-datetime="8:29 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473752391195688963"
+                 data-text="@panchoballard Such a fan." data-datetime="8:28 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473752356487577605"
+                 data-text="@darrenhayman I swear the clank was there . Probably because at that point in the song I involuntarily stop myself throwing whatever I\'m holding in my right hand onto the floor. Memory is a funny thing.#TimsTwitterListeningParty" data-datetime="8:28 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473752249474162688"
+                 data-text="Antony sings on GLR. I would always get him to sing some lead. We learnt how to write songs together at Maidstone College of Art. Early Darren and Ant bands include Kank and Big Boys’ Toys. Twisting Mary’s Arm is a retooled Big Boys’ Toys song. #TimsTwitterListeningParty" data-datetime="8:28 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FMichaelJSheehy%2Fstatus%2F1473752189692780547"
+                 data-text="@darrenhayman Weirdly, I went to the Wig and Gown a lot. It’s a minor miracle I didn’t get the living fuck kicked out of me looking like I did back then" data-datetime="8:27 PM Dec 22, 2021"> 
+                MichaelJSheehy            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473751858749521934"
+                 data-text="‘The Greater London Radio’ As well as Painting and Kissing this was considered as a single for a short time. I wanted to write a series of songs with unwanted names. GLR became BBC London and National Canine Defence League became ‘The Dog’s Trust’. #timstwitterlisteningparty" data-datetime="8:26 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473751739610324994"
+                 data-text="@darrenhayman When I heard Hold Me Closer for the first time in 21 years earlier today I was knocked back. I hadn\'t recognised it as being a highlight back then but it really is.#TimsTwitterListeningParty" data-datetime="8:26 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473751660493221891"
+                 data-text="Really enjoying listening back to all these songs. It’s a great album. I thought Hefner was going to be properly famous when I first heard the final mixes. I should have remembered that this never happens to bands that I sing with!" data-datetime="8:25 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473751542276710416"
+                 data-text="Antony Harding (drums) is playing pots and pans from Roundhouse Studio’s kitchen on ‘Don’t Go’. #TimsTwitterListeningParty" data-datetime="8:25 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473751278505414668"
+                 data-text="‘Don’t Go’ was written on tour with the Violent Femmes and taught to the band at a soundcheck. John misheard where the on beat was and heard it as this country two-step, which I use in songs all the time now. #TimsTwitterListeningParty" data-datetime="8:24 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473751231810215942"
+                 data-text="@charliechar @LlSTENlNG_PARTY Yep, I think our lack of ‘Strictly’ ability was kind of charming!" data-datetime="8:24 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473750851948892163"
+                 data-text="Jack Hayter had a cushion in front of him for ‘Don’t Go’ so he could throw down the metal slide between the verse and the finger-picked chorus. He missed and I used to think you could hear the clank as it hit the wooden floor but now I can’t hear it. #TimsTwitterListeningParty" data-datetime="8:22 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1473750646939660297"
+                 data-text="These kind of tweets are why we love the listening parties so much… https://t.co/PPiOoQwvXF" data-datetime="8:21 PM Dec 22, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473750530178658315"
+                 data-text="@AlabasterMiss @LlSTENlNG_PARTY I think that Underworld weekender was actually an incredibly kind way of raising enough money to pay me a wage as at that point someone at Too Pure didn\'t want to. #TimsTwitterListeningParty" data-datetime="8:21 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="100000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473750264742096901"
+                 data-text="That’s Mark Bandola playing piano on this and ‘Thatcher’. I’m crap at piano but at least better than the other three Hefners so I got the job the rest of the time. #TimsTwitterListeningParty" data-datetime="8:20 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473749843088711685"
+                 data-text="‘Hold Me Closer’. I can’t really get over my confidence listening to the words on this album now. They are so direct, so simple. I think I might try and write like this guy again soon. #TimsTwitterListeningParty" data-datetime="8:18 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473749830828707840"
+                 data-text="@panchoballard Kinda" data-datetime="8:18 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473749611869356033"
+                 data-text="@catenarywires So true. Poor Rachael the choreographer..who I\'d briefly been in a band with before Hefner. She really had tried to make it as easy as possible. #timstwitterlisteningparty" data-datetime="8:17 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473749497805221890"
+                 data-text="@wiaiwya @darrenhayman Haha. We actually were. We’d never really met before I went along to record. I feel a little worried that I somehow sucked Darren down into the more indie nether-world from there on in….." data-datetime="8:17 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473749399994089476"
+                 data-text="It was suggested at the time that ‘Painting and Kissing’ should be re-recorded after the album’s release as a single but with a ‘chorus’ written for it. We said no, it has no chorus, that’s the point. #TimsTwitterListeningParty" data-datetime="8:16 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fthemartialarts%2Fstatus%2F1473749323963932682"
+                 data-text="@darrenhayman I remember seeing them the day before Fidelity Wars came out and at least 3 songs from this album were played already and were the highlights as well.  Was very chuffed my birthday got a mention during P+K.  I think I cheered #timstwitterlisteningparty" data-datetime="8:16 PM Dec 22, 2021"> 
+                themartialarts            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473749148293910541"
+                 data-text="This is a good memory, Jack had to pretty much do all those keyboard overdubs on a melodica live but also sometimes the moog right? Maybe the moog when we weren’t flying. https://t.co/VDvpYjXJnI" data-datetime="8:15 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FSkepWax%2Fstatus%2F1473749087069642770"
+                 data-text="@wiaiwya @darrenhayman This the Heavenly you’re thinking of? https://t.co/Enk6Hr9PXb" data-datetime="8:15 PM Dec 22, 2021"> 
+                SkepWax            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473748703626289167"
+                 data-text="@darrenhayman Haha. I didn’t recall that. It can be a really good technique for singing in time though. Especially when you haven’t practised together in advance (which - ahem - we hadn’t)." data-datetime="8:14 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473748675650326532"
+                 data-text="‘Painting and Kissing’ was written just after Fidelity Wars and we played it every night on that tour. I was worried it was overcooked by the time we got to record it. I rarely went to the ‘Wig and Gown’. It was a football pub. It was kind of a joke. #TimsTwitterListeningParty" data-datetime="8:13 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473748657929342980"
+                 data-text="@darrenhayman Live that song used to leave me gasping for breath and light headed. I stll have that old melodica it\'s the hrdest one to blow long notes into. #TimsTwitterListeningParty" data-datetime="8:13 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473748300796997634"
+                 data-text="@themartialarts Was that you perchance?" data-datetime="8:12 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473748172447047680"
+                 data-text="I love that the original CD comes with a CD-ROM of the Good Fruit video. I wonder how often people play that these days?! #timstwitterlisteningparty" data-datetime="8:11 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473748100850274311"
+                 data-text="‘Good Fruit’ is I think Hefner’s most successful song. If you come and see me play live you have a 50/50 chance of hearing it live. #TimsTwitterListeningParty" data-datetime="8:11 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473748019392790531"
+                 data-text="We were given a REALLY easy dance move, and we still all struggled. I don’t think any of us are destined for Strictly! #timstwitterlisteningparty" data-datetime="8:11 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473747976380108809"
+                 data-text="@panchoballard Yeah, 2 or 3. There’s not so many live vocals on this record. But everything else." data-datetime="8:11 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473747881823805443"
+                 data-text="I have more vivid memories of recording the video for Good Fruit. It was all done in a flat on Commercial Street overlooking Spitalfields market.  I love the video, but my main memory was of how terrible we all were at dancing. https://t.co/IfnKuxs9kE 
+ #Timstwitterlisteningparty" data-datetime="8:10 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473747786579517446"
+                 data-text="‘Good Fruit’. When Amelia Fletcher arrived to sing her parts she said that we should sing both parts whilst looking each other, which makes perfect sense. On the rare occasions we sing this live I still tilt my mic stand around to face her. #TimsTwitterListeningParty" data-datetime="8:10 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473747755541663747"
+                 data-text="@ciaranc77 @LlSTENlNG_PARTY @JackHayter1 @catenarywires Me too" data-datetime="8:10 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473747608032231426"
+                 data-text="@gerardwood Wow..nicking that pic...I wasn\'t far wrong about the sweaty recollection #TimsTwitterListeningParty" data-datetime="8:09 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473747452134146049"
+                 data-text="@JackHayter1 Queen mother. It was the only time Too Pure did non Hayman artwork. I didn’t approve." data-datetime="8:09 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473747334307663876"
+                 data-text="Arrangement and production of Hefner records were always a group effort with John Morrison (bass) and Miti Adhikari (engineer) taking the lead. I remember not being present for several parts of this record. I wanted to be surprised. #TimsTwitterListeningParty" data-datetime="8:08 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473747330574782468"
+                 data-text="@darrenhayman That’s interesting that you think of it as pious. I was always a little nervous that people would think I was the girl Darren was writing about in the song. It wasn’t. Honest guv. #Timstwitterlisteningparty" data-datetime="8:08 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473747201234980866"
+                 data-text="@dystinjo @sturkmardy @LlSTENlNG_PARTY I would say most people are using Spotify" data-datetime="8:08 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1473747148613341188"
+                 data-text="@dystinjo @sturkmardy @darrenhayman https://t.co/oU9Nbs02GY" data-datetime="8:07 PM Dec 22, 2021"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473747080262922240"
+                 data-text="@darrenhayman I wonder if we\'d get away with a picture of the queen on the posters these days without every one being defaced? Or was it the queen mother? I forget.#TimsTwitterListeningParty" data-datetime="8:07 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473747073682055176"
+                 data-text="@MichaelJSheehy Thankyou Michael" data-datetime="8:07 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473746990253158407"
+                 data-text="@simoneskillz Thankyou Simone" data-datetime="8:07 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473746856769462286"
+                 data-text="This is a love album both to London and a girl. It was an attempt to see what happened if we tried to make a ‘proper’ album. There was a collective effort to pull our socks up and see what happened if we tried and did things in more than one take. #TimsTwitterListeningParty" data-datetime="8:06 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473746719053651978"
+                 data-text="@darrenhayman Yes it\'s the most folk album in that regard even though it\'s the  biggest sounding most\"rock\" one.#TimsTwitterListeningParty" data-datetime="8:06 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473746599851479046"
+                 data-text="‘Greedy Ugly People’. There’s a pious quality to this song that I hope I just about get away with. When the world is cruel we can hope there is something untouchable inside us that nobody can corrupt. #TimsTwitterListeningParty" data-datetime="8:05 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473746328014536705"
+                 data-text="@gerardwood @NightshiftMag That was a VERY hot and sweaty one in a tiny concrete room" data-datetime="8:04 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473746119142387715"
+                 data-text="This album is Hefner’s third album but it often feels to me like my first album. The first two albums are more about me occupying a character, this is me being myself for the first time. Songs about love and time and place are all I’ve done ever since. #timstwitterlisteningparty" data-datetime="8:03 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473746084291923981"
+                 data-text="For those listening on Spotify, you might want to note that the album came out in 2000, not 2009 as Spotify - in its infinite wisdom - claims. #Timstwitterlisteningparty" data-datetime="8:03 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FJackHayter1%2Fstatus%2F1473746024980221965"
+                 data-text="@darrenhayman So clever that I stuck a label with the chords onto your guitar which I borrowed for the first Reading festival we played because that was possibly the first time we played it live.#timstwitterlisteningparty" data-datetime="8:03 PM Dec 22, 2021"> 
+                JackHayter1            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fcatenarywires%2Fstatus%2F1473745785967808513"
+                 data-text="@darrenhayman Home made mojito https://t.co/y1WO7BOlIm" data-datetime="8:02 PM Dec 22, 2021"> 
+                catenarywires            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473745614802407436"
+                 data-text="The chords for the chorus are E, G#, A, F#, E, B, A, E. There are no minors. I think this is clever. #TimsTwitterListeningParty" data-datetime="8:01 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473745372308807697"
+                 data-text="‘We Love the City’. The line “This is London not Antarctica so why don’t the tubes run all night” was stolen from one of Steve Wright’s Afternoon Boys who actually said ‘This is London not Sarajevo…’ #TimsTwitterListeningParty" data-datetime="8:00 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdarrenhayman%2Fstatus%2F1473745215634743304"
+                 data-text="Let\'s go! #timstwitterlisteningparty" data-datetime="8:00 PM Dec 22, 2021"> 
+                darrenhayman            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1473745167739985928"
+                 data-text="Handing over @darrenhayman  @JackHayter1 &amp; Amelia Fletcher (@catenarywires) for our Hefner @LlSTENlNG_PARTY 
+
+We Love The City… https://t.co/0UAYEi6eDq" data-datetime="8:00 PM Dec 22, 2021"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
