@@ -18,8 +18,8 @@ class TimeSlotToJson : HtmlFileCreator {
     val timeSlots = TimeSlotReader(fileName, inputStream).timeSlots
     val template = FreeMarkerUtils().getFreeMarker(TIMESLOT_JSON_FTL)
 
-    // aws will only accept 25 puts - i.e. 25 items in one go so split.
-    val chunks = timeSlots.sortedBy { it.isoDate }.chunked(25)
+    // aws will only accept 25 puts - i.e. 25 items in one go so split.  Only parties with a ttlp num
+    val chunks = timeSlots.filter { it.hasNumber() }.sortedBy { it.isoDate }.chunked(25)
 
     val counter = AtomicInteger()
     chunks.forEach {
