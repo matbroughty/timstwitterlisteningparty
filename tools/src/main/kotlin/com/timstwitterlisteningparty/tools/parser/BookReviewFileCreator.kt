@@ -22,7 +22,7 @@ class BookReviewFileCreator : HtmlFileCreator {
     reviews.forEach { logger.debug("Read in Bean {}", it) }
 
     val template = FreeMarkerUtils().getFreeMarker(BOOK_REVIEWS_FTL)
-    val input: Map<String, List<BookReview>> = mapOf(Pair("reviews",reviews))
+    val input: Map<String, List<BookReview>> = mapOf(Pair("reviews", reviews))
     val htmlStr = StringWriter()
     template.process(input, htmlStr)
     logger.debug("Reviews html {}", htmlStr)

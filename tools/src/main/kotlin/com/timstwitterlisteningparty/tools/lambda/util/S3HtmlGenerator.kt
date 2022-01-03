@@ -18,7 +18,7 @@ class S3HtmlGenerator {
                srcKeyBookStores: String = "data/book-shops-data.csv",
                srcKeyBookReviews: String = "data/book-review-data.csv"
   ): String {
-    print("bucket = $bucketName and file = $srcKeyTimeSlots")
+    print("bucket = $bucketName and timeslot file = $srcKeyTimeSlots")
     val s3Client = AmazonS3ClientBuilder.defaultClient() as AmazonS3Client
     println("Getting $srcKeyTimeSlots from bucket $bucketName")
     val s3Object = s3Client.getObject(GetObjectRequest(bucketName, srcKeyTimeSlots))
@@ -45,7 +45,8 @@ class S3HtmlGenerator {
     val recordSlotsMsg = createHtmlFile(RecordStoreFileCreator(), bucketName, s3Client, srcKeyRecordStores, "snippets/record-stores.html")
     val bookSlotsMsg = createHtmlFile(BookStoreFileCreator(), bucketName, s3Client, srcKeyBookStores, "snippets/book-stores.html")
     val bookReviewMsg = createHtmlFile(BookReviewFileCreator(), bucketName, s3Client, srcKeyBookReviews, "snippets/book-reviews-shops.html")
-
+    // not actually an html file but a json file generated from the timeslot data
+    //val timeSlotJsonMsg = createHtmlFile(TimeSlotToJson(), bucketName, s3Client, srcKeyTimeSlots, "data/time-slot.json")
 
 
     //finally write an invalidation.txt file to indicate the cloud front edge needs refreshing

@@ -16,7 +16,7 @@ const val BOOK_SHOPS_FTL = "bookshops.ftl"
 const val BOOK_REVIEWS_FTL = "bookreviews.ftl"
 const val WALL_FTL = "wall.ftl"
 const val ANNIVERSARY_FTL = "anniversary.ftl"
-
+const val TIMESLOT_JSON_FTL = "timeslot-json.ftl"
 
 /**
  * Any methods handy for using the templates*.ftl files
