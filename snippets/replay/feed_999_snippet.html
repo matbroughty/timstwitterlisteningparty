@@ -1,0 +1,594 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/0SYQq0JiOmSlbUGPCavCCV" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02dad1ef05bf42170a710b8b7d" alt="Now Or Whenever" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Spector</span><br/><span class="sub-colour">Now Or Whenever</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(1480897)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/0SYQq0JiOmSlbUGPCavCCV" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_1480897_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 86 tweets from Wednesday 12th January 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Spector" target="_blank"><img src="https://pbs.twimg.com/profile_images/1399597344962891777/fO8HxIya_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Spector.jpg'"><br/>@Spector</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/richardturvey" target="_blank"><img src="https://pbs.twimg.com/profile_images/1281640113458614273/H4thn8Dj_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/richardturvey.jpg'"><br/>@richardturvey</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1475188118676463625/EKjnZA-F_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="When Saturday Comes" data-start="0"
+             data-duration="63" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Catch You On The Way Back In" data-start="64"
+             data-duration="196" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Do You Wanna Drive" data-start="261"
+             data-duration="127" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Norwegian Air" data-start="389"
+             data-duration="202" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Funny Way Of Showing It" data-start="592"
+             data-duration="218" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="No One Knows Better" data-start="811"
+             data-duration="208" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="I'm Not Crying You're Crying" data-start="1020"
+             data-duration="219" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Bad Summer" data-start="1240"
+             data-duration="165" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="D-Roy" data-start="1406"
+             data-duration="224" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="This Time Next Year" data-start="1631"
+             data-duration="154" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="An American Warehouse in London" data-start="1786"
+             data-duration="363" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2150"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851dad1ef05bf42170a710b8b7d" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-86" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="163000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1481365567596548100"
+                 data-text="@Spector @LlSTENlNG_PARTY @richardturvey 🙌🔥❤️" data-datetime="8:40 PM Jan 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481364883065221127"
+                 data-text="@Tim_Burgess Thanks so much Tim! Camille and Jed send their love x" data-datetime="8:38 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fjamesealmond%2Fstatus%2F1481364704949846018"
+                 data-text="Great album @Spector cannot wait for the tour to happen now (or whenever) #TimsTwitterListeningParty" data-datetime="8:37 PM Jan 12, 2022"> 
+                jamesealmond            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481364573462609926"
+                 data-text="Thanks so much @Tim_Burgess @LlSTENlNG_PARTY and @richardturvey. Emotional listening back one year on. So glad to have it out. Pick up a copy of you enjoyed it x https://t.co/aeAeWjrbRn https://t.co/nw6MkI0ae2" data-datetime="8:36 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1481364560447774721"
+                 data-text="RT @Tim_Burgess: 👇🤘" data-datetime="8:36 PM Jan 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481364556765093891"
+                 data-text="Pleasure producing this @Spector album @CoastalSound_ 
+
+Engineered by @tom_roach and Jason Taylor Brown
+
+Mixed by @Tom_Longworth 
+
+Mastered by Robin Schmidt
+
+Cc: @terencedwards85 🧦" data-datetime="8:36 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSuperdrogidge%2Fstatus%2F1481364216003059725"
+                 data-text="@Spector #timstwitterlisteningparty  .. #AmericanWarehouseInLondon sounds good from here ☺️ https://t.co/kMGUGASfQ1" data-datetime="8:35 PM Jan 12, 2022"> 
+                Superdrogidge            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481364183522414596"
+                 data-text="Tears on the touchscreen. #TimsTwitterListeningParty" data-datetime="8:35 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481364133245333505"
+                 data-text="Everyone just loses it at the end. Our longest song to date, but hopefully doesn’t outstay it’s welcome. 
+
+#TimsTwitterListeningParty" data-datetime="8:35 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1481364009806876686"
+                 data-text="Biiiig thanks to @Spector - that was ace! Good luck with the show tonight/ in 20 minutes x x" data-datetime="8:34 PM Jan 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481363959110414336"
+                 data-text="“Maybe you don\'t ever want to see me again / at least I\'ll never have to small talk with your friends”
+
+#TimsTwitterListeningParty" data-datetime="8:34 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481363611952025610"
+                 data-text="🤷🏻‍♂️
+
+#TimsTwitterListeningParty https://t.co/9RX1cJd7xB" data-datetime="8:33 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481363597133496322"
+                 data-text="SOLO #TimsTwitterListeningParty" data-datetime="8:32 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481363418884026372"
+                 data-text=".@richardturvey had been trying to get a drum machine on the album for ages lol #TimsTwitterListeningParty" data-datetime="8:32 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481363354493018125"
+                 data-text="Was always the last track on the album for me this one. One of my favs and great vocals/lyrics from @fredmacpherson https://t.co/KqjYqieGO3" data-datetime="8:32 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481363248670810122"
+                 data-text="“Shoulda left it to the amateurs” #timstwitterlisteningparty" data-datetime="8:31 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481363101110910976"
+                 data-text="Written in many parts over many years. Band members have fallen out over the structure. #TimsTwitterListeningParty" data-datetime="8:31 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481362892612149251"
+                 data-text="American Warehouse in London. This song was our Everest. Still not sure it’s finished. #TimsTwitterListeningParty" data-datetime="8:30 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481362762483785731"
+                 data-text="“Forced” https://t.co/jqRdknxKuy" data-datetime="8:29 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481362706993139713"
+                 data-text="Lovely flute from @richardturvey. You know what they say. If you’ve got it, flautist. #TimsTwitterListeningParty" data-datetime="8:29 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481362705583947778"
+                 data-text="Couldn’t believe it when Fred and Jed knocked this out in one take 👊
+
+Two of them in a very small room and I was forced into dubbing a flute on 🤣
+
+#TimsTwitterListeningParty https://t.co/rzFGzQuUnI" data-datetime="8:29 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481362614294831109"
+                 data-text="This whole album is the most ‘live’ we’ve ever been on record. And this track most of all. We performed it take after take until we got it. The kick you can hear is jed tapping his foot in the room. #timstwitterlisteningparty" data-datetime="8:29 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481362509336612867"
+                 data-text="Inspired by Psychic TV - The Orchids 
+https://t.co/sdu3Wuf4JL
+
+#TimsTwitterListeningParty" data-datetime="8:28 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481362220810444804"
+                 data-text="This Time Next Year. Our first (but hopefully not last) folk moment?
+
+#TimsTwitterListeningParty" data-datetime="8:27 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481362001385467906"
+                 data-text="Love that piano through the chorus effect @richardturvey #TimsTwitterListeningParty" data-datetime="8:26 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fkatyaaart%2Fstatus%2F1481361969059876867"
+                 data-text="me during this fucking youth stealing pandemic https://t.co/jJkIbnHC3C" data-datetime="8:26 PM Jan 12, 2022"> 
+                katyaaart            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481361887371616260"
+                 data-text="Why’s it easier for grown men to write songs about each other than have a conversation lol?
+
+#TimsTwitterListeningParty" data-datetime="8:26 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481361864604979201"
+                 data-text="Kinda ties this @Spector album into the last one for me this track.
+
+#TimsTwitterListeningParty https://t.co/84upjykFIQ" data-datetime="8:26 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481361745721581569"
+                 data-text="“When did everything close?
+And now whose memories are those?”
+
+#TimsTwitterListeningParty" data-datetime="8:25 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481361631464632321"
+                 data-text="“Existing is exhausting” probably another line stolen from a meme. 
+
+#TimsTwitterListeningParty" data-datetime="8:25 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481361511989882883"
+                 data-text="D-Roy. We also tried to have fewer ‘love songs’ on this album. This is a song about friendship which ironically ended up being an even bigger love song than usual.
+
+#TimsTwitterListeningParty" data-datetime="8:24 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fnevercallmealex%2Fstatus%2F1481361419668967435"
+                 data-text="existing is exhausting! existing is exhausting! 
+existing is exhausting! existing is exhausting!
+existing is exhausting! existing is exhausting! 
+existing is exhausting! existing is exhausting!
+existing is exhausting! existing is exhausting! 
+#TimsTwitterListeningParty
+@Spector" data-datetime="8:24 PM Jan 12, 2022"> 
+                nevercallmealex            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481361248180748293"
+                 data-text="Lol we were actually trying to have fewer, but what can you do https://t.co/ZJtiBvgojX" data-datetime="8:23 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnevercallmealex%2Fstatus%2F1481361117385572352"
+                 data-text="@Spector defo the best song of 2021 💔
+#TimsTwitterListeningParty" data-datetime="8:23 PM Jan 12, 2022"> 
+                nevercallmealex            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481361072372260868"
+                 data-text="It’s still not in sync!
+
+#TimsTwitterListeningParty https://t.co/sdsPwwGesV" data-datetime="8:22 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481360970937245700"
+                 data-text="It’s very much got that slight romantic coming of age thing going on that there’s a bit less of on this album. But I think it fits. It’s for people in their late twenties who still act like teens when emotions are involved. Aka all of us.
+
+#TimsTwitterListeningParty" data-datetime="8:22 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481360943535865859"
+                 data-text="Here’s that boss @CasioMusicUK organ in arp mode! Took ages to get it in sync.
+
+#TimsTwitterListeningParty https://t.co/hp362ZjvDx" data-datetime="8:22 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fnevercallmealex%2Fstatus%2F1481360867417595905"
+                 data-text="I have only 9 months to relate to this lyrics
+wish me luck 🤞🏻
+#TimsTwitterListeningParty
+@Spector https://t.co/MwgYmrZ0hc" data-datetime="8:22 PM Jan 12, 2022"> 
+                nevercallmealex            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481360854025179139"
+                 data-text="I was trying to remember what tuning I used on this one at rehearsal and then realised it was standard tuning - Jed #TimsTwitterListeningParty" data-datetime="8:22 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481360848815853577"
+                 data-text="“We were bad news in good weather” #TimsTwitterListeningParty" data-datetime="8:22 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481360669844942852"
+                 data-text="Lovely arpeggiator @richardturvey
+
+#TimsTwitterListeningParty" data-datetime="8:21 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481360592833241088"
+                 data-text="Bad Summer’s the only song that preceded the rest of the writing on the album by a few years. We’re very conscious that we won’t be able to record songs like this forever so we’re trying to get a few more out while we still can.
+
+#TimsTwitterListeningParty" data-datetime="8:21 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481360307574484994"
+                 data-text="@richardturvey Confirmed" data-datetime="8:19 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481360255267258371"
+                 data-text="The puppet video might’ve been @richardturvey’s idea? So blame him lol
+
+#TimsTwitterListeningParty https://t.co/tURBj22vq5" data-datetime="8:19 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481360152586596352"
+                 data-text="Reminded me of this tune this one…
+
+https://t.co/Dez8Dw4sVL
+
+Hence the vid 🤣
+
+#TimsTwitterListeningParty https://t.co/MlOyJbqTMb" data-datetime="8:19 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1481360135142391813"
+                 data-text="@spector #TimsTwitterListeningParty https://t.co/vA22GLcDjK" data-datetime="8:19 PM Jan 12, 2022"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481360053047341057"
+                 data-text="Martin brought everything he hoped he would: Complex chord changes, anal attention to detail and a little bit of Andrew Lloyd Webber.
+
+#TimsTwitterListeningParty" data-datetime="8:18 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481359882267861001"
+                 data-text="So none of us knew how seriously the others were taking it (or not)
+
+ #TimsTwitterListeningParty" data-datetime="8:18 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481359761450975239"
+                 data-text="I’m Not Crying You’re Crying: We wrote this one with Paul Institute associate (and old friend) @MTHADLEY. All three of us stayed masked up the whole day.
+
+#TimsTwitterListeningParty" data-datetime="8:17 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481359451974258691"
+                 data-text="There’s a great Casio organ in the studio @CoastalSound_ that we ended up using a few tracks.
+
+#TimsTwitterListeningParty https://t.co/oK0PHA18Bx" data-datetime="8:16 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481359423771758595"
+                 data-text="Amazing drumming from Nicolas Py. He’s been our live drummer for quite a few years (suggested by fellow Frenchman Yoann Intonti when he left for the bastard vaccines) but this is first album he’s played on throughout 
+
+#TimsTwitterListeningParty" data-datetime="8:16 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481359170477731842"
+                 data-text="One reviewer said they didn’t understand the lyric “our parents looking up addresses in the A to Z”. It refers to the pocket map they used to use find addresses in the mid nineties so I’m not surprised the young reviewer had no idea. 
+
+#TimsTwitterListeningParty" data-datetime="8:15 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481358961467174912"
+                 data-text="“A coffee table book about illegal raves, you hate it when I bend the corner of a page.” - this actually happened  #TimsTwitterListeningParty" data-datetime="8:14 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481358777899270145"
+                 data-text="No One Knows Better. Hypnotic verses with a Dandy Warhols chorus? One of the few songs I got to spout lots of nonsense on.
+
+ #TimsTwitterListeningParty" data-datetime="8:13 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481358642137944064"
+                 data-text="I really wanted to get a cool kinda phasey sound around @fredmacpherson vocal and ended up using a @strymon DECO.
+
+You can really hear it on this track! https://t.co/OK32MmP3k1" data-datetime="8:13 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1481358572374171660"
+                 data-text="We have been promised a bonus on top of our regular @LlSTENlNG_PARTY fee by @Spector - if we can help get them to 18,000 followers before the album finishes. Help us earn $$$$$ https://t.co/MSh2A8ew76" data-datetime="8:13 PM Jan 12, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481358535673929733"
+                 data-text="Keyboard parts written by the maestro Jerskin Fendrix on a Juno at mine, reinterpreted by @richardturvey who’s annoyingly good on keys. Billy Preston vibes.
+
+#TimsTwitterListeningParty" data-datetime="8:12 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481358394485354499"
+                 data-text="Jed gets some proper solos on this album. We must be getting old.
+
+#TimsTwitterListeningParty" data-datetime="8:12 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fnevercallmealex%2Fstatus%2F1481358299631132675"
+                 data-text="say I\'m the potato to your plum
+#TimsTwitterListeningParty
+@Spector" data-datetime="8:11 PM Jan 12, 2022"> 
+                nevercallmealex            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481358266357751812"
+                 data-text="Annoying spector pause lol #TimsTwitterListeningParty" data-datetime="8:11 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481358224368537612"
+                 data-text="Jed had to FaceTime Jack to show us how to play the first chord lol #TimsTwitterListeningParty" data-datetime="8:11 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fkatyaaart%2Fstatus%2F1481358200033189897"
+                 data-text="@Spector song of me being 27 aka song of this year also probably song of the lyfe
+
+#TimsTwitterListeningParty" data-datetime="8:11 PM Jan 12, 2022"> 
+                katyaaart            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481358059272388609"
+                 data-text="I did some singing lessons before we recorded this album because I was so out of practice after 2020. Hopefully it shows a little bit? #TimsTwitterListeningParty" data-datetime="8:10 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481357865550069764"
+                 data-text="Funny Way of Showing It. We’d been listening solo John Lennon - watching the wheels maybe? Probs quite obvious #TimsTwitterListeningParty" data-datetime="8:10 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481357702941089796"
+                 data-text="One of many lovely guitar counter-melodies from Jed here. #TimsTwitterListeningParty" data-datetime="8:09 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fkatyaaart%2Fstatus%2F1481357645202272256"
+                 data-text="@Spector I REMEMBER WE WERE STANDING IN THE RAIN !!!!!!! 📢" data-datetime="8:09 PM Jan 12, 2022"> 
+                katyaaart            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481357566286479364"
+                 data-text="This has the Juno and Jack’s vocals that we recorded in my flat next to the kitchen. It’s a baby’s room now lol 
+
+#TimsTwitterListeningParty" data-datetime="8:09 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481357278016155651"
+                 data-text="It’s one of a few songs that mention rain on the album, along with the artwork. Something we didn’t clock until it was all finished.
+
+#TimsTwitterListeningParty" data-datetime="8:07 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481357047723659264"
+                 data-text="Norwegian Air. This is the second song we wrote with Jack from @_TheMagicGang. He was very keen we make something that sounded like ‘classic Spector’, whatever that means.
+
+#TimsTwitterListeningParty" data-datetime="8:06 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481356838767669249"
+                 data-text="“Children of the sixties / Telling us to slow it down / Guess they’ve watched too many hippies / Getting buried in the ground” is one my my fave lyrics on the album
+
+#TimsTwitterListeningParty" data-datetime="8:06 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481356819960418310"
+                 data-text="My favourite track on the album 👊 https://t.co/R3oArISfHY" data-datetime="8:06 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481356707116761088"
+                 data-text="Left the question mark off the title like Is This It. Do You Wanna Drive
+
+#TimsTwitterListeningParty" data-datetime="8:05 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481356556390309896"
+                 data-text="For the geeks: all the drums on this album are recorded to a 388 tape machine. https://t.co/OvKq37cQVx https://t.co/G2XR1iJJca" data-datetime="8:04 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481356539164299270"
+                 data-text="“A sublet in the suburbs
+Midlands summer nights dream”
+
+#TimsTwitterListeningParty" data-datetime="8:04 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481356439063085056"
+                 data-text="Do You Wanna Drive. Can anyone work out the time signature?
+
+#TimsTwitterListeningParty" data-datetime="8:04 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481356340211630080"
+                 data-text="First time we’ve ever done a ‘big verse’ at the end of a song. 
+
+#TimsTwitterListeningParty" data-datetime="8:04 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481356065681940487"
+                 data-text="The middle eight is a bit of a Shania Twain rip tbh.
+
+#TimsTwitterListeningParty" data-datetime="8:03 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481355933905297408"
+                 data-text="We described it as a drinking song, not a thinking song. #TimsTwitterListeningParty" data-datetime="8:02 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Frichardturvey%2Fstatus%2F1481355889726611456"
+                 data-text="I do believe that the @Spector boys had this song in a different key and I suggested turning it into an intro. https://t.co/SQ5plcIKgn" data-datetime="8:02 PM Jan 12, 2022"> 
+                richardturvey            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1481355790493564931"
+                 data-text="Good to be back at The @LlSTENlNG_PARTY - sounding gooood @Spector" data-datetime="8:01 PM Jan 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481355715788820481"
+                 data-text="Catch You On The Way Back In. We set out to write some heavier, faster tracks with this album and I think this is the best. It was the first track we wrote where we knew it belonged on album straight away.
+
+ #TimsTwitterListeningParty" data-datetime="8:01 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481355565813186561"
+                 data-text="It’s a bit of calm before the storm, a palette cleanser like one of those weird savoury sorbets.
+
+ #TimsTwitterListeningParty" data-datetime="8:01 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481355447152041984"
+                 data-text="It was actually the last thing we recorded on the last day, when @richardturvey was defo ready to go home and watch the mask singer. 
+
+#TimsTwitterListeningParty" data-datetime="8:00 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481355390113796107"
+                 data-text="When Saturday Comes. This was originally the intro to D-Roy but we decided to move it to the front of the album and change it to the same key as Catch You On The Way Back In.
+
+#TimsTwitterListeningParty" data-datetime="8:00 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSpector%2Fstatus%2F1481355354613161988"
+                 data-text="Let’s go" data-datetime="8:00 PM Jan 12, 2022"> 
+                Spector            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1481355318839975946"
+                 data-text="Aaaand it’s over to @Spector for tonight’s @LlSTENlNG_PARTY 
+
+Time to get stuck in… https://t.co/umsSkS1G5x" data-datetime="8:00 PM Jan 12, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
