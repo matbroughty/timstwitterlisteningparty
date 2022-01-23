@@ -41,6 +41,12 @@ class TimeSlotFileCreator : HtmlFileCreator {
       .filter{it.replayLink.isNotBlank()}
       .collect(Collectors.toList())
 
+    val silentWall = beans.stream()
+      .filter{!it.is1970()}
+      .filter{it.replayLink.isBlank()}
+      .filter{it.tweeterList().isEmpty()}
+      .collect(Collectors.toList())
+
     val upcoming = beans.stream()
       .filter { !it.is1970() && it.isoDate.toLocalDate().isBefore(LocalDate.now()).not() }
       .collect(Collectors.toList())
@@ -63,6 +69,10 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val wallFullSizeHtml = buildWallHtml(completedFullSizeWall, upcoming, true, split = 12)
     val wallFullSize = File("pages/timswall.html")
 
+    val silentWallFullSizeHtml = buildWallHtml(silentWall, emptyList(), true, split = 12)
+    val silentWallFullSize = File("pages/silentwall.html")
+
+
     // if called from Lambda we can't write to the file
     if (writeToFile) {
       completedFile.writeText(completedHtml)
@@ -72,6 +82,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
       wallFile.writeText(wallHtml)
       wallFullSize.writeText(wallFullSizeHtml)
       anniversaryFile.writeText(anniversaryHtml)
+      silentWallFullSize.writeText(silentWallFullSizeHtml)
     }
     logger.debug("Upcoming\n {} \nDateTbd \n{} \ncompleted\n {} \nAll \n{}", upcomingHtmlCard, dateTbdHtml, completedHtml, allOneTableHtml)
     return mapOf(
@@ -81,7 +92,8 @@ class TimeSlotFileCreator : HtmlFileCreator {
       Pair("snippets/${upcomingFileCard.name}", upcomingHtmlCard),
       Pair("snippets/${anniversaryFile.name}", anniversaryHtml),
       Pair("snippets/${wallFile.name}", wallHtml),
-      Pair("pages/${wallFullSize.name}", wallFullSizeHtml)
+      Pair("pages/${wallFullSize.name}", wallFullSizeHtml),
+      Pair("pages/${silentWallFullSize.name}", silentWallFullSizeHtml)
       )
   }
 
