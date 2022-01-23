@@ -66,10 +66,11 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val allOneTableFile = File("snippets/all-time-slots.html")
     val wallHtml = buildWallHtml(completed, upcoming)
     val wallFile = File("snippets/wall.html")
-    val wallFullSizeHtml = buildWallHtml(completedFullSizeWall, upcoming, true, split = 12)
+    val wallFullSizeHtml = buildWallHtml(completedFullSizeWall, upcoming, fullSize = true, split = 12)
     val wallFullSize = File("pages/timswall.html")
 
-    val silentWallFullSizeHtml = buildWallHtml(silentWall, emptyList(), true, split = 12)
+    val silentWallFullSizeHtml = buildWallHtml(silentWall, emptyList(), fullSize = true, split = 6,
+      silent = true)
     val silentWallFullSize = File("pages/silentwall.html")
 
 
@@ -102,11 +103,11 @@ class TimeSlotFileCreator : HtmlFileCreator {
    * All album artwork - but only if the [TimeSlot.spotifyImgLink] is populated and is a spotify album link.
    * Otherwise larger artworks sends the wall out of sync
    */
-  private fun buildWallHtml(completed: List<TimeSlot>, upcoming: List<TimeSlot>, fullSize: Boolean = false, split : Int = 12): String {
+  private fun buildWallHtml(completed: List<TimeSlot>, upcoming: List<TimeSlot>, fullSize: Boolean = false, split : Int = 12, silent: Boolean = false): String {
 
     val template = FreeMarkerUtils().getFreeMarker(WALL_FTL)
     val completedList: List<List<TimeSlot>> =
-      completed.filter { it.tweeterLinkList().isNotEmpty()
+      completed.filter { (if (silent) it.tweeterLinkList().isEmpty() else it.tweeterLinkList().isNotEmpty())
         && it.spotifyImgLinkSmall.isNotEmpty()
         && it.spotifyImgLink.contains("https://i.scdn.co", ignoreCase = true)}
         .sortedBy { it.isoDate }.chunked(split).toList()
