@@ -116,6 +116,7 @@ class TimeSlotFileCreator : HtmlFileCreator {
       upcoming.filter { it.spotifyImgLinkSmall.isNotEmpty()}.sortedBy { it.isoDate }.chunked(split).toList()
     val input: Map<String, Any> = mapOf(
       Pair("fullSize", fullSize),
+      Pair("top100", false),
       Pair("completed_list", completedList),
       Pair("upcoming_list", upcomingList))
     val htmlStr = StringWriter()

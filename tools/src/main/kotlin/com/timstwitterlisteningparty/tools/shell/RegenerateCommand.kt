@@ -14,13 +14,16 @@ import org.springframework.shell.standard.ShellMethod
 @ShellComponent
 class RegenerateCommand(val allHtmlCommand: AllHtmlCommand, val enrishCsvCommand: CsvEnrichCommand,
                         val collectionPagesGenerateCommand: CollectionPagesGenerateCommand,
-                        val timeSlotJsonGenerateCommand: TimeSlotJsonGenerateCommand) {
+                        val timeSlotJsonGenerateCommand: TimeSlotJsonGenerateCommand,
+                        val top100ToAlbumArtwork: Top100ToAlbumArtwork) {
 
   @ShellMethod("Regenerates the site calling the command 'replay', 'allhtml', 'json' and 'collections' commands")
   fun regen(): String {
     val updatedTimeSlotData = enrishCsvCommand.enrich()
     val allHtml = allHtmlCommand.allhtml()
     val jsonLength = timeSlotJsonGenerateCommand.json()
-    return "regen: ${updatedTimeSlotData.split("\n").count()} rows in time-slot-data and allHtml length ${allHtml.length} and collections generated = ${collectionPagesGenerateCommand.collections()} plus json files (put items * 25)  $jsonLength"
+    val top100 = top100ToAlbumArtwork.top100()
+
+    return "regen: ${updatedTimeSlotData.split("\n").count()} rows in time-slot-data and allHtml length ${allHtml.length} and collections generated = ${collectionPagesGenerateCommand.collections()} plus json files (put items * 25)  $jsonLength plus top 100 wall = $top100"
   }
 }

@@ -52,12 +52,12 @@ class Top100ToAlbumArtwork {
 
     val input: Map<String, Any> = mapOf(
       Pair("fullSize", true),
+      Pair("top100", true),
       Pair("completed_list", completedList),
       Pair("upcoming_list", completedList))
 
     val htmlStr = StringWriter()
     template.process(input, htmlStr)
-    logger.info("the html {}", htmlStr.toString())
 
     val fileWriter = FileWriter("pages/top100_wall.html")
     fileWriter.write(htmlStr.toString())
