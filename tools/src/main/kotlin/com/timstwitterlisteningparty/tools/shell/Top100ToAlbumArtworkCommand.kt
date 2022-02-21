@@ -23,7 +23,7 @@ import kotlin.streams.toList
  * And generates an album artwork page for it
  */
 @ShellComponent
-class Top100ToAlbumArtwork {
+class Top100ToAlbumArtworkCommand {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   @ShellMethod("Builds up the pages/top100_wall.html from the " +
@@ -41,10 +41,6 @@ class Top100ToAlbumArtwork {
 
 
     val top100 = replayLinks.stream().map { findTimeSlot(it) }.toList()
-
-    top100.forEach {
-      logger.info("retrieved entry {}", it)
-    }
 
     val completedList: List<List<TimeSlot?>>  = top100.chunked(10).toList();
 

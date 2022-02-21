@@ -15,7 +15,7 @@ import org.springframework.shell.standard.ShellMethod
 class RegenerateCommand(val allHtmlCommand: AllHtmlCommand, val enrishCsvCommand: CsvEnrichCommand,
                         val collectionPagesGenerateCommand: CollectionPagesGenerateCommand,
                         val timeSlotJsonGenerateCommand: TimeSlotJsonGenerateCommand,
-                        val top100ToAlbumArtwork: Top100ToAlbumArtwork) {
+                        val top100ToAlbumArtwork: Top100ToAlbumArtworkCommand) {
 
   @ShellMethod("Regenerates the site calling the command 'replay', 'allhtml', 'json' and 'collections' commands")
   fun regen(): String {
