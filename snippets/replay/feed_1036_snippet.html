@@ -1,0 +1,545 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3hlVF7J7TrYkgo1zrUweHz" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02a6b413e91f887d150fc8266d" alt="Homesick" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Sea Girls</span><br/><span class="sub-colour">Homesick</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(9133189)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3hlVF7J7TrYkgo1zrUweHz" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_9133189_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 101 tweets from Tuesday 22nd March 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/SeaGirls" target="_blank"><img src="https://pbs.twimg.com/profile_images/1460903429421907970/-xtYQYMK_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/SeaGirls.jpg'"><br/>@SeaGirls</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Hometown" data-start="0"
+             data-duration="231" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Sick" data-start="232"
+             data-duration="196" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Lonely" data-start="429"
+             data-duration="191" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Someone’s Daughter Someone’s Son" data-start="621"
+             data-duration="230" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Sleeping With You" data-start="852"
+             data-duration="249" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Paracetamol Blues" data-start="1102"
+             data-duration="235" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Again Again" data-start="1338"
+             data-duration="183" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Lucky" data-start="1522"
+             data-duration="228" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Higher" data-start="1751"
+             data-duration="201" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Cute Guys" data-start="1953"
+             data-duration="245" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Friends" data-start="2199"
+             data-duration="231" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Watch Your Step" data-start="2431"
+             data-duration="192" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="I Got You" data-start="2624"
+             data-duration="230" style="display:none"></div>
+                        <div id="track-14" class="track-list"
+                     data-name="Finished" data-start="2855"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851a6b413e91f887d150fc8266d" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-101" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506358204384567302"
+                 data-text="@paracetamolblue Recorded the album in Brixton so felt right to shoot the cover there too!" data-datetime="7:52 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506357761151541254"
+                 data-text="Ahhh amazing to hear!! Hx https://t.co/C2E3Jhx0Cp" data-datetime="7:50 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506357642876399633"
+                 data-text="@annalise_90 Usually a melody with a central lyric then work the lyrics out from there Hx" data-datetime="7:50 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506357612773883910"
+                 data-text="@paracetamolblue It’s from a self help tape we found in Larry’s studio!" data-datetime="7:50 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506357488769241088"
+                 data-text="@obviouslyIwt All of them! But specifically Paracetamol Blues and Cute Guys - Oli" data-datetime="7:49 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1506357384213671953"
+                 data-text="Brotherhood @LlSTENlNG_PARTY 
+
+Saturday April 2nd. 8pm (UK time)
+
+With special guest host @peterhook https://t.co/1x2zO3HhRp" data-datetime="7:49 PM Mar 22, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506357373950205964"
+                 data-text="@soozworld Tha k you so much !! Hx" data-datetime="7:49 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506356878103744520"
+                 data-text="@kazlark That is a great song!" data-datetime="7:47 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506356828346765320"
+                 data-text="Thanks so much to everyone listening along! This is been great and if you have any questions too we’ll try to answer them, keep spreading the good word this has been very fun #timstwitterlisteningparty" data-datetime="7:47 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506356636893466624"
+                 data-text="@TOBEAD0RED Gonna need a little time for that 😓" data-datetime="7:46 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506356461168910344"
+                 data-text="Sad times Hx @LlSTENlNG_PARTY https://t.co/YdYmLyS5mp" data-datetime="7:45 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fbluedotfestival%2Fstatus%2F1506356295556870147"
+                 data-text="Blue skies at bluedot… summer is round the corner!
+
+Day splits incoming tomorrow ☀️ https://t.co/VD1LA0BYXo" data-datetime="7:45 PM Mar 22, 2022"> 
+                bluedotfestival            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506356136672473094"
+                 data-text="@PeterMallett3 @Tim_Burgess @LlSTENlNG_PARTY Thanks for listening along!!" data-datetime="7:44 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506356092690907136"
+                 data-text="Going for that Nirvana Unplugged vibe here #timstwitterlisteningparty" data-datetime="7:44 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506356020838338573"
+                 data-text="I Got You - We just wanted to write a total dedicated love song. Cos there were so many angles through out the album. I just wanted to put down when it’s totally great Hx #timstwitterlisteningparty" data-datetime="7:43 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506355825018912769"
+                 data-text="@Poppy53690831 Oli with some help from Rory 🤘🏻" data-datetime="7:43 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506355820971311110"
+                 data-text="Fanks!! Hx https://t.co/JVf93rnyLC" data-datetime="7:43 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506355759902339074"
+                 data-text="Oli on the acoustic guitar on the piano here, just sayin’ #timstwitterlisteningparty" data-datetime="7:42 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506355628805140483"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY Thanks for having us!" data-datetime="7:42 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506355581447245832"
+                 data-text="@paracetamolblue Thank you!!" data-datetime="7:42 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506355480167436297"
+                 data-text="this started out very 60s sympathy for the devil vibes but slowly become more Brit pop as we teased it out, loved playing the drums for this! #timstwitterlisteningparty" data-datetime="7:41 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506355378350706690"
+                 data-text="Watch your step - This was a very early song written for the album and was the song that lead to again again. Hx #timstwitterlisteningparty" data-datetime="7:41 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506355294670106625"
+                 data-text="Enjoy the bonus tracks if you’re listening along on Spotify!! #timstwitterlisteningparty" data-datetime="7:41 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506355051245318150"
+                 data-text="@openupyourhead Arms aloft singalong instead!" data-datetime="7:40 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1506355039455129619"
+                 data-text="Much love and thanks to @SeaGirls for their @LlSTENlNG_PARTY tonight 🙌 ❤️" data-datetime="7:40 PM Mar 22, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506354969846632450"
+                 data-text="@kmannix17 We’ll definitely be back over!!" data-datetime="7:39 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Foverpasspayne%2Fstatus%2F1506354788807716873"
+                 data-text="GRAB YOUR FRIENDS WHEREVER YOU CAN GO FUCK UP YOUR PLANS CAUSE EVERY SECOND YOURE NOT WASTING IS ONE YOULL NEVER GET BACK #timstwitterlisteningparty" data-datetime="7:39 PM Mar 22, 2022"> 
+                overpasspayne            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506354682956034060"
+                 data-text="There’s definitely some Weezer in there too and the slide guitar solo is pure country. The song didn’t really change from the demo Oli and Rory made in Oli’s sitting room, just re recorded it hi fi and made everything sound as big as possible. #timstwitterlisteningparty" data-datetime="7:38 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506354622495182853"
+                 data-text="I feel like we’ve been trying to write a song inspired by ‘Your Best American Girl’ by Mitski since we first heard it years ago. That mainly manifests itself on this song through just having loads of guitars going for it in the chorus #timstwitterlisteningparty" data-datetime="7:38 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506354532653187078"
+                 data-text="As soon as you can’t have something is when you really want it, the chorus was this overblown fantasy of letting loose and forgetting about everything else. - Oli #timstwitterlisteningparty" data-datetime="7:38 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506354462503411712"
+                 data-text="It was written just as things were starting to open during lockdown and was a kind of burst of energy borne out of frustration. #timstwitterlisteningparty" data-datetime="7:37 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506354399211405312"
+                 data-text="Friends - The lyrics started inspired by a story of David Bowie in Berlin driving his car in circles until it ran out of petrol when he lets go of the wheel. - Oli #timstwitterlisteningparty" data-datetime="7:37 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506354016212721669"
+                 data-text="@annalise_90 In my top 3 for sure - Oli" data-datetime="7:35 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506354007102607368"
+                 data-text="If you know you know Hx @LlSTENlNG_PARTY https://t.co/aSoK7dlUFm" data-datetime="7:35 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506353956544557058"
+                 data-text="@kazlark Pure Rory" data-datetime="7:35 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506353905671802883"
+                 data-text="There’s also a self help running throughout which felt appropriate with the insecurity of the song #timstwitterlisteningparty" data-datetime="7:35 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506353710892523529"
+                 data-text="@jameslweekes Wrote and rewrote it to just make the song that bit clearer Hx" data-datetime="7:34 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506353678315364359"
+                 data-text="The end was a real chance to surprise people and it was a lot of fun going from the softest part of the album to the heaviest all in one song. It’s been very fun rehearsing this to play love it feels like it’s going to be a very special moment live! #timstwitterlisteningparty" data-datetime="7:34 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506353559801110529"
+                 data-text="Another is Henry’s vocals for the song put onto a tape machine where could manipulate the speed then forced through 100% auto tune which ended up with these eerie squeals throughout. #timstwitterlisteningparty" data-datetime="7:34 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506353528389963784"
+                 data-text="@kwithbface Definitely stands out Hx" data-datetime="7:34 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506353491631034370"
+                 data-text="this track was a lot of fun to record, maybe our favourite experience because we just threw whatever we had at it. One of the tracks is Henry and Oli walking down Brixton Hill either side of the road recording the traffic and pedestrians.#Timstwitterlisteningparty" data-datetime="7:33 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FobviouslyIwt%2Fstatus%2F1506353454742130693"
+                 data-text="cute guys is a whole rollercoaster @SeaGirls #timstwitterlisteningparty" data-datetime="7:33 PM Mar 22, 2022"> 
+                obviouslyIwt            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506353271266496518"
+                 data-text="Cute guys - It’s basically my feelings after a late night phone call with my ex. The acoustic riff is something I’ve always just naturally played when I pick up an acoustic and it took me years to make a song from it Hx #timstwitterlisteningparty" data-datetime="7:33 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506352812493615110"
+                 data-text="@kazlark Same Hx" data-datetime="7:31 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506352734118756357"
+                 data-text="@CharlesMLambert He did Hx" data-datetime="7:30 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506352684890218497"
+                 data-text="@openupyourhead We shall!!" data-datetime="7:30 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fnewhopegraciee%2Fstatus%2F1506352664078172162"
+                 data-text="I\'ll get high, high, high-higher
+@SeaGirls #timstwitterlisteningparty" data-datetime="7:30 PM Mar 22, 2022"> 
+                newhopegraciee            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506352628556570633"
+                 data-text="Ultimately this wasn’t right and it took us ages to figure out how to best present it, settling on matching the punky energy on the chorus with a full throttle sea girls experience. #timstwitterlisteningparty" data-datetime="7:30 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506352530296655877"
+                 data-text="This was the first song we started recording and the last one we finished. The first version was very Sam’s Town inspired with horns and a lot more jauntyness (a word I just apparently made up). #timstwitterlisteningparty" data-datetime="7:30 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="121000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506352387472121858"
+                 data-text="Higher - The first song written for the album  it would be  fun to do something with a nod to Mr Brightside which was the “wash your hands” song at the start of the pandemic. Hx #timstwitterlisteningparty" data-datetime="7:29 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506351880242401281"
+                 data-text="Yes!! We all sing it #timstwitterlisteningparty https://t.co/EMVnxFYJdO" data-datetime="7:27 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506351712675803147"
+                 data-text="The demo originally only had  the last chorus full pelt but we felt we needed to get there faster as it was such a big moment. #timstwitterlisteningparty" data-datetime="7:26 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506351626394775552"
+                 data-text="there’s shades of ‘I’m on fire’ by Bruce Springsteen in this as a little homage but it flowers into a big rock song halfway through the second verse. #timstwitterlisteningparty" data-datetime="7:26 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506351502113259537"
+                 data-text="The line “holy sh*t Jesus Christ” was the last line I sang of the whole album. I screamed it as hard as I could, it just felt appropriate Hx #timstwitterlisteningparty" data-datetime="7:25 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506351430462066689"
+                 data-text="Lucky - I found a letter in lockdown from my great grandfather to great grandmother and the kids. He was just about to go over for D-day in WWII and it made me think how lucky I am. Hx #timstwitterlisteningparty" data-datetime="7:25 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506351122872684548"
+                 data-text="@annalise_90 Yes love that line! - Oli" data-datetime="7:24 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506350993130278928"
+                 data-text="The instrumentation was trying to match the rush of the lyrics to create something uplifting and euphoric. The whole drum track was lifted from an improvised take of the second verse, #timstwitterlisteningparty" data-datetime="7:23 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506350984951472129"
+                 data-text="You know it Hx @LlSTENlNG_PARTY https://t.co/JOoJCf98vF" data-datetime="7:23 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506350839488729100"
+                 data-text="this started life as a lot more of a straight rock song, we even lifted the start of the cars ‘just what I needed’ but ultimately that wasn’t right. The song started to click when we added strings, inspired by Tonight Tonight by the Smashing Pumpkins. #timstwitterlisteningparty" data-datetime="7:23 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506350662820499467"
+                 data-text="Again again - I personified my relationship with partying “you scare me half to death” Hx #timstwitterlisteningparty" data-datetime="7:22 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1506350645825216514"
+                 data-text="RT @Tim_Burgess: Keep on keeping on. You’ve got this 
+❤️" data-datetime="7:22 PM Mar 22, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506350318807883777"
+                 data-text="@kwithbface Love it!!!" data-datetime="7:21 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506350280107040770"
+                 data-text="Some strong hot fuss vibes running through the track, I love how the instruments all compliment each other in the chorus to create this big wall of sound. #timstwitterlisteningparty" data-datetime="7:21 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506350189086449667"
+                 data-text="- we all agreed this was a banger from the second we heard the song. This one was co produced with Cass Lowe which was a great experience, he definitely had a vision for the track from the get go which made it a pleasure to record #timstwitterlisteningparty" data-datetime="7:20 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="203000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506350129321857026"
+                 data-text="I bumped into an old friend of a friend in soho and we decided to get a drink together. That week PB was written while messaging her and I just imagined what a relationship would be like if I was with someone like myself it’s imperfec/affectionate Hx #timstwitterlisteningparty" data-datetime="7:20 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506349279677456391"
+                 data-text="@IVfallingforyou 🎉🎉🎉" data-datetime="7:17 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506349207317319689"
+                 data-text="Been fun working out sleeping with you live with all the electronic elements, it’s been sounding great in rehearsals! First play tomorrow in Birmingham! #timstwitterlisteningparty" data-datetime="7:16 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fopenupyourhead%2Fstatus%2F1506348927439847437"
+                 data-text="me and someone’s daughter @SeaGirls #timstwitterlisteningparty https://t.co/BwIwJVNZrT" data-datetime="7:15 PM Mar 22, 2022"> 
+                openupyourhead            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahpika%2Fstatus%2F1506348881134694406"
+                 data-text="I was introduced to @SeaGirls by my good friends @sparklesgreen. Their daughter who has Autism found loud noises hard. This was her first concert &amp; she felt the world just stopped. Go Poppy you beautiful little soul. We love you ❤️ 
+@LlSTENlNG_PARTY #timstwitterlisteningparty https://t.co/ITwF4YOc1N" data-datetime="7:15 PM Mar 22, 2022"> 
+                sarahpika            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506348847659900943"
+                 data-text="Got a nice hypnotic feel with the acoustic line I think - Oli #timstwitterlisteningparty" data-datetime="7:15 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506348751232933896"
+                 data-text="Sleeping With You - the song started life with Oli and Rory playing simultaneous guitar parts and Andy providing the chords on bass. The rest bloomed from there inspired by the drive soundtrack to create this dark late night feel. #timstwitterlisteningparty" data-datetime="7:15 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1506348677555703815"
+                 data-text="Playing our 1,097th @LlSTENlNG_PARTY album right now (hi @SeaGirls 👋). Tomorrow marks two years since we started. Big love to every artist who has taken part and everyone who has listened in around the world. It’s been amazing. Let’s keep them going, eh? ❤️
+
+Tim x x" data-datetime="7:14 PM Mar 22, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506348565177712641"
+                 data-text="Sleeping with you  - Walking to the tube from a girlfriend’s house id been staying at in north London I realised we were kinda doomed cos I was so not over my ex Hx #timstwitterlisteningparty" data-datetime="7:14 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506348290497028101"
+                 data-text="@newhopegraciee You’re so welcome" data-datetime="7:13 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506348079338897423"
+                 data-text="End result feels like the Weeknd covering the Cure to me, loads of energy and love the big guitar part that comes in after the breakdown. We weren’t playing this live for the in stores but after just one run through we instantly changed our minds. Oli #timstwitterlisteningparty" data-datetime="7:12 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506347940192866308"
+                 data-text="the first version of this was nothing like the final song except for the first verse. Originally going for a Nancy Boy by Placebo vibe but the song really came to life when someone had the genius idea to kick into double speed for the chorus. #timstwitterlisteningparty" data-datetime="7:11 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="112000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506347782579396616"
+                 data-text="SDSS- The second verse I just flash to being fucked up in a club. Newly single when you are just on your own again. I had written the first verse while in a relationship then finished the song once I found out I was actually being dumped Hx #timstwitterlisteningparty" data-datetime="7:11 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506347313094176768"
+                 data-text="@obviouslyIwt Same! Very cinematic" data-datetime="7:09 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506347253635686407"
+                 data-text="That’s cool Hx https://t.co/uz9PJyzLg6" data-datetime="7:09 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506347240796864524"
+                 data-text="It was awesome playing this on our last UK tour, it got such a great reaction despite being unreleased (helped that Henry taught everyone the chorus before!) - Oli #timstwitterlisteningparty" data-datetime="7:09 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506347159435763731"
+                 data-text=", the little bass riff developed from wanting something like ‘nobody speak’ by Run the Jewels to be driving the track. The end result is nothing like that but maybe indicative of how we wanted to pull from more this album #timstwitterlisteningparty" data-datetime="7:08 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fnewhopegraciee%2Fstatus%2F1506347099687997448"
+                 data-text="i get a little bit lonely when i’m not with you!! @SeaGirls #timstwitterlisteningparty" data-datetime="7:08 PM Mar 22, 2022"> 
+                newhopegraciee            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506346988543037447"
+                 data-text="- can’t go wrong with a big chorus? The whistle was on the demo from the start and felt like something a little unexpected to front the song with. We tried a lot of parts for this song but ultimately pared it down to let the song itself shine - Oli #timstwitterlisteningparty" data-datetime="7:08 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506346869491916817"
+                 data-text="This album thinks about where you belong and while sitting outside my local shop last summer I felt I just wanted to be with my old best friend from school and how so much life has got between us since we last hung out. I kinda felt irrelevant Hx #timstwitterlisteningparty" data-datetime="7:07 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fparacetamolblue%2Fstatus%2F1506346652571140096"
+                 data-text="I\'M SICK OF YOUR FRIENDS
+THEY\'RE FUCKING BORINGGG
+#timstwitterlisteningparty @SeaGirls" data-datetime="7:06 PM Mar 22, 2022"> 
+                paracetamolblue            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506346421561315344"
+                 data-text="That’s the point! Must be bad if you are #timstwitterlisteningparty https://t.co/uz9PJyzLg6" data-datetime="7:05 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506346333547991049"
+                 data-text="Sick felt like the right first track to release as it feels like a step forward sonically while still retaining a lot of the elements of the ‘sea girls sound’. #timstwitterlisteningparty" data-datetime="7:05 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fjameslweekes%2Fstatus%2F1506346258088218628"
+                 data-text="i will never be sick of the beatles sorry @SeaGirls #timstwitterlisteningparty" data-datetime="7:05 PM Mar 22, 2022"> 
+                jameslweekes            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506346241965363204"
+                 data-text="Sick - This song is definitely all about the lyrics so the production was all about letting them shine while bringing some heat when it’s needed.#timstwitterlisteningparty" data-datetime="7:05 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fdrewtetz%2Fstatus%2F1506346150676385798"
+                 data-text="another great album that i had the honor of zoetrope\'ing for @BloodRecs — tune in to @LlSTENlNG_PARTY to hear @SeaGirls run it down in their own words 🌊 https://t.co/gKwTMl4if5 https://t.co/fsT6rKmiXo" data-datetime="7:04 PM Mar 22, 2022"> 
+                drewtetz            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506346138563194881"
+                 data-text="Sick - we spent ages trying to find the best beat/groove for this song. We listened to a lot of hip hop records at the same tempo to try and get some swag into it but ultimately settled on the most simple beat, sometimes less is more! - Oli #timstwitterlisteningparty" data-datetime="7:04 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506346026113933312"
+                 data-text="Sick - The pressure of modern life impacted by lockdown made me just sick where at times I felt sick of everything. There were a few ways to take that and in sick I just decide to grow up Hx #timstwitterlisteningparty" data-datetime="7:04 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506345919863824399"
+                 data-text="@newhopegraciee It’s a good one" data-datetime="7:03 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506345756223053829"
+                 data-text="Sweet candy with a sad centre #timstwitterlisteningparty https://t.co/HplNrXpRz9" data-datetime="7:03 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506345598873739264"
+                 data-text="Soloooooo #timstwitterlisteningparty" data-datetime="7:02 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506345558830632964"
+                 data-text="@Peanutpower4 @LlSTENlNG_PARTY Loving the lights!! #timstwitterlisteningparty" data-datetime="7:02 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506345392522280961"
+                 data-text="This was a pretty straightforward recording as we knew what beast it was the second we had it! Good fun to play live, feels like a set opener too. #timstwitterlisteningparty" data-datetime="7:01 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506345275568398345"
+                 data-text="Hometown - This was definitely a late night studio song and you can probably tell in the finished product. Felt good to start the album with a bang and deliver that rock song goodness right off the bat. #timstwitterlisteningparty" data-datetime="7:01 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSeaGirls%2Fstatus%2F1506345130344787973"
+                 data-text="Hometown - Wanted to dedicate something to a friend that we lost. And I’m just simply saying what’s going on at home and saying I’m not gonna waste the time I have alive while learning from our mistakes. Hx #timstwitterlisteningparty" data-datetime="7:00 PM Mar 22, 2022"> 
+                SeaGirls            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fjameslweekes%2Fstatus%2F1506345066696216577"
+                 data-text="lemonade ripped jeans nothing feels when you’re seventeen!! #timstwitterlisteningparty" data-datetime="7:00 PM Mar 22, 2022"> 
+                jameslweekes            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1506344976199917586"
+                 data-text="Handing over to @SeaGirls for their Homesick @LlSTENlNG_PARTY 
+
+🤘 https://t.co/tHxewZxxsn" data-datetime="7:00 PM Mar 22, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
