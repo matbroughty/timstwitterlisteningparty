@@ -1,0 +1,604 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://shopemf-theband.com/album/go-go-sapiens" target="_blank">                <img src="img/feed_1044.png" alt="Go Go Sapiens" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">EMF</span><br/><span class="sub-colour">Go Go Sapiens</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(550709)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_550709_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 126 tweets from Friday 1st April 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/EMFTheBand" target="_blank"><img src="https://pbs.twimg.com/profile_images/1488467893050302470/3beqdViN_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/EMFTheBand.jpg'"><br/>@EMFTheBand</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/liveid6" target="_blank"><img src="https://pbs.twimg.com/profile_images/1322155743513104385/Q9hoQhw9_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/liveid6.jpg'"><br/>@liveid6</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Jamesatkinmusic" target="_blank"><img src="https://pbs.twimg.com/profile_images/1364671883652833283/DPF80veH_normal.png" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Jamesatkinmusic.jpg'"><br/>@Jamesatkinmusic</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                </div>
+        <div id="tweet-feed-126" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509980096668471296"
+                 data-text="@soozworld @Jamesatkinmusic @EMFTheBand See you on tour" data-datetime="7:44 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509979847216533507"
+                 data-text="@SeanDC09 Yep. I remember playing and chuckling to myself cause they asked James not to swear which was guaranteed to fail" data-datetime="7:43 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509979634133258246"
+                 data-text="Now we are just EMF. 
+
+We love you all!! Thanks so much @LlSTENlNG_PARTY @Tim_Burgess for sharing our new album with the world." data-datetime="7:42 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509979565652955148"
+                 data-text="@SeanDC09 Great minds X" data-datetime="7:42 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509979476997939206"
+                 data-text="@Tim_Burgess @EMFTheBand @Jamesatkinmusic Looking forward to that X" data-datetime="7:42 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509979456248684550"
+                 data-text="As we became more successful there were so many expectations and distractions that we got kind of lost. We got distracted trying to please people by either being too cool or too pop and generally overthinking it all. #TimsTwitterListeningParty" data-datetime="7:42 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509979364968091649"
+                 data-text="Making it without a record label breathing down our necks was liberating. As Derry always says “we have nothing to prove” so we did it for the fans and cause this is who we are and what we love to do. #TimsTwitterListeningParty" data-datetime="7:41 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509979283405561859"
+                 data-text="We wrote this album with the thought of playing live in mind. Just 1 self-indulgent ballad, the rest are pure up-tempo ditties to shake a dance floor. There will be the usual mayhem/sense of community that our customary at our gig. Come feel the love! #TimsTwitterListeningParty" data-datetime="7:41 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509979256557875200"
+                 data-text="Thank you #timstwitterlisteningparty and all of you for sharing this with us we couldn’t have done it without you. Sending big love. See you on tour @EMFTheBand" data-datetime="7:41 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1509979179474898956"
+                 data-text="✊❤️🔥 https://t.co/Gp4xSIWIkW" data-datetime="7:41 PM Apr 1, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509979178594091016"
+                 data-text="We wrote, produced and mixed GGS in the Summer 2021. James has made 5 solo albums and Ian has written with everyone from Beyonce to The Prodigy so we felt confident, after all these years that we could and should shape it ourselves. #TimsTwitterListeningParty" data-datetime="7:41 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509979138882424842"
+                 data-text="Oh wait, we have some more... 🤩
+
+#TimsTwitterListeningParty" data-datetime="7:40 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FJamesatkinmusic%2Fstatus%2F1509979126333120514"
+                 data-text="Thanks everyone for taking the time out to listen to the new EMF album. What a buzz.  #TimsTwitterListeningParty @EMFTheBand @Jamesatkinmusic @liveid6" data-datetime="7:40 PM Apr 1, 2022"> 
+                Jamesatkinmusic            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509978971051802624"
+                 data-text="Thank you to everyone for coming to our Listening Party. 
+
+We are thrilled to finally be able to share the very (very!) long awaited new album with you. 
+
+We will see you on the road in April and at festivals over the summer. LLTNF! 
+
+xEMFx
+
+#TimsTwitterListeningParty" data-datetime="7:40 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509978903238135816"
+                 data-text="@Early90sIndie Unbelievable @EMFTheBand" data-datetime="7:39 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FJamesatkinmusic%2Fstatus%2F1509978812909510669"
+                 data-text="@bespokespeeches @EMFTheBand Thanks Simon x #TimsTwitterListeningParty @EMFTheBand @Jamesatkinmusic @liveid6" data-datetime="7:39 PM Apr 1, 2022"> 
+                Jamesatkinmusic            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509978661436510208"
+                 data-text="Check this part out…. #timstwitterlisteningparty" data-datetime="7:39 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1509978582805794827"
+                 data-text="Big thanks to @EMFTheBand @Jamesatkinmusic &amp; @liveid6 - see you all at a festival somewhere in the future ✌️" data-datetime="7:38 PM Apr 1, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509978320200421386"
+                 data-text="Sparks and Flashes my favourite (for today) This means a lot to me and probably to many of you. About someone we lost. #timstwitterlisteningparty" data-datetime="7:37 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509978320087228425"
+                 data-text="For someone that would never have had time to be sad that he is not here anymore, even though we are. #TimsTwitterListeningParty" data-datetime="7:37 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509978173496250376"
+                 data-text="Dedicated to friends we’ve lost and how we miss them. Life is a precious thing. #TimsTwitterListeningParty" data-datetime="7:37 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509978017476583427"
+                 data-text="Great closer to the album - a classic EMF groove with a big sentimental chorus. #TimsTwitterListeningParty" data-datetime="7:36 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509977948501286928"
+                 data-text="EMF - GO GO SAPIENS: Sparks and Flashes
+
+#TimsTwitterListeningParty" data-datetime="7:36 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509977893694230528"
+                 data-text="@markcass17 Today!" data-datetime="7:35 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509977836295233546"
+                 data-text="Try not to get bitter. #timstwitterlisteningparty" data-datetime="7:35 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509977671148740616"
+                 data-text="This is about having kids #timstwitterlisteningparty @EMFTheBand" data-datetime="7:35 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FJamesatkinmusic%2Fstatus%2F1509977647908102152"
+                 data-text="@EMFTheBand ahhhh #TimsTwitterListeningParty @EMFTheBand @Jamesatkinmusic @liveid6" data-datetime="7:34 PM Apr 1, 2022"> 
+                Jamesatkinmusic            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509977561354412039"
+                 data-text="ID: Telling my son, who is growing up and finding it hard at times, that you have to make the most of every day. 
+
+#TimsTwitterListeningParty" data-datetime="7:34 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fbespokespeeches%2Fstatus%2F1509977552240234508"
+                 data-text="@EMFTheBand Sounds beautiful. Total festival feel. Can see everyone singing along to this!" data-datetime="7:34 PM Apr 1, 2022"> 
+                bespokespeeches            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FSeanDC09%2Fstatus%2F1509977547311923207"
+                 data-text="@EMFTheBand @Jamesatkinmusic @liveid6 again saw this live with only an electric guitar to accompany. Took some stones to play this live not knowing what to expect. Amazing reception well deserved" data-datetime="7:34 PM Apr 1, 2022"> 
+                SeanDC09            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509977480127524871"
+                 data-text="This was an epic weekend! https://t.co/xJEdDKYYEZ" data-datetime="7:34 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fmeisbaer%2Fstatus%2F1509977416478908421"
+                 data-text="@liveid6 @Jamesatkinmusic @EMFTheBand Very Lies, nice and gloomy and the samples 😊 Dr Strangelove #TimsTwitterListeningParty" data-datetime="7:34 PM Apr 1, 2022"> 
+                meisbaer            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509977342688567296"
+                 data-text="We recorded it simply with one microphone and a guitar – this version is actually the demo. We did consider going into a posh studio, but this version captured what we were trying to achieve just right. #TimsTwitterListeningParty" data-datetime="7:33 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509977177781059586"
+                 data-text="Taking it down for a moment #timstwitterlisteningparty" data-datetime="7:33 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509977153860943880"
+                 data-text="We are finally brave enough to include an acoustic track on the album! We are totally exposing ourselves here, but perhaps we are old enough to finally be confident to do it now. #TimsTwitterListeningParty" data-datetime="7:33 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1509977147015839746"
+                 data-text="Dr Strangelove 🎶 @EMFTheBand #GoGoSapiens #timstwitterlisteningparty https://t.co/KWbaGq1mH7" data-datetime="7:33 PM Apr 1, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509977067928043524"
+                 data-text="EMF - GO GO SAPIENS: Greatest Day
+
+#TimsTwitterListeningParty" data-datetime="7:32 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509976990002130950"
+                 data-text="@SeanDC09 @Jamesatkinmusic @EMFTheBand Stevey can groove on dat bass" data-datetime="7:32 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509976939494313993"
+                 data-text="We are so lucky to have Stevey Star! @steveymarsh https://t.co/apImQLMIIr" data-datetime="7:32 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509976689358553101"
+                 data-text="👀 https://t.co/9lqnabtcCy" data-datetime="7:31 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509976662196248579"
+                 data-text="@Jamesatkinmusic @EMFTheBand Love this too" data-datetime="7:31 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FJamesatkinmusic%2Fstatus%2F1509976572534702086"
+                 data-text="Dr. Strangelove - my persona fav i think, although it changes daily. #TimsTwitterListeningParty @EMFTheBand @Jamesatkinmusic @liveid6" data-datetime="7:30 PM Apr 1, 2022"> 
+                Jamesatkinmusic            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509976524287578112"
+                 data-text="Plenty of real-life James Bond villains around that fit the Dr. Strangelove film character. There is a twist in the song that the devastation is heartbreak instead of a bomb. #TimsTwitterListeningParty" data-datetime="7:30 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FJamesatkinmusic%2Fstatus%2F1509976369450598408"
+                 data-text="@liveid6 @SeanDC09 @MarkyByrne @EMFTheBand @woodsdgb Probably the last time we ever got asked to perform live on BBc" data-datetime="7:29 PM Apr 1, 2022"> 
+                Jamesatkinmusic            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509976340644208642"
+                 data-text="A song that portrays the devastation that love can bring. #TimsTwitterListeningParty" data-datetime="7:29 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509976294859096073"
+                 data-text="Don’t call it a comeback, it wasn’t like that #TimsTwitterListeningParty" data-datetime="7:29 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509976212772462593"
+                 data-text="EMF have always been about the grooves; our strength is hopefully being able to put a killer song on top. #TimsTwitterListeningParty" data-datetime="7:29 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509976148821913604"
+                 data-text="EMF - GO GO SAPIENS: Dr. Strangelove
+
+#TimsTwitterListeningParty" data-datetime="7:29 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509976037727342603"
+                 data-text="@SeanDC09 @MarkyByrne @EMFTheBand @Jamesatkinmusic @woodsdgb Yeah James did not hold back 😂" data-datetime="7:28 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509975897931399170"
+                 data-text="We’re staying up all night and we’re never coming down #TimsTwitterListeningParty" data-datetime="7:28 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509975599019962378"
+                 data-text="#TimsTwitterListeningParty you say the dark is coming soon, and you think there’s nothing you can do, can’t you hear the wolves are howling at the moon?" data-datetime="7:26 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509975532972253193"
+                 data-text="We are again reflecting on the idea of death on our shoulder. We are so lucky that we are able to keep writing and playing music. 
+
+It’s been a long journey but it isn’t over just yet.
+
+ #TimsTwitterListeningParty" data-datetime="7:26 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509975388314873871"
+                 data-text="Remembering the good times with someone you love, when life is hard, and they feel down. 
+
+You want to fight it and go out all night and be immortal. 
+
+#TimsTwitterListeningParty" data-datetime="7:26 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509975309189365769"
+                 data-text="Fashionably late 😁 https://t.co/4DVtQ3QegM" data-datetime="7:25 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509975198438678533"
+                 data-text="EMF - GO GO SAPIENS: Never Die
+
+#TimsTwitterListeningParty" data-datetime="7:25 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FJamesatkinmusic%2Fstatus%2F1509975126506360833"
+                 data-text="@meisbaer @mumu_mark @EMFTheBand @liveid6 can we start again?" data-datetime="7:24 PM Apr 1, 2022"> 
+                Jamesatkinmusic            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509975019035766784"
+                 data-text="This track is epic live #TimsTwitterListeningParty" data-datetime="7:24 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FJamesatkinmusic%2Fstatus%2F1509974977919000578"
+                 data-text="@SeanDC09 @EMFTheBand @liveid6 @woodsdgb Ha, you like the lyrics x" data-datetime="7:24 PM Apr 1, 2022"> 
+                Jamesatkinmusic            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509974883194839043"
+                 data-text="Did you know @liveid6 was classically trained? 🤔#TimsTwitterListeningParty" data-datetime="7:24 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FJamesatkinmusic%2Fstatus%2F1509974868497997827"
+                 data-text="@mumu_mark @EMFTheBand @liveid6 I had to take Sonny to a physics lesson." data-datetime="7:23 PM Apr 1, 2022"> 
+                Jamesatkinmusic            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509974621944266767"
+                 data-text="Hi James! https://t.co/upbKiMpp3N" data-datetime="7:22 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509974594299514890"
+                 data-text="#TimsTwitterListeningParty You Gotta Keep It Coming. I still love the fire behind the laughter in your eyes" data-datetime="7:22 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509974549701480452"
+                 data-text="The lyrics wrote themselves in a stream of consciousness. Felt appropriate to do it in the style of Gene Vincent and Eddie Cochran, rockabilly guitar with classic EMF guitars and driving beats. #TimsTwitterListeningParty" data-datetime="7:22 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FJamesatkinmusic%2Fstatus%2F1509974444785254414"
+                 data-text="Hi! Everyone - hope you loving the album? what have i missed?
+#TimsTwitterListeningParty @EMFTheBand @Jamesatkinmusic @liveid6" data-datetime="7:22 PM Apr 1, 2022"> 
+                Jamesatkinmusic            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509974342024708103"
+                 data-text="A flow of references that name check rock’n’roll and punk artists that touched our lives over the years as a way to tell someone that they still touch your life.
+#TimsTwitterListeningParty" data-datetime="7:21 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509974195446423565"
+                 data-text="EMF - GO GO SAPIENS: Keep It Coming
+
+#TimsTwitterListeningParty" data-datetime="7:21 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FSeanDC09%2Fstatus%2F1509974053779558400"
+                 data-text="@EMFTheBand @Jamesatkinmusic @liveid6 @woodsdgb #timstwitterlisteningparty some Mef memories! https://t.co/6uZsOKHWt1" data-datetime="7:20 PM Apr 1, 2022"> 
+                SeanDC09            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fmeisbaer%2Fstatus%2F1509973983441084423"
+                 data-text="@EMFTheBand Oh, very Cha x3 b-side vibe! Equilibrium #TimsTwitterListeningParty" data-datetime="7:20 PM Apr 1, 2022"> 
+                meisbaer            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509973921302556672"
+                 data-text="Whatever happened to the good ones? We don’t know So many of our friends and heroes have lost their way      #timstwitterlisteningparty @EMFTheBand" data-datetime="7:20 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509973887324508165"
+                 data-text="The skippy back beat references early dance culture. We really wanted to create a song that echoed those heady days of old school raves and watching the sun rise whilst dancing in a field somewhere in the west country. #TimsTwitterListeningParty" data-datetime="7:20 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509973811973734407"
+                 data-text="\"There\'s something wrong with your equilibrium!\" #TimsTwitterListeningParty" data-datetime="7:19 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1509973635238436874"
+                 data-text="This time tomorrow…
+
+#Brotherhood @LlSTENlNG_PARTY 
+
+@Tim_Burgess 
+
+#TimsTwitterListeningParty https://t.co/3b2RfH9e7n" data-datetime="7:19 PM Apr 1, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FSeanDC09%2Fstatus%2F1509973625167826944"
+                 data-text="@EMFTheBand One of my faves on the record!!! @liveid6 @Jamesatkinmusic @woodsdgb @LlSTENlNG_PARTY @Tim_Burgess#timstwitterlisteningparty" data-datetime="7:19 PM Apr 1, 2022"> 
+                SeanDC09            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509973577071747082"
+                 data-text="This is about old pop star heroes who have perhaps lost their way. Lines like ‘The Queen’s not dead’ &amp; ‘What she said’ might make it pretty obvious who we are talking about? #TimsTwitterListeningParty" data-datetime="7:18 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509973443458043909"
+                 data-text="We’ve had this drum loops for decades! It was just about finding the perfect song to write around it. Hopefully it transports you back to watching the sunrise after a beautiful night. #TimsTwitterListeningParty" data-datetime="7:18 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509973363925651457"
+                 data-text="EMF - GO GO SAPIENS: Equilibrium
+
+#TimsTwitterListeningParty" data-datetime="7:17 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509973159679864842"
+                 data-text="#TimsTwitterListeningParty We got love on our side! @EMFTheBand" data-datetime="7:17 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509972987772084226"
+                 data-text="#TimsTwitterListeningParty this is for all of James’s ‘Party People’ you know who you are" data-datetime="7:16 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509972903663702023"
+                 data-text="We love how it takes its time to build before the big anthemic chorus drops. Ian gets to display his blues style riffing whilst JA pays homage to the baggy side of the 90s. 
+
+A celebration of being free to do things just the way we want to.
+
+#TimsTwitterListeningParty" data-datetime="7:16 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509972841634086914"
+                 data-text="#timstwitterlisteningparty https://t.co/3e6Z8uFXw5" data-datetime="7:15 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509972670665961480"
+                 data-text="We are honestly not in the ‘Grip of E’ anymore – but we still feel the love. This is a song about spreading the love. #TimsTwitterListeningParty" data-datetime="7:15 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509972657097392131"
+                 data-text="Ok no gtr sólo on Crime of Passion but We Are The Free is one big gtr solo" data-datetime="7:15 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509972487559389190"
+                 data-text="This is a groove-based tune.
+
+#TimsTwitterListeningParty" data-datetime="7:14 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1509972450808893444"
+                 data-text="More absolute gold at the @LlSTENlNG_PARTY https://t.co/Y5UhhAxurI" data-datetime="7:14 PM Apr 1, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509972425529860098"
+                 data-text="EMF - GO GO SAPIENS: We are the Free
+
+#TimsTwitterListeningParty" data-datetime="7:14 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509972274081845249"
+                 data-text="80’s synth solo! A-ha eat your heart out" data-datetime="7:13 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509972253747916803"
+                 data-text="The video is in the process of being shot by our dear friend Ben Hall (Unscene). Think skaters at night with head touches, graffiti from Teo (ID\'s Son) and lots of passionate activity that some may say is a crime. #TimsTwitterListeningParty" data-datetime="7:13 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509972098483167235"
+                 data-text="\"Bringing it home\" #TimsTwitterListeningParty https://t.co/Ow8n2Ft9Hq" data-datetime="7:12 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fmeisbaer%2Fstatus%2F1509972095119376390"
+                 data-text="@EMFTheBand Didn\'t expect the rave ending of Stay Classy San Diego 😁 #TimsTwitterListeningParty" data-datetime="7:12 PM Apr 1, 2022"> 
+                meisbaer            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509971855020638217"
+                 data-text="Alan Bennet (the legendary playwright) was the first to hear this song. I was playing the demo on my phone in the village shop where we often chat together. The conversation is usually about potatoes. #TimsTwitterListeningParty" data-datetime="7:11 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509971822904815616"
+                 data-text="#TimsTwitterListeningParty James sounds amazing on this song, he has such a soulful voice" data-datetime="7:11 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509971648006569984"
+                 data-text="Have you ever fallen in love with someone you shouldn’t have fallen in love with?
+
+#TimsTwitterListeningParty" data-datetime="7:11 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509971578171404291"
+                 data-text="EMF - GO GO SAPIENS: Crime of Passion
+
+#TimsTwitterListeningParty" data-datetime="7:10 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1509971514652860427"
+                 data-text="I feel warm just listening to Stay Classy San Diego 😎😜☀️ @EMFTheBand #TimsTwitterListeningParty https://t.co/SWH4Mj4MN0" data-datetime="7:10 PM Apr 1, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509971307563204608"
+                 data-text="#TimsTwitterListeningParty 3rd gtr s……" data-datetime="7:09 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509971299866714128"
+                 data-text="Califor-ni-a! #TimsTwitterListeningParty" data-datetime="7:09 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509971226806169600"
+                 data-text="#TimsTwitterListeningParty love Aid Todds drums on this: surf punk techno" data-datetime="7:09 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fnotinmyhouseuk%2Fstatus%2F1509971221630406663"
+                 data-text="@EMFTheBand Anchorman ❤️❤️" data-datetime="7:09 PM Apr 1, 2022"> 
+                notinmyhouseuk            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509971138511872004"
+                 data-text="Back then I expected everything to be exciting and ephemeral cause we were young and the possibilities were endless… now I remember how special that moment was and I wish I could go back. #TimsTwitterListeningParty" data-datetime="7:09 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509970959171784716"
+                 data-text="All the tracks were written and recorded between the Yorkshire Dales and North London – quite contrasting locations as you can imagine. #TimsTwitterListeningParty https://t.co/97fUnHGEA0" data-datetime="7:08 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509970891119243266"
+                 data-text="#TimsTwitterListeningParty memories of our crazy times in California and of some of the crazy wonderful people we met" data-datetime="7:08 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509970764983939077"
+                 data-text="We have such close ties to San Diego. We had the best nights ever in that town back in the 90s. We ended up at an all-night rave one night at a Skatepark with California’s greatest skaters #TimsTwitterListeningParty" data-datetime="7:07 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509970691092844549"
+                 data-text="EMF - GO GO SAPIENS: Stay Classy San Diego
+
+#TimsTwitterListeningParty" data-datetime="7:07 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509970547026939910"
+                 data-text="2nd gtr sólo in 27 years" data-datetime="7:06 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509970381532246026"
+                 data-text="There\'s no better soloist than our own @liveid6 #TimsTwitterListeningParty" data-datetime="7:06 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509970273159761923"
+                 data-text="#TimsTwitterListeningParty  la Pasionaria was an amazing woman who fought Franco in the Spanish civil war she said ‘NO PASARAN’ they will not pass!!!!!" data-datetime="7:05 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509970213802061833"
+                 data-text="A nod to all the powerful girls changing the world. 
+
+There are a lot of battles still to be fought. 
+
+Thanks to the Sisters, the world is slowly becoming a better place for our daughters and all women to live in. 
+
+We will always be with you.
+
+#TimsTwitterListeningParty" data-datetime="7:05 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fiblamethebeans%2Fstatus%2F1509970185524072457"
+                 data-text="@LlSTENlNG_PARTY @EMFTheBand I\'m in a new happy place. https://t.co/OwGUpYsjRg" data-datetime="7:05 PM Apr 1, 2022"> 
+                iblamethebeans            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509970073145987084"
+                 data-text="Fun fact: James wrote the guitar riff. #TimsTwitterListeningParty" data-datetime="7:04 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509969935019171843"
+                 data-text="The grove is AC/DC inspired, thundering along at a mid-tempo and taking no prisoners along the way. #TimsTwitterListeningParty" data-datetime="7:04 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509969828857143314"
+                 data-text="EMF - GO GO SAPIENS: Sister Sandinista
+
+https://t.co/HNwktQCIWN
+
+#TimsTwitterListeningParty" data-datetime="7:03 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509969752466284546"
+                 data-text="We’re doing it right now!!!" data-datetime="7:03 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509969603623063553"
+                 data-text="We’ve been here before and we’ve been through some ups and downs together but we’re still standing! 
+
+We need to get on with it cause time is running out… “don’t stop, now we started it!” 
+
+#TimsTwitterListeningParty" data-datetime="7:03 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fmumu_mark%2Fstatus%2F1509969558379147273"
+                 data-text="First listen to Go Go Sapiens - 27 years in the waiting #TimsTwitterListeningParty @EMFTheBand @Jamesatkinmusic @liveid6" data-datetime="7:02 PM Apr 1, 2022"> 
+                mumu_mark            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509969504159387650"
+                 data-text="First gtr sólo in 27 years" data-datetime="7:02 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509969419912597505"
+                 data-text="You got to keep going and don’t give up. We’ll “soon be gone, we’re doing it right now!” We want to feel the joy of beats and guitars and people jumping around with us at gigs while we can still jump around! #TimsTwitterListeningParty" data-datetime="7:02 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509969390225309702"
+                 data-text="Can’t wait to do that live with you all there" data-datetime="7:02 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509969320360792069"
+                 data-text="“YEAH YEAH!”
+
+#TimsTwitterListeningParty" data-datetime="7:01 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509969178593271817"
+                 data-text="We Started It 30 years ago and are not ready to give up the ghost just yet. The song also reflects on the inevitable end in sight as we get older and will soon be gone. #TimsTwitterListeningParty" data-datetime="7:01 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1509969133986791435"
+                 data-text="Woohoo handclaps opener - always good to clap along! @EMFTheBand #timstwitterlisteningparty" data-datetime="7:01 PM Apr 1, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509969133286395904"
+                 data-text="#TimsTwitterListeningParty it’s so good to play that gtr riff when it all kicks off" data-datetime="7:01 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509969045529022473"
+                 data-text="So nice to have a new banging tune to start the live sets! #TimsTwitterListeningParty" data-datetime="7:00 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509968965304569856"
+                 data-text="EMF - GO GO SAPIENS: Started It
+
+#TimsTwitterListeningParty" data-datetime="7:00 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fliveid6%2Fstatus%2F1509968898107580421"
+                 data-text="DON’T STOP NOW WE STARTED IT!! #TimsTwitterListeningParty" data-datetime="7:00 PM Apr 1, 2022"> 
+                liveid6            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FEMFTheBand%2Fstatus%2F1509968859087917064"
+                 data-text="Let’s GO GO!  
+
+Press play NOW! @jamesatkinmusic @liveid6 @woodsdgb @steveymarsh 
+
+https://t.co/2zEWyoTIVj
+
+#TimsTwitterListeningParty https://t.co/FWMSJEYBCd" data-datetime="7:00 PM Apr 1, 2022"> 
+                EMFTheBand            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1509968852884627463"
+                 data-text="Handing over to @EMFTheBand for #TimsTwitterListeningParty 
+
+Join in https://t.co/eeqqJq3U18 https://t.co/8rKq14HJa9" data-datetime="7:00 PM Apr 1, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
