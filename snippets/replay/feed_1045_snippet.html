@@ -1,0 +1,671 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/playlist/4G68yguwvHY2ohIAGEfJqr" target="_blank">                <img src="img/feed_1045.png" alt="Brotherhood" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">New Order</span><br/><span class="sub-colour">Brotherhood</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(434538)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/playlist/4G68yguwvHY2ohIAGEfJqr" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_434538_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 76 tweets from Saturday 2nd April 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/peterhook" target="_blank"><img src="https://pbs.twimg.com/profile_images/1195184464353214466/U2JZDBM6_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/peterhook.jpg'"><br/>@peterhook</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1401913725288960003/n_dKSg1J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Paradise - 2015 Remaster" data-start="0"
+             data-duration="231" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Weirdo - 2015 Remaster" data-start="232"
+             data-duration="233" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="As It Is When It Was - 2015 Remaster" data-start="466"
+             data-duration="226" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Broken Promise - 2015 Remaster" data-start="693"
+             data-duration="227" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Way of Life - 2015 Remaster" data-start="921"
+             data-duration="246" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Bizarre Love Triangle - 2015 Remaster" data-start="1168"
+             data-duration="262" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="All Day Long - 2015 Remaster" data-start="1431"
+             data-duration="313" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Angel Dust - 2015 Remaster" data-start="1745"
+             data-duration="223" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Every Little Counts - 2015 Remaster" data-start="1969"
+             data-duration="268" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="State of the Nation" data-start="2238"
+             data-duration="392" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2631"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="img/feed_1045_small.png" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-76" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510343448620060673"
+                 data-text="RT @Birmingham_81: The Cocteau Twins performing Bluebeard on the Tonight Show with Jay Leno in April 1994 - their first time on US TV. Repl…" data-datetime="7:48 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510343328075853827"
+                 data-text="❤️🔥 https://t.co/TXmaaU0h5R" data-datetime="7:48 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510342982960136203"
+                 data-text="RT @Tim_Burgess: The amount seems to depend on which house they were at, eh @10DowningStreet? 😉 https://t.co/Ql2OXquDgk" data-datetime="7:46 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510342954686328836"
+                 data-text="Thanks again, @Tim_Burgess!
+
+What are we doing for the next one mate? I guess we could do ‘Republic’ or maybe even Monaco’s ‘Music For Pleasure’ - I’ll leave it up to you lot to decide!
+
+Goodnight all!
+
+@LlSTENlNG_PARTY
+
+#TimsTwitterListeningParty" data-datetime="7:46 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510342863732846599"
+                 data-text="I actually think the fighting &amp; rivalry working the band is precisely what gave us an edge. Brotherhood is an underrated record.
+
+I took great delight in touring this album live with The Light in 2014/15 as some of the songs had never been played.
+
+#TimsTwitterListeningParty" data-datetime="7:46 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510342789028007945"
+                 data-text="RT @Tim_Burgess: Also…
+
+First ever live outing of True Faith. Instruments trashed at the end https://t.co/938xEt4OCj" data-datetime="7:45 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510342778005471236"
+                 data-text="And that’s it! Thanks everyone. I really enjoyed listening to that one again. I hope I wasn’t too negative at times but just trying to give you a true representation of my experience making this record…
+
+UK, Ireland, Japan… a truly international LP!
+
+#TimsTwitterListeningParty" data-datetime="7:45 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510342724909740036"
+                 data-text="RT @peterhook: @LlSTENlNG_PARTY Manchester England! ✊" data-datetime="7:45 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510342301817651210"
+                 data-text="The song was inspired by our Japanese translator who said that all the groupies that would follow bands around was the SHAME OF THE NATION! We used that later as the title for the remix. ‘State’ just fit better vocally.
+
+What a mad outro!
+
+#TimsTwitterListeningParty" data-datetime="7:44 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510341952063033349"
+                 data-text="We had a massive argument about this track.
+
+“Your bass is getting in the way of my vocal!”
+
+“No mate, I think you’ll find that your vocal is getting in the way of my bass!”
+
+Six &amp; a half minutes was long for a single. It captures the band well though.
+
+#TimsTwitterListeningParty" data-datetime="7:42 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510341850342830086"
+                 data-text="Thank you. That is exactly why I do it! There are lots of rarely played tracks which deserve more spotlight! https://t.co/04D3XSuKBX" data-datetime="7:42 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510341517898137605"
+                 data-text="The JC120 guitar amp gave that really clean sound. I think we actually used Ian’s old Vox Phantom on this track. It also did Everything’s Gone Green.
+
+All the keys are a bit loud? Might have sounded better if they’d been a bit more subdued.
+
+#TimsTwitterListeningParty" data-datetime="7:40 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510341378802397184"
+                 data-text="A brilliant album. A fantastic @LlSTENlNG_PARTY 
+
+Thanks @peterhook x x" data-datetime="7:40 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510341255758323713"
+                 data-text="STATE OF THE NATION
+
+I believe this was labelled on some vinyl but not included? It did end up being added to the CD version of the album.
+
+This was also done in Japan &amp; is very much a showcase for Yamaha keyboards &amp; synths. Six string bass on this.
+
+#TimsTwitterListeningParty" data-datetime="7:39 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1510341250389528577"
+                 data-text="https://t.co/3Mhz9R1alf" data-datetime="7:39 PM Apr 2, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510340956712751106"
+                 data-text="This effect at the end was just Barney pressing every single key on the emulator 2.
+
+Once he was holding them all down with both hands, feet &amp; his head we all just left him. 😆
+
+State Of The Nation is next for CD listeners so we will include it now!
+
+#TimsTwitterListeningParty" data-datetime="7:38 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510340655687643137"
+                 data-text="Lovely strings but more daft lyrics.
+
+Coming back in in time after that pause always proved difficult for some band members…
+
+Strange bum notes on the bass at the end there. No idea why they stayed in!
+
+#TimsTwitterListeningParty" data-datetime="7:37 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1510340633709330438"
+                 data-text="#TimsTwitterListeningParty https://t.co/gVZSh4GCri" data-datetime="7:37 PM Apr 2, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510340326715805706"
+                 data-text="Great timpani drums by Steve on this. I love the do do doo’s… sha la laa’s &amp; do do doo’s were tricks of ours to save writing more lyrics. See also Paradise/Love Vigilantes.
+
+2 basses going together there - no chorus effect on either. Unusual for me.
+
+#TimsTwitterListeningParty" data-datetime="7:36 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510340064882184200"
+                 data-text="EVERY LITTLE COUNTS
+
+The lyrics to this song were done at 5am at the end of a long session in Ireland, when everyone had just had enough.
+
+The laughing sounded natural so we fought to keep that in. Proper 5am lyrics here - let’s get it done &amp; go home!
+
+#TimsTwitterListeningParty" data-datetime="7:35 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510339910351343625"
+                 data-text="We actively pursued the Western theme &amp; sound on this song. We loved The Good, The Bad &amp; The Ugly.
+
+We put metal washers on the bridge of the guitars to get a metallic sound. We also used Co-Axil aerial cables so that any loss of signal was diminished.
+
+#TimsTwitterListeningParty" data-datetime="7:34 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510339706311135240"
+                 data-text="Nice percussion break there from Steve. Including steel drums! And another brilliant guitar solo.
+
+I think I tried the 4 string &amp; the 6 string for this. Barney wouldn’t listen to the bass until the final mix. Not a great feeling to be honest…
+
+#TimsTwitterListeningParty" data-datetime="7:33 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510339410239369222"
+                 data-text="I think this one is the bassline that he hated. I really struggled to get anything onto this track really.
+
+Lots of Yamaha keys used - a very clean sound. Barney worked really hard on this, all the orchestral parts.
+
+Gunshots add to the western vibe.
+
+#TimsTwitterListeningParty" data-datetime="7:32 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510339295680290824"
+                 data-text="Brotherhood. I’ve missed you. Sounding amazing right now #TimsTwitterListeningParty" data-datetime="7:32 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510339057968103431"
+                 data-text="RT @chris_hawkins: Looks like actual @neworder artwork to be fair" data-datetime="7:31 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510339026347335684"
+                 data-text="ANGEL DUST
+
+This starts with a sample of an old Middle Eastern prayer call. When The Light toured this record live I got my tech Phil Murphy to replicate it as I’m not allowed to use any original tracks. He did great!
+
+Strong Ennio Morricone vibe.
+
+#TimsTwitterListeningParty" data-datetime="7:30 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="142000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1510338977240387596"
+                 data-text="RT @chris_hawkins: Looks like actual @neworder artwork to be fair" data-datetime="7:30 PM Apr 2, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510338381783441408"
+                 data-text="The strings on this are absolutely lovely. We used a lot of Wagner’s ‘Das Rheingold’ on it. It sounds very grand.
+
+I love this guitar solo. And we have another nice instrumental period which I was a big fan of. Two duelling basslines at the end here.
+
+#TimsTwitterListeningParty" data-datetime="7:28 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1510338128774668295"
+                 data-text="Peter Hook - another photo taken when New Order played Birmingham’s Imperial Cinema in Jan 82 #timstwitterlisteningparty @peterhook @Tim_Burgess #Brotherhood https://t.co/OmOSDtP1Ca" data-datetime="7:27 PM Apr 2, 2022"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510338041709092867"
+                 data-text="All Day Long was one of the only times where Barney said to me in a drunken moment that he hated the bass. Listening to it, I think he might have meant Angel Dust (next track) as this is a great one!
+
+It’s a lovely vocal with a strong lyrical message.
+
+#TimsTwitterListeningParty" data-datetime="7:27 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510337815711731715"
+                 data-text="ALL DAY LONG
+
+This is another great one. Lovely synth bass &amp; guitar intro followed by some nice bass chords. My Yamaha was singing!
+
+Barney was certainly more interested in this side of the LP but these songs actually have less vocals? Interesting.
+
+#TimsTwitterListeningParty" data-datetime="7:26 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1510337779183538177"
+                 data-text="New Order in Record Mirror in 1986, the year of #Brotherhood. #timstwitterlisteningparty https://t.co/eyoa2BConA" data-datetime="7:26 PM Apr 2, 2022"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510337721524441093"
+                 data-text="BLT was the only song from Brotherhood that we did a music video for. Robert Longo tried his best with this one but with the band not in it I think it was doomed to fail…
+
+We were rightly criticised a lot in the US media for this decision.
+
+#TimsTwitterListeningParty" data-datetime="7:25 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510337646018637829"
+                 data-text="We used the Yamaha QX1 a lot on this. I would later use the QX5 on Touched By The Hand Of God.
+
+I’m amazed that bass break stayed in but thank God it did. One of my best!
+
+They pissed themselves when the Shep Pettibone remix came back with no bass on.
+
+#TimsTwitterListeningParty" data-datetime="7:25 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510337563021778947"
+                 data-text="Originally this was in another key &amp; had lots more bass parts. But because they used droning open strings I had to ditch them when the key was changed to suit Barney’s vocals more. John Robie’s influence again.
+
+Amazing sequencer programming by Barney.
+
+#TimsTwitterListeningParty" data-datetime="7:25 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1510337264009756675"
+                 data-text="BLT https://t.co/nsB8STi0Pp" data-datetime="7:23 PM Apr 2, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510337226336612354"
+                 data-text="Great song, strong chorus. It became our biggest US hit.
+
+Barney was suffering from insomnia at the time &amp; wanted to work at night with us 3 working in the day. This idea was nixed when Mike Johnson sheepishly asked “But Bernard, when will I sleep?” 😆
+
+#TimsTwitterListeningParty" data-datetime="7:23 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510336941371408390"
+                 data-text="Bizarre Love Triangle by @neworder ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️" data-datetime="7:22 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510336915794542594"
+                 data-text="I was asked to leave the bass off, which prompted Mike Johnson to wade in &amp; say it was better on. I of course agreed!
+
+We had a separate fader on the desk marked HOOKY BASS that Barney would turn down all the time. Luckily, it was never even connected.
+
+#TimsTwitterListeningParty" data-datetime="7:22 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510336643760283660"
+                 data-text="BIZARRE LOVE TRIANGLE
+
+This marks the start of the electronic side of this album. Barney was adamant about having the two distinct sides.
+
+To me it seemed like he wanted the whole band to go electronic. Possibly the start of our differing opinions…
+
+#TimsTwitterListeningParty" data-datetime="7:21 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510336493084188673"
+                 data-text="Ok, time for all vinyl listeners to flip over… give me a second!
+
+#TimsTwitterListeningParty" data-datetime="7:20 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510336373080965129"
+                 data-text="The ending of this song is a guitar tour de force by Barney. Even some shredding at the end!
+
+Funny how he also managed to get a nod to Love Will Tear Us Apart in on the guitar there. Anybody hear that?
+
+It was tough to mix all those parts together.
+
+#TimsTwitterListeningParty" data-datetime="7:20 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510336246941368321"
+                 data-text="RT @laetitia_mavrel: @LlSTENlNG_PARTY @Tim_Burgess Beautiful french pressing from 86 with one of those nasty stickers u d better not remove…" data-datetime="7:19 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1510336104179945474"
+                 data-text="RT @MarkR1892: @LlSTENlNG_PARTY #Brotherhood #neworder #timstwitterlisteningparty https://t.co/BwJmG6uSFm" data-datetime="7:19 PM Apr 2, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1510336086731595778"
+                 data-text="RT @obiwakka: @LlSTENlNG_PARTY Fac150 https://t.co/1QYzzpDNiR" data-datetime="7:19 PM Apr 2, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510336049209389057"
+                 data-text="Another great guitar solo. It sounds really summery.
+
+Mike Johnson &amp; I came up with this reggae style bass break. A total contrast to the rest of the track.
+
+More great lead guitar playing. We tried to emulate the guitar sound of the Isley Brothers.
+
+#TimsTwitterListeningParty" data-datetime="7:19 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fandylimb%2Fstatus%2F1510335835584942080"
+                 data-text="@Birmingham_81 @Tim_Burgess @peterhook @LlSTENlNG_PARTY Looks like I got a bargain https://t.co/9oJTc9E9y5" data-datetime="7:18 PM Apr 2, 2022"> 
+                andylimb            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510335824730202113"
+                 data-text="The heavy rock intro develops into a great pop song. The vocals on this one are actually quite straight forward.
+
+I think this could have been a single too. Maybe we should have put more keyboards on this just to tie everything together a bit more.
+
+#TimsTwitterListeningParty" data-datetime="7:18 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510335430230691844"
+                 data-text="WAY OF LIFE
+
+I really wanted to get another bass riff that was as good as Age Of Consent. I managed it here by turning that riff backwards and using it again.
+
+Distorted bass intro. We got that by putting it through an Akai cassette player!
+
+#TimsTwitterListeningParty" data-datetime="7:16 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510335044568719364"
+                 data-text="I saw @neworder perform Broken Promise on The Tube 
+
+It blew my mind https://t.co/HwYg7liTgZ" data-datetime="7:15 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510335041947250697"
+                 data-text="Despite how I felt about the vocals, the songs always came through in the end.
+
+Great solo. For someone who seemed more interested in the electronic side, he didn’t half play some searing leads on these tracks.
+
+To me this could have been on Movement.
+
+#TimsTwitterListeningParty" data-datetime="7:15 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510334761251790849"
+                 data-text="Double tracked vocal again here, and lots of backing vocals. I thought that not letting the band do the backing vocals was quite divisive. To my ear it just sounds a bit too much.
+
+It was John Robie who was always pushing Barney to add more vocals.
+
+#TimsTwitterListeningParty" data-datetime="7:14 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510334413426634754"
+                 data-text="BROKEN PROMISE
+
+This is a really fast one - great intro with the bass &amp; guitar. I think this is my son’s favourite bassline of mine. We actually also used to play this as Revenge, Pottsy liked singing it.
+
+All this music was written before the vocals.
+
+#TimsTwitterListeningParty" data-datetime="7:12 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fdrewmclelland%2Fstatus%2F1510334254168879109"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY I haven’t played #Brotherhood for ages, what a treat to listen to it again. #timstwitterlisteningparty" data-datetime="7:12 PM Apr 2, 2022"> 
+                drewmclelland            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510334009137577994"
+                 data-text="More double vocal lines in the chorus. I love that drop down as we go into the next verse.
+
+That’s the Jam live room again giving that great sound on the toms.
+
+Lots of nice guitar work here too. This song is like a velvet glove on an iron fist.
+
+#TimsTwitterListeningParty" data-datetime="7:11 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510333906511437827"
+                 data-text="As it is when it was . Early fav for me. I am not grown up and I am not a boy, I feel no pain and I feel no joy xxx" data-datetime="7:10 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510333826853224450"
+                 data-text="Yes! I owe a lot to @EHX! https://t.co/THY38N0as9" data-datetime="7:10 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510333652919590920"
+                 data-text="This song was actually recorded in Japan at a studio in Tokyo. I was delighted to work a bit of ‘Love Will Tear Us Apart’ into the bassline as a nod to Joy Division.
+
+Quite a melancholic track. The lyrics are great. To me it’s a love song to Salford.
+
+#TimsTwitterListeningParty" data-datetime="7:09 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fhelbo1%2Fstatus%2F1510333445272178690"
+                 data-text="@Tim_Burgess @peterhook I miss that venue so much. https://t.co/9a1HnNtEHR" data-datetime="7:08 PM Apr 2, 2022"> 
+                helbo1            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Flaetitia_mavrel%2Fstatus%2F1510333313965305859"
+                 data-text="@Tim_Burgess Makes us all such a bunch of cool weirdoes.
+It’s a club here 😆" data-datetime="7:08 PM Apr 2, 2022"> 
+                laetitia_mavrel            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510333261708513287"
+                 data-text="AS IT IS WHEN IT WAS
+
+This is one of my favourites &amp; another bassline that I’m very proud of.
+
+Lovely intro by Barney on the acoustic guitar. Back to the 6 string for this one. Mike Johnson our studio engineer did a really great job recording my bass.
+
+#TimsTwitterListeningParty" data-datetime="7:08 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1510333229819174914"
+                 data-text="Peter Hook - photographed when New Order played Birmingham’s Imperial Cinema in Jan 82 #timstwitterlisteningparty @peterhook @Tim_Burgess #Brotherhood https://t.co/M3vKOSHrWT" data-datetime="7:07 PM Apr 2, 2022"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510333190052925440"
+                 data-text="Total love for the @LlSTENlNG_PARTY - it’s a pleasure to be tuned in with everyone around the world. Tim x x" data-datetime="7:07 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510333099724451845"
+                 data-text="Weirdo. First heard this in Newcastle Mayfair [or maybe a cassette bootleg before] but real in the flesh blew me away at Mayfair. Had a lasting effect on me. Loved the title too @peterhook" data-datetime="7:07 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510332848540196877"
+                 data-text="When there’s a song title you really love 😉 https://t.co/2RK0zrmoFg" data-datetime="7:06 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510332745284734988"
+                 data-text="I really like that bass break/solo in the middle. It feels like I managed to get all of my trademarks into the one song here.
+
+For such a short song it actually has quite a long instrumental outro. We were great at that, but it would stop soon after.
+
+#TimsTwitterListeningParty" data-datetime="7:06 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1510332648266387462"
+                 data-text="Now playing #Brotherhood by #NewOrder for #timstwitterlisteningparty with @peterhook and @Tim_Burgess. £5.99 from Woolies. Money well spent #WonderOfWoolies https://t.co/q6YzdfYZA9" data-datetime="7:05 PM Apr 2, 2022"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510332375368097813"
+                 data-text="WEIRDO
+
+I’m back on the 4 string bass for this one. Two vocal lines going again in the chorus. I remember the backing vocals on this one driving me mad.
+
+Many arguments over the mixing desk about that. Really nice pop song tho. Could’ve been a single?
+
+#TimsTwitterListeningParty" data-datetime="7:04 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdanwingrove%2Fstatus%2F1510332209147830272"
+                 data-text="@LlSTENlNG_PARTY Listening on vinyl in Winslow, Bucks https://t.co/98U9Iib9pt" data-datetime="7:03 PM Apr 2, 2022"> 
+                danwingrove            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510332159470489603"
+                 data-text="These days, the Sha La La’s in this track actually remind of our Monaco song ‘What Do You Want From Me’ - I suppose that inspiration can work both ways!
+
+Check out the Rolling Stones Sympathy For The Devil film if you want to see more of Jam Studios.
+
+#TimsTwitterListeningParty" data-datetime="7:03 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1510332059541196805"
+                 data-text="RT @LlSTENlNG_PARTY: OK! Let us know where you are in the world for our Brotherhood @LlSTENlNG_PARTY 
+
+Same question to @peterhook https://…" data-datetime="7:03 PM Apr 2, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510331911029334023"
+                 data-text="This is a great track &amp; a solid opener to the record. I got the melody on the Shergold Marathon six string bass &amp; that inspired the vocal line.
+
+The ‘Jolene’ part was indeed inspired by Dolly Parton - we’d been listening to a lot of country music.
+
+#TimsTwitterListeningParty" data-datetime="7:02 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510331679923073031"
+                 data-text="Barney double tracked the vocals - high &amp; low. He also started doing his own backing vocals, you can hear on the chorus.
+
+He was coming up with lots of different but simultaneous vocal lines. At times I thought it crowded some of the tracks on this LP.
+
+#TimsTwitterListeningParty" data-datetime="7:01 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510331516928335875"
+                 data-text="PARADISE
+
+Great drum intro. Jam Studio in London had a really unique sound. We pumped the drums into a big speaker in the live room and recorded them back in the studio. It gave us that big drum sound.
+
+Bass synth was a mix of Prophet 5 &amp; Moog Source.
+
+#TimsTwitterListeningParty" data-datetime="7:01 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fpeterhook%2Fstatus%2F1510331367086858240"
+                 data-text="Ok, let’s go!
+
+It’s nice to be here with you all once again for another @LlSTENlNG_PARTY trip down memory lane. Thanks to @Tim_Burgess as always…
+
+#Brotherhood
+
+#TimsTwitterListeningParty https://t.co/UBGVcAec20" data-datetime="7:00 PM Apr 2, 2022"> 
+                peterhook            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510331270756196352"
+                 data-text="It’s time.
+Going in.
+Brotherhood 
+
+Everyone say hi to @peterhook 👋 https://t.co/I9yzpUqZtS" data-datetime="7:00 PM Apr 2, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
