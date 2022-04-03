@@ -1,0 +1,581 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5n6EDAmq49n9w2rin6e7FQ" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e021584fb1fc14c8f10308bfa5a" alt="We Are The Weirdos" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Hatcham Social</span><br/><span class="sub-colour">We Are The Weirdos</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(108248)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5n6EDAmq49n9w2rin6e7FQ" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_108248_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 84 tweets from Sunday 3rd April 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/HatchamSocial" target="_blank"><img src="https://pbs.twimg.com/profile_images/1490418660317536260/h6fRkbky_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/HatchamSocial.jpg'"><br/>@HatchamSocial</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Wild Creatures - Tim Burgess Version" data-start="0"
+             data-duration="169" style="display:none"></div>
+                        <div id="track-2" class="track-list"
+                     data-name="Finished" data-start="170"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048511584fb1fc14c8f10308bfa5a" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-84" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510721321994489858"
+                 data-text="♥️♥️♥️♥️ https://t.co/8k25reZGTq" data-datetime="8:50 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510721306957950984"
+                 data-text="@HatchamSocial @LlSTENlNG_PARTY ✊🔥" data-datetime="8:50 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510720974509031425"
+                 data-text="Stay True! (pic by @Sad_Bast)
+#TimsTwitterListeningParty https://t.co/UfiGcPWcIk" data-datetime="8:48 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510720835551694855"
+                 data-text="Big love to everyone for listening along with us and all the people along the way so far! Can’t wait to meet you at a show in the future.
+ 
+Thanks @_FiercePanda for being the crazy kids you are and getting the weirdness! See you soon! -  Finn &amp; Toby
+#TimsTwitterListeningParty https://t.co/MeUIPAG2Up" data-datetime="8:48 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510720704324513792"
+                 data-text="Thanks so much @LlSTENlNG_PARTY @Tim_Burgess for having us along today, and being such a big part of the adventures -- bringing your enthusiasm and talents to the travels of the good ship Hatcham. 🚀❤️ -  Finn &amp; Toby
+#TimsTwitterListeningParty" data-datetime="8:47 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510720574355656711"
+                 data-text="Pic from up at the studio where we recorded the third album - Finn
+#TimsTwitterListeningParty https://t.co/7uelarbUOS" data-datetime="8:47 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510720426472837130"
+                 data-text="That brought back so many fantastic memories. Big love to everyone who has sailed on the good ship @HatchamSocial ❤️🔥" data-datetime="8:46 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510720219920191500"
+                 data-text="The album artwork feels linked to this song -- a collage of many of the people who were part of the gang through the years, collaboratively made by both me and Finn -- Toby #TimsTwitterListeningParty" data-datetime="8:45 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510720180221091843"
+                 data-text="The high keys part I played on my old beaten up DX9. Love that thing, everything you play on it sounds like a #JohnCarpenter soundtrack. Bought it off @eBay for £80 because it had no plug, lol. - Finn
+#TimsTwitterListeningParty https://t.co/cdG8CwCYxE" data-datetime="8:45 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510720005066870787"
+                 data-text="Produced this at Sleepwalker Studios in in Leytonestone using #reaperdaw @Cockos , which we have been using for years now. Messing around with heavy gating on the Reagate. - Toby
+#TimsTwitterListeningParty" data-datetime="8:44 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510719958682066946"
+                 data-text="We made this to go on a little EP that was sold exclusively at the “Stay True To Your Family” single launch at @ServantJazz in Dalston. Oliver Guy Watkins made some great videos for that record, including the single version of Stay True. - Finn
+#TimsTwitterListeningParty" data-datetime="8:44 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510719913266188290"
+                 data-text="Stay True To Your Teardrops
+Original had #davidclaxton #rileydifford produced #hatchamsocial engineered and mixed by #tobytobiaskidd 
+#timstwitterlisteningparty" data-datetime="8:44 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510719808773500930"
+                 data-text="Here’s a pic from the recording session… This was up in Wales again at Drummers Hill. Joanna Curwood (of @yassassinmusic) came to help set up, and ended up taking some photos while we were there. - Finn
+#TimsTwitterListeningParty https://t.co/wRIzcwpgHm" data-datetime="8:44 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510719712375758860"
+                 data-text="Amazing #JoeMeek style BVs by @AmyJaneStudt!
+- Toby
+#timstwitterlisteningparty" data-datetime="8:43 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510719518028488714"
+                 data-text="This has definitely proven to be a highlight from the last record. Toby’s lyrics, especially in the chorus, capture an idea and state a truth that is so close and true to our very existence. - Finn
+#TimsTwitterListeningParty" data-datetime="8:42 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510719460507856899"
+                 data-text="Produced ourselves, #DavidClaxton brought a kind of wide landscape to our sound at this point.
+-Toby
+#timstwitterlisteningparty" data-datetime="8:42 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510719399216533511"
+                 data-text="@HatchamSocial @LlSTENlNG_PARTY ❤️" data-datetime="8:42 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510719232161497089"
+                 data-text="The Struggle That Keeps Us Together
+ 
+For me this song is very emotional, embodying the depths of poverty and the heights of kinship. In many ways a mirror to the story of Hatcham Social ❤️
+- Toby
+#timstwitterlisteningparty" data-datetime="8:41 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510719076028633109"
+                 data-text="More great production from Tim and Jim on this - Finn
+#timstwitterlisteningparty" data-datetime="8:41 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510718874253201419"
+                 data-text="You really hear our signature high backing vocals on this one. - Finn
+#TimsTwitterListeningParty" data-datetime="8:40 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510718786852339718"
+                 data-text="We used to have a giant book of #lewiscarroll stories that would sit on the kick drum at every show. Penelope has always felt like it came from within that book to me. It sums a lot of things up from that period, conceptually. - Finn
+#TimsTwitterListeningParty https://t.co/9MjEtL2VqQ" data-datetime="8:40 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510718580526100481"
+                 data-text="If I close my eyes whilst listening to Penelope, I visualise a youthful adventure. Lots of little interconnected stories, like a soundtrack to a Billy Liar sequel.
+- Toby
+#timstwitterlisteningparty" data-datetime="8:39 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="111000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510718534653026310"
+                 data-text="Penelope (Under My Hat)
+With #davidfinberg produced #timburgess engineered and mixed by #jimspencermusic
+#timstwitterlisteningparty" data-datetime="8:39 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510718072092606470"
+                 data-text="We are all wild creatures overcome by the gravitational pull of other peoples lives and ideas, of the new shiny concepts growing in the belly of our souls. 
+- Toby
+#timstwitterlisteningparty" data-datetime="8:37 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510717963816816640"
+                 data-text="You can actually hear Toby recording the guitar in the background of this “Making of” video from the time…! - Finn #ABitofFryandLaurie
+https://t.co/efVB4EKkEq
+#TimsTwitterListeningParty" data-datetime="8:36 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510717872733138954"
+                 data-text="Another precious little darling that is now joyously released into the world after being locked away for many years. 
+- Toby
+#timstwitterlisteningparty" data-datetime="8:36 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510717818223878144"
+                 data-text="Wild Creatures
+With #davidfinberg produced #timburgess engineered and mixed by #jimspencermusic
+#timstwitterlisteningparty" data-datetime="8:36 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510717607569100801"
+                 data-text="Also the video for this is definitely a favourite. I always loved Nicola’s editing style, choosing to repeat short movements, and keeping in moments most people would cut. Also it being on super 8 just adds such a lovely grain to the whole thing.- Finn
+#TimsTwitterListeningParty" data-datetime="8:35 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510717454053486593"
+                 data-text="I think this has some of the best lyrics Toby has written, the verses are just brilliant. It also captures some of our weirdest and most unique playing as a band. - Finn
+#TimsTwitterListeningParty" data-datetime="8:34 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510717310595706888"
+                 data-text="This reminds me of parties at #AndyFrasers house -- the epicentre of the London music scene in the late naughty noughties.
+ 
+Dancing around his living room to the #TheAssociates on Andy\'s Beocentre, fighting over what Bowie single to put on next.
+- Toby
+#timstwitterlisteningparty" data-datetime="8:34 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510717257961328653"
+                 data-text="Where did everyone hear this first?? - Finn
+#timstwitterlisteningparty" data-datetime="8:33 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510717077698621446"
+                 data-text="Murder In The Dark 
+With #davidfinberg produced #timburgess engineered and mixed by #jimspencermusic
+#timstwitterlisteningparty" data-datetime="8:33 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510716838409383939"
+                 data-text="I remember there was this little room up a ladder or something, like a mezzanine, at Baxter’s studio, and you could play computer games in there 🤖💾. - Finn
+#TimsTwitterListeningParty" data-datetime="8:32 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510716725205028867"
+                 data-text="Ahh yea HQ on Redchurch St. We wrote the whole first record there. S.C.U.M, #Babyshambles and #TheLibertines all also rehearsed there at the time. - Finn
+#TimsTwitterListeningParty" data-datetime="8:31 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510716628761296901"
+                 data-text="#BaxterDury came down to our rehearsal space in Redchurch street, I remember he told us he had listened to Penelope Under My Hat and really liked it. We thought he was really interesting. He had a vision for something really ambitious and weird.
+- Toby
+#timstwitterlisteningparty" data-datetime="8:31 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510716525258453001"
+                 data-text="One of the previously unreleased tracks that was begging to be heard.
+👉 Produced by the charming @baxterdury 
+- Toby
+#timstwitterlisteningparty" data-datetime="8:31 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510716338519658501"
+                 data-text="Hypnotise Terrible Eyes
+With #davidfinberg produced #baxterdury 
+#timstwitterlisteningparty" data-datetime="8:30 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510715899539595274"
+                 data-text="Original illustration I did for the About Girls album artwork, guess the ref...😉 - Finn
+#TimsTwitterListeningParty https://t.co/G3LgyvAbig" data-datetime="8:28 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510715614666665990"
+                 data-text="Yes, those initial sessions were so fruitful, yet that final album was a disappointment for us; due to money: all our pennies were paying off mysterious hatcham debts.
+So, it was invigorating to hear Harry’s take on it. - Toby
+#TimsTwitterListeningParty" data-datetime="8:27 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510715541287276547"
+                 data-text="The original was written during an intense writing session me and Toby did up in Wales. We got together the main body of the second record. Including N Y Girl, Lois Lane, Escape From London, Somebody Else’s You, and Stick Together. - Finn
+#TimsTwitterListeningParty" data-datetime="8:27 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510715353722142727"
+                 data-text="In many ways I think Harry’s take on All Summer Long is much closer to the type of sound I think we were originally envisaging for the record. Obviously not quite as electronic though. - Finn
+#TimsTwitterListeningParty" data-datetime="8:26 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510715194854494212"
+                 data-text="This version was specially made for the LP(!) by multitalented musician and producer #HarryLove @hslove, who I lived with in a squat in New Cross when I first moved to London.
+- Toby
+#timstwitterlisteningparty" data-datetime="8:25 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510715065770643463"
+                 data-text="Inspired by an argument with our founder bass player #DavidFineberg in a van in Belgium. He could have easily written this about me! It always gets complicated with people we care about ❤️
+- Toby
+#timstwitterlisteningparty" data-datetime="8:25 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510715038411145222"
+                 data-text="❤️✌️Good timez https://t.co/JIu1zwSduT" data-datetime="8:25 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510714904826757127"
+                 data-text="All Summer Long
+#WeAreTheWierdos special produced by @hslove #harrylove, original had #rileydifford #davidclaxton
+#timstwitterlisteningparty" data-datetime="8:24 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510714833355816966"
+                 data-text="Little #orangejuice reference at the end there 😉 haha. - Finn
+#TimsTwitterListeningParty" data-datetime="8:24 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510714663163596803"
+                 data-text="Bit of crazy old video footage of us playing it at @BBC6Music 😆 - Finn
+https://t.co/JP3id0Jdv5
+
+#TimsTwitterListeningParty" data-datetime="8:23 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510714545614036996"
+                 data-text="It was such an exciting experience going up to record at Big Mushroom with #TimBurgess and #JimSpencer for the first time. - Finn
+#TimsTwitterListeningParty" data-datetime="8:23 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510714454471757824"
+                 data-text="I remember the summer after this came out it would come on all the time in every club I went in!
+ 
+This was one of the highlights at @RoughTrade album launch last Wednesday. Bish bash bosh so fast💥
+- Toby
+#timstwitterlisteningparty" data-datetime="8:22 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510714372674490373"
+                 data-text="Till The Dawn
+With #davidfinberg produced #timburgess engineered and mixed by #jimspencermusic
+#timstwitterlisteningparty" data-datetime="8:22 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510714171255660551"
+                 data-text="We played the 100 Club for the launch of this single with Electricity In Our Homes and Neils Children supporting, oh and the performance artists Skip Theatre performing with us. I think Faris may have DJed… - Toby
+#timstwitterlisteningparty" data-datetime="8:21 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510714113474928647"
+                 data-text="It was also around this time we went and had a tour of @EdwynCollins @West_HeathYard studio and hung out with him and his wife Grace. That was an incredibly exciting day. I remember @KateJacksonLBs was there too having a meeting... - Finn
+#TimsTwitterListeningParty" data-datetime="8:21 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510713840022994956"
+                 data-text="One of the best drums sounds I have ever had. All down to the genius of @FARISADAMBADWAN and @Andy_Savours . - Finn
+#TimsTwitterListeningParty" data-datetime="8:20 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510713795274055687"
+                 data-text="I was reading Vile Bodies by #EvelynWaugh when I found the title. Initially a throwaway song, it ended up being loved by Loog records who put us in the studio with @FARISADAMBADWAN to produce, and became a smash hit in the indie pop parade.🥳🪩
+- Toby
+#timstwitterlisteningparty" data-datetime="8:20 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510713695541895181"
+                 data-text="So So Happy Making 
+With #davidfineberg produced by #farisbadwan and engineered #andysaviours 
+#timstwitterlisteningparty" data-datetime="8:19 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510713416016617483"
+                 data-text="David, Finn, Me &amp; Toby
+
+@HatchamSocial https://t.co/FXBGEw3s7V" data-datetime="8:18 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510713126081212419"
+                 data-text="Great pic by @markcharlatan from Paris around this time… - FInn
+#TimsTwitterListeningParty https://t.co/Hsdb28iBKN" data-datetime="8:17 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510712820022845447"
+                 data-text="Such great melodic bass by #RileyDifford, it feels like something #TonyVisconti would groove to!
+ 
+Also fantastic guitar hook played by #DavidClaxton 🎸
+- Toby
+#timstwitterlisteningparty" data-datetime="8:16 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510712605631041541"
+                 data-text="We recorded/produced this ourselves up in Wales at Drummers Hill Studio, on an old Fostex 8 track, just live takes with no overdubs! Love the sound of that whole record. - Finn
+#TimsTwitterListeningParty https://t.co/xuj81Lstp8" data-datetime="8:15 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510712386084384768"
+                 data-text="I imagined #AndreBreton writing a surrealistic pop song, and this came out.
+ 
+Written about @AmyJaneStudt in her kitchen in Leytonstone. 
+- Toby
+#timstwitterlisteningparty" data-datetime="8:14 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="133000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510712222758096896"
+                 data-text="Lion With A Laser Gun
+With #davidclaxton #rileydifford produced #hatchamsocial engineered and mixed by #tobytobiaskidd
+#timstwitterlisteningparty" data-datetime="8:13 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510711666153074692"
+                 data-text="Some nice pics by @davidedegiorgi from BTS of the Sidewalk video by Theo Shaw - Finn
+#TimsTwitterListeningParty https://t.co/Lq37q29BpP" data-datetime="8:11 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510711421763559429"
+                 data-text="@_FiercePanda started one of those big indie super clubs (like Frog) at @ScalaLondon in King’s Cross, and they named it Sidewalk, haha, that was pretty amazing. We used to go and walk around like we owned the place, 😎. - Finn
+#TimsTwitterListeningParty" data-datetime="8:10 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510711403107209216"
+                 data-text="Love this song https://t.co/kTP4wcRFvC" data-datetime="8:10 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510711182952439819"
+                 data-text="One of the best opening riffs in pop music ever performed by founder bass player @davefineberg
+ 
+@jimspencermusic\'s mix took this song to the next level.
+ 
+Through the tunnel into a world of our own. 
+- Toby
+#timstwitterlisteningparty" data-datetime="8:09 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510711127453409291"
+                 data-text="Sidewalk
+With #davidfinberg produced #timburgess engineered and mixed by #jimspencermusic
+#timstwitterlisteningparty" data-datetime="8:09 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510710887400751110"
+                 data-text="@Tim_Burgess made me build a pillow fort to sing this song in!
+- Toby
+#timstwitterlisteningparty https://t.co/3gU9rL3o9T" data-datetime="8:08 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510710665941504014"
+                 data-text="I made the decision to take the hi-hat out of my kit(inspired by Siousxie and the Banshees), limiting myself and the types of rhythms I could write. This created a style that centred around my use of the tom as the primary sound. - Finn
+#TimsTwitterListeningParty" data-datetime="8:07 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510710544512204817"
+                 data-text="(you can tell I was reading Sartre’s existentialism at this point)
+- Toby
+#timstwitterlisteningparty" data-datetime="8:07 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510710503349362697"
+                 data-text="This period of writing was such an exciting time. We were really honing our sound and creating something a bit darker. - Finn
+#TimsTwitterListeningParty" data-datetime="8:07 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510710459783073805"
+                 data-text="We are all grotty little buggers.
+ 
+But the real evil is so banal that it lives amongst us; like greedy power-hungry ghosts gobbling up all the lil\' Pacmans that are just trying to get by. 👾
+ 
+- Toby
+#timstwitterlisteningparty" data-datetime="8:06 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510710385325879300"
+                 data-text="I Cannot Cure My Pure Evil
+With #davidfinberg produced #timburgess engineered and mixed by #jimspencermusic
+#TimsTwitterListeningParty" data-datetime="8:06 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510710139921260546"
+                 data-text="Breaking news… https://t.co/bEa6YpFZBy" data-datetime="8:05 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510710060229529608"
+                 data-text="Found some great pics of us not long after this time at Offset Festival by Cecilia Gatto which show our live synth/guitar player Jerome Watson - Finn
+#TimsTwitterListeningParty https://t.co/BJ7oFNPESM" data-datetime="8:05 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510710021692309509"
+                 data-text="🙌✌️✊ https://t.co/2JLxfzfuaa" data-datetime="8:05 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510709810588749833"
+                 data-text="Yea great production from #TimBurgess on this. Those gong sounds are amazing, and the addition of the spelling out of “i.n.m.y.o.p.i.n.i.o.n” over the newly added military shuffle in the middle 8. - Finn
+#TimsTwitterListeningParty" data-datetime="8:04 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510709782575001610"
+                 data-text="❤️🔥 https://t.co/ZT9nnUivl5" data-datetime="8:04 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510709658624921600"
+                 data-text="I am singing the absurdity of a culture of overconfidence.
+ 
+Don\'t be too confident kids, let\'s ALWAYS question.
+ 
+PS: thanks @Tim_Burgess for the great production, especially the gongs🤩
+- Toby
+#timstwitterlisteningparty" data-datetime="8:03 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510709588311613443"
+                 data-text="In My Opinion 
+Original lineup with #davidfinberg produced #timburgess engineered and mixed by #jimspencermusic
+#TimsTwitterListeningParty" data-datetime="8:03 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510709458896400407"
+                 data-text="#JoeMeek’s synth here! 🥳 - Finn
+#TimsTwitterListeningParty" data-datetime="8:02 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510709058399088646"
+                 data-text="It was a lot of fun this going in to Bark Studio with #BrianOShaughnessy. The man behind classics like Loaded by @ScreamOfficial, #MyBloodyValentine’s You Made Me Realise EP, and @TheLongBlondes - Giddy Stratospheres!! - Finn
+#TimsTwitterListeningParty" data-datetime="8:01 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510708938370658315"
+                 data-text="We start with an oldy which is also something new. Initially written for the debut album we finished it off for this LP and recorded with  Brian O Shaughnessy.
+It was like jumping into a time machine for a collaboration with our younger selves. 
+-  Toby
+#TimsTwitterListeningParty" data-datetime="8:00 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FHatchamSocial%2Fstatus%2F1510708750256123909"
+                 data-text="If You Go Down To The Woods Today (Three Cheers For Our Side).
+A new and old song recorded especially for the LP! Bass by #JamesMaynardFry produced by #BrianOShaugnessy  - and thanks @steve_lamacq for debuting this on @BBC6Music!
+ 
+#TimsTwitterListeningParty" data-datetime="8:00 PM Apr 3, 2022"> 
+                HatchamSocial            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1510708747924086794"
+                 data-text="It’s over to those charming weirdos @HatchamSocial for their @LlSTENlNG_PARTY takeover… https://t.co/2SAonFCnM1" data-datetime="8:00 PM Apr 3, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
