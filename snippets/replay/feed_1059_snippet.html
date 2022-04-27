@@ -1,0 +1,400 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/3Snv5Zp5dC5XasFgl35KsQ" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02f4c076b85108477233ba38fa" alt="The DNA OF DMA" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">David M. Allen</span><br/><span class="sub-colour">The DNA OF DMA</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/3Snv5Zp5dC5XasFgl35KsQ" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 38 tweets from Wednesday 27th April 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/RSDUK" target="_blank"><img src="https://pbs.twimg.com/profile_images/1469311038701162496/HN-H4An3_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/RSDUK.jpg'"><br/>@RSDUK</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LolTolhurst" target="_blank"><img src="https://pbs.twimg.com/profile_images/1282886375407144960/-ycJMA1s_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LolTolhurst.jpg'"><br/>@LolTolhurst</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="You And I" data-start="0"
+             data-duration="170" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Just a Combination" data-start="171"
+             data-duration="195" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="The Sound of Muzak" data-start="367"
+             data-duration="189" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="It Is Nowhere" data-start="557"
+             data-duration="171" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="All or Nothing" data-start="729"
+             data-duration="162" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="The Dice Are Loaded" data-start="892"
+             data-duration="203" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Lost Horizons" data-start="1096"
+             data-duration="176" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Drowning On the Wave of Dublife" data-start="1273"
+             data-duration="443" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="The Passion of Father Bernard" data-start="1717"
+             data-duration="542" style="display:none"></div>
+                        <div id="track-10" class="track-list"
+                     data-name="Finished" data-start="2260"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851f4c076b85108477233ba38fa" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-38" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519400085922189315"
+                 data-text="Please drop any questions to @DNAofDMA and I\'ll try to answer them ! Bye bye, Dave xxx" data-datetime="7:36 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="228000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519399910243713025"
+                 data-text="We\'re drawing to a close (as you can probably gather from what you\'re hearing ahahahhahahha)
+Thanks so much to @Tim_Burgess &amp; his wonderful @LlSTENlNG_PARTY - thanks to @RSDUK for honouring me with an official RSD \'22 release &amp; thanks to all for listening !" data-datetime="7:35 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="159000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519398952788971525"
+                 data-text="squelchy quelch ;°°))" data-datetime="7:31 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519398289115951104"
+                 data-text="...it\'s sort of like when you watch your child paint a crap picture that they love doing and so you love it and you frame it and hang it in your kitchen...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:29 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519397985104404480"
+                 data-text="Minimalist, moi ?
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:28 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519397869106745344"
+                 data-text="The Passion of Father Bernard
+It\'s my favourite track. It just sounds like someone messing about for fun on a couple of modular synth faders and a reverb unit - and nothing else - which it is...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:27 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2FLolTolhurst%2Fstatus%2F1519397437269438464"
+                 data-text="@RexRobertus @Tuwhit2Whoo @ZOLAJESUS @curecreatures Thank you !" data-datetime="7:25 PM Apr 27, 2022"> 
+                LolTolhurst            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519396947597185025"
+                 data-text="...The rest of the synths were inspired by the brass on the Jacksons record \'Destiny\'.
+Martin playing the parts at with the tape running at half speed and me taking the engineering/producer role...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:23 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519396856509485056"
+                 data-text="2 - he’d bought them -never used it as it wasn’t relevant to the bands he was producing.
+It took all day to program a simple sequencer part that followed the chords.. we never synchronized it... just ran it free and live...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:23 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="111000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519396486966124546"
+                 data-text="This dub version was used by the english figure skating champion for an exhibition dance - Chris Howarth, I think his name was...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:22 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="149000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519396020924436480"
+                 data-text="Drowning In The Wave Of DubLife
+ The last song that was recorded for the Pinpoint album … I extracted a promise from Martin Rushent to do an experimental track and wanted to use the Roland System 700 &amp; MC-8. 
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:20 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1519395398598676480"
+                 data-text="@LolTolhurst ❤️🔥" data-datetime="7:17 PM Apr 27, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="122000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519395257556914177"
+                 data-text="Lost Horizons
+I love the old film about Shangri-la and this I now realise is a sort of Proustian exercise in looking back into the past deep inside your head...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:17 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1519394749546905600"
+                 data-text="RT @Tim_Burgess: It’s not about me or @thecharlatans - it’s about new and emerging bands losing a value income which they can use to fund s…" data-datetime="7:15 PM Apr 27, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519394687404105728"
+                 data-text="...It has the worst pun that rather shamefully still amuses me - \"Armageddon out of here !\" (as in \"I\'m getting out of here!\") 
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:14 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519394439243960323"
+                 data-text="The Dice Are Loaded
+I’d just read The Dice Man by Luke Reinhardt and was sort of taking the piss out of that...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:13 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519394157701341185"
+                 data-text="It’s really just the goth lyric thing “I want MORE!” sentiment - possibly very Eldritch. And rather childish perhaps - sorry, not talking about you there \'Von\' 😉…
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:12 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FLolTolhurst%2Fstatus%2F1519393962192216066"
+                 data-text="@RSDUK @LlSTENlNG_PARTY @DNAofDMA Its was Boris Birthday the other day . He\'s still accurate !
+There\'s a reason he was called \" The Count \"!" data-datetime="7:12 PM Apr 27, 2022"> 
+                LolTolhurst            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519393695790948355"
+                 data-text="All or Nothing
+I suppose it\'s a total rip off of the Small Faces although I can say I wasn’t aware of that at the time, honest !
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:11 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519393382312951808"
+                 data-text="Which reminds me of syncing the \'reverb\' sequencer on The Cure\'s \'Disintegration\' that was triggered by Boris\'s hi-hat cymbal - really spot on - total accuracy !
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:09 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FLolTolhurst%2Fstatus%2F1519393278524764160"
+                 data-text="@Tim_Burgess hey Tim!! 👋💓" data-datetime="7:09 PM Apr 27, 2022"> 
+                LolTolhurst            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519393277291679744"
+                 data-text="...due to the accuracy of sound reproduction -but with wow and flutter, which are small random changes in pitch &amp; speed caused by the mechanism of tape machines being imperfect, the result is more like a good human player.
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:09 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519393189253332992"
+                 data-text="Wow and flutter or… why you can’t make dub mixes like early 80s on digital systems... Because digital sources do not vary in tempo or pitch, when you apply effects they often sound clinical...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:08 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519393024995962884"
+                 data-text="It is nowhere
+Instrumental done to be the the B side of Sound of Muzak. This is the original idea behind all the dub mixes from that time. All the time went into the A side… thus leaving the B side vocal-free… 
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:08 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519392719818432512"
+                 data-text="The late great Martin Rushent is singing harmonies... ❤️
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:07 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519392441790603265"
+                 data-text="...the start of Premier inns - the original version was a single on Albion records that was serviced to radio who absolutely hated it so that was the end of that...
+@LlSTENlNG_PARTY @DNAofDMA
+ #timstwitterlisteningparty" data-datetime="7:06 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1519392350086258691"
+                 data-text="❤️ https://t.co/ZIEuUJGOzn" data-datetime="7:05 PM Apr 27, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FLolTolhurst%2Fstatus%2F1519392210516537344"
+                 data-text="@RSDUK @LlSTENlNG_PARTY @DNAofDMA @RSDUK @DNAofDMA  hello Dirk ! Been a while I see you were hanging out with Young Phil the other day for RSD? I have fond memories of you both ! Lolx" data-datetime="7:05 PM Apr 27, 2022"> 
+                LolTolhurst            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519392189691965441"
+                 data-text="Sound of Muzak
+Written in a hotel room in Middlesborough whilst on tour with Pinpoint, our post-punk experimental outfit.
+Rusty water actually did come out of the taps...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:05 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519391899928477697"
+                 data-text="Blimey - the compression on the tom tom rolls - sorry ! ahahhah
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:03 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519391498894290945"
+                 data-text="...probably because the new world of sex is so difficult to negotiate for young hetero/gay/asexual people.
+Sexuality isn’t particularly fixed anyway &amp; you have to start somewhere !
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:02 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519391391415160832"
+                 data-text="Just a Combination
+This song is an exercise in song writing... boy/girl girl/girl boy/boy whoever/whatever - that has to be discovered by every generation growing up anew... 
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:01 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519391240177033216"
+                 data-text="Reminds me of working on the @tsomofficial Sisters Of Mercy \'Some Kind Of Stranger\' where it was absolute hell trying to sync the DMX drum machine on an almost complete version ! We had to record it all again...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:01 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519391141971509249"
+                 data-text="...It’s also the first song I tried to program on day 1 so it represents the biggest learning curve and took hours just to get the microphone with the compressor to go to tape.
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:00 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1519391011587473410"
+                 data-text="Say hello to David Allen - he’s tweeting from @RSDUK 
+
+He has a TED style @LlSTENlNG_PARTY talk entitled The DNA of DMA https://t.co/BGDmEtrA5P" data-datetime="7:00 PM Apr 27, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519390948098289673"
+                 data-text="You and I
+I think this song was the first song that I wrote to be a pop song, rather cynically I suppose which is why it\'s about singer/audience/relationships of any kind...
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="7:00 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519390842540204032"
+                 data-text="@DNAofDMA is the sound of my 1st attempts at producing at Genetic Studios in \'80. It got me my 1st job under Martin Rushent &amp; 1 of our 1st projects together was the @humanleagueHQ\'s \'Dare\' - we used much of the same gear
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="6:59 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FRSDUK%2Fstatus%2F1519390708649676802"
+                 data-text="Welcome everybody - thanks for being right here/right now with us ! Drop the needle/press play on your phone/computer/hi-fi &amp; let\'s listen to @DNAofDMA together - GO !
+@LlSTENlNG_PARTY @DNAofDMA 
+#timstwitterlisteningparty" data-datetime="6:59 PM Apr 27, 2022"> 
+                RSDUK            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
