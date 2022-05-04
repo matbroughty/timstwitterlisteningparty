@@ -1,0 +1,621 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/2EKzD1PtSyL1hvPlrOv4Hz" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0263cfdf0b189cf8cdd814ec0e" alt="Honeyglaze" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Honeyglaze</span><br/><span class="sub-colour">Honeyglaze</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/2EKzD1PtSyL1hvPlrOv4Hz" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 122 tweets from Wednesday 4th May 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/honeyglaze" target="_blank"><img src="https://pbs.twimg.com/profile_images/1251522035878150144/_aYr87AF_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/honeyglaze.jpg'"><br/>@honeyglaze</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/SpeedyWunder" target="_blank"><img src="https://pbs.twimg.com/profile_images/1511615758941491202/8DKb_yss_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/SpeedyWunder.jpg'"><br/>@SpeedyWunder</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Start" data-start="0"
+             data-duration="207" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Shadows" data-start="208"
+             data-duration="162" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Creative Jealousy" data-start="371"
+             data-duration="136" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="I Am Not Your Cushion" data-start="508"
+             data-duration="185" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Female Lead" data-start="694"
+             data-duration="124" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Burglar" data-start="819"
+             data-duration="348" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Half Past" data-start="1168"
+             data-duration="155" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Deep Murky Water" data-start="1324"
+             data-duration="184" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Young Looking" data-start="1509"
+             data-duration="153" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Souvenir" data-start="1663"
+             data-duration="205" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Childish Things" data-start="1869"
+             data-duration="358" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2228"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485163cfdf0b189cf8cdd814ec0e" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-122" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521953269395898371"
+                 data-text="Thank you @Tim_Burgess @LlSTENlNG_PARTY for setting this up, god bless u all #timstwitterlisteningparty" data-datetime="8:41 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1521953066949435392"
+                 data-text="@honeyglaze Not to forget...thanks guys, enjoyed listening to this and the interesting tweets 🙏 #timstwitterlisteningparty" data-datetime="8:41 PM May 4, 2022"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FPeterMallett3%2Fstatus%2F1521953038059118592"
+                 data-text="@honeyglaze Brilliant thank you for this. I am off to listen some more. Really love the sounds. Best wishes ❤️ ♥️ 💕" data-datetime="8:40 PM May 4, 2022"> 
+                PeterMallett3            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTrudyAWhite%2Fstatus%2F1521952967712251906"
+                 data-text="@honeyglaze Thank you!! Have added this album to my top albums of the year list🙌 So so good, will definitely come and see you live soon ❤" data-datetime="8:40 PM May 4, 2022"> 
+                TrudyAWhite            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Flaetitia_mavrel%2Fstatus%2F1521952908983644161"
+                 data-text="@honeyglaze @LlSTENlNG_PARTY Nice discovery!
+That’s enlightening this dull wednesday evening without a gig.
+Cheers!" data-datetime="8:40 PM May 4, 2022"> 
+                laetitia_mavrel            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521952856676438019"
+                 data-text="@Peanutpower4 see you in Glasgow for Road to Great Escape" data-datetime="8:40 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1521952759049818113"
+                 data-text="@honeyglaze Thank you so much for a wonderful record, genuinely love what you do, big love to Dan &amp; all the @SpeedyWunder crew for bringing you to us, &amp; mad props to @Tim_Burgess &amp; @LlSTENlNG_PARTY for tonight! Good luck with the record &amp; keep yourselves nice x
+
+#timstwitterlisteningparty https://t.co/QJOkYtgsQH" data-datetime="8:39 PM May 4, 2022"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521952743056982016"
+                 data-text="@CharlieMishere maybe" data-datetime="8:39 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FPaulDearden005%2Fstatus%2F1521952402940776449"
+                 data-text="@honeyglaze From Manchester Gorilla gig, love it when the support act is amazing too! https://t.co/plR1MaFx4u" data-datetime="8:38 PM May 4, 2022"> 
+                PaulDearden005            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1521952379146493956"
+                 data-text="@Tim_Burgess @honeyglaze @LlSTENlNG_PARTY Another wonderful new band included in Listening Parties, I think they will go far -  a fantastic debut!" data-datetime="8:38 PM May 4, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fmarjoriecurtis%2Fstatus%2F1521952378920087552"
+                 data-text="@SpeedyWunder @honeyglaze love this" data-datetime="8:38 PM May 4, 2022"> 
+                marjoriecurtis            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FCharlieMishere%2Fstatus%2F1521952243423002624"
+                 data-text="@honeyglaze There’s no time to explain?" data-datetime="8:37 PM May 4, 2022"> 
+                CharlieMishere            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521952108135731202"
+                 data-text="@SharmanSomerset Longfellow Guitars! the raddest of em all" data-datetime="8:37 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521952107833835528"
+                 data-text="@honeyglaze https://t.co/xAByaWuVJv" data-datetime="8:37 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1521952043992293381"
+                 data-text="@honeyglaze ❤️X
+
+#timstwitterlisteningparty https://t.co/U5xzyhgoRo" data-datetime="8:36 PM May 4, 2022"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521952025373720577"
+                 data-text="#timstwitterlisteningparty Thank you for listening. We’re Honeyglaze, and remember:" data-datetime="8:36 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521951933543727106"
+                 data-text="@benmillsss Okay Ben ❤️" data-datetime="8:36 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521951859816255493"
+                 data-text="Always get a bit emotional at the end when everything cuts out and the last note hits #timstwitterlisteningparty" data-datetime="8:36 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1521951850349670400"
+                 data-text="@honeyglaze Childish Things def a great #Closer choice 🔥🎸🎶" data-datetime="8:36 PM May 4, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521951820305911808"
+                 data-text="@honeyglaze #timstwitterlisteningparty https://t.co/pmmavpuP2R" data-datetime="8:36 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521951742702858241"
+                 data-text="Taken by Dan on the last day of recording - thank you to everyone that was part of this album, we love you dearly ❤️ #timstwitterlisteningparty https://t.co/1K9qGFaQzE" data-datetime="8:35 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521951719353159685"
+                 data-text="uhh #TimsTwitterListeningParty" data-datetime="8:35 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLiamBrigg%2Fstatus%2F1521951549492240387"
+                 data-text="@honeyglaze This @LlSTENlNG_PARTY replay is going straight to the top of my recommendations list. Been brilliant" data-datetime="8:35 PM May 4, 2022"> 
+                LiamBrigg            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521951537832108033"
+                 data-text="This was us trying to figure out which order to record in - we would record 2 or 3 songs live all in a row, and if we didn’t like one we’d have to redo all of them. https://t.co/mE8CAgtktn" data-datetime="8:34 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521951429992366081"
+                 data-text="@honeyglaze I LOVE REVERB" data-datetime="8:34 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1521951409574400000"
+                 data-text="@honeyglaze That is one of the coolest guitars I think I’ve ever seen x
+
+#timstwitterlisteningparty" data-datetime="8:34 PM May 4, 2022"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521951335737868289"
+                 data-text="the “Sunday scents” referred to in the lyrics are the smells of a fresh tin of breakfast mayonnaise #timstwitterlisteningparty" data-datetime="8:34 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521951217445965829"
+                 data-text="@honeyglaze #timstwitterlisteningparty https://t.co/5EkI8lYRwt" data-datetime="8:33 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521951187855159296"
+                 data-text="Tim - currently hacking our twitter account #timstwitterlisteningparty https://t.co/tezLx9Lw6c" data-datetime="8:33 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521951084901769216"
+                 data-text="Dan introducing something called \"distortion\" during Childish Things recording #timstwitterlisteningparty https://t.co/jhCXfFGnlw" data-datetime="8:33 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521951005855948801"
+                 data-text="THE DRUMS @honeyglaze #timstwitterlisteningparty" data-datetime="8:32 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521951003301535745"
+                 data-text="If people in the crowd are talking at the beginning of the song, they’re usually silent by the end. That’s the idea, anyway #timstwitterlisteningparty" data-datetime="8:32 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1521950936507236353"
+                 data-text="Big thanks to @honeyglaze for stopping by the @LlSTENlNG_PARTY tonight 🙌" data-datetime="8:32 PM May 4, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521950895281516544"
+                 data-text="Childish Things is the song we have ended almost every show we’ve ever done with, right from the beginning. When we finally got pedals last year we got to make it really noisy at the end which was nice #timstwitterlisteningparty" data-datetime="8:32 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FCharlieMishere%2Fstatus%2F1521950841212932097"
+                 data-text="@honeyglaze Another brilliant one! (just like the rest of the album!)" data-datetime="8:32 PM May 4, 2022"> 
+                CharlieMishere            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1521950772753276930"
+                 data-text="@honeyglaze Don’t apologise, it’s a stunning closer for a wonderful album x
+
+#timstwitterlisteningparty" data-datetime="8:31 PM May 4, 2022"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521950684920397827"
+                 data-text="@honeyglaze #timstwitterlisteningparty https://t.co/cthXTdti8f" data-datetime="8:31 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1521950682286276608"
+                 data-text="@honeyglaze More, more!!" data-datetime="8:31 PM May 4, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fbenmillsss%2Fstatus%2F1521950575528759299"
+                 data-text="@honeyglaze don’t be sorry, that song is fucking immense" data-datetime="8:31 PM May 4, 2022"> 
+                benmillsss            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521950508990316544"
+                 data-text="Childish Things is our last song. We’re so sorry. #timstwitterlisteningparty" data-datetime="8:30 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521950457912041473"
+                 data-text="I suppose it also reflects our feeling of primarily being a live band, and the record being like a show #timstwitterlisteningparty" data-datetime="8:30 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1521950379193294850"
+                 data-text="@honeyglaze Getting the Grizzly Bear thing 🤘 #timstwitterlisteningparty" data-datetime="8:30 PM May 4, 2022"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521950369999470592"
+                 data-text="@honeyglaze #timstwitterlisteningparty https://t.co/ipeNpnGt8S" data-datetime="8:30 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521950290446016512"
+                 data-text="We had to practice for a couple months to work on the songs and get them tight enough to play live onto the record  #timstwitterlisteningparty" data-datetime="8:30 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521950288390893570"
+                 data-text="@honeyglaze #timstwitterlisteningparty https://t.co/FVrRkvJ0MA" data-datetime="8:29 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521950094966280198"
+                 data-text="THE PIANO @honeyglaze #timstwitterlisteningparty" data-datetime="8:29 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521950086481252352"
+                 data-text="By the way, the guitar, bass and drums on this album were all recorded live to tape in one take, sometimes even the first take. That’s just how Dan works. #timstwitterlisteningparty" data-datetime="8:29 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521949969531478020"
+                 data-text="@soozworld @LlSTENlNG_PARTY Thank you! ❤️" data-datetime="8:28 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521949896487718914"
+                 data-text="SOUVENIR. 
+
+FAVOURITE.
+
+@honeyglaze   
+
+#timstwitterlisteningparty" data-datetime="8:28 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521949883644710912"
+                 data-text="We almost called the album Souvenir but as you can see, we didn’t #timstwitterlisteningparty" data-datetime="8:28 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FLiamBrigg%2Fstatus%2F1521949808474439680"
+                 data-text="Track 10 of 11 already? This has been brilliant, just flown by #timstwitterlisteningparty" data-datetime="8:28 PM May 4, 2022"> 
+                LiamBrigg            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521949781203075077"
+                 data-text="Souvenir was the last song written for the album (except for Start, which was written 2 days before recording). It’s about being grateful when you don’t feel like it. #timstwitterlisteningparty" data-datetime="8:27 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521949507419881473"
+                 data-text="@honeyglaze #timstwitterlisteningparty https://t.co/FiENofNlda" data-datetime="8:26 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Flaetitia_mavrel%2Fstatus%2F1521949452046680070"
+                 data-text="@SpeedyWunder @honeyglaze That’s what we said about u …
+En français dans le texte ;) 
+
+https://t.co/7JTj5PvOkJ" data-datetime="8:26 PM May 4, 2022"> 
+                laetitia_mavrel            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521949443079221248"
+                 data-text="Young Looking, once again, is bereft of metaphor. It is what it says. Except for the bit about loving Maryanne’s skin, that is a metaphor. Maryanne is Anouska’s mum’s best friend’s name. #timstwitterlisteningparty" data-datetime="8:26 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521949335088513026"
+                 data-text="💞💞💞 https://t.co/2N6uUYouhq" data-datetime="8:26 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1521949256164294658"
+                 data-text="@honeyglaze @LlSTENlNG_PARTY Really great track, need to hear it live soon 😃" data-datetime="8:25 PM May 4, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521949234630696964"
+                 data-text="Another 60s style kind of sort of thing, but also kind of a Grizzly Bear sort of thing? #timstwitterlisteningparty" data-datetime="8:25 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521949096378089472"
+                 data-text="Young Looking was the first track Anouska and Tim worked on together, before forming the band #timstwitterlisteningparty" data-datetime="8:25 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521949021052542976"
+                 data-text="Miss you Feta ❤️ #timstwitterlisteningparty https://t.co/8eIXZDUE4u" data-datetime="8:24 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521948947182497794"
+                 data-text="That strange synth you hear was invented before modern synths, it’s a rare electric keyboard organ thing called a Clavioline #timstwitterlisteningparty" data-datetime="8:24 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521948788570664961"
+                 data-text="If Deep Murky Water was a single, this would be the artwork #timstwitterlisteningparty https://t.co/EthV3Us9bV" data-datetime="8:24 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521948773676638215"
+                 data-text="There’s a little nod to Red Clay there #timstwitterlisteningparty" data-datetime="8:23 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fbenmillsss%2Fstatus%2F1521948629413552130"
+                 data-text="@honeyglaze @SpeedyWunder me when i see tim and yuri" data-datetime="8:23 PM May 4, 2022"> 
+                benmillsss            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FCharlieMishere%2Fstatus%2F1521948597591363585"
+                 data-text="@honeyglaze It’s one of my favourites!" data-datetime="8:23 PM May 4, 2022"> 
+                CharlieMishere            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521948557728788481"
+                 data-text="@SpeedyWunder i love this man" data-datetime="8:23 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1521948556546002946"
+                 data-text="RT @Tim_Burgess: That time The Charlatans overdid it and we became our spirit animals (📸by @ambassadorcow) https://t.co/8gQ1JVPj4q" data-datetime="8:23 PM May 4, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1521948455991656448"
+                 data-text="@honeyglaze Almost a Stereolab feel to this track x
+
+#timstwitterlisteningparty" data-datetime="8:22 PM May 4, 2022"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521948326215753728"
+                 data-text="Deep Murky Water is really nice to play live with the spoken word bits and harmonies #timstwitterlisteningparty" data-datetime="8:22 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521948325976711169"
+                 data-text="Oh baby, all this straight to tapeybaby #timstwitterlisteningparty https://t.co/SSjp40EF1A" data-datetime="8:22 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521948131914616833"
+                 data-text="Half Past was a really collaborative track. We had to make a big diagram of the structure, because of the beat skips and changes in texture #timstwitterlisteningparty" data-datetime="8:21 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521948028042686464"
+                 data-text="Tim going OFFF in the middle section hehe of Half Past #timstwitterlisteningparty https://t.co/snbUc1Rkjv" data-datetime="8:21 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521947986296819713"
+                 data-text="@honeyglaze #timstwitterlisteningparty https://t.co/3dDVitLAqo" data-datetime="8:20 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FEDouglasWW%2Fstatus%2F1521947669144473601"
+                 data-text="I\'m adding Burglar to my year-end playlist... to be arranged and organized closer to year\'s end... #TimsTwitterListeningParty" data-datetime="8:19 PM May 4, 2022"> 
+                EDouglasWW            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521947624290594817"
+                 data-text="The end of Burglar and the beginning of Half Past marks the halfway point of the album. We tried to structure it in a way that splits Side 1 and 2 nicely #timstwitterlisteningparty" data-datetime="8:19 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521947520414453764"
+                 data-text="@PiranAston_ @SpeedyWunder @LlSTENlNG_PARTY Love you Piran ❤️🫶" data-datetime="8:18 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521947484272082946"
+                 data-text="@honeyglaze #timstwitterlisteningparty https://t.co/mQTYfzDbNZ" data-datetime="8:18 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521947386158923777"
+                 data-text="@NorthOnePhot Epic shots!" data-datetime="8:18 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521947312808996866"
+                 data-text="@honeyglaze @wetlegband #timstwitterlisteningparty https://t.co/91iIjfWA0i" data-datetime="8:18 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521947190834438147"
+                 data-text="The weird vocal effects are from a granular sampler called the Morphagene. They were playing live as we recorded, which made it a strange old time #timstwitterlisteningparty" data-datetime="8:17 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521947140758642689"
+                 data-text="@LiamBrigg Aw thanks Liam xx" data-datetime="8:17 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521946972755746817"
+                 data-text="@laetitia_mavrel @LlSTENlNG_PARTY ❤️" data-datetime="8:16 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FNorthOnePhot%2Fstatus%2F1521946972667719680"
+                 data-text="Saw @honeyglaze supporting Wet Leg a couple of weeks ago. Very good 🙂  #TimsTwitterListeningParty https://t.co/nd0sa2YTWK" data-datetime="8:16 PM May 4, 2022"> 
+                NorthOnePhot            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FPiranAston_%2Fstatus%2F1521946965617094664"
+                 data-text="The debut album from @honeyglaze is a special piece of music, made by truly special and wonderful people. 
+
+It deserves your attention, and if you haven’t already, you must listen to it 
+
+#timslisteningparty @SpeedyWunder @LlSTENlNG_PARTY 
+
+https://t.co/JPqHadtQPt" data-datetime="8:16 PM May 4, 2022"> 
+                PiranAston_            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521946881110290437"
+                 data-text="@TrudyAWhite @soozworld Thanks Trudy!" data-datetime="8:16 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521946876924338180"
+                 data-text="#timstwitterlisteningparty https://t.co/qzzrJskUqS" data-datetime="8:16 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521946868145655809"
+                 data-text="Burglar is long, which is a welcome relief from tweeting every 5 seconds #timstwitterlisteningparty" data-datetime="8:16 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1521946763854286849"
+                 data-text="7 years, nothing has changed https://t.co/TPyfpjhaMI" data-datetime="8:15 PM May 4, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521946701426311168"
+                 data-text="Burglar is def one of our favourites on the album. Inspired by Charles Bukowski, Radiohead and burglary. #timstwitterlisteningparty" data-datetime="8:15 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Flaetitia_mavrel%2Fstatus%2F1521946577325248514"
+                 data-text="@honeyglaze @LlSTENlNG_PARTY I like this sound.
+Heard about the release but it’s my 1st listening.
+Refreshing really ! #timstwitterlisteningparty" data-datetime="8:15 PM May 4, 2022"> 
+                laetitia_mavrel            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FArjandeVet%2Fstatus%2F1521946496870014981"
+                 data-text="I discovered @honeyglaze last year when \'Burglar\' was played in @duysterradio, a weekly Belgian radio show. The song made me think of the Belgian band Amatorski, both in music and vocals. #TimsTwitterListeningParty" data-datetime="8:14 PM May 4, 2022"> 
+                ArjandeVet            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1521946236961624072"
+                 data-text="@honeyglaze I love this song! Perfect pop vibes x
+
+#timstwitterlisteningparty https://t.co/Hs9n9fiC6Y" data-datetime="8:13 PM May 4, 2022"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521946209207914498"
+                 data-text="We\'re listening from Leeds! Promise we\'re much more excited than we look here #timstwitterlisteningparty https://t.co/8zPoiGDHq7" data-datetime="8:13 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521946169219375105"
+                 data-text="Female Lead was kind of a joke song, sort of an homage to the Ronettes/Shangri-Las. We made it by emailing files back and forth n ended up liking it enough to keep #timstwitterlisteningparty" data-datetime="8:13 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1521946101074513920"
+                 data-text="Another gorgeous track, a recent single release I’ve listened to a lot, great humour in these lyrics! Female Lead @honeyglaze 😁👏🏼👏🏼🎶 #TimsTwitterListeningParty" data-datetime="8:13 PM May 4, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPiranAston_%2Fstatus%2F1521946018325147650"
+                 data-text="❤️ https://t.co/sXAcxf5id7" data-datetime="8:13 PM May 4, 2022"> 
+                PiranAston_            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521945907792687105"
+                 data-text="Female Lead was written in deep lockdown, when everyone was changing their hairstyles drastically. The events depicted do not bear any relation to real events. #timstwitterlisteningparty" data-datetime="8:12 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521945873902718980"
+                 data-text="@honeyglaze @LoungeSocietyHB @PiranAston_ #timstwitterlisteningparty https://t.co/mM3vV607Mf" data-datetime="8:12 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521945705144795144"
+                 data-text="🍯🍯🍯 https://t.co/8EvXDOTWbr" data-datetime="8:11 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521945462755971073"
+                 data-text="The instrumental has like 3 layered basses in it, which is probably not a good idea. #timstwitterlisteningparty" data-datetime="8:10 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1521945403909890054"
+                 data-text="Some might have creative jealousy over not writing this one themselves 😉 #TimsTwitterListeningParty" data-datetime="8:10 PM May 4, 2022"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521945353112666114"
+                 data-text="@benmillsss Cheers Ben ❤️" data-datetime="8:10 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521945252315156484"
+                 data-text="#timstwitterlisteningparty https://t.co/BtzryvdU54" data-datetime="8:09 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521945211802431495"
+                 data-text="“Cushion” is another one that doesn’t take much explanation. There aren’t really any metaphors except for cushions. #timstwitterlisteningparty" data-datetime="8:09 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521945084106878979"
+                 data-text="I Am Not Your Cushion is a line that doesn’t actually appear in the song, but it gets the message across #timstwitterlisteningparty" data-datetime="8:09 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521944746503163906"
+                 data-text="@TrudyAWhite Thank you!" data-datetime="8:07 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521944705398984711"
+                 data-text="Creative Jealousy was originally written in a kind of Latin feel on a keyboard, but we messed around with the rhythm until it was odd enough for our tastes. #timstwitterlisteningparty" data-datetime="8:07 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1521944644430540803"
+                 data-text="🧑‍🌾...that\'s right, I\'m digging it! @honeyglaze #TimsTwitterListeningParty" data-datetime="8:07 PM May 4, 2022"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521944608581763074"
+                 data-text="\'Shadows\' tambourine masterpiece #timstwitterlisteningparty https://t.co/GnuJgZSDL7" data-datetime="8:07 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521944480034697222"
+                 data-text="@honeyglaze @LoungeSocietyHB #timstwitterlisteningparty https://t.co/M6QuKWYI93" data-datetime="8:06 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FTrudyAWhite%2Fstatus%2F1521944286375337984"
+                 data-text="\"Shadows\" what a song! Love it😁 What a great band @honeyglaze are ❤ #TimsTwitterListeningParty" data-datetime="8:06 PM May 4, 2022"> 
+                TrudyAWhite            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1521944120855601153"
+                 data-text="Have had a few listens already and Shadows is definitely a fave track already 😍🎶 @honeyglaze Thanks to @FrancisLung for the recommendation on his @lprpod episode! 😁👏🏼👏🏼👏🏼 #TimsTwitterListeningParty" data-datetime="8:05 PM May 4, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fclaire3638%2Fstatus%2F1521944101331087360"
+                 data-text="@LlSTENlNG_PARTY @honeyglaze Me ✋ 
+Listening in the Western Algarve 🇵🇹" data-datetime="8:05 PM May 4, 2022"> 
+                claire3638            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FSpeedyWunder%2Fstatus%2F1521944097497489410"
+                 data-text="@honeyglaze #timstwitterlisteningparty https://t.co/Aq3eBsFUvZ" data-datetime="8:05 PM May 4, 2022"> 
+                SpeedyWunder            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521944042052988932"
+                 data-text="Shadows, surprisingly, is not a metaphor. It’s about shadows cast by trees on Anouska’s wall from outside at night. #TimsTwitterListeningParty" data-datetime="8:05 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fbenmillsss%2Fstatus%2F1521943730097471493"
+                 data-text="@honeyglaze cyclical structure, nice xxx" data-datetime="8:03 PM May 4, 2022"> 
+                benmillsss            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521943617576869888"
+                 data-text="The first track is imaginatively called Start. We recorded it at the end of the sessions. It samples Childish Things, the album closer, and uses similar chords and structure. Thought it would be nice to begin and end with a kind of symmetry. #TimsTwitterListeningParty" data-datetime="8:03 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521943610538831880"
+                 data-text="\'Start\' recording! #timstwitterlisteningparty https://t.co/3dMcwSZ4Kj" data-datetime="8:03 PM May 4, 2022"> 
+                honeyglaze            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="109000" data-url="https%3A%2F%2Ftwitter.com%2FdaveGildedALM%2Fstatus%2F1521943323753304065"
+                 data-text="Worth it @SpeedyWunder @honeyglaze @Tim_Burgess https://t.co/6r0mzFBq5g" data-datetime="8:02 PM May 4, 2022"> 
+                daveGildedALM            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FSharmanSomerset%2Fstatus%2F1521942865890492418"
+                 data-text="#timstwitterlisteningparty
+
+@honeyglaze @SpeedyWunder let’s go!!!! https://t.co/VeseWl3Pkl" data-datetime="8:00 PM May 4, 2022"> 
+                SharmanSomerset            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1521942801340149761"
+                 data-text="Handing over to @honeyglaze for The @LlSTENlNG_PARTY https://t.co/MNjWMIhyC3" data-datetime="8:00 PM May 4, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Fhoneyglaze%2Fstatus%2F1521942787041771520"
+                 data-text="Hi #TimsTwitterListeningParty, we’re Honeyglaze! We’re a trio from London, made of Anouska (guitar, vocals), Yuri (drums) and Tim (bass). https://t.co/mXrWLizNAZ" data-datetime="8:00 PM May 4, 2022"> 
+                honeyglaze            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
