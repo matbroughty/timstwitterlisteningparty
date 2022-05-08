@@ -1,0 +1,699 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5UblzbyTIbNxvBy3UxECs6" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02825e681c2dca61438a2721c4" alt="World Full Of Worry" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Peaness</span><br/><span class="sub-colour">World Full Of Worry</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5UblzbyTIbNxvBy3UxECs6" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 132 tweets from Sunday 8th May 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/PeanessBand" target="_blank"><img src="https://pbs.twimg.com/profile_images/1450018226818228226/xoN65IAq_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/PeanessBand.jpg'"><br/>@PeanessBand</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Take A Trip" data-start="0"
+             data-duration="101" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Kaizen" data-start="102"
+             data-duration="233" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="How I'm Feeling" data-start="336"
+             data-duration="227" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Girl Just Relax" data-start="564"
+             data-duration="205" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="irl" data-start="770"
+             data-duration="200" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Doing Fine" data-start="971"
+             data-duration="183" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Worry" data-start="1155"
+             data-duration="242" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Left To Fall Behind" data-start="1398"
+             data-duration="232" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="What's The Use?" data-start="1631"
+             data-duration="200" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Hurts 'Til It Doesn't" data-start="1832"
+             data-duration="182" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Sad Song" data-start="2015"
+             data-duration="274" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2290"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851825e681c2dca61438a2721c4" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-132" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523388162604933121"
+                 data-text="@soozworld @LlSTENlNG_PARTY So glad you enjoyed it! Thanks so much 💚💚💚" data-datetime="7:43 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523388017360408576"
+                 data-text="@philhappy @LlSTENlNG_PARTY thank you so much! 💚💚💚" data-datetime="7:43 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523387942638862336"
+                 data-text="RT @Tim_Burgess: Talking of pubs and good things on Twitter. Happy birthday for tomorrow @PaulHeatonSolo - what a brilliant thing to do  ht…" data-datetime="7:42 PM May 8, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523387926125580289"
+                 data-text="@DavidBanks2017 @LlSTENlNG_PARTY @GorillaMCR We can\'t wait for this show! 🤩🤩🤩" data-datetime="7:42 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523387433890451457"
+                 data-text="@MonkeyMarl @LlSTENlNG_PARTY WOW!" data-datetime="7:40 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523387432837681152"
+                 data-text="RT @adwaithmusic: Ymunwch â ni ar y 20fed o Fai i ddod at ein gilydd gyda @Tim_Burgess i wrando ar albwm cyntaf ni Melyn 💛🍋🧀 Bu ni\'n tweeti…" data-datetime="7:40 PM May 8, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523387420065947648"
+                 data-text="RT @adwaithmusic: 🌞 Tim\'s Listening Party! 🌞
+
+Join us on the 20th of May for a lil get together with @Tim_Burgess to listen to our debut al…" data-datetime="7:40 PM May 8, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fphilhappy%2Fstatus%2F1523387415896805376"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY First listen to the album and that was brilliant! Thank you ❤️" data-datetime="7:40 PM May 8, 2022"> 
+                philhappy            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1523387317347512320"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY Thank you, what a fantastic album! 🙏" data-datetime="7:40 PM May 8, 2022"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FIamhairyf%2Fstatus%2F1523387205082763265"
+                 data-text="Thank you @PeanessBand and @Tim_Burgess … always like a new find… #TimsTwitterListeningParty" data-datetime="7:39 PM May 8, 2022"> 
+                Iamhairyf            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523387164624830464"
+                 data-text="You can buy the the album here: 
+
+https://t.co/8echNMvZPf
+
+ALL THINGS PEANESS: 
+https://t.co/t93QPZoTgZ
+
+@LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW" data-datetime="7:39 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523387060937134082"
+                 data-text="❤️🔥 https://t.co/z8fkGfbqBY" data-datetime="7:39 PM May 8, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fplsimps%2Fstatus%2F1523387054351998976"
+                 data-text="What a joyous album #WFOW is. Thanks to all in @PeanessBand for such a great #TimsTwitterListeningParty
+I hope to get to see you live again soon 🤩" data-datetime="7:39 PM May 8, 2022"> 
+                plsimps            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Frobevs%2Fstatus%2F1523386985057898496"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY Thank you. What a great album, I’ve loved listening #timstwitterlisteningparty" data-datetime="7:38 PM May 8, 2022"> 
+                robevs            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523386779516121088"
+                 data-text="Thank you for listening with us. Thank you for your support. It\'s been a dream come true. 
+
+@LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW" data-datetime="7:38 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523386751674318849"
+                 data-text="Wow! What an album. Thanks @PeanessBand for stopping by the @LlSTENlNG_PARTY 🤘 https://t.co/yJipBAVgDG" data-datetime="7:37 PM May 8, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523386672611684353"
+                 data-text="@mydogminton @melliesully Ahhhhhhhh! So cute! 😍😍😍" data-datetime="7:37 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523386589975515136"
+                 data-text="@LlSTENlNG_PARTY The song ends the way the album starts - with waves crashing down and the tide coming in and out, to repeat the cycle again." data-datetime="7:37 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523386424262750208"
+                 data-text="@LlSTENlNG_PARTY The outro repeats and repeats - with more layers of harmony added each time. Do you think they listened? \"I\'ve had enough / I\'ve given up\"" data-datetime="7:36 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523386316397842432"
+                 data-text="Every band was a support band once. Always turn up early 🤘 https://t.co/chYiWTFhnP" data-datetime="7:36 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523386099451953152"
+                 data-text="@LlSTENlNG_PARTY \"Love them and stay, love myself and leave\"" data-datetime="7:35 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385981226782721"
+                 data-text="@LlSTENlNG_PARTY God we love harmonies" data-datetime="7:34 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385857826189313"
+                 data-text="@melliesully @mydogminton Lady T is has good taste 🥰🥰🥰" data-datetime="7:34 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385761835659265"
+                 data-text="@LlSTENlNG_PARTY Rach: Jess wrote this song about a breakup I went through a few years ago. She played it me in the practice room and I welled up a bit. She\'s a sweetheart. I\'m sure it will be applicable to many of your breakups too." data-datetime="7:34 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385687717818368"
+                 data-text="@LlSTENlNG_PARTY This is a break up song. You tried, you communicated, but you’ve come to the decision to leave and move on with your life without each other. There’s always love there, but you have to decide whether you’re sacrificing yourself in order to please them." data-datetime="7:33 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385614774960129"
+                 data-text="TRACK 11: Sad Song 
+
+@LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW" data-datetime="7:33 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Frobevs%2Fstatus%2F1523385427721277440"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY @ringostarrmusic Yay ringo #timstwitterlisteningparty https://t.co/oo0tUFqCTQ" data-datetime="7:32 PM May 8, 2022"> 
+                robevs            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385349552377856"
+                 data-text="@LlSTENlNG_PARTY A song for when you can’t decide what to do. Stuck in limbo mode, frozen and waiting for a sign on which way to go." data-datetime="7:32 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385259127377920"
+                 data-text="@LlSTENlNG_PARTY Structurally it’s not very predictable in comparison to a lot of our songs. But a trait that is there is the riffs from the bass." data-datetime="7:32 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385191422640128"
+                 data-text="@LlSTENlNG_PARTY The vocals are in unison until the second chorus which adds a huge lift and release." data-datetime="7:31 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385156123635716"
+                 data-text="@LlSTENlNG_PARTY The keyboard sound that features throughout is an omnichord (played by Jess) and adds a bit of sparkle on what is a very simple and sparse song." data-datetime="7:31 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385112955555840"
+                 data-text="@LlSTENlNG_PARTY I had what we call the \'wrongo\' pattern at the start of the song in my head for ages. When Jess came to us with the acoustic ideas for the song I knew straight away we could turn it into a beatles-y kind of vibe. We love them. Shout out Ringo @ringostarrmusic" data-datetime="7:31 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523385058391855104"
+                 data-text="@LlSTENlNG_PARTY Rach: the drum beat in this song is inspired by Ringo Starr\'s style of playing. He\'s one of my favourite drummers in that he never overdoes it but always plays unconventional patterns which you find yourself tapping along to." data-datetime="7:31 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523384992427958273"
+                 data-text="@LlSTENlNG_PARTY This is the only song on the album that was predominantly recorded in a different studio. We visited our friends in Glasgow band Catholic Action - Chris McCrory and Andy MacPherson - for a weekend and although none of the other tracks recorded then made the album." data-datetime="7:30 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523384926267068422"
+                 data-text="@LlSTENlNG_PARTY Our ode to The Beatles and 60s pop. A song about being scared and not knowing what to do." data-datetime="7:30 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523384845690277888"
+                 data-text="TRACK 10: Hurts \'Till It Doesn\'t
+
+@LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW" data-datetime="7:30 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fmydogminton%2Fstatus%2F1523384513975316481"
+                 data-text="@PeanessBand From the very first listen, I\'ve been really loving the flow of this album. The tracklist seems to effortlessly go from one to the next almost as if it was written as one continuous arrangement. #timstwitterlisteningparty #WFOW" data-datetime="7:29 PM May 8, 2022"> 
+                mydogminton            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Frobevs%2Fstatus%2F1523384498226081792"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY Banger this. #timstwitterlisteningparty https://t.co/Q4aF1AmHJp" data-datetime="7:29 PM May 8, 2022"> 
+                robevs            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523384479167160320"
+                 data-text="@LlSTENlNG_PARTY This is probably my fave to play live. It\'s so fun and fast and silly." data-datetime="7:28 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523384233816780800"
+                 data-text="@LlSTENlNG_PARTY Another song about giving up and just wanting to sleep." data-datetime="7:27 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523384175365042176"
+                 data-text="@melliesully OMG 😍😍😍" data-datetime="7:27 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523384127352819712"
+                 data-text="Agreed. Love a track 8 https://t.co/mIlhvQjVeR" data-datetime="7:27 PM May 8, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523384010176536576"
+                 data-text="TRACK 9: What\'s The Use? 
+
+@LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW" data-datetime="7:27 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523383893902204930"
+                 data-text="@LlSTENlNG_PARTY We knew this would be Track 8 when we wrote it. Something special about rack 8 on albums, don\'t you think?" data-datetime="7:26 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTrogbag%2Fstatus%2F1523383832979795970"
+                 data-text="@LlSTENlNG_PARTY @PeanessBand ‘Left to fall behind’ is beautiful 🙂💚" data-datetime="7:26 PM May 8, 2022"> 
+                Trogbag            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fmelliesully%2Fstatus%2F1523383765216628736"
+                 data-text="A delicious way to spend a summer evening... Doors wide open, PJs on, Lady T in attendance &amp; my own little representation of @PeanessBand 
+#WFOW #TimsTwitterListeningParty https://t.co/L10DyAfFbd" data-datetime="7:26 PM May 8, 2022"> 
+                melliesully            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523383694727139329"
+                 data-text="@LlSTENlNG_PARTY Jess: the very rare moment where my bass is clean and not fuzzy!" data-datetime="7:25 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FChrisCottis%2Fstatus%2F1523383655347134464"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY This lyric hits so hard it\'s brutal in the best way 💚" data-datetime="7:25 PM May 8, 2022"> 
+                ChrisCottis            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523383615018610688"
+                 data-text="@LlSTENlNG_PARTY The lyrics are very much based around the pressures of age and feeling that not having achieved certain things like getting a house or getting married or having a child means you haven\'t succeeded, so society turns it\'s back on you because you\'ve chosen not to do the conventional" data-datetime="7:25 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523383500937654272"
+                 data-text="@LlSTENlNG_PARTY ...and it sucks that there are people stuck doing jobs that bring them no satisfaction just so they can live day to day and try to have some enjoyment in life." data-datetime="7:25 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523383427524923392"
+                 data-text="@LlSTENlNG_PARTY It\'s difficult sometimes finding a balance because as a band of our current status we\'re very much aware that we need a second form of income..." data-datetime="7:24 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523383310180765696"
+                 data-text="@LlSTENlNG_PARTY I found out my entire department was being let go and while everyone else was looking for roles in other departments and elsewhere, I was sat almost relieved thinking \"I don\'t really want to do this anymore anyway, this is my way out of here!\"" data-datetime="7:24 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523383274541772801"
+                 data-text="@LlSTENlNG_PARTY Balla - Inspired yet again about being in a job you don\'t want to be in!" data-datetime="7:24 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523383127942615041"
+                 data-text="TRACK 8: Left To Fall Behind
+
+@LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW" data-datetime="7:23 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523383019524206592"
+                 data-text="@LlSTENlNG_PARTY Rach: I really enjoy a good bell pattern which is really fun to play at the end of the song too. I grew up listening to pop punk/rock bands with massive/fat sounding drums and powerful fills, so this was my opportunity to slip a couple of Bonham triplets in there!" data-datetime="7:23 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fnikkiandthewave%2Fstatus%2F1523382993301123072"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY My fave! 🥰" data-datetime="7:23 PM May 8, 2022"> 
+                nikkiandthewave            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523382902280630274"
+                 data-text="@LlSTENlNG_PARTY I love all the vocals and counter melodies going on at the end, again we used a lot of call and response…get learning all the lyrics everybody, you\'re definitely going to want to join in! 
+
+@LlSTENlNG_PARTY" data-datetime="7:22 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523382630661586944"
+                 data-text="@LlSTENlNG_PARTY “So heavy crawling through this… well how long till I feel like I deserve to exist? Don’t wanna feel like this” - It’s dramatic, but that’s literally how I’ve felt. Full of shame, full of guilt, full of self loathing, thinking everybody hates you for leaving. 
+
+@LlSTENlNG_PARTY" data-datetime="7:21 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523382528651841536"
+                 data-text="@LlSTENlNG_PARTY The shaker pedal makes yet another appearance in the middle section with the synth underneath it and it really runs in tandem with the theme of the lyrics \"So heavy crawling through this\" - kinda makes you feel like you\'re under water or trying to swim through syrup!" data-datetime="7:21 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523382439988539393"
+                 data-text="@LlSTENlNG_PARTY Drums: some very satisfying drum fills in this tune - notably before the 2nd chorus." data-datetime="7:20 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fmaffrj%2Fstatus%2F1523382433516703745"
+                 data-text="Loving the @PeanessBand album on #TimsTwitterListeningParty. Hard to believe it\'s five years or so since I first saw them at @Telfords for the first time (although this photo is from @FocusWales). https://t.co/HMfhgB4kgg" data-datetime="7:20 PM May 8, 2022"> 
+                maffrj            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523382369666748417"
+                 data-text="@LlSTENlNG_PARTY Balla - This is probably my favourite song to play live, it is just absolute power the whole way through." data-datetime="7:20 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523382294580711424"
+                 data-text="You have to learn to be yourself again, and that can be terrifying. “Backing up to a world full of worry” - retreating into your head, into your bed, into sadness." data-datetime="7:20 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523382263538667522"
+                 data-text="@LlSTENlNG_PARTY Post break-up existential crisis song. When you break up with someone after 5 years, you don’t know who you are without them and you question everything about who you are.
+
+@LlSTENlNG_PARTY" data-datetime="7:20 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523382168311185408"
+                 data-text="TRACK 7: Worry
+
+@LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW" data-datetime="7:19 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523382123771531264"
+                 data-text="Goth Balla seems to be way more popular now than she ever was at school 😂 🖤🖤🖤 https://t.co/nZ1c9WFPEr" data-datetime="7:19 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fmydogminton%2Fstatus%2F1523381976119771136"
+                 data-text="@melliesully @PeanessBand @LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW #HowImFeeling 
+💯 It\'s a great video. https://t.co/yje70AnTuM" data-datetime="7:19 PM May 8, 2022"> 
+                mydogminton            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fkevbrackenbury%2Fstatus%2F1523381955106025472"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY This is SUMMER" data-datetime="7:18 PM May 8, 2022"> 
+                kevbrackenbury            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523381718580826112"
+                 data-text="@LlSTENlNG_PARTY I love the harmonies in this song. From the middle section onwards “take me home” it’s just layer after layer." data-datetime="7:17 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523381717679034368"
+                 data-text="@WillNeville1892 @JimmysLiverpool We do indeed. @Torture_TDSBand and @Ambedo_Blue will be joining us! 💚💚💚" data-datetime="7:17 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FDavidBanks2017%2Fstatus%2F1523381690525048833"
+                 data-text="@PeanessBand This song means even more now. I didn\'t pick up on it before." data-datetime="7:17 PM May 8, 2022"> 
+                DavidBanks2017            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523381680207056897"
+                 data-text="@LlSTENlNG_PARTY It was only once we had extra synth parts that she started to see the vision. Being fans of video games, we wanted 8 bit wobbly fun sounds for the synth parts. Don’t ask me what they’re called." data-datetime="7:17 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523381630877937664"
+                 data-text="@LlSTENlNG_PARTY Synth: lots of great synth parts and sounds in this song. When we first started playing around this song, Rach wasn’t into it at all." data-datetime="7:17 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523381542126456832"
+                 data-text="@LlSTENlNG_PARTY A song about needing comfort from someone and being codependent. Sometimes you just need someone special in your life to tell you that everything is going to be alright. 
+
+@LlSTENlNG_PARTY" data-datetime="7:17 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523381358545891328"
+                 data-text="TRACK 6: Doing Fine (final track on A-Side)
+
+@LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW" data-datetime="7:16 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523381134557532161"
+                 data-text="Again the chorus pattern is inspired by Latin style beats that I was trying to learn at the time. Shot myself in the foot really cause its dead hard to play and sing my harmony at the same time. Watch out for my dead pan concentrating face if you watch us play this live hahaha." data-datetime="7:15 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fmartinlrix%2Fstatus%2F1523381127452405760"
+                 data-text="This album is bouncing. Dancing on  my walk home from the shops. @LlSTENlNG_PARTY @PeanessBand #TimsTwitterListeningParty" data-datetime="7:15 PM May 8, 2022"> 
+                martinlrix            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523381058422460417"
+                 data-text="Rach: the drums in this one I went round the houses with for ages as I knew I wanted there to be percussive elements but I tried to add it all within the kit. It didn’t work so Russ added it in with the keyboard percussion sounds later on haha." data-datetime="7:15 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380993843150851"
+                 data-text="We all wanted to be The Spice Girls, we all went through an Emo phase, we love The Beatles and every now and then we throw on animal masks and secretly enter talent competitions...it\'s a bizarre and wonderful amalgamation of everything that makes Peaness. 
+ 
+@LlSTENlNG_PARTY" data-datetime="7:15 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fmydogminton%2Fstatus%2F1523380934657339393"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW #HowImFeeling Honestly think this might be your best track so far. Another banging chorus and I love the validate/ meditate lyric." data-datetime="7:14 PM May 8, 2022"> 
+                mydogminton            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380923231707136"
+                 data-text="Filming the music video for this one was an absolute blast and I finally got to choreograph a dance routine! We wanted to portray all of the different youth subcultures that we were a part of growing up. 
+
+@LlSTENlNG_PARTY" data-datetime="7:14 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380853610491905"
+                 data-text="You end up losing a sense of who you are and who you want to be. We all need to get a bit more comfortable being vulnerable with each other because we can\'t keep sugar-coating everything and pretending we\'re fine all the time - \"What if I said I\'m fine? Would you believe me?\"" data-datetime="7:14 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380810858045447"
+                 data-text="@ChrisCottis @LlSTENlNG_PARTY All. The. Bloody. Time. 🙃🙃🙃" data-datetime="7:14 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmelliesully%2Fstatus%2F1523380782110326789"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY LOVED the video to this one...pure joy x
+#irl
+#WFOW
+#timstwitterlisteningparty" data-datetime="7:14 PM May 8, 2022"> 
+                melliesully            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380773444751360"
+                 data-text="Basically, you\'re play dough, and there are all of these external factors influencing you, social media being the main culprit, and they\'re moulding and shaping you into something deemed \"socially acceptable\"." data-datetime="7:14 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380709368365059"
+                 data-text="he verse lyrics \"conformable, modifiable, mould and shape me, make me feel good. I had some time, and now I\'m wired, doesn\'t feel like I thought it would\" are about developing this online persona that doesn\'t necessarily align with what\'s going on in real life." data-datetime="7:13 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380595459510272"
+                 data-text="\'IRL\' is about not fitting in, changing yourself to appease other people, constantly searching for external validation, in particular through various social media outlets, and as a result starting to struggle with your mental health." data-datetime="7:13 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380516661080064"
+                 data-text="Balla - Kicking off with its afro-style rhythm and riffy guitars, this song REALLY lures you into a false sense of security...here\'s that classic peaness juxtaposition again and we\'re about to get lyrically vulnerable with you." data-datetime="7:13 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380453670998016"
+                 data-text="TRACK 5: IRL
+
+@LlSTENlNG_PARTY" data-datetime="7:12 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380282987929600"
+                 data-text="We all sang on the end of the song as we wanted it to sound like chorus/chant/choir kind of vibe for people to sing along to. It feels to me like we\'re singing to ourselves to remind us that \'comparison will kill you\'. Very satisfying :)." data-datetime="7:12 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380256534515712"
+                 data-text="@plsimps @shedrewthegun Awwww! 🥲💚🥲💚🥲💚🥲" data-datetime="7:12 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1523380251304235008"
+                 data-text="This @PeanessBand @LlSTENlNG_PARTY is 🔥🔥🔥🔥🔥🔥🔥" data-datetime="7:12 PM May 8, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380181716520962"
+                 data-text="@LlSTENlNG_PARTY It\'s so incredibly satisfying and the call and response vocals at the end are definitely going to encourage some audience participation at our live shows." data-datetime="7:11 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380114821578752"
+                 data-text="@LlSTENlNG_PARTY We played around with so many different ideas like the tape delay and feedback from the amp on the second verse, it got noisy…and I love coming back in for that ending and kicking the shit out of my overdrive pedal!" data-datetime="7:11 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523380040930521090"
+                 data-text="Balla - We did A LOT of stuff with the guitars for this one. I recorded with my telecaster mostly, but went over certain sections with a strat and an acoustic." data-datetime="7:11 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379960823566346"
+                 data-text="I love the second verse of this song with the extra sounds and what we call \'plinky plonkies\' to build it dynamically. We thought about using more sounds outside of bass guitar and drums for this album to fill it out and expand it away from what we do live." data-datetime="7:11 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1523379920583364608"
+                 data-text="Hopefully listening to this album will wash your worries away! ‘World Full of Worry’ @PeanessBand #WFOW #TimsTwitterListeningParty https://t.co/yg5Jhh29KP" data-datetime="7:10 PM May 8, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379872764112896"
+                 data-text="The organ brings this song together and made a massive difference to the feel of the track once we added it." data-datetime="7:10 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379838907830272"
+                 data-text="When we have busier vocal melody in verses, we always seem to make the choruses legato and simpler. Something easy for the ear to cling on to. That’s pop music!" data-datetime="7:10 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379764408373250"
+                 data-text="Whether it’s someone telling you, or you telling yourself, you try to snap out of the repeating self doubt." data-datetime="7:10 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379649841143812"
+                 data-text="@LlSTENlNG_PARTY Girl Just Relax is a slacker rock homage to anxiety. Sometimes people try to offer help to those struggling with mental health problems by telling them to just relax, or to look on the bright side - which then just leads to more frustration and feelings of isolation." data-datetime="7:09 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379646066167808"
+                 data-text="@piltonpilgrim @LlSTENlNG_PARTY So sorry we missed you! Hopefully catch you at another show soon :)))" data-datetime="7:09 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379563312848896"
+                 data-text="TRACK 4: Girl Just Relax. 
+
+@LlSTENlNG_PARTY" data-datetime="7:09 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379461198020608"
+                 data-text="Did everyone like the music video? Bugsssss" data-datetime="7:09 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fmydogminton%2Fstatus%2F1523379425412530176"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW #HowImFeeling Think this chorus is outstanding. Been stuck in my head for weeks." data-datetime="7:08 PM May 8, 2022"> 
+                mydogminton            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fplsimps%2Fstatus%2F1523379407175389184"
+                 data-text="I saw @PeanessBand supporting the always excellent @shedrewthegun at O2 Academy in Birmingham a while ago. Hopefully this album will introduce them to a wider audience where they will get the recognition they deserve.
+#timstwitterlisteningparty" data-datetime="7:08 PM May 8, 2022"> 
+                plsimps            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379264317403137"
+                 data-text="Balla - We do love a good old middle 8 and that section in this song is inspired by Paramore. We were listening them a lot around this time and I remember saying \"think the middle section in \'Still Into You\'\", it\'s a very satisfying riff to play!" data-datetime="7:08 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379257753309184"
+                 data-text="@mydogminton @LlSTENlNG_PARTY This is a brand brand new one for you guys, only played it live for the first time quite recently...but it\'s been knocking about in our heads for years!" data-datetime="7:08 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379210986827776"
+                 data-text="We thought the middle section could be the new M&amp;S advert song. \'This isn\'t just any song… this is a Peaness song\' lollll
+
+@LlSTENlNG_PARTY" data-datetime="7:08 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523379147300433920"
+                 data-text="Jess: a new live show feature is to ask someone in the audience to pass me a shaky egg for the pre-chorus. 
+
+@LlSTENlNG_PARTY" data-datetime="7:07 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378979561824257"
+                 data-text="... I love \'four to the floor\' elements to drive the song and make it something people can easily dance to, but my hands are always doing their own little vibe around the kit over the top.
+
+@LlSTENlNG_PARTY" data-datetime="7:07 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378890160304128"
+                 data-text="Rach: I always try to write drum beats that aren\'t the standard \'straight 4/4\' pattern and moving things round to compliment the rest of the song and make the rhythm interesting to listen to...." data-datetime="7:06 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378775462842368"
+                 data-text="Drums: rach will never play a straight beat for longer than 8 bars. Polyrhythms and unconventional patterns and sprinkles of playfulness cover this album and our sound, and How I’m Feeling is a great example of this.
+
+@LlSTENlNG_PARTY" data-datetime="7:06 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378675487371267"
+                 data-text="@LlSTENlNG_PARTY A song about wanting to quit your job and do band things. Having the belief that you’re capable of doing that thing you wanna do, but sometimes things get in the way and cause delay. 
+
+@LlSTENlNG_PARTY" data-datetime="7:05 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fsoozworld%2Fstatus%2F1523378668407762944"
+                 data-text="Finding some dancing energy for this!! 💃🏼Loving the summery sounds here from @PeanessBand ‘Kaizen’ 🎶😁 #TimsTwitterListeningParty" data-datetime="7:05 PM May 8, 2022"> 
+                soozworld            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378580071145472"
+                 data-text="TRACK 3: How I\'m Feeling. 
+
+@LlSTENlNG_PARTY #timstwitterlisteningparty #WFOW" data-datetime="7:05 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378472386584576"
+                 data-text="@Bernicessities @melliesully @LlSTENlNG_PARTY yaaaaaaaaay! thank you so much 💚💚💚" data-datetime="7:05 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378382297513984"
+                 data-text="That is quite a collection! 💚💚💚 https://t.co/lEJFAbkLwd" data-datetime="7:04 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378316450811904"
+                 data-text="We love a bass and guitar harmony riff. Think Thin Lizzy vibes. Very satisfying.
+
+@LlSTENlNG_PARTY" data-datetime="7:04 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378197319938049"
+                 data-text="Rach drums: 165 bpm - I really enjoy playing the middle 8 section which is a sped up bossanova over the top of the summery sounding chords. I love brazilian/Latin American beats used in pop music and it was a perfect opportunity to add it in. 
+
+@LlSTENlNG_PARTY" data-datetime="7:03 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fplsimps%2Fstatus%2F1523378172573609984"
+                 data-text="@PeanessBand Kaizen is such a great song! #TimsTwitterListeningParty #WFOW" data-datetime="7:03 PM May 8, 2022"> 
+                plsimps            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378093469028352"
+                 data-text="Balla guitar pedal: tc electronic shaker 🤩
+A theme throughout this album and the Peaness vibe. Wavey, cheeky, and fun. 
+ 
+@LlSTENlNG_PARTY" data-datetime="7:03 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523378053774204931"
+                 data-text="@kevbrackenbury @hashtagsalesy @LlSTENlNG_PARTY Sorry :( don\'t be...jelly (donut) lol" data-datetime="7:03 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523377978121801729"
+                 data-text="Rach \"I remember playing this for the first time in our favourite Chester venue Telfords and being very excited about it. I kept adding in cymbal bells in all the stops and annoyed Jess and Balla with it 😂\".
+
+@LlSTENlNG_PARTY" data-datetime="7:03 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523377864925540353"
+                 data-text="A song about crying over the end of the world. 
+Jess says - “Kaizen is a song to remind myself that with every act of kindness and every crime, we affect the future, and that those choices go on to shape others, and our beautiful planet, long after we’re gone.”
+
+@LlSTENlNG_PARTY" data-datetime="7:02 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fmartinlrix%2Fstatus%2F1523377755923968001"
+                 data-text="@PeanessBand @LlSTENlNG_PARTY Beautiful opener #timstwitterlisteningparty" data-datetime="7:02 PM May 8, 2022"> 
+                martinlrix            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523377680607248384"
+                 data-text="TRACK 2: Kaizen - off we go! 
+
+#timstwitterlisteningparty #WFOW" data-datetime="7:01 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523377557642833920"
+                 data-text="We recorded the ambiance (pebbles, birds etc) on Jess’ voice notes down at the beach by the studio in Penmaenmawr, North Wales. 
+
+Jess played the acoustic guitar and then we added her and Balla’s vocals. I really love it. 
+
+#timstwitterlisteningparty #WFOW" data-datetime="7:01 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523377423081177088"
+                 data-text="TAKE A TRIP -  the calm before the storm. For when you do actually take that walk on a beach and forget about everything else in the world. A section of the cycle involving sorrow, anger and peace. 
+
+#timstwitterlisteningparty #WFOW" data-datetime="7:00 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523377397348945920"
+                 data-text="Oh! Our Totally Snick pea guy does not have a name? Who wants to give it one? Best one might get some goodies 👀 https://t.co/XYH4gVFtXo" data-datetime="7:00 PM May 8, 2022"> 
+                PeanessBand            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523377204440322050"
+                 data-text="Time to get started at The @LlSTENlNG_PARTY 
+
+Over to you @PeanessBand - and World Full Of Worry https://t.co/D7bI5t3fx5" data-datetime="7:00 PM May 8, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FPeanessBand%2Fstatus%2F1523377183464468480"
+                 data-text="TRACK 1: Take A Trip. 
+
+@LlSTENlNG_PARTY #WFOW #timstwitterlisteningparty" data-datetime="6:59 PM May 8, 2022"> 
+                PeanessBand            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
