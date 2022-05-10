@@ -1,0 +1,464 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5HsS1ZypeIv7XCNMI5GSy1" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02e3f37ec20212bf582b97e591" alt="Two" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Dubstar</span><br/><span class="sub-colour">Two</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5HsS1ZypeIv7XCNMI5GSy1" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 79 tweets from Monday 9th May 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/sarahblackwood" target="_blank"><img src="https://pbs.twimg.com/profile_images/1488890943512223746/f2VUeD4X_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/sarahblackwood.jpg'"><br/>@sarahblackwood</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/chrisewilkie" target="_blank"><img src="https://pbs.twimg.com/profile_images/1488884033820020739/FTi00IRh_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/chrisewilkie.jpg'"><br/>@chrisewilkie</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/dubstarUK" target="_blank"><img src="https://pbs.twimg.com/profile_images/1488882961118371842/hgkdKHIS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/dubstarUK.jpg'"><br/>@dubstarUK</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Token" data-start="0"
+             data-duration="266" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="I Can See You Outside" data-start="267"
+             data-duration="259" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Tectonic Plates" data-start="527"
+             data-duration="214" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Lighthouse" data-start="742"
+             data-duration="260" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Tears" data-start="1003"
+             data-duration="191" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Hygiene Strip" data-start="1195"
+             data-duration="248" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Blood" data-start="1444"
+             data-duration="231" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Social Proof" data-start="1676"
+             data-duration="205" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Kissing To Be Unkind" data-start="1882"
+             data-duration="277" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Perfect Circle" data-start="2160"
+             data-duration="251" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2412"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851e3f37ec20212bf582b97e591" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-79" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523765685628792833"
+                 data-text="@helbo1 @dubstarUK @chrisewilkie Love you!!!!! But I don\'t think my nerves could cope!!!! #timstwitterlisteningparty" data-datetime="8:43 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FJamieVJB%2Fstatus%2F1523765683892670464"
+                 data-text="@dubstarUK And after Friday at @RoughTrade, if Chris and Sarah do play more shows then ensure you get a ticket and see them live. Friday, an acoustic session, was marvellous and highlighted how good these songs and the back catalogue really are. A band truly loved. X" data-datetime="8:43 PM May 9, 2022"> 
+                JamieVJB            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523765436281929729"
+                 data-text="@phil_marriott You know how i feel about that song!!!!!!! #timstwitterlisteningparty" data-datetime="8:42 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523765043074310144"
+                 data-text="@iantracy79 @chrisewilkie @dubstarUK good to hear x #timstwitterlisteningparty" data-datetime="8:41 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523764953689526272"
+                 data-text="@dubstarUK 🙌" data-datetime="8:40 PM May 9, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523764921426530305"
+                 data-text="❤️🔥 https://t.co/dz1RqvDZXU" data-datetime="8:40 PM May 9, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523764897922043905"
+                 data-text="@Tim_Burgess Mucho love and thanks to you too, @Tim_Burgess  ❤️❤️❤️" data-datetime="8:40 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523764889810255873"
+                 data-text="@JimmyLennonSE1 @dubstarUK Thank you, so much x #timstwitterlisteningparty" data-datetime="8:40 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523764815260708864"
+                 data-text="#TimsTwitterListeningParty is a welcome reminder that beautiful things can still emerge during times of great struggle and difficulty. Love and gratitude to @Tim_Burgess for continuing to bring us all together. C x" data-datetime="8:40 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523764717197860864"
+                 data-text="@soozworld @dubstarUK Love this so much! Mesmerising! x #timstwitterlisteningparty" data-datetime="8:39 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523764625640411136"
+                 data-text="Mucho love and thanks to @dubstarUK x x" data-datetime="8:39 PM May 9, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="66000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523764421100994560"
+                 data-text="@iantracy79 @chrisewilkie @dubstarUK Hope light is getting a look in now x #timstwitterlisteningparty" data-datetime="8:38 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523764144695955456"
+                 data-text="@RLeBonTennant virtual hugs x #timstwitterlisteningparty" data-datetime="8:37 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523764069186306048"
+                 data-text="Perfect Circle- once recording was underway, I found Sarah’s voice and Haguey’s piano so moving that I worried we’d lose something by adding more, but we kept the supporting elements subtle, so it still breathes like a living thing  #TimsTwitterListeningParty" data-datetime="8:37 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523763850872786944"
+                 data-text="Perfect Circle- I was resistant to having a cover on Two, but Haguey reminded me that there were a couple on our first album which people love. Along with Smiths and Joy Division, R.E.M. were a big deal to me and friends in Gateshead when forming bands #TimsTwitterListeningParty" data-datetime="8:36 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523763809546305536"
+                 data-text="Now Playing: Circle - Stephen plays the piano, so much emotion in those keys. Chris added a beautiful guitar part remotely, I was cross that he\'d discarded most of it as he felt it was gilding the lily... on reflection he made the right production call. #TimsTwitterListeningParty" data-datetime="8:36 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523763784632139776"
+                 data-text="Now playing: Perfect Circle - recorded largely as an experiment, perhaps to be kept in the back pocket for some future occasion or b-side, this R.E.M. cover turned out to be the perfect closer for Two #TimsTwitterListeningParty" data-datetime="8:36 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523763623373737986"
+                 data-text="Al Green hi-hats are another highlight" data-datetime="8:35 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523763511943659520"
+                 data-text="@oldgoldrich Oh bless you!!!! x #timstwitterlisteningparty" data-datetime="8:35 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523763227532103680"
+                 data-text="@andyjr1975 @LiamBrigg Oh thats lovely, thank you x #timstwitterlisteningparty" data-datetime="8:33 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523763023823147008"
+                 data-text="I\'m so glad i made it to that high note! #timstwitterlisteningparty" data-datetime="8:33 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523762988272222208"
+                 data-text="Kissing to be Unkind- Sarah performs vocal miracles on this one. Try singing it, and you’ll see what I mean. 
+#TimsTwitterListeningParty" data-datetime="8:33 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523762727629770752"
+                 data-text="Kissing to be Unkind- sometimes when people are being nice, you instinctively feel that their malevolence is already locked and loaded. 
+#TimsTwitterListeningParty" data-datetime="8:31 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523762655865229312"
+                 data-text="Now Playing: Kissing - Did the backing vocals in a room with a big hole in the floor, like many of us in lockdown I got sucked into home renovations. View from the mic was straight down to kitchen below. I do seem to like making things complicated... #TimsTwitterListeningParty" data-datetime="8:31 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523762622897995776"
+                 data-text="@RLeBonTennant Me too. x #timstwitterlisteningparty" data-datetime="8:31 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523762615423430657"
+                 data-text="Now playing: Kissing to be Unkind - when affection is offered as a poisoned chalice, intended to weaken the recipient, as preparation for the delivery of an emotional assault  #TimsTwitterListeningParty" data-datetime="8:31 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523762255610793984"
+                 data-text="Social Proof- in the instrumental section, Haguey transforms into Chris Hillman in support of my efforts to channel @RogerMcGuinn..! #TimsTwitterListeningParty" data-datetime="8:30 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523762086748180480"
+                 data-text="@RLeBonTennant It was very worrying x #timstwitterlisteningparty" data-datetime="8:29 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523761912227692544"
+                 data-text="@LiamBrigg I love it when an album keeps dragging you back for more! Thanks so much! #timstwitterlisteningparty" data-datetime="8:28 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523761836004311040"
+                 data-text="Now Playing: Social Proof - We worried that the jangly Americana element wasn\'t a stylistic fit for the album, but Haguey pointed out \"Blackbird\" was on the same album as \"Helter Skelter\" and that was the end of that... lyrics resonate well I think... #TimsTwitterListeningParty" data-datetime="8:28 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523761813262716928"
+                 data-text="Social Proof- the social/psychology observation is only one facet of the song, it splinters into more diverse aspects of society and vexation. Seemed like a good excuse to do a jangly number.. #TimsTwitterListeningParty" data-datetime="8:28 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="165000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523761773991452672"
+                 data-text="Now playing: Social Proof - When people find themselves in a new situation and are unsure about how to behave, there’s a tendency to observe others’ behaviour and follow suit. But what if the others are making a terrible mistake? #TimsTwitterListeningParty" data-datetime="8:28 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523761082560839681"
+                 data-text="@phil_marriott It changes key too........really subtle......#timstwitterlisteningparty" data-datetime="8:25 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523761065162543105"
+                 data-text="Blood- neighbouring beds would be illuminated from within during nocturnal admissions. I was struck by their incandescent beauty, in contrast to the sounds of familial drama and excruciating pain from behind the glowing curtains  #TimsTwitterListeningParty https://t.co/r5oG4bBdR9" data-datetime="8:25 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523760914214039552"
+                 data-text="@RLeBonTennant Oooooooh! #timstwitterlisteningparty" data-datetime="8:24 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523760825525506048"
+                 data-text="Now Playing: Blood - It’s a real siren at the end, from BBC sound effects………I love they way Haguey manages to makes a siren sound subtle….. king of restraint, and works so well for this track ❤️  #TimsTwitterListeningParty" data-datetime="8:24 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523760798929022976"
+                 data-text="Blood- inspired by my time in hospital, after being sent by GP to diagnose a suspected subarachnoid haemorrhage. There was a literal Spinal Tap moment: I was so afraid of the scheduled lumbar puncture that I discharged myself prematurely #TimsTwitterListeningParty" data-datetime="8:24 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523760780906090496"
+                 data-text="Now playing: Blood -  dark hospital drama rendered as a four minute new wave pop song. “When they shone the light in your eyes, it was clear the blood had started filling your head” #TimsTwitterListeningParty" data-datetime="8:24 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523760726430519297"
+                 data-text="@RLeBonTennant Great idea! #timstwitterlisteningparty" data-datetime="8:24 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523760405960851456"
+                 data-text="Love the Holly/wood lyric #timstwitterlisteningparty" data-datetime="8:22 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523760278697291776"
+                 data-text="Hygiene Strip- I’d done a guide vocal for song and sent to Sarah and Hague around 3am. I was finally going to bed, but then the “hate the way you look at my shoes” section came into my head, so I had to fire up the equipment again before I forgot it #TimsTwitterListeningParty" data-datetime="8:22 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523760152003760128"
+                 data-text="@waybeyondjacob 😍" data-datetime="8:21 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523759766312722433"
+                 data-text="Now Playing: HStrip needed us in the video hence the closing shot of me. Lockdown uncut hair (not ideal!) and not been into town for 5 months. Deserted which heightened the sense that we were all experiencing something simultaneously and universally... #TimsTwitterListeningParty" data-datetime="8:20 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523759755776651264"
+                 data-text="Now playing: Hygiene Strip - written and recorded during first UK lockdown. An incidental human story unfolding within the frame of a pandemic. #TimsTwitterListeningParty" data-datetime="8:20 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="109000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523759752890953728"
+                 data-text="Hygiene Strip- I was having some mental health problems which made it hard to keep writing, but Haguey sent me a file of this opening synth riff which stuck in my head, so I started the song in a socially-distanced queue at the Co-op. 
+#TimsTwitterListeningParty" data-datetime="8:20 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523759292998098945"
+                 data-text="@chrisewilkie Thats exactly what happened to me when i was singing it!!!!!!! #timstwitterlisteningparty" data-datetime="8:18 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523759062797619200"
+                 data-text="Tears- wrote this just before going to meet Sarah in London at the end of 2019, to plan the recording of Two.
+It’s one of these songs where you start out writing about someone else and then realise it’s probably about you
+#TimsTwitterListeningParty" data-datetime="8:17 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523758975405408257"
+                 data-text="Now Playing: Tears - Me trying to be Yorkshire’s answer to Lana Del Rey. We were both obsessed with Norman Fucking Rockwell!  Love how songs can change meaning over time... this one changed for me half way through recording it... bit disconcerting! #TimsTwitterListeningParty" data-datetime="8:17 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523758945348718593"
+                 data-text="Now playing: Tears - written in December 2019, this one is about that moment when you suddenly feel the weight of everything which has happened to bring you to where you are now, fortitude fails and the dam breaks  #TimsTwitterListeningParty" data-datetime="8:16 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523758774364049408"
+                 data-text="Adore that guitar outro #timstwitterlisteningparty" data-datetime="8:16 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523758706353053696"
+                 data-text="@LiamBrigg that got me too #timstwitterlisteningparty" data-datetime="8:16 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523758609452003328"
+                 data-text="@LiamBrigg that got me too" data-datetime="8:15 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523758372407111680"
+                 data-text="Lighthouse- but I often feel like that after friends or tradesmen have left. Especially the ones I’m most fond of 😅
+#TimsTwitterListeningParty" data-datetime="8:14 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FLiamBrigg%2Fstatus%2F1523758360863993856"
+                 data-text="\"I\'m pouring myself into the glass that you drank from\", what a lyric! #Timstwitterlisteningparty" data-datetime="8:14 PM May 9, 2022"> 
+                LiamBrigg            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523758132496793605"
+                 data-text="@dubstarUK Brilliant 😃 #timstwitterlisteningparty" data-datetime="8:13 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523757920554749952"
+                 data-text="Lighthouse- That feeling when someone leaves your house and you’re completely depersonalised, your home has been reduced to the theatrical scenery where their monologue was deployed. You’re looking at an empty stage but it’s where you live. #TimsTwitterListeningParty" data-datetime="8:12 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523757858424115200"
+                 data-text="Now Playing: Lighthouse - This was the first track we did. After hearing the melody, it wouldn’t leave me alone. The strings, the imagery just stayed in my head.. the words are very visual and it takes me to cold and wet sea places when singing it... #TimsTwitterListeningParty" data-datetime="8:12 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523757847607009281"
+                 data-text="Now playing: Lighthouse - when the light of your life leaves you struggling for breath, the sanctuary of your home is violated, and you’re left staring at the wreckage  #TimsTwitterListeningParty" data-datetime="8:12 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523757795484770304"
+                 data-text="@phil_marriott Absolutely filthy!!!!!!! #timstwitterlisteningparty" data-datetime="8:12 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523757478638657536"
+                 data-text="@RLeBonTennant Its stunning isn\'t it!" data-datetime="8:11 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523757330747195392"
+                 data-text="Tectonic Plates- we tried to hit a few stylistic references from our formative years on this one- XTC, Sister Sledge, Bowie etc.
+When you attempt to do a guitar part like this convincingly, you realise what a class act @nilerodgers really is. #TimsTwitterListeningParty" data-datetime="8:10 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523757302657953793"
+                 data-text="@chrisewilkie Hahahahaha 😆" data-datetime="8:10 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523757053227188226"
+                 data-text="@phil_marriott Aww thanks chick #timstwitterlisteningparty" data-datetime="8:09 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523756993382543360"
+                 data-text="Tectonic Plates- the full title was originally ‘(My Love Awaits Beneath) Tectonic Plates’, but it aesthetically undermined the graphic layout on the back of album sleeve. And it’s a bit of a mouthful, let’s face it  #TimsTwitterListeningParty" data-datetime="8:09 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523756961862647809"
+                 data-text="Now Playing: Tectonic Chris was hesitant about this one but I was insistent from the start. I\'m glad I can still hit those high notes (just) - but preferably not every day...! #TimsTwitterListeningParty" data-datetime="8:09 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523756944867037184"
+                 data-text="Now playing: Tectonic Plates - Musically it’s a vision of the future as it was perceived in the past. Lyrically, it’s about suppressed feelings and the emotional pressure cooker effect. #TimsTwitterListeningParty" data-datetime="8:09 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523756871219560450"
+                 data-text="@RLeBonTennant I did have a little dance as i was recording....... #timstwitterlisteningparty" data-datetime="8:08 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523756554885165056"
+                 data-text="Loving the guitar riff  #timstwitterlisteningparty" data-datetime="8:07 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523756244116570112"
+                 data-text="I Can See You Outside- I was in such a maelstrom of anxiety at the time of writing that the lyrical imagery sometimes arrives like it’s been smashed through a kaleidoscope #TimsTwitterListeningParty" data-datetime="8:06 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523755939882745856"
+                 data-text="I Can See You Outside- I thought my death was imminent when setting out to write this, so ‘outside’ became a metaphor for the afterlife. As lockdown lifted, it sounded like it was about social-distancing policy, but the song was already recorded by then #TimsTwitterListeningParty" data-datetime="8:05 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523755875324039168"
+                 data-text="Now playing: Outside - Haguey greeted me at the studio door hopping with excitement &amp; said “I think we’re on a bit of a creative roll here, come and listen to what me and Chris\'ve cooked up”, out rolled the amazing instrumental -I joined him hopping... #TimsTwitterListeningParty" data-datetime="8:04 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523755858961723392"
+                 data-text="Now playing: I Can See You Outside - Intended as a defiant expression of optimism, with the resolution to transcend an existential threat  #TimsTwitterListeningParty" data-datetime="8:04 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523755854335733760"
+                 data-text="@phil_marriott @dubstarUK we love it!!!!!! #timstwitterlisteningparty" data-datetime="8:04 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523755519978082304"
+                 data-text="Token- the instrumental coda at the end of this album version lets you wonder if Sarah has made the right decision. It was edited from the Single version, allowing us to imagine that her escape is complete #TimsTwitterListeningParty" data-datetime="8:03 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="116000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523755426000506880"
+                 data-text="We did this one acoustically on Friday and it worked really well! #timstwitterlisteningparty" data-datetime="8:02 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fchrisewilkie%2Fstatus%2F1523754939578986496"
+                 data-text="Token- the chorus came first. I was picturing Sarah extricating herself from a toxic situation. She’s summoning the final rush of willpower to escape something or somebody harmful, and is prepared to risk the consequences #TimsTwitterListeningParty" data-datetime="8:01 PM May 9, 2022"> 
+                chrisewilkie            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FdubstarUK%2Fstatus%2F1523754786763710464"
+                 data-text="Now playing: Token - This was the last song to be written for Two and the third to be composed during the lockdown era. Acknowledge the end and choose to survive. #TimsTwitterListeningParty" data-datetime="8:00 PM May 9, 2022"> 
+                dubstarUK            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahblackwood%2Fstatus%2F1523754762155356161"
+                 data-text="Now playing: Token - The verse words were literally written as we recorded. I’d sing a verse, see how it sung, we’d get Chris on the phone, tweak, re write, re- sing…..and repeat……for about 3 weeks!!!!! #TimsTwitterListeningParty" data-datetime="8:00 PM May 9, 2022"> 
+                sarahblackwood            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1523754705851412481"
+                 data-text="Over to you @sarahblackwood and @chrisewilkie a.k.a @dubstarUK 
+
+Time for our Two @LlSTENlNG_PARTY… https://t.co/zsMtw89AwK" data-datetime="8:00 PM May 9, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
