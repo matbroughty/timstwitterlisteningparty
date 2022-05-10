@@ -1,0 +1,414 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7d44aI6aP8aL9XLTHkZNS0" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e027436c39aedad71e9ae4d61ae" alt="Sunzoom" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Sunzoom</span><br/><span class="sub-colour">Sunzoom</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7d44aI6aP8aL9XLTHkZNS0" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 62 tweets from Tuesday 10th May 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/SunzoomMusic" target="_blank"><img src="https://pbs.twimg.com/profile_images/1522297184485613568/ZY-K4gK0_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/SunzoomMusic.jpg'"><br/>@SunzoomMusic</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/ColoramaRecords" target="_blank"><img src="https://pbs.twimg.com/profile_images/1093479687702147073/BuoXlWkS_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/ColoramaRecords.jpg'"><br/>@ColoramaRecords</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/andyjcrofts" target="_blank"><img src="https://pbs.twimg.com/profile_images/1493578740131057668/wYw14cMl_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/andyjcrofts.jpg'"><br/>@andyjcrofts</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="The Sun's Everlasting" data-start="0"
+             data-duration="63" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Pour Me Another Wine" data-start="64"
+             data-duration="264" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Anytime Soon" data-start="329"
+             data-duration="258" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="A Simple Song" data-start="588"
+             data-duration="167" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Garden Birds Of India" data-start="756"
+             data-duration="172" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Willowhedge" data-start="929"
+             data-duration="254" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Osaka Radio" data-start="1184"
+             data-duration="82" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Let's Go" data-start="1267"
+             data-duration="221" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="The Place Where The Long Shadows Grow" data-start="1489"
+             data-duration="314" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Hell No" data-start="1804"
+             data-duration="242" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Soul Parade" data-start="2047"
+             data-duration="249" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2297"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048517436c39aedad71e9ae4d61ae" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-62" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524128262309523456"
+                 data-text="HELL NO (DEMO): its the demo... haha #TimsTwitterListeningParty" data-datetime="8:44 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FForsythK2%2Fstatus%2F1524128097557262339"
+                 data-text="@SunzoomMusic Off the scale , what a phenomenal album . Hope you\'ve enjoyed every minute of this, well deserved #TimsTwitterListeningParty 🙌" data-datetime="8:43 PM May 10, 2022"> 
+                ForsythK2            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524128068620754946"
+                 data-text="https://t.co/MgszYwavJZ" data-datetime="8:43 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524128060995420160"
+                 data-text="flute solo by andy frizell of wizards of twiddly #TimsTwitterListeningParty" data-datetime="8:43 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524127935300616193"
+                 data-text="@EDouglasWW @LiamBrigg @softcellhq yes. hello" data-datetime="8:43 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524127853700427781"
+                 data-text="Thinking of Scott today  https://t.co/WAPcD9340V" data-datetime="8:42 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524127754979057664"
+                 data-text="@KYN_POD @Hanpeel Shes astonishing!" data-datetime="8:42 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524127544164945920"
+                 data-text="If your sticking around for BONUS TRACKS...#TimsTwitterListeningParty heres HAPPY FLY: words by William Blake" data-datetime="8:41 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FColoramaRecords%2Fstatus%2F1524127521716981762"
+                 data-text="Bonus tracks #TimsTwitterListeningParty @SunzoomMusic" data-datetime="8:41 PM May 10, 2022"> 
+                ColoramaRecords            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524127358692859909"
+                 data-text="Well thats it... #TimsTwitterListeningParty" data-datetime="8:40 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524126929510670341"
+                 data-text="violin solo by @Hanpeel is sublime X" data-datetime="8:39 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FEDouglasWW%2Fstatus%2F1524126924464922624"
+                 data-text="And I gotta say, @softcellhq\'s first album in 20 years would be a tough act to follow but @SunzoomMusic took on that challenge and delivered! #timstwitterlisteningparty" data-datetime="8:39 PM May 10, 2022"> 
+                EDouglasWW            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524126726497918978"
+                 data-text="Home on the range: another one I demoed a long time ago. I found the string parts done by the amazing Hannah Peel @Hanpeel and Vicky Mutch on an old hard drive and had to use them. Great Rhodes piano too by Paul Donnelly @PaulStraws #TimsTwitterListeningParty" data-datetime="8:38 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524126563977080843"
+                 data-text="@MacaronPurpl Love Anton!!" data-datetime="8:37 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524126449728466944"
+                 data-text="@ColoramaRecords @TeenageWaitress @chrispaulwatson The boys #TimsTwitterListeningParty" data-datetime="8:37 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524126264554053633"
+                 data-text="Soul Parade: I was also listening to a lot of XTC at the time #TimsTwitterListeningParty" data-datetime="8:36 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="125000" data-url="https%3A%2F%2Ftwitter.com%2FColoramaRecords%2Fstatus%2F1524126206819549187"
+                 data-text="@TeenageWaitress @SunzoomMusic @chrispaulwatson Love this pic" data-datetime="8:36 PM May 10, 2022"> 
+                ColoramaRecords            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524125684259598338"
+                 data-text="Soul Parade: Another story song. I wanted to write little one verse stories with a new character in each. A separate verse for each separate soul. Nothing really matters, we all have a story, we all die, enjoy your bloody self!! #TimsTwitterListeningParty" data-datetime="8:34 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FSuperdrogidge%2Fstatus%2F1524125503321481218"
+                 data-text="This is an absolute beaut of an album.. enthralled ecstatically completely! 😎 @SunzoomMusic #TimsTwitterListeningParty" data-datetime="8:33 PM May 10, 2022"> 
+                Superdrogidge            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524125259057795076"
+                 data-text="@andyjcrofts if it wasnt for this song we would never have met hahah" data-datetime="8:32 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524125192188043265"
+                 data-text="@EDouglasWW sending love man x" data-datetime="8:32 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FForsythK2%2Fstatus%2F1524125071312408576"
+                 data-text="If you\'re not singing this right now you\'re doing it wrong  
+
+Take a bow @SunzoomMusic this album it\'s immense. Every single track and so interesting to read the background to the tracks 💜🎧
+#TimsTwitterListeningParty
+
+https://t.co/scbrm6koqJ" data-datetime="8:31 PM May 10, 2022"> 
+                ForsythK2            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fandyjcrofts%2Fstatus%2F1524125020448239616"
+                 data-text="@SunzoomMusic This was the first song I heard from you. I played it on my radio show and it went down well. ⭐️" data-datetime="8:31 PM May 10, 2022"> 
+                andyjcrofts            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524124915296788482"
+                 data-text="@TeenageWaitress HAHAH" data-datetime="8:31 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524124759310667781"
+                 data-text="Hell No: MISERY ALERT!! It’s about my dad. He got dementia about 5 years ago and passed away last year. Miss him every day. Cheerful this isn’t it… I like the kind of Native American groove in the verses. #TimsTwitterListeningParty" data-datetime="8:30 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524124650015535104"
+                 data-text="SEGUE: Liverpool Express #TimsTwitterListeningParty" data-datetime="8:30 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524124196871327744"
+                 data-text="@ForsythK2 Yes Kimbo! X" data-datetime="8:28 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="149000" data-url="https%3A%2F%2Ftwitter.com%2FForsythK2%2Fstatus%2F1524124027840864263"
+                 data-text="@SunzoomMusic I was singing this very loudly in my kitchen on repeat over the weekend . It\'s a beauty as is everything on this album  #TimsTwitterListeningParty" data-datetime="8:27 PM May 10, 2022"> 
+                ForsythK2            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524123401811603457"
+                 data-text="The place where the long shadows grow: This started as a memory of picking my grandad up drunk. We were really close but the war had really screwed him up and like many men at the time he drowned his sorrows. No help in those days xx #TimsTwitterListeningParty" data-datetime="8:25 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524123317749395458"
+                 data-text="@TeenageWaitress its not thrown together ye know...hahah xxx" data-datetime="8:24 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524123067143884801"
+                 data-text="@mforsythmusic blessings brother x" data-datetime="8:23 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fmforsythmusic%2Fstatus%2F1524122906795679751"
+                 data-text="@SunzoomMusic this album deserves to go Platinum. Outstanding musician. You feel left handed waiting for the bells to Come singing la la lady lets go #timstwitterlisteningparty" data-datetime="8:23 PM May 10, 2022"> 
+                mforsythmusic            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FColoramaRecords%2Fstatus%2F1524122658866188288"
+                 data-text="@SunzoomMusic Amazing!" data-datetime="8:22 PM May 10, 2022"> 
+                ColoramaRecords            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524122445829091329"
+                 data-text="Let’sGo: the classic dream song. Too much red wine and cheese before bed and this is what you get. Great bass duties shared between Tom Powell of Michael heads band @michaelheadtreb and @stephenduffield again. Fuzz and clean. Split’em.. #TimsTwitterListeningParty" data-datetime="8:21 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524122119549992961"
+                 data-text="Osaka Radio: I did a weird bass groove at 4am (insomnia) with a tiny glass hammer that started this whole thing. The Japanese feel of the glockenspiel led me to record a random voice from Osaka Radio and stick it in there. Translations welcome. #TimsTwitterListeningParty" data-datetime="8:20 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="122000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524121921859772417"
+                 data-text="MARTIN SMITH ON TRUMPET !!!! #TimsTwitterListeningParty" data-datetime="8:19 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524121409131327490"
+                 data-text="Lots of Beatley Mellotron on this one #willowhedge #TimsTwitterListeningParty" data-datetime="8:17 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524121112858316801"
+                 data-text="Willowhedge: I blame Countryfile for the lyrics. Amazing Brass section by Andy Frizell and Martin Smith of @wizardsoftwidd recorded years ago and resurrection for the album. #TimsTwitterListeningParty" data-datetime="8:16 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524120975532515334"
+                 data-text="MARIJUHANA! #TimsTwitterListeningParty" data-datetime="8:15 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FColoramaRecords%2Fstatus%2F1524120862336630785"
+                 data-text="@ady_hanson @SunzoomMusic Agreed! ⭐️" data-datetime="8:15 PM May 10, 2022"> 
+                ColoramaRecords            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524120772360515586"
+                 data-text="melodica is one of the things i found in the toy box when i was recording at home #TimsTwitterListeningParty" data-datetime="8:14 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FColoramaRecords%2Fstatus%2F1524120663593824256"
+                 data-text="@SunzoomMusic @ChrisGPackham First single release on Colorama. Lovely tune #TimsTwitterListeningParty" data-datetime="8:14 PM May 10, 2022"> 
+                ColoramaRecords            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fady_hanson%2Fstatus%2F1524120597038567424"
+                 data-text="Definitely nothing simple about this song #TimsTwitterListeningParty just brilliant! @SunzoomMusic hats off pal 👏👏💜🎶
+
+https://t.co/X8KRVu3enA" data-datetime="8:14 PM May 10, 2022"> 
+                ady_hanson            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524120572237598721"
+                 data-text="bongo fury #TimsTwitterListeningParty" data-datetime="8:13 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524120366444122118"
+                 data-text="Garden Birds: wrote this after a visit to 69A (Best curiosity shop in town) I was flicking through a book about Indian Birds &amp; wrote it when I got home. Prob didn’t remember the  details correctly but I’m sure @ChrisGPackham could put me right.#TimsTwitterListeningParty" data-datetime="8:13 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FColoramaRecords%2Fstatus%2F1524119873022009346"
+                 data-text="A Simple Song is a fave from the album. First track that caught our attention  #TimsTwitterListeningParty @SunzoomMusic" data-datetime="8:11 PM May 10, 2022"> 
+                ColoramaRecords            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524119861743566852"
+                 data-text="MORE COWBELL #TimsTwitterListeningParty" data-datetime="8:11 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524119671443652608"
+                 data-text="A Simple Song: This was one of those songs that came to me walking the dog I suddenly had melody and lyrics. Thank god for voice notes! I like the wah bass on this, gives it a great bounce. Bit of a nonsense lyric which are probably my favourite kind… #TimsTwitterListeningParty" data-datetime="8:10 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524119510806114304"
+                 data-text="@TeenageWaitress yep, a mates grandad. amazing stuff." data-datetime="8:09 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FColoramaRecords%2Fstatus%2F1524119165333868546"
+                 data-text="Can imaging Anytime Soon at a festival. Big sing along  #TimsTwitterListeningParty @SunzoomMusic" data-datetime="8:08 PM May 10, 2022"> 
+                ColoramaRecords            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524119067086442498"
+                 data-text="great piano by @mearrom" data-datetime="8:07 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524118744355721216"
+                 data-text="Anytime Soon: It started as a story I was told by a WW2 veteran years ago about him getting knocked out on D-Day and losing his platoon on the beach. He woke up in the surf and had to try and get himself back with his mates. Amazing story. #TimsTwitterListeningParty" data-datetime="8:06 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524118516630269954"
+                 data-text="little segue of my single GOLDEN AGE at the end there #TimsTwitterListeningParty" data-datetime="8:05 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524118274602311680"
+                 data-text="Drums: All the drumming on the album is by @NovaTwinsMusic drummer Jake Leon Woodward. I went into @ArkRecordingStu with producer Steve Powell who brought Jake in for two days and he just perfected the sound I wanted" data-datetime="8:04 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524118095178366976"
+                 data-text="Pour Me Another Wine: I wanted a real bass groove which was a bit beyond me so I asked @stephenduffield from The Beta Band/Steve Mason (who I know had worked with my mates @ToffeeYaffle) and amazingly he agreed and just nailed it! #TimsTwitterListeningParty" data-datetime="8:04 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524117891850936320"
+                 data-text="a little gate of psychedelia , like a fanfare at the start of a movie then into: Pour Me Another Wine: a story song. A couple in my local used to have the same fight every week. One wanted to stay one wanted to go. Funny, romantic, sad #TimsTwitterListeningParty" data-datetime="8:03 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FColoramaRecords%2Fstatus%2F1524117508634120195"
+                 data-text="@SunzoomMusic @LlSTENlNG_PARTY Hello 👋" data-datetime="8:01 PM May 10, 2022"> 
+                ColoramaRecords            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524117480876044288"
+                 data-text="track 2 straight in @LlSTENlNG_PARTY" data-datetime="8:01 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524117347547635717"
+                 data-text="The Sun’s Everlasting: I was just jamming a kind of circular raga thing on the acoustic and the lyric spiralled around this one. It reminded me of the bit in the Dylan documentary No Direction Home where he’s reading the pet grooming sign in 10 different ways. @LlSTENlNG_PARTY" data-datetime="8:01 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524117291042025473"
+                 data-text="The Sun’s Everlasting: I was just jamming a kind of circular raga thing on the acoustic and the lyric spiralled around this one. It reminded me of the bit in the Dylan documentary No Direction Home where he’s reading the pet grooming sign in 10 different ways." data-datetime="8:00 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524117091187630083"
+                 data-text="Handing over to @SunzoomMusic for the @LlSTENlNG_PARTY 🙌 https://t.co/EsuiuEJaKP" data-datetime="8:00 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FSunzoomMusic%2Fstatus%2F1524117078592167936"
+                 data-text="Ok everyone press play now on the album for SUNZOOM @LlSTENlNG_PARTY" data-datetime="8:00 PM May 10, 2022"> 
+                SunzoomMusic            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>

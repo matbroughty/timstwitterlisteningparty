@@ -1,0 +1,435 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/0iWF2Q0lgv6xpAWGOV5rkQ" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0296ff2887032252af16b73716" alt="Happiness Not Included" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Soft Cell</span><br/><span class="sub-colour">Happiness Not Included</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(492923)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/0iWF2Q0lgv6xpAWGOV5rkQ" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_492923_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 42 tweets from Tuesday 10th May 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/MarcAlmond" target="_blank"><img src="https://pbs.twimg.com/profile_images/1267999518215282689/PNVAwIPR_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/MarcAlmond.jpg'"><br/>@MarcAlmond</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/daveballelectro" target="_blank"><img src="https://pbs.twimg.com/profile_images/1509156205448552455/r_NS2uVp_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/daveballelectro.jpg'"><br/>@daveballelectro</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1505922187701665795/TDTS3cnZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/softcellhq" target="_blank"><img src="https://pbs.twimg.com/profile_images/1455139144422789120/Uob5FUNY_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/softcellhq.jpg'"><br/>@softcellhq</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Happy Happy Happy" data-start="0"
+             data-duration="286" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Polaroid" data-start="287"
+             data-duration="281" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Bruises On All My Illusions" data-start="569"
+             data-duration="285" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Purple Zone" data-start="855"
+             data-duration="191" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Heart Like Chernobyl" data-start="1047"
+             data-duration="204" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Light Sleepers" data-start="1252"
+             data-duration="281" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Happiness Not Included" data-start="1534"
+             data-duration="295" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Nostalgia Machine" data-start="1830"
+             data-duration="274" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Nighthawks" data-start="2105"
+             data-duration="314" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="I'm Not a Friend of God" data-start="2420"
+             data-duration="274" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Tranquiliser" data-start="2695"
+             data-duration="230" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="New Eden" data-start="2926"
+             data-duration="389" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3316"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485196ff2887032252af16b73716" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-42" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fsoftcellhq%2Fstatus%2F1524101691578195971"
+                 data-text="Thanks to everyone for listening and special thanks to @Tim_Burgess for hosting the *Happiness not included @LlSTENlNG_PARTY!
+
+The album is available to buy and stream at https://t.co/jPSRC3jrhd
+
+#TimsTwitterListeningParty #SoftCell https://t.co/mGun5F5n7u" data-datetime="6:58 PM May 10, 2022"> 
+                softcellhq            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524101466549628930"
+                 data-text="❤️ https://t.co/gprj2xjFgF" data-datetime="6:58 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524101058724782080"
+                 data-text="Thank you all for joining this fun @LlSTENlNG_PARTY and to @Tim_Burgess for inviting us 🖤
+
+#TimsTwitterListeningParty #SoftCell
+
+https://t.co/EFLtF2C1lH" data-datetime="6:56 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="270000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524100778180419585"
+                 data-text="Thank you for listening and coming to the Party – we loved the one for ‘Non-Stop Erotic Cabaret’ so much we came back. 
+
+Thanks to @Tim_Burgess &amp; @LlSTENlNG_PARTY for asking us.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:55 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524099646771109888"
+                 data-text="I’d like to do a Grid ambient version of this with @MrRichardNorris. The perfect ending to *HNI, we would have made it longer if there had been more space on the vinyl!
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:50 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524099240980537346"
+                 data-text="New Eden – a final song to give us all some hope in this dark world.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:49 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524099051133808641"
+                 data-text="Such a brilliant album and a fantastic @LlSTENlNG_PARTY by @daveballelectro &amp; @MarcAlmond 
+
+Get yourself a copy of the new @softcellhq LP right here https://t.co/AvO5fGRCK4" data-datetime="6:48 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524098683528261635"
+                 data-text="Tranquiliser – really pleased how this turned out, especially the strings. One of the most cinematic tracks on the album.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:46 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="220000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524098259546955776"
+                 data-text="Tranquiliser – so Soft Cell – how I feel presently post-Covid.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:45 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524097338100359169"
+                 data-text="I’m Not a Friend of God - one of the darkest songs on *HNI. As ever with Soft Cell, it\'s the light and the shade and this is definitely the shade.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:41 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="254000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524097125369454594"
+                 data-text="I’m Not a Friend of God - well I’m not actually so what can I tell you. And it’s true that God is only around when there is misery and death, which all seems a bit too late.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:40 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524096059131183104"
+                 data-text="Nighthawks - one of my solo tracks for my autobiography box set a couple of years ago, Marc heard it when he read my book and immediately commandeered it for Soft Cell.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:36 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="225000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524095800896335872"
+                 data-text="Nighthawks – the fearsome vocal of the creature that is Cristeene – what a vocal performance!
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:35 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524094856284577792"
+                 data-text="Nostalgia Machine - we have a fantastic 12” version of this for future release, which is how it was recorded before being edited down to fit on the album!
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:31 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="219000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524094660502765569"
+                 data-text="Nostalgia Machine – just put on your disco boots and throw all your cares away.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:30 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524093742424244226"
+                 data-text="Got a really excited phone call from a friend the other week when they were having breakfast in the same restaurant as @MarcAlmond" data-datetime="6:27 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524093685792751616"
+                 data-text="Happiness Not Included - featuring an electronic harpsichord and Gary Barnacle playing some evil-sounding flute this time.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:27 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="99000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524093450601340931"
+                 data-text="Happiness Not Included – an angry rant at the world.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:26 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="145000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524093034568331265"
+                 data-text="If you’ve just joined us, here’s the buy/listen link for *Happiness not included: https://t.co/YcHOz8IoYV
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:24 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524092426683568128"
+                 data-text="Light Sleepers - I think this should be the next single from *HNI. A great Marc vocal performance and sublime sax from Gary Barnacle, whose contribution has really added to this album.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:22 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="159000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524092221871607809"
+                 data-text="Light Sleepers – one of our best songs. I think it is a classic in its simplicity. I wrote it in LA. The Earth café off Melrose was my inspiration.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:21 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524091553878261762"
+                 data-text="Heart Like Chernobyl - written in my kitchen in the darkest depths of lockdown, one of my favourite moments of the album in its sheer simplicity.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:18 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524091369345761280"
+                 data-text="Heart Like Chernobyl – if you listen to it, this is not actually about Chernobyl at all. 
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:17 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524091299862917122"
+                 data-text="Yeah! @softcellhq &amp; @petshopboys - a match made in Heaven" data-datetime="6:17 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524090905082400770"
+                 data-text="Please follow @softcellhq" data-datetime="6:16 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524090828100153344"
+                 data-text="Can we give it a go please? 🙏 https://t.co/OJhH6AhyBy" data-datetime="6:15 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524090661003214849"
+                 data-text="Purple zone - We were already very confident we had delivered some of Soft Cell’s best work with this new album, but this collaboration was the cherry on the cake.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:15 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524090557966036993"
+                 data-text="Purple zone – such a gift from @petshopboys. We are all in the Purple Zone right now.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:14 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524090101252435970"
+                 data-text="Heard that @petshopboys might be listening along too 😉" data-datetime="6:12 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524089659592216579"
+                 data-text="Bruises On All My Illusions - Check out the Chris and Cosey and Grid remixes of ‘Bruises\' coming on the 12” vinyl single very soon.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:11 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524089418147106818"
+                 data-text="Bruises On All My Illusions – my rock and roll bit – a sequel to ‘Bedsitter’ maybe. Love playing it live.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:10 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="207000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524089257916342273"
+                 data-text="Imagine listening along to a @softcellhq album with @MarcAlmond &amp; @daveballelectro 😻😻😻
+It’s happening right now" data-datetime="6:09 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524088386071445506"
+                 data-text="Polaroid - still one of the most surreal things ever meeting Warhol, but we must have done it as we still have the polaroids!
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:06 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524088266126942211"
+                 data-text="Polaroid – meeting an idol like Andy Warhol, a living legend, perhaps one of the most famous people who ever lived. And it was everything I expected it to be, and yet not.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:05 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524088148275470337"
+                 data-text="❤️❤️❤️@softcellhq https://t.co/SrmJqVY76F" data-datetime="6:05 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524087906943574017"
+                 data-text="Enjoyed performing \'Happy Happy Happy\' on our recent tour and pleased we used it as the calling card for *HNI.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:04 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524087748218564609"
+                 data-text="Happy Happy Happy – we live in a time with no irony, and so many people sadly miss that. I know I do. 
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:03 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fdaveballelectro%2Fstatus%2F1524087590181343235"
+                 data-text="Most of the album demos were written by the time lockdown started, as it all got worse I was recording alone at home. The isolation comes out in the music I think.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:02 PM May 10, 2022"> 
+                daveballelectro            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524087399986434054"
+                 data-text="This was truly a lockdown record – I don’t know how I would have found the time or inclination to write it – it happened because I was locked up at home.
+
+#TimsTwitterListeningParty #SoftCell" data-datetime="6:02 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FMarcAlmond%2Fstatus%2F1524087029537071104"
+                 data-text="Welcome to the *Happiness not included @LlSTENlNG_PARTY.
+
+Press play on your copy of the record now!
+
+#TimsTwitterListeningParty #SoftCell
+
+https://t.co/YcHOz8IoYV" data-datetime="6:00 PM May 10, 2022"> 
+                MarcAlmond            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fsoftcellhq%2Fstatus%2F1524086904634888193"
+                 data-text="The *Happiness not included @LlSTENlNG_PARTY starts now!
+
+Press play and follow along as @daveballelectro &amp; @MarcAlmond talk about each track on the album 🖤
+
+#TimsTwitterListeningParty #SoftCell
+
+https://t.co/jPSRC3jrhd" data-datetime="6:00 PM May 10, 2022"> 
+                softcellhq            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1524086879515258882"
+                 data-text="Handing over to @MarcAlmond and @daveballelectro also known as @softcellhq 
+
+Press play, drop the needle on the record*
+
+*Happiness Not Included https://t.co/eiRFgRQxqY" data-datetime="6:00 PM May 10, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
