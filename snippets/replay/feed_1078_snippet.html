@@ -1,0 +1,743 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/6a7B6DW9E6Ta4VQri8HMQl" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02369c900f9453cb6d0957bd55" alt="These Actions Cannot Be Undone" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Gentle Sinners</span><br/><span class="sub-colour">These Actions Cannot Be Undone</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/6a7B6DW9E6Ta4VQri8HMQl" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 128 tweets from Friday 20th May 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/AidanJohnMoffat" target="_blank"><img src="https://pbs.twimg.com/profile_images/1322617746002239489/mFx9_2kb_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/AidanJohnMoffat.jpg'"><br/>@AidanJohnMoffat</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/thetwilightsad" target="_blank"><img src="https://pbs.twimg.com/profile_images/1037500467440492544/hjv8zOgQ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/thetwilightsad.jpg'"><br/>@thetwilightsad</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/gentle_sinners" target="_blank"><img src="https://pbs.twimg.com/profile_images/1504426398680821760/lC6-Bf8n_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/gentle_sinners.jpg'"><br/>@gentle_sinners</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1525386140659900417/8Kj0nW1n_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Waiting For Nothing" data-start="0"
+             data-duration="343" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Killing This Time" data-start="344"
+             data-duration="260" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Let Them Rot" data-start="605"
+             data-duration="226" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="The Cries" data-start="832"
+             data-duration="157" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Date & Sign" data-start="990"
+             data-duration="251" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Rent Free" data-start="1242"
+             data-duration="201" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Shores of Anhedonia" data-start="1444"
+             data-duration="247" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Face to Fire (After Nyman)" data-start="1692"
+             data-duration="207" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Don't Say Goodnight" data-start="1900"
+             data-duration="245" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Landfill" data-start="2146"
+             data-duration="251" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2398"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851369c900f9453cb6d0957bd55" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-128" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527752219545812993"
+                 data-text="... and that\'s our album. Thanks for joining us! You can listen again or buy here: https://t.co/qEIIy33Rhn
+
+#timstwitterlisteningparty 
+
+(LP with bonus remix 7\" in shops September.)" data-datetime="8:44 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527751952389529600"
+                 data-text="@Heather_TTS @Tim_Burgess Cheers, Heather!" data-datetime="8:43 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527751733065175041"
+                 data-text="@teknostatik Cheers Andy!" data-datetime="8:42 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527751599703085063"
+                 data-text="@_roseability Aidan can confirm this" data-datetime="8:42 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1527751589838180358"
+                 data-text="Twenty minutes until our @John_Fogerty @LlSTENlNG_PARTY" data-datetime="8:42 PM May 20, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527751460787834882"
+                 data-text="@mrmitchell78 @gentle_sinners Cheers!" data-datetime="8:41 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527751459391082497"
+                 data-text="Thank you @Tim_Burgess @LlSTENlNG_PARTY ❤️ https://t.co/yt2T6DZ6uE" data-datetime="8:41 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527751368534016001"
+                 data-text="@teknostatik Cheers, Andy!" data-datetime="8:41 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527751252116918279"
+                 data-text="Thanks, all! And special thanks to legend @Tim_Burgess for having us. I\'m off now to find out why Katy Perry\'s trending ...
+
+ #Timstwitterlisteningparty" data-datetime="8:40 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1527751071480922112"
+                 data-text="My one word review:
+
+COR!
+
+What a positive experience for the ears! Thanks so much @gentle_sinners @AidanJohnMoffat #TimsTwitterListeningParty" data-datetime="8:40 PM May 20, 2022"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fteknostatik%2Fstatus%2F1527751032444420097"
+                 data-text="This has been great, and is definitely a record I want to own at some point soon. It\'s also different to anything either participant has done before, which is always what I look for in a collaboration. #TimsTwitterListeningParty" data-datetime="8:40 PM May 20, 2022"> 
+                teknostatik            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527751012760530944"
+                 data-text="... and that\'s our album. Thanks for joining us! You can listen again or buy here: https://t.co/qEIIy3ls8V
+
+(LP with bonus remix 7\" in shops September.)" data-datetime="8:40 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FHeather_TTS%2Fstatus%2F1527750952068927489"
+                 data-text="#TimsTwitterListeningParty
+Landfill is ace, so many layers of meaning. 🖤🖤🖤 https://t.co/Er4KZL1DLt" data-datetime="8:39 PM May 20, 2022"> 
+                Heather_TTS            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527750884330971137"
+                 data-text="@pshutt41 Cheers!" data-datetime="8:39 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fpshutt41%2Fstatus%2F1527750765149814784"
+                 data-text="Landfill. A great finish to a top album. #Timstwitterlisteningparty" data-datetime="8:39 PM May 20, 2022"> 
+                pshutt41            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527750763031801856"
+                 data-text="Every band needs a t-shirt. We\'ll get these printed for the tour ... details soon!
+
+#timstwitterlisteningparty https://t.co/SlDSMsrxVO" data-datetime="8:39 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1527750653577142273"
+                 data-text="Thaaaaaanks @gentle_sinners &amp; @AidanJohnMoffat ❤️🔥" data-datetime="8:38 PM May 20, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527750509288820737"
+                 data-text="... but I probably had pyjamas on.
+
+#timstwitterlisteningparty" data-datetime="8:38 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527750494483058692"
+                 data-text="#timstwitterlisteningparty https://t.co/X1BX2pQqkj" data-datetime="8:37 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fsabrillena%2Fstatus%2F1527750450489044995"
+                 data-text="I like that most of the lyrics of this album are frank, without filter, that there is not really room for interpretation and that we manage to relate to those words anyway. And this song is the epitome of it. 🖤#timstwitterlisteningparty https://t.co/irzRagti0j" data-datetime="8:37 PM May 20, 2022"> 
+                sabrillena            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fktmcnl%2Fstatus%2F1527750449075474433"
+                 data-text="Such an awesome song 👌 #gentlesinners @thetwilightsad #fearlesslyterrifed https://t.co/q3D1w2bpkz" data-datetime="8:37 PM May 20, 2022"> 
+                ktmcnl            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527750332390023171"
+                 data-text="@AidanJohnMoffat Who’s there?" data-datetime="8:37 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527750258087718912"
+                 data-text="Landfill
+
+Aidan sent the 🎶 over &amp; I knew what I needed to ✍️ about. The military 🥁 made me think about being at war with myself &amp; my 🧠. It reminded me of the stigmas around mental health, “pull yourself together son” is an example of old/bad advice
+
+#timstwitterlisteningparty" data-datetime="8:37 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527750257580421120"
+                 data-text="Want to know how I\'m sure Landfill\'s my favourite? I mixed it in the kitchen.
+
+#timstwitterlisteningparty" data-datetime="8:37 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527750207798132736"
+                 data-text="Just realised I\'ve never asked James what that knock knock joke is. I\'ll phone you after!
+
+ #Timstwitterlisteningparty" data-datetime="8:36 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527750185849331712"
+                 data-text="#timstwitterlisteningparty https://t.co/QqOFWTjc9B" data-datetime="8:36 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527750005716656130"
+                 data-text="Landfill\'s my favourite, and I think James\'s too. Don\'t Say Goodnight was originally the closer, but we thought that was a bit too obvious, and we wanted to have a Big Finish, and pump up the drama.
+
+PULL YOURSELF TOGETHER, SON!
+
+#timstwitterlisteningparty" data-datetime="8:36 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527750005670305792"
+                 data-text="Landfill
+
+For me, this is one of the most important songs I’ve ever written. It’s about finally addressing my issues with anxiety &amp; my mental health. Realising it’s ok to ask for help and there’s nothing to be ashamed about. 
+
+#timstwitterlisteningparty" data-datetime="8:36 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527749829388124165"
+                 data-text="@mbalashov @LlSTENlNG_PARTY @gentle_sinners @AidanJohnMoffat ❤️❤️❤️" data-datetime="8:35 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527749660659548161"
+                 data-text="#timstwitterlisteningparty https://t.co/j2EFmmrgdt" data-datetime="8:34 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1527749595190657027"
+                 data-text="Sponsorship deal incoming https://t.co/RpsgqXgg1y" data-datetime="8:34 PM May 20, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527749507546591233"
+                 data-text="@maggienificent2 Not sure it\'ll help you sleep!" data-datetime="8:34 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527749504375500800"
+                 data-text="I mixed all the songs in pyjamas.
+
+#timstwitterlisteningparty" data-datetime="8:34 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527749502890700800"
+                 data-text="I\'ve always loved lullaby-style songs that close albums – like Ringo on the White Album. This would\'ve been the last track, but ...
+
+#timstwitterlisteningparty" data-datetime="8:34 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527749502551183361"
+                 data-text="I love the new @billieeilish album and I know Aidan does too. I watched the documentary about her and decided I’d get the same 🎤 she uses in her house &amp; on the road. I also watched a few @finneas interviews about how they record
+
+#timstwitterlisteningparty https://t.co/bfsPF3RUCJ" data-datetime="8:34 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527749349207429120"
+                 data-text="#timstwitterlisteningparty https://t.co/B6502s14Vb" data-datetime="8:33 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527749251807076352"
+                 data-text="Took ages to mix this one. I loved it as a lullaby but there was something sinister behind it too, so I tried to bring that out ... but also make it so you could dance to it ... plus give it an old 78rpm jazz feel. Threw everything at it, basically!
+
+#timstwitterlisteningparty" data-datetime="8:33 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527749251056291840"
+                 data-text="I recorded all my vocals in @adidas joggies
+
+ #timstwitterlisteningparty" data-datetime="8:33 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2F_roseability%2Fstatus%2F1527749233293414400"
+                 data-text="my cat anhedonia doesn\'t sufficiently appreciate that she\'s named in a @gentlesinners track, but at thankfully her sisters melancholia and ennui don\'t know to be envious. #timstwitterlisteningparty https://t.co/pY6DKWPXoJ https://t.co/BQiHkPsHhF" data-datetime="8:32 PM May 20, 2022"> 
+                _roseability            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527749082936135681"
+                 data-text="#timstwitterlisteningparty https://t.co/3ISiVBAJ8T" data-datetime="8:32 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527749069401096193"
+                 data-text="VOCAL SYNTH YAS
+
+ #Timstwitterlisteningparty" data-datetime="8:32 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527748999364624384"
+                 data-text="Don’t Say Goodnight
+
+I sing “sleepy sleepy boy sleepy sleepy boy” to my son at night to help him fall asleep. A song about wanting to sleep but your 🧠 won’t shut off (anxiety again). AKG has a new 👶🏻 brother so falling asleep isn’t a problem anymore
+
+#timstwitterlisteningparty" data-datetime="8:32 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527748902237220864"
+                 data-text="@pshutt41 Cheers!" data-datetime="8:31 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527748813343047682"
+                 data-text="@scoobiedubh Cheers!" data-datetime="8:31 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fpshutt41%2Fstatus%2F1527748743566598145"
+                 data-text="This is getting better and better. Face to fire is a cracking tune.  #Timstwitterlisteningparty" data-datetime="8:30 PM May 20, 2022"> 
+                pshutt41            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527748707025829889"
+                 data-text="I absolutely love Michael Nyman, and the orchestration in this is a tribute. First heard his soundtracks on Channel 4 in the 80s – Drowning By Numbers, still one of my favourite records.
+
+ #Timstwitterlisteningparty" data-datetime="8:30 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527748600729677825"
+                 data-text="#timstwitterlisteningparty https://t.co/OVrD9fZBAQ" data-datetime="8:30 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527748540163936257"
+                 data-text=":) https://t.co/5q9S9KlkQk" data-datetime="8:30 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527748431585869825"
+                 data-text="#timstwitterlisteningparty https://t.co/Cdf7N2UClx" data-datetime="8:29 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527748339709759488"
+                 data-text="@maggienificent2 Feel Bad Hit of the Summer :)" data-datetime="8:29 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527748246747025408"
+                 data-text="Face to Fire 
+
+The words “Fearlessly Terrified” had been in my 🧠 for a while. Aidan sent over this 🎶 it sounded such a confident song. I thought those words were a good way of showing no matter how confident some1 can seem they can be just as fragile #timstwitterlisteningparty" data-datetime="8:29 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527748245274992640"
+                 data-text="There can\'t be many songs with the line \"I don\'t want to die\" that I find really funny, but this is one of them. You wouldn\'t know it from the album, but we\'re usually having a right good laugh with each other. This song might be the most \"us\".
+
+#timstwitterlisteningparty" data-datetime="8:29 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527748244511539200"
+                 data-text="Face to Fire
+
+Aidan sent me the 🎶 &amp; something clicked. By the next day I’d written &amp; recorded all my vocals. It was a song I didn’t know i needed to write. Upbeat, playful &amp; catchy. Things not related to me, I still managed to make it sad 
+
+#timstwitterlisteningparty" data-datetime="8:29 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1527748226593476612"
+                 data-text="First listen and I bloody love this album.  @gentle_sinners #TimsTwitterListeningParty" data-datetime="8:28 PM May 20, 2022"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527747992240783361"
+                 data-text="This next one, Face To Fire – I really didn\'t think James would go for this. I sent over two instrumental tracks at the time – I don\'t remember what the other one was, but I know it was pretty downbeat, and I thought he\'d never pick the fun one.
+
+#timstwitterlisteningparty" data-datetime="8:28 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527747672207245316"
+                 data-text="🎷 https://t.co/8TeuJnHtFx" data-datetime="8:26 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527747489276862466"
+                 data-text="Here comes the saxophone! Again. I\'ve been having a bit of a love affair with the sax recently; I think it might blossom into a marriage. Is it too late to take lessons?
+
+#timstwitterlisteningparty" data-datetime="8:26 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527747469546819592"
+                 data-text="@gentle_sinners Cheers!" data-datetime="8:25 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527747406896439297"
+                 data-text="#timstwitterlisteningparty https://t.co/moEOANXWNz" data-datetime="8:25 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527747237522161665"
+                 data-text="Shores of Anhedonia
+
+I ❤️ Aidan’s vocals on this song. Without discussing the lyrics we were on the exact same page. I ❤️ the interplay of both sets of vocals. Musically I feel moments of clarity followed by intense claustrophobia &amp; self doubt &amp;🎷
+
+#timstwitterlisteningparty" data-datetime="8:25 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527747167951142917"
+                 data-text="@maggienificent2 🙏" data-datetime="8:24 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527747112905101312"
+                 data-text="@maggienificent2 Agreed!" data-datetime="8:24 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fmbalashov%2Fstatus%2F1527747038972198912"
+                 data-text="@LlSTENlNG_PARTY @gentle_sinners @AidanJohnMoffat Kharkiv, Ukraine 🇺🇦 https://t.co/Qvkc5gfGXa" data-datetime="8:24 PM May 20, 2022"> 
+                mbalashov            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527747003937071105"
+                 data-text="@nelsodj @LlSTENlNG_PARTY @gentle_sinners yay!" data-datetime="8:24 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527746985737916417"
+                 data-text="Not sure why I chose to do vocals on here, I\'d just had that \"shores of anhedonia\" phrase rolling around my head at the time and needed to get it out. The latter section about my broken phone was a nightmare I had. It was scarier than it sounds!
+
+#timstwitterlisteningparty" data-datetime="8:24 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527746736248107008"
+                 data-text="Here\'s another unused photo ...
+
+#timstwitterlisteningparty https://t.co/eQHqiUeDXn" data-datetime="8:23 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527746483453407232"
+                 data-text="We\'d already mastered the album with DTM (b-side on Killing This Time 7\") as track 6 but had a last-minute panic. Rent Free had been abandoned for some reason, but a quick, frantic mixed saved it, and now it\'s one of my favourites.
+
+#timstwitterlisteningparty" data-datetime="8:22 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527746388724957188"
+                 data-text="#timstwitterlisteningparty https://t.co/sidgIYNlfs" data-datetime="8:21 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527746368072257536"
+                 data-text="Can\'t even look at that photo without feeling sick
+
+#timstwitterlisteningparty" data-datetime="8:21 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527746231031631872"
+                 data-text="Rent Free
+
+The last song to be finished for the album. A song about feeling helpless when you can clearly see that the powers that be are quite literally “a bunch of fuckin clowns”
+
+#timstwitterlisteningparty" data-datetime="8:21 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527746154011795458"
+                 data-text="@pshutt41 Cheers!" data-datetime="8:20 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527746095589228544"
+                 data-text="@pshutt41 Cheers!" data-datetime="8:20 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527745979809554432"
+                 data-text="Here\'s some unused artwork. Turns out I absolutely HATE having my head underwater. Although I don\'t mind it so much on the rare occasions I go swimming, oddly. But doing these photos was horrible.
+
+#timstwitterlisteningparty https://t.co/6KHjPrwu02" data-datetime="8:20 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fmissmerrymouse1%2Fstatus%2F1527745934100254726"
+                 data-text="@gentle_sinners it\'s time for the slow dance 🖤#timstwitterlisteningparty" data-datetime="8:19 PM May 20, 2022"> 
+                missmerrymouse1            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527745854035083265"
+                 data-text="#timstwitterlisteningparty https://t.co/KsSIZTXOzI" data-datetime="8:19 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527745776222359552"
+                 data-text="As you can hear, I did a lot tampering with James\'s voice. Vocal synths are brilliant!
+
+#timstwitterlisteningparty" data-datetime="8:19 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527745728692592641"
+                 data-text="I like the wee fright in this song with the manic loud bit. It originally went the opposite way and broke down to a quiet whisper but I thought burying the voice in noise suited the sentiments more.
+
+#timstwitterlisteningparty" data-datetime="8:19 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527745727966851072"
+                 data-text="Date &amp; Sign
+
+One of the quieter songs on the record until the middle where it gets very intense. The main lyric at that point is “don’t be like me”. #timstwitterlisteningparty" data-datetime="8:19 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527745355122720771"
+                 data-text="#timstwitterlisteningparty https://t.co/DYzZfqeaUT" data-datetime="8:17 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527745250588086279"
+                 data-text="@LightingMonkey @thetwilightsad Never worn dungarees in my life." data-datetime="8:17 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527745224423772161"
+                 data-text="Date &amp; Sign
+
+I have 2 kids. I’m happiest when I’m just their dad. Like most Dads I want the best for them. I don’t want them to suffer from anxiety like me. It’s quite a sweet but sad song. Sometimes a ❤️ letter to those I ❤️, Sometimes pure anxiety #timstwitterlisteningparty" data-datetime="8:17 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527744882252685313"
+                 data-text="#timstwitterlisteningparty https://t.co/8l9gOUiOwv" data-datetime="8:15 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527744730049691655"
+                 data-text="#timstwitterlisteningparty https://t.co/GIR9p6JCbN" data-datetime="8:15 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527744721480736768"
+                 data-text="The Cries
+
+I heard the female vocals &amp; 1st thing I thought was “just stand back &amp; let her sing” I related the voice to all the unheard people in society, if the people in power actually listen to the people who’s lives their decisions actually effect #timstwitterlisteningparty" data-datetime="8:15 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527744695333441536"
+                 data-text="@mrmitchell78 @gentle_sinners High praise indeed! Thanks!" data-datetime="8:14 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527744470510452738"
+                 data-text="The Cries
+
+This might come as some surprise but I actually want to be happy. Most of the time I am. I have a lot to be happy about but my anxieties &amp; mental health can get in the way of that happiness. My mind drifts from happy to worry all too often. #timstwitterlisteningparty" data-datetime="8:14 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1527744458334384129"
+                 data-text="If this album was a TV Show, it’d be Twin Peaks. I’m all in. @gentle_sinners @AidanJohnMoffat #TimsTwitterListeningParty" data-datetime="8:13 PM May 20, 2022"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527744419780337664"
+                 data-text="❤️ https://t.co/b77YBXPFYS" data-datetime="8:13 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527744322996674561"
+                 data-text="#timstwitterlisteningparty https://t.co/oNdW4mejKO" data-datetime="8:13 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527744262133231618"
+                 data-text="@sabrillena @gentle_sinners @HEYDUGGEE Ha ha! He\'s a talented wee lad, aye." data-datetime="8:13 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527744219015692291"
+                 data-text="As soon as I heard Arthur\'s wee vocal at the end of James\'s session, I knew it was going in the song somewhere – a wee moment of loveliness in the dark. I didn\'t ask James about it, just sent him the mix and hoped he\'d like it. He did! Phew.
+
+#timstwitterlisteningparty" data-datetime="8:13 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527744217593696262"
+                 data-text="Let Them Rot feat AKG
+
+AKG came home from nursery &amp; I was recordin. He wanted to sing into my 🎤 so I hit record. I ❤️ the moment you hear AKG. Like in real life he’s the light when the dark feels like its taking over #timstwitterlisteningparty" data-datetime="8:13 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527744109510811652"
+                 data-text="#timstwitterlisteningparty https://t.co/8yPo1W9ZcC" data-datetime="8:12 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527744086006026245"
+                 data-text="@teknostatik Cheers! Hopefully some more surprises to come. There\'s even a metal one. Kind of." data-datetime="8:12 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527743965897932800"
+                 data-text="Let Them Rot
+
+AKG makes me listen to this song in the car all the time but only pays attention when it’s his bit
+
+#timstwitterlisteningparty" data-datetime="8:12 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527743906984734720"
+                 data-text="#timstwitterlisteningparty https://t.co/pMpycU7Wk4" data-datetime="8:11 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527743714394705920"
+                 data-text="Let Them Rot feat AKG
+
+Who is AKG I hear you ask? Is he a hot new rapper with a cool mixtape about to drop? Is he a bold new electronic artists?
+
+One day he might be……but right now he’s my 4 year old Son who loves Dinosaurs &amp; @HEYDUGGEE.
+
+#timstwitterlisteningparty" data-datetime="8:11 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527743714268954624"
+                 data-text="Guess where I mixed this one? You know how the pandemic made people realise they could work from home? It made me realise I could do everything in bed.
+
+#timstwitterlisteningparty" data-datetime="8:11 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fgshawisme%2Fstatus%2F1527743702525005824"
+                 data-text="If you aren’t doing the @gentle_sinners #timstwitterlisteningparty  you are missing out. This album will be troubling my end of year Top 5 🙌🏻" data-datetime="8:10 PM May 20, 2022"> 
+                gshawisme            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527743463961153536"
+                 data-text="DRUMS! I love drums. Especially drums that sound like the world\'s on fire.
+
+#timstwitterlisteningparty" data-datetime="8:10 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527743445179195393"
+                 data-text="@mrmitchell78 @gentle_sinners Glad you like it, Paul!" data-datetime="8:09 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527743150302932994"
+                 data-text="#timstwitterlisteningparty https://t.co/XepIbKNteg" data-datetime="8:08 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527743055989719041"
+                 data-text="#timstwitterlisteningparty https://t.co/RCJ3bx21kA" data-datetime="8:08 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fgshawisme%2Fstatus%2F1527742971873042433"
+                 data-text="@AidanJohnMoffat Love the concept of a choir of Jameses 😃 And @gentle_sinners live… 👀 #timstwitterlisteningparty" data-datetime="8:08 PM May 20, 2022"> 
+                gshawisme            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527742960246435842"
+                 data-text="I mixed this one in bed too.
+
+#timstwitterlisteningparty" data-datetime="8:08 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527742959537430528"
+                 data-text="Killing This Time
+
+I started to think a lot about the lines “got to learn to live without”. With climate change &amp; other 🌍 events coming to forefront I started asking myself “do I need this?”. What makes me happy? Things? No. People? Yes (sometimes 😉) #timstwitterlisteningparty" data-datetime="8:08 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527742959495614465"
+                 data-text="Killing This Time 
+
+When this song was finished and I’d spent some time with it…..I came to the conclusion that…..I think the falsetto middle 8 “got to learn to live without” is my attempt at ABBA
+
+#timstwitterlisteningparty" data-datetime="8:08 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527742760840732673"
+                 data-text="#timstwitterlisteningparty https://t.co/gMSN1PJurG" data-datetime="8:07 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527742707593928704"
+                 data-text="There was a lot more going on musically in Killing This Time – taiko drums and everything! – but it was a mess. I soon learned the joy of ditching things and stripping songs down to their bones. And then putting the strings back in, of course.
+
+#timstwitterlisteningparty" data-datetime="8:07 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527742520352022528"
+                 data-text="@AidanJohnMoffat Physically I do have a big head" data-datetime="8:06 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527742456833355776"
+                 data-text="Killing This Time
+
+“take everything you care about, got to learn to live without” was how I felt during the pandemic. Whilst I followed the rules to protect those I care about I got into the mind frame of “got to learn to live without” to help me cope #timstwitterlisteningparty" data-datetime="8:06 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527742375120064512"
+                 data-text="👀 https://t.co/CO0ey0rKNo" data-datetime="8:05 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527742222732492801"
+                 data-text="It’s pushin 
+It’s pushin 
+My brain feels like it’s cookin  #Timstwitterlisteningparty" data-datetime="8:05 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527742204558643201"
+                 data-text="Because we weren\'t expecting to do these songs live*, I knew I could use a whole choir of Jameses on the album. I don\'t think there were many vocal takes I didn\'t use in some way, there\'s hundreds of them!
+
+(*We probably are now though, news soon ...)
+
+#timstwitterlisteningparty" data-datetime="8:05 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527742136799698945"
+                 data-text="@petoukhoff Cheers!" data-datetime="8:04 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527742000816062465"
+                 data-text="@thetwilightsad Don\'t get a big head" data-datetime="8:04 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527741912643424264"
+                 data-text="I wrote this one in bed. https://t.co/7zw9kUDE0Y" data-datetime="8:03 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527741702689107968"
+                 data-text="I mixed this one in bed.
+
+#timstwitterlisteningparty" data-datetime="8:03 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527741690114723841"
+                 data-text="😭😭😭😭😭😭 https://t.co/Sj4BEtsgrN" data-datetime="8:02 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527741596262928387"
+                 data-text="#timstwitterlisteningparty https://t.co/D2z7IgNiZe" data-datetime="8:02 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527741561659871234"
+                 data-text="Don\'t tell him I said this, but I love James\'s voice.
+
+#timstwitterlisteningparty" data-datetime="8:02 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527741450129227783"
+                 data-text="Waiting For Nothing
+
+I remember thinkin this is like nothing I’ve ever written to before but at the same time being excited to get to work. I wrote the majority of it early 1 morning after waking up. I’d been listenin to it on repeat the previous night #timstwitterlisteningparty" data-datetime="8:02 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527741273884479490"
+                 data-text="GO!
+
+#timstwitterlisteningparty" data-datetime="8:01 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FAidanJohnMoffat%2Fstatus%2F1527741198382862337"
+                 data-text="Waiting for Nothing was the only way to start the album, it was the first tune we did and got us quite excited about doing more. I took the title from Tom Kromer\'s book of the same name but didn\'t expect James to keep it. Obviously struck a chord.
+
+#timstwitterlisteningparty" data-datetime="8:01 PM May 20, 2022"> 
+                AidanJohnMoffat            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fteknostatik%2Fstatus%2F1527741124533792771"
+                 data-text="I\'ve saved this until tonight. A collaboration between two of my favourites. #TimsTwitterListeningParty https://t.co/XKhYi3gtxW" data-datetime="8:00 PM May 20, 2022"> 
+                teknostatik            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fthetwilightsad%2Fstatus%2F1527741089561645056"
+                 data-text="#timstwitterlisteningparty https://t.co/u1btYp8Pou" data-datetime="8:00 PM May 20, 2022"> 
+                thetwilightsad            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1527740972058263555"
+                 data-text="Handing over to @AidanJohnMoffat &amp; @gentle_sinners https://t.co/QESgTIk1AE" data-datetime="8:00 PM May 20, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2Fgentle_sinners%2Fstatus%2F1527740947366174720"
+                 data-text="Waiting For Nothing
+
+The 1st song Aidan &amp; I wrote together. My anxiety was at its worst, I was worried about my family, friends and everyday I was looking for something to help us move forward…..some hope but my 📱 &amp; the 📺 quickly erased any hope. #timstwitterlisteningparty" data-datetime="8:00 PM May 20, 2022"> 
+                gentle_sinners            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
