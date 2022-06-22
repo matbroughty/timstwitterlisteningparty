@@ -1,0 +1,531 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7lkHNu9PjuMg6g6vq55cYW" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02e3186e1c0538ae30233cfe2a" alt="Here We Are" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Citizens!</span><br/><span class="sub-colour">Here We Are</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(367268)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7lkHNu9PjuMg6g6vq55cYW" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_367268_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 101 tweets from Wednesday 22nd June 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/GoCitizens" target="_blank"><img src="https://pbs.twimg.com/profile_images/823125379728764929/jzu8o6iZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/GoCitizens.jpg'"><br/>@GoCitizens</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/tom_burke_" target="_blank"><img src="https://pbs.twimg.com/profile_images/1002275079944921088/Me6XJNdu_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/tom_burke_.jpg'"><br/>@tom_burke_</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1535750640084951040/itYVivbd_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="True Romance" data-start="0"
+             data-duration="241" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Reptile" data-start="242"
+             data-duration="227" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Caroline" data-start="470"
+             data-duration="174" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Love You More" data-start="645"
+             data-duration="200" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Let's Go All the Way" data-start="846"
+             data-duration="250" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="(I'm in Love with Your) Girlfriend" data-start="1097"
+             data-duration="196" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Nobody's Fool" data-start="1294"
+             data-duration="210" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Monster" data-start="1505"
+             data-duration="217" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="She Said" data-start="1723"
+             data-duration="171" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="I Wouldn't Want To" data-start="1895"
+             data-duration="193" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Know Yourself" data-start="2089"
+             data-duration="234" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2324"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851e3186e1c0538ae30233cfe2a" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-101" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539696130052816896"
+                 data-text="Is this bracing enough for you @mjaevans ? #timstwitterlisteningparty https://t.co/7eHQ3spy5Z" data-datetime="7:45 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539696007331594240"
+                 data-text="It was classic @alkapranos to go the extra mile both so that we would have material for our campaign and because he loves using his studio #timstwitterlisteningparty" data-datetime="7:45 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539695697418719234"
+                 data-text="If anyone is on Spotify listening to the 2 acoustic tracks: We set up in the studio one Sat night and recorded this with a bottle of wine. Wurlitzer, Bass, Drums, Guitar, Vocals." data-datetime="7:43 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539695641500295171"
+                 data-text="Thank you for everything...we may be in touch ;-) https://t.co/6dxmDyiKxF" data-datetime="7:43 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1539695567667863564"
+                 data-text="@GoCitizens @LlSTENlNG_PARTY 🙌" data-datetime="7:43 PM Jun 22, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539695340726767618"
+                 data-text="Thank you to Tim and the team for organising this. We sort of ambushed them on the anniversary of the album and they\'ve been so great getting it done. I can\'t tell you how much fun we had doing this. I\'m proper emosh. https://t.co/DWmd2He3D2" data-datetime="7:42 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1539695085331283969"
+                 data-text="Biiiiiig thanks to @GoCitizens for a fantastic @LlSTENlNG_PARTY 🙌🙌" data-datetime="7:41 PM Jun 22, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539695058747801600"
+                 data-text="Thank you so much to all of you who logged in for this. We\'ve all been talking in the run up to this and we\'re going to do some shows very soon (and new music?)...keep your eyes peeled. #timstwitterlisteningparty https://t.co/nVinL0fB2o" data-datetime="7:41 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539694709353943042"
+                 data-text="I can\'t believe that\'s over....#timstwitterlisteningparty HereWeAre walking through the scottish fields with @alkapranos Feels a good way to end. (though I\'ve got some other bits and bobs...) https://t.co/h3MdYVMbys" data-datetime="7:39 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539694652202405895"
+                 data-text="Also props to @alkapranos for mixing this song including all those made live delays and spring reverbs. #timstwitterlisteningparty" data-datetime="7:39 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539694473281781761"
+                 data-text="Guys, can we do this every Wednesday. I\'ve had so much fun! #timstwitterlisteningparty" data-datetime="7:39 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539694430357274626"
+                 data-text="One of the best moments of the album was turning this from an electro song to this slow, cumbia inspired groove. All of us in the room feeling something #timstwitterlisteningparty" data-datetime="7:38 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539694288937910272"
+                 data-text="So much fun to play live. We once played it on the roof of Gallerie La Fayette in paris as part of fashion week and they shut the roads cause the crowds had gathered to see us play. Real U2 moment. Roof below #timstwitterlisteningparty https://t.co/K4PWE57Dsa" data-datetime="7:38 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539694111275491328"
+                 data-text="PolySix" data-datetime="7:37 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539694091717541888"
+                 data-text="Alex made this dub mix you hear here with all those incredible delays using his beautiful mixing desk and when we heard it we were just like  YES IT WORKS!!!! #timstwitterlisteningparty" data-datetime="7:37 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539694014642913286"
+                 data-text="Know Yourself. I was strumming the Coronado sitting behing Mike\'s drum kit. Alex suddenly set up a mic, brought it over and we did the vocals then and there. Thanks @alkapranos for capturing that relaxed, dreamy moment. #timstwitterlisteningparty" data-datetime="7:37 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539693897932312576"
+                 data-text="Not studio, train!" data-datetime="7:36 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539693867460591618"
+                 data-text="Know Yourself -  The last song we recorded. It came together on the FINAL day of recording as I was literally leaving for the studio." data-datetime="7:36 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539693642587176961"
+                 data-text="100%. Let\'s tell that story. #timstwitterlisteningparty https://t.co/Dr81SinuQh" data-datetime="7:35 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539693584869474305"
+                 data-text="HOW IS THIS THE FINAL SONG ALREADY #timstwitterlisteningparty No fat on this record." data-datetime="7:35 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539693530469261313"
+                 data-text="Self praise is no praise but I\'ve been writing songs with @tom_burke_ and @mjaevans for many years and I think that was the best lyrics I ever wrote. #timstwitterlisteningparty" data-datetime="7:35 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539693412923883521"
+                 data-text="Alex helped bring in the major minor change. Made the song. #timstwitterlisteningparty https://t.co/ly909NcEAQ" data-datetime="7:34 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539693359320768513"
+                 data-text="You took your chances! #timstwitterlisteningparty" data-datetime="7:34 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539693326894514179"
+                 data-text="Alex had a beautiful Wurlitzer piano which we used to track this and the next song… #timstwitterlisteningparty https://t.co/tQqlKOmnNd" data-datetime="7:34 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539693297337253888"
+                 data-text="I wouldn\'t want to. This was real co-write in the front room of the flat I was lodging in in Stoke Newington with @LJDiamondMusic and @mjaevans. #timstwitterlisteningparty" data-datetime="7:34 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539693132765437952"
+                 data-text="When I met my now wife she overheard me telling someone this was about my ex and she said she would go home and listen to it and be like \"WHO IS THIS WOMAN\"." data-datetime="7:33 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539692909020286977"
+                 data-text="I Wouldn\'t Want To - This song means a lot to me as I wrote it about the end of one (huge) relationship and the failed beginning of the other. Tom and me thrashed it out before we took it to the ban. Mike finessed the keys part #timstwitterlisteningparty" data-datetime="7:32 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539692800333193217"
+                 data-text="This is flying by #timstwitterlisteningparty" data-datetime="7:32 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539692734398844929"
+                 data-text="Here is actual footage of @bassmackem laying down that bass line...#timstwitterlisteningparty @DanelectroUSA https://t.co/1INUWy4E1i" data-datetime="7:32 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539692629432098817"
+                 data-text="Me hugging Mike when I heard the riff. #timstwitterlisteningparty https://t.co/u0eQU1SOGz https://t.co/dj6xuJYHwA" data-datetime="7:31 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539692510821421056"
+                 data-text="It is indeed. @mjaevans nailing it! https://t.co/cQiY4iTzM3" data-datetime="7:31 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539692402532810754"
+                 data-text="I remember coming down one morning and Mike and Alex were just lay on the floor of the studio with about 6 synths and organs around them trying out a million different sounds to get the riff right. A lovely memory #timstwitterlisteningparty" data-datetime="7:30 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539692333104594950"
+                 data-text="She Said. @mjaevans banger. Is that Foxx Fuzz on bass?" data-datetime="7:30 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539692159082823681"
+                 data-text="An @mjaevans RIFF. Bass playing throughout this album is incredible, but I have lovely memories of him putting this live part down in the studio. He and Mike could just lock into each other and rock. They were the bedrock of all our live shows. #timstwitterlisteningparty" data-datetime="7:29 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539691993101733889"
+                 data-text="Monster. Loved writing this middle section. We spent ages figuring out how to make the key changes work. @alkapranos was also always big on finding ways to vary the delivery of the last chorus #timstwitterlisteningparty" data-datetime="7:29 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539691925309194240"
+                 data-text="What the chords were doing here only @alkapranos , @mjaevans and @tom_burke_ know. https://t.co/whE2BQT62j" data-datetime="7:28 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539691803628257285"
+                 data-text="Monster - Mike Evans with the wonderful engineer #jamesklewis who was with us for the whole album. #timstwitterlisteningparty https://t.co/jNYVaxcosX" data-datetime="7:28 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539691536308387846"
+                 data-text="Go on @tom_burke_ what a lovely vocal delivery. #timstwitterlisteningparty" data-datetime="7:27 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539691521598963713"
+                 data-text="Monster. So many songs on this album about finding a way to feel human through personal connections in a world where it is easy to feel lost and powerless. #timstwitterlisteningparty" data-datetime="7:27 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539691451352842243"
+                 data-text="Monster - This song was a monster. We put together about 3 different songs to build it. We spent ⅔ weeks before tracking with Alex just working through the songs, their arrangements, their lyrics, and it made such a huge different to the record." data-datetime="7:27 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539691335778697217"
+                 data-text="Alex introduced us to Martyn. We knew we needed a bass player to fill out the line up and he was a mutual friend. We\'re still so close and I\'m so glad he did. #timstwitterlisteningparty https://t.co/BGdioY6rqp" data-datetime="7:26 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539691182162329600"
+                 data-text="Should we play these songs live again soon @tom_burke_ @mjaevans ...thoughts guys? #timstwitterlisteningparty Loving hearing @bassmackem groove on this. https://t.co/34yI0xbNh3" data-datetime="7:25 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539691138566819844"
+                 data-text="A lot of the sound of this album comes from the Flickinger desk @alkapranos had. Type of desk used by Sly Stone and Ike Turner and it certainly bestowed some of its magic vibes on us.  #timstwitterlisteningparty" data-datetime="7:25 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539690856566988809"
+                 data-text="I also remember the first time @tom_burke_  played me this demo and I heard the riff at the beginning with the backwards pianos and I thought….this is so cool. I love that our band sounds like this. Did I say we had a lot of fun making this album?" data-datetime="7:24 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539690680632713221"
+                 data-text="Tom bought a kalimba off ebay and we tried to tune it to do this song and with the real instrument rather than a synth. It wouldn’t hold tune, was SO noisy cause of the contact pick up we had installed, and we were NOT very good at playing it. #timstwitterlisteningparty" data-datetime="7:23 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539690660579639296"
+                 data-text="Nobody\'s Fool. We used Fender Coronado unplugged and mic\'ed for that little part in the verses #timstwitterlisteningparty" data-datetime="7:23 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539690529839005699"
+                 data-text="Note on #girlfriend Myself and Thom had a thing on tour, everynight we would shout the name of someone related to the town we were playing in just before we did the solo in unison. Only one night did we shout the same person. Marseille, Didier Drogba. #timstwitterlisteningparty" data-datetime="7:23 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539690386318401537"
+                 data-text="Nobody\'s Fool. @bassmackem lovely bass #timstwitterlisteningparty" data-datetime="7:22 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539690338075435010"
+                 data-text="I hadn’t listened to this album since we released it in 2012 and going back to it last month this song (and Love You More) really stood out to me. Because they weren’t singles I sort of forget how well crafted they were. Alex really pushed us to find every hook and nuance. https://t.co/3WXBKyAuNB" data-datetime="7:22 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539690196693917696"
+                 data-text="Girlfriend. That fill. Those drums! At some point on tour we had a really elaborate joke about half-time oranges #timstwitterlisteningparty" data-datetime="7:22 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539690137319342081"
+                 data-text="Watching Mike do the drums on the slow down and speed up in the studio was sick. He had to play to a really mad tempo ramp and just aniled it everytime. He also did that great fill to go into it. He also then nailed it EVERY NIGHT on tour for 18 months. #timstwitterlisteningparty" data-datetime="7:21 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539690018222096384"
+                 data-text="This song WAILED live. This man below was our stage hand on one of the greatest tours we ever did. Ger, we salute you!! #timstwitterlisteningparty https://t.co/YW2pcMBG0p" data-datetime="7:21 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539689952832798722"
+                 data-text="Girlfriend. MS20! #timstwitterlisteningparty \\" data-datetime="7:21 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539689858851127296"
+                 data-text="Girlfriend. I remember @LJDiamondMusic turning up at our flat with the chorus for this song and in my memory he plays it to me right there on the doorstep. #timstwitterlisteningparty" data-datetime="7:20 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539689856921751552"
+                 data-text="I this song while very hungover after doing a nightshift at a @MOJO_BAR Liverpool. There was some discussion about the slow down at the end, I remember it being suggested it wasn’t very commercial. Alex quite politely noted that one of his songs had had a tempo change in it ;-) https://t.co/KiQoY764h2" data-datetime="7:20 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539689605922013185"
+                 data-text="I\'m In Love With Your Girlfriend!! - RIFF time. Always a belter live! https://t.co/VgE0J7W03t" data-datetime="7:19 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539689589757157376"
+                 data-text="Lets Go All The Way. That was one of the first songs I tried to write with 2 fingers as instructed by Ed Buller. #timstwitterlisteningparty" data-datetime="7:19 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539689480646434818"
+                 data-text="Massive shout out here to our label @kitsune who backed us 100% and were so supportive of everything we did. Here is that compilation release with a nameless band on it #timstwitterlisteningparty https://t.co/fV2TmqdQRC" data-datetime="7:19 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539689261741576193"
+                 data-text="Let\'s Go All The Way. So cool the way the voice gets dryer as that song gets quieter. #timstwitterlisteningparty" data-datetime="7:18 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539689253290086402"
+                 data-text="Even though this song is quite pensive in tone people would SCREAM the chorus at us at festivals which I always liked. I also always got to really extend the M8 live and do loads of weird synth noises with my SH101 which was always lots of fun. #timstwitterlisteningparty" data-datetime="7:18 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539689204577353728"
+                 data-text="It\'s MAD. What a strange and wonderful part of the song. It was always insane live! https://t.co/CcM6SKvVlA" data-datetime="7:18 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539689111237312513"
+                 data-text="Agreed..and in the background here we hear the birds from the conservatory. #atmosphere #letitbreath https://t.co/LC2l5T5QZH" data-datetime="7:17 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539688978730962944"
+                 data-text="I think I would stand there going \"Yes that sounds great\" ....\"But that sounds great too\" then at dinner later Alex would kindly share the credit! https://t.co/BZVhlpzJY9" data-datetime="7:17 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539688817753554950"
+                 data-text="I think the lyrics here are really special and really captured that time in early 2010 after the global recession and how the world felt as we looked at all our peers from the safety of our rehearsal room in the early twenty tens. Thoughts? @tom_burke_ #timstwitterlisteningparty" data-datetime="7:16 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539688723352256512"
+                 data-text="Let\'s Go All The Way. I couldn\'t sing this the first day we tried to do it. Was such a relief a few days later to come back and get it right #timstwitterlisteningparty" data-datetime="7:16 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539688693807693825"
+                 data-text="So this is strictly speaking the first ever CITIZENS! song, but we didn\'t even have a name when it came out #timstwitterlisteningparty" data-datetime="7:16 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539688589369511942"
+                 data-text="Let\'s Go All The Way - Our label @kitsune  were putting out one of their legendary mixtape CDs just as we started recording the album and they wanted this to be the first track. WEhad no time to track anything so Alex just led us on a three day mix odyssey making the demo rock!!" data-datetime="7:15 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539688357088854017"
+                 data-text="👏👏👏 https://t.co/YkMGBxJf3i" data-datetime="7:14 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539688216168734723"
+                 data-text="Mike in THAT conservatory....here that mans BVs. Jesus he can sing @mjaevans #timstwitterlisteningparty https://t.co/dtqeQngjYI" data-datetime="7:14 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539688125206827008"
+                 data-text="Love You More. This was the first mix we got back from Mike Frasier in Vancouver. We put it on in the rehearsal rooms in Stoke Newington and jumped around like kids #timstwitterlisteningparty" data-datetime="7:13 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539687947066392586"
+                 data-text="Some great chords in this from Tom too. I had to learn them for the tours and they really kept me on my toes. I also have a great memory of Tom recording the guitar part in the chorus on one Alex’s retro synth guitar from the 80s. #timstwitterlisteningparty" data-datetime="7:13 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539687889348579329"
+                 data-text="Love You More. I had just learned diminished chords.#timstwitterlisteningparty" data-datetime="7:12 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1539687875327000577"
+                 data-text="RT @Tim_Burgess: Happy birthday Bobby G 
+x x https://t.co/5KLZob6pST" data-datetime="7:12 PM Jun 22, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539687776773447681"
+                 data-text="This was the first song we got the mixes back for. Mike Frasier an amazing mixer from Canada mixed the album so it was done remotely and then we’d all sit down together and hear it. He brought out all the amazing percussion and rhythms that we’d tracked in the studio so perfectly" data-datetime="7:12 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539687665649475584"
+                 data-text="There is bird song from that conservatory later on #timstwitterlisteningparty https://t.co/KgnSPKycj4" data-datetime="7:12 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539687582983913472"
+                 data-text="Caroline. @LJDiamondMusic and @mjaevans magic. #timstwitterlisteningparty" data-datetime="7:11 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539687507188764672"
+                 data-text="Doing the backing vocals all round the microphone together was really fun and one of those moments in the studio where you can just relax and enjoy yourself. Maybe the only BV we all did together. #timstwitterlisteningparty" data-datetime="7:11 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539687346794364929"
+                 data-text="One night we played in Montreal and this guy came down who’d had his heart broken and afterwards he told me that Caroline was his song because that was his ex’s name and it the whole story could have been their relationship. #timstwitterlisteningparty" data-datetime="7:10 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539687286815744000"
+                 data-text="Caroline. @alkapranos wanted the riff to sound like a carnival band under Brooklyn Bridge (or something like that) Great layering of sounds. #timstwitterlisteningparty" data-datetime="7:10 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539687251210375170"
+                 data-text="This song is about the really cool girl that you fancy at a party and who you sort of know is way too good for you but you’re determined to impress anyway. She’s also maybe not very nice. We were inspired by Martin Rev from Suicide’s instrumental solo project for the soundscape." data-datetime="7:10 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539687096075669506"
+                 data-text="Cheeky plug.... https://t.co/KJHYfjnMbd" data-datetime="7:09 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539686981839601664"
+                 data-text="Caroline - We started the album with the three main singles. Cocky, Mad, Scary??? A lot of fun in hindsight #timstwitterlisteningparty" data-datetime="7:09 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539686933802225668"
+                 data-text="Caroline. The phaser on the hi hats! #timstwitterlisteningparty" data-datetime="7:09 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539686839442866176"
+                 data-text="I love the drums on this album. @mjaevans playing is so tight and groovy. That drum sound took days to set up." data-datetime="7:08 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539686793087426561"
+                 data-text="Simpatico #timstwitterlisteningparty https://t.co/0gGHdEHv6Z" data-datetime="7:08 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539686682643111936"
+                 data-text="Those kick drum patterns...@mjaevans is one HELL of a drummer as those of you who saw him play with @Franz_Ferdinand in South America can testify too!! https://t.co/F5kUMDIG0q" data-datetime="7:08 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539686525046243338"
+                 data-text="Reptile. Wrote this chorus sitting in Regents Park opposite the zoo drinking a bottle of wine. I lived in Chalk Farm at the time. #timstwitterlisteningparty" data-datetime="7:07 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539686505685417989"
+                 data-text="Not Reptile specific, but there is a great story about our Guadalajara gig, we\'ll tell later. #vivamexico https://t.co/XvGlz4zfjU" data-datetime="7:07 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539686411602886656"
+                 data-text="Listening to the album, tweeting, talking to @tom_burke_  , dealing with the fire alarm in the studio complex we\'re in....it\'s kind of like the gigs we played. I had 3 synths a guitar and cow bell. No rest! #timstwitterlisteningparty" data-datetime="7:07 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539686217477931010"
+                 data-text="🙌🙌🙌 https://t.co/ne0C64NvfE" data-datetime="7:06 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539686139929427970"
+                 data-text="Alex had a really great way of getting us to use loads of old synths and cool guitar tones to layer up and make totally unique tones for the riffs. I don’t know what’s at play here but it sounds so unique. A kind of Beach Boys approach to electro-pop. #timstwitterlisteningparty" data-datetime="7:05 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539685966604128259"
+                 data-text="Reptile - This song did really well in France and even featured in a really arty French novel. The main protagonist worries that he’s becoming a total sleaze and this song becomes like his touchstone for the transformation.#timstwitterlisteningparty" data-datetime="7:05 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Ftom_burke_%2Fstatus%2F1539685779865276416"
+                 data-text="True Romance. We recorded the vocals for this on the day of Prince William and Kate\'s wedding and hence the adlib: \'Your soul will remain a soul of the people\' #timstwitterlisteningparty" data-datetime="7:04 PM Jun 22, 2022"> 
+                tom_burke_            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539685750987448320"
+                 data-text="Tom shouts “Your soul will become the soul of the people”. We recorded this on the day of the royal wedding between kate and william and one of the commentators said this about Kate’s soul!! So intense. Tom really cleverly weaved that into the song. #timstwitterlisteningparty" data-datetime="7:04 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539685609920503809"
+                 data-text="The WOO is very important. #Hooks
+#timstwitterlisteningparty" data-datetime="7:03 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539685499564163073"
+                 data-text="First time I heard him sing when we met I was like \"I want to be in a band with this guy\" and also, he\'s wasted on guitar. Get him up front #timstwitterlisteningparty https://t.co/Zi9MkayjuL" data-datetime="7:03 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539685337378725889"
+                 data-text="It\'s amazing how this song went around the world. We played in Kazakhstan, Moscow, Chile, Mexico, Australia and everyone knew this song. When that piano riff starts everyone would just go mad. It was and is the greatest feeling.
+#TimsTwitterListeningParty" data-datetime="7:02 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539685044171710467"
+                 data-text="Feels apt about now....#timstwitterlisteningparty https://t.co/BijTcepCki" data-datetime="7:01 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539684961581776896"
+                 data-text="Gonna retweet @alkapranos lovely words from earlier in real time too! #timstwitterlisteningparty https://t.co/SLk5sYUjtl" data-datetime="7:01 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FGoCitizens%2Fstatus%2F1539684833181458433"
+                 data-text="Thank you Tim. Let\'s get this show on the road....True Romance.... https://t.co/p4JnNhzW2L" data-datetime="7:00 PM Jun 22, 2022"> 
+                GoCitizens            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1539684659877093384"
+                 data-text="OK. Time for a @LlSTENlNG_PARTY 
+
+Say hello to @GoCitizens (and @tom_burke_ too) 
+
+Here We Are! https://t.co/mvKMLeMPOq" data-datetime="7:00 PM Jun 22, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
