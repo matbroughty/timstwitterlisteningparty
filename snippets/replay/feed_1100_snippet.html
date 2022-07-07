@@ -1,0 +1,499 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/26wHOzVnkzezKpZZHpzpyZ" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02be00f294c3adc36d6f900554" alt="For All Our Days That Tear The Heart" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Jessie Buckley &amp; Bernard Butler</span><br/><span class="sub-colour">For All Our Days That Tear The Heart</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/26wHOzVnkzezKpZZHpzpyZ" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 72 tweets from Thursday 7th July 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Bernard_Butler" target="_blank"><img src="https://pbs.twimg.com/profile_images/1753312043/image_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Bernard_Butler.jpg'"><br/>@Bernard_Butler</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/buckleyxbutler" target="_blank"><img src="https://pbs.twimg.com/profile_images/1507094402036117511/6ztpP_Nl_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/buckleyxbutler.jpg'"><br/>@buckleyxbutler</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1543109823725768706/dZZr2TFp_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="The Eagle & The Dove" data-start="0"
+             data-duration="349" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="For All Our Days That Tear The Heart" data-start="350"
+             data-duration="300" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="20 Years A-Growing" data-start="651"
+             data-duration="243" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Babylon Days" data-start="895"
+             data-duration="267" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Seven Red Rose Tattoos" data-start="1163"
+             data-duration="300" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Footnotes On The Map" data-start="1464"
+             data-duration="230" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="We've Run The Distance" data-start="1695"
+             data-duration="207" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="We Haven’t Spoke About The Weather" data-start="1903"
+             data-duration="258" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Beautiful Regret" data-start="2162"
+             data-duration="191" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="I Cried Your Tears" data-start="2354"
+             data-duration="248" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Shallow The Water" data-start="2603"
+             data-duration="301" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Catch The Dust" data-start="2905"
+             data-duration="131" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3037"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851be00f294c3adc36d6f900554" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-72" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545132984952561670"
+                 data-text="@buckleyxbutler .. well look where that got us 😂❤️" data-datetime="7:49 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545132795340566528"
+                 data-text="This is a poem. This album for me is like finding a box of photographs at the back of your closet you didn’t know was there and every bit of dust that remains on them is a part of the love letter from us to you. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:49 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="176000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545132778718740483"
+                 data-text="Shallow The Water - this is a 1 take performance in a friends studio all@in same room. I went for piano because we were absorbed by Roberta’s First Take … I’d probably do it on guitar now 🤷🏻‍♂️😂" data-datetime="7:48 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545132040542072834"
+                 data-text="...The image of the dust caught in the sun light coming through a window with all these particles of thoughts, emotions, words, notes, songs struck us and this poem became a theme for the whole record. 
+#FAODTTTH" data-datetime="7:46 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545132040256778240"
+                 data-text="In the summer of the first pandemic my dad would  swim in the lakes in Killarney and for some reason the Queen bee’s used to land on the lake and get stuck in the water. My dad would pick them up on his hand and swim them back to shore. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:46 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545131789257060352"
+                 data-text="...at this point I tried one piece with an electric. I played the loop from the pedal for JB and we sat on the floor listening to it on repeat for maybe an hour whilst we assembledJessie’s snips of lines. .." data-datetime="7:45 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="180000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545131537095569409"
+                 data-text="CATCH THE DUST:
+I used an old Gibson acoustic my wife gave me but had never used from the outset. I tuned it to DADGAD which I had never used before just to make my life harder. I thought it would make me work harder with this special person keep reminding me to focus
+#FAODTTTH" data-datetime="7:44 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545130782733262848"
+                 data-text="...The feel of this song always reminds me of that image. “The wind of these words…” references back to “Twenty Years A-Growing”. This could easily be a soul swinger but is far more restrained and dreamy in tghe Roberta Flack mould
+#FAODTTTH" data-datetime="7:41 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545130781982527493"
+                 data-text="First lyrics I shared with Bernard. Was terrified and thought well I’ve made a holy show of myself. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:41 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545130530198286336"
+                 data-text="SHALLOW THE WATER
+Jessie fixed photographs next to her notes and sent me as many of these as words. One was by Francesca Woodman- at once in motion and suspended in time...
+#FAODTTTH" data-datetime="7:40 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="97000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545130489182298115"
+                 data-text="… quite something listening to this on the big screen and picturing my little loft studio with no acoustic treatment at all. 
+Get a good idea and do it yerself kids . If I can etc …" data-datetime="7:39 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545130083748401152"
+                 data-text=".. so that’s my best Johnny Cash and yes I wore black to record it ✌️" data-datetime="7:38 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545130027121086464"
+                 data-text="... I used a ‘gusli’ which someone kindly gifted me from Russia and I have no idea how to play and is painstaking to tune.Pure Dr Zhivago. Jessie sang along to the guitar which we then took out so that her voice is almost bare at the beginning.
+#FAODTTTH" data-datetime="7:38 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545129775399780352"
+                 data-text="Burnt my soul to dust, Turned my blood to rust, Must hurt to know, I’m your beautiful regret. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:37 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545129775236124673"
+                 data-text="...It was also very difficult to record - like all of the pieces, mapped over the original iPhone recording, I had to honour the dynamic ever changing tempo....
+#FAODTTTH" data-datetime="7:37 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545129523972345862"
+                 data-text="I CRIED YOUR TEARS
+musically very difficult on purpose,our first song and we were both very tentative,cautious to push the envelope, not follow a template - I read it that way but in retrospect jessie didn’t know any other way. ..
+#FAODTTTH" data-datetime="7:36 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545129272225828864"
+                 data-text="Musically it’s Stones-y open D with 3 key change movements planned to resolve with the big open D at the end. 
+#FAODTTTH" data-datetime="7:35 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545129140814286851"
+                 data-text="… also a rare one I played electric bass on . Mostly it was upright by the incredible Misha Mullov-Abbado" data-datetime="7:34 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545129020659998720"
+                 data-text="Nearly a ’name’ male voice duet which I resisted.. I wanted Jessie to own the song ... I relented and recorded myself throwing in harmonies. Jessie said ”that will do” and so I ended up playing the bad guy....
+#FAODTTTH" data-datetime="7:34 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545129020521476096"
+                 data-text="But sometimes it’s the dead end that you miss the most…I feel like Emmylou Harris and Gram Parson in this song. It’s an impossible love that leaves you. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:34 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545128768808701954"
+                 data-text="Beautiful regret
+The last song we recorded. I had attempted a couple of remote takes of this which jessie couldn’t settle on...we recorded it in 2 takes around the same mic eyeballing each other, had a laugh then went to the pub....
+#FAODTTTH" data-datetime="7:33 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545128768649302016"
+                 data-text="I think from personal experiences when you get to the point in your relationship where you’re just making eggs for your lover in the morning or talking bout the weather you’re probably coming to a dead end right?!? (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:33 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="87000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545128760067985414"
+                 data-text="Oh the rain at the start  is the real thing… it actually rained while I was recording guitars. It rained a lot during that time 😂" data-datetime="7:32 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545128395100536833"
+                 data-text="@Andybebop @LlSTENlNG_PARTY @buckleyxbutler ❤️" data-datetime="7:31 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545128283003576320"
+                 data-text="… guitars are Gretsch 6120  doubled with Martin 12 string for the pure Buffalo Springfield effect ✌️" data-datetime="7:31 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545128265521692673"
+                 data-text="WE HAVNT SPOKE ABOUT THE WEATHER
+These were written close together and share same sides of the same musical and lyrical coin. The times were so heightened that we forgot the simplicity of just moaning about the weather. More DADGAD action
+#FAODTTTH" data-datetime="7:31 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545128016115802113"
+                 data-text="Sometimes in our longest relationship’s you can feel the most estranged…. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:30 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545128014018580480"
+                 data-text="...Musically this began on the piano but ended up a bit of Buffalo Springfield fuzz thing. The opening line of colours is a deliberate (on my part) football reference for which I apologise ...
+#FAODTTTH" data-datetime="7:30 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545127762016366592"
+                 data-text="WE’VE RUN THE DISTANCE
+Amidst all the slow torture of a record you always  need tempo and gusto. There is lots of ‘weather’ going on with this record unavoidably connected to talk of Ireland and it’s relationship with how it shapes our emotional perspectives...
+#FAODTTTH" data-datetime="7:29 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FAndybebop%2Fstatus%2F1545127706634878977"
+                 data-text="Just stopping by to say I love this album ❤️ @buckleyxbutler @LlSTENlNG_PARTY https://t.co/aXrF6JEuvo" data-datetime="7:28 PM Jul 7, 2022"> 
+                Andybebop            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545127675672641542"
+                 data-text="@northofcam @LlSTENlNG_PARTY You need to do the walk" data-datetime="7:28 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545127565857361920"
+                 data-text="The gang vocal@in Footnotes is mainly 12 of me recorded into my Cole’s 4038. @samleesong is also in there as my guest. Sam intro’s me to @RobGMacfarlane and was also ref’s be Jessie when we met so it was important Sam was on this song as my homage 🙏" data-datetime="7:28 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545127510433726467"
+                 data-text="...I had intended the call and response to be a choir and only sang it myself to show jessie the idea but she loved it as it was. I like the idea that the trees, the animals and the landscape is singing back to Jessie.
+#FAODTTTH" data-datetime="7:28 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545127258771308545"
+                 data-text="...the last song we wrote, a feeling of release that we journeyed through some tough pieces,elation at what we created. ..
+#FAODTTTH" data-datetime="7:27 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545127258704097281"
+                 data-text="The last song we accidentally wrote. This is just utter joy. Making this whole record has been a complete untainted joyfest. We just kept putting one foot infront of the other till we had made our own map. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:27 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="119000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1545127255558561792"
+                 data-text="Sweet bvs @Bernard_Butler" data-datetime="7:26 PM Jul 7, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545126755475697664"
+                 data-text="...I was transfixed by a page in Rob McFarlane’s “The Old Ways” on the Aboriginal myth that humans mapped their first steps in musical notes to remember their paths,rivers and mountains being musical and the journey a song. The “Footnotes” mapped the way for travellers.
+#FAODTTTH" data-datetime="7:25 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545126503897235456"
+                 data-text="FOOTNOTES ON THE MAP:
+Jessie texted me \"She is staring out to the distant sea/She is silence itself “ followed by lots of continuously beautiful babble that went on over a couple of days. It made sense to write something simple like trees gradually filling a landscape..
+#FAODTTTH" data-datetime="7:24 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545126385517305856"
+                 data-text="@Tim_Burgess This was a 1 take recording in my lounge with me on the piano in the corner." data-datetime="7:23 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545126000542920704"
+                 data-text="I wanted to find a place where the space between the words and the notes played the loudest. This is the scariest piece because it’s so beautifully fragile. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:22 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545125996793405452"
+                 data-text="@agrasso77 @LlSTENlNG_PARTY Because there was no one else! I still have Mako’s lit setup next to me@and in my mind he still plays it.
+I bought a £30 Amazon violin and made the noises I needed them got @AliceZawadzki to do some incredible improv stuff. @salstrings did the lovely group stuff" data-datetime="7:21 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1545125987951808512"
+                 data-text="Wow. Yes, can totally hear the influence. Brilliant https://t.co/FsCY12NM2U" data-datetime="7:21 PM Jul 7, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fobrienmark%2Fstatus%2F1545125827708329985"
+                 data-text="This is a truly stunning piece of work. Jesse Buckley and Bernard Butler have created something really beautiful and now you can listen along #timstwitterlisteningparty #FAODTTTH @buckleyxbutler https://t.co/Z44moLVoAQ" data-datetime="7:21 PM Jul 7, 2022"> 
+                obrienmark            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545125497197182979"
+                 data-text="...Musically I leant toward “Spirit Of Eden” in the minimalism but the freeform conversational trumpet played by Byron Wallen was all jessie’s idea. 
+#FAODTTTH" data-datetime="7:20 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545125245551628289"
+                 data-text="I visited Suffolk many times during this period and Jessie settled not far.The image of silkworms, the monuments of pain, the quest for love amidst the destruction was a repeating theme...
+#FAODTTTH" data-datetime="7:19 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545124994006630402"
+                 data-text="SEVEN RED ROSE TATTOOS:
+The first verse was  amidst Jessie’s random texts, the rest spun from Sebald’s The Rings Of Saturn which weighs heavy on this record both topically and also geographically...
+#FAODTTTH" data-datetime="7:18 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fhikerdelic%2Fstatus%2F1545124751173107717"
+                 data-text="Hey @Tim_Burgess, don\'t tell anyone but we\'ve had these done. https://t.co/1bjJp0hz3o" data-datetime="7:17 PM Jul 7, 2022"> 
+                hikerdelic            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545124742616809472"
+                 data-text="I bought a cheap bodhran which came with a tutor cd and spent some days trying to master it before resorting to an actual player from Wicklow who I watched record over Zoom. :)
+#FAODTTTH" data-datetime="7:17 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545124742235131905"
+                 data-text="We are all just vagabonds trying to get to a better place. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:17 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1545124678095847431"
+                 data-text="🙋‍♂️ 
+
+❤️❤️❤️❤️❤️❤️ https://t.co/jzZ1KI1Qe1" data-datetime="7:16 PM Jul 7, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545124563733856259"
+                 data-text="@DeadStarSonics @Tim_Burgess On the acoustic guitar it was a Neumann Km84 on the neck and Coles 4038 on body 
+Jessie’s voice was mainly an Austrian Audio and sometimes a vintage C12. Bvs were the Coles" data-datetime="7:16 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545124490568290304"
+                 data-text="We were talking religion, sharing Father Ted-esque TV news clips of statues crying etc which seeped into the iconography talk of statues coming down in the midst of the Black Lives Matter movement....
+#FAODTTTH" data-datetime="7:16 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="120000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545124238876585984"
+                 data-text="BABYLON DAYS:
+Jessie was talking about  Richard Brautigan who she loves - I fell on his “Dreaming Of Babylon” to feed our next session. The protagonist flits between daydreams and his real life mayhem which gave the idea for a song split between these 2 characters. ..
+#FAODTTTH" data-datetime="7:15 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545123735488716800"
+                 data-text="...Another DADGAD piece musically and obviously in homage to Bert Jansch.
+#FAODTTTH" data-datetime="7:13 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545123483973079041"
+                 data-text="It took another 18 years.Jessie was talking about her brother’s travels when my daughter walked in and we moved to talk of her teenage years and the dust about to gather on her shoes. “…. only once in the flower of our youth” ...
+#FAODTTTH" data-datetime="7:12 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545123483952115712"
+                 data-text="Do you know how a mans life is divided?…..
+Twenty years a growing, twenty years a blooming, twenty years a stooping, twenty years declining.” (JB)  #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:12 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545123232373649409"
+                 data-text="20 YEARS A-GROWING
+I spent childhood summers on Valentia Island,returned around 2006 to the Blaskets Museum,https://t.co/4cDaXE036H wife found Maurice O’Sullivan’s memoir and these lines which were beautiful, and quite funny. I knew that it was a song when I read them
+#FAODTTTH" data-datetime="7:11 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="168000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1545123182058799104"
+                 data-text="Listening to @buckleyxbutler in @Dolby Atmos https://t.co/JwCRpEAWA3" data-datetime="7:10 PM Jul 7, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545122478044979201"
+                 data-text="...I recorded Sally Herbert’s string quartet in my front room. Sally and I had to drag the sofas out of the way first.:)
+#FAODTTTH" data-datetime="7:08 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545122225652731910"
+                 data-text="\"I think, I feel, I fall,I fly/One day at a time”-so easy to see within music-looked like an album title right there. I recorded a DADGADsketch which took maybe 4 days to get the correct dynamic before jessie sang. She sent me 3 takes in total which took breath away.
+#FAODTTTH" data-datetime="7:07 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545122225577046016"
+                 data-text="It broke my heart but also kinda how I was feeling at the time. I got some guys I know from the Matt Talbot community in Dublin and my dad to record the lines…Everyone knows the need to knock on a strangers door and be leant an ear. (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:07 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545121974078382082"
+                 data-text="Wrote these lyrics one night when I couldn’t sleep in Chicago and when we came to record it I was looking for sounds of some protest against loneliness in the big city. I found a clip of a poor auld homeless man in Dublin knocking on a strangers door asking if he could come in." data-datetime="7:06 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545121973948125184"
+                 data-text="\"For all our days that tear the heart\"
+jessie texted me with abstract lines interjected with “how’s your week?” or “shall i come over?”. I compiled every line and printed them so we had a running tableau of useful thoughts...
+#FAODTTTH" data-datetime="7:06 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545121722642227200"
+                 data-text="Juana turned out to be a lovely lady in the autumn of her life full of stories of touring, heartbreak and joy. She danced with her eyes closed transported as i recorded the thunder of her feet on the wooden floor.
+#FAODTTTH" data-datetime="7:05 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545121471126589440"
+                 data-text="...I wanted to record the ’sound’ of dancing you could hear percussively but had to imagine visually. Jessie was at The National and sent me a list of dancers. I picked the most ’Spanish” name - ‘Juana Jimenez’ - and arranged to meet Juana her home in Essex...
+#FAODTTTH" data-datetime="7:04 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1545121340142788610"
+                 data-text="Stunning vocals @buckleyxbutler loving the squeaks and creeks from the guitars and bass and drum. Breathtaking, really" data-datetime="7:03 PM Jul 7, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1545121221800509444"
+                 data-text="Mind being blown by @buckleyxbutler in @dolby Atmos" data-datetime="7:03 PM Jul 7, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545121219183140865"
+                 data-text="..The bullfight concept became a theme when we were all looking to side up, to find ourselves on the right side of good or evil but missing the qualities in all of us. The intro was inspired by some Georgian hunks singing around a big dining table a piece called \"Alilo\"
+#FAODTTTH" data-datetime="7:03 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545120967642517505"
+                 data-text="...we drifted into talk of bullfights &amp; “Torment &amp; Torreros” by Marc &amp; The Mambas - a well of inspiration for me since I was 14 featuring his take on Brel’s ”The Bulls”...
+#FAODTTTH" data-datetime="7:02 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="114000" data-url="https%3A%2F%2Ftwitter.com%2Fbuckleyxbutler%2Fstatus%2F1545120967516635137"
+                 data-text="The title comes from a book I have never read and I feel it would break the spell if I did read it now. You can write many stories from just 4 words. This song found us rather than us setting out to write this mad Bulgarian bullfight (JB) #TimsTwitterListeningParty #FAODTTTH" data-datetime="7:02 PM Jul 7, 2022"> 
+                buckleyxbutler            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1545120489823141890"
+                 data-text="Hello from the @dolby screening room in London 
+
+Time to get started with our Jessie Buckley &amp; Bernard Butler @LlSTENlNG_PARTY 
+
+Follow @buckleyxbutler &amp; @Bernard_Butler 
+
+Press play. Drop the needle on the record… https://t.co/zJT0oY8AY4" data-datetime="7:00 PM Jul 7, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FBernard_Butler%2Fstatus%2F1545120473914023936"
+                 data-text="The Eagle &amp; The Dove
+my mum gave me a book saying ‘might be worth something’ meaning to sell-of course it was valuable to me.The title jumped out,we read a few paragraphs and laughed how religious tomes kept being thrown at us as reminder of impending doom... 
+#FAODTTTH
+#FAODTTTH" data-datetime="7:00 PM Jul 7, 2022"> 
+                Bernard_Butler            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
