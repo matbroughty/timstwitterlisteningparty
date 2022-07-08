@@ -1,0 +1,375 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/1w7FOWkRZKYriIEQNufT9W" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0295ba3811a99735d0d39c6d99" alt="Dear Scott" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Michael Head &amp; The Red Elastic Band</span><br/><span class="sub-colour">Dear Scott</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/1w7FOWkRZKYriIEQNufT9W" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 35 tweets from Friday 8th July 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/michaelheadtreb" target="_blank"><img src="https://pbs.twimg.com/profile_images/1512146650122305540/PY47KDfP_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/michaelheadtreb.jpg'"><br/>@michaelheadtreb</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/PhilMurphy1878" target="_blank"><img src="https://pbs.twimg.com/profile_images/1237015828849209345/Pwbjc5G4_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/PhilMurphy1878.jpg'"><br/>@PhilMurphy1878</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Nathaniel_lc" target="_blank"><img src="https://pbs.twimg.com/profile_images/1536278419524182019/AE2DvTzI_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Nathaniel_lc.jpg'"><br/>@Nathaniel_lc</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1543109823725768706/dZZr2TFp_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Kismet" data-start="0"
+             data-duration="275" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Broken Beauty" data-start="276"
+             data-duration="224" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="The Next Day" data-start="501"
+             data-duration="154" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Freedom" data-start="656"
+             data-duration="207" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="American Kid" data-start="864"
+             data-duration="193" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Grace And Eddie" data-start="1058"
+             data-duration="215" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Fluke" data-start="1274"
+             data-duration="324" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Gino And Rico" data-start="1599"
+             data-duration="258" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="The Grass" data-start="1858"
+             data-duration="284" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="The Ten" data-start="2143"
+             data-duration="301" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Pretty Child" data-start="2445"
+             data-duration="250" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Shirls Ghost" data-start="2696"
+             data-duration="122" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="2819"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485195ba3811a99735d0d39c6d99" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-35" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="137000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1545465309238280193"
+                 data-text="Much love going out to @michaelheadtreb - Dear Scott is brilliant. Thanks for joining us at The @LlSTENlNG_PARTY 🙌" data-datetime="5:50 PM Jul 8, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fnelluckcin%2Fstatus%2F1545464732697522176"
+                 data-text="take a bow @michaelheadtreb @BRyderJones  #DearScott 
+#albumoftheyear
+#timstwitterlisteningparty @LlSTENlNG_PARTY @Tim_Burgess https://t.co/xu1EToKkA7" data-datetime="5:48 PM Jul 8, 2022"> 
+                nelluckcin            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="162000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545464413695647744"
+                 data-text="Shirls Ghost 
+I wrote this melody and the next day together on the piano. I transposed the next day to guitar and it worked. So I did the same with Shirls Ghost after the album came out. Shirls Ghost with lyrics is coming soon. 
+
+#TimsTwitterListeningParty" data-datetime="5:46 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="122000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545463737179639812"
+                 data-text="Pretty child 
+This one is an old idea. We started doing it live and it got a really good response so we decided to record it and thought it was well worth going on the album. 
+
+#TimsTwitterListeningParty" data-datetime="5:44 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FPhilMurphy1878%2Fstatus%2F1545463224534982656"
+                 data-text="THE TEN - another great tune from Mick.. This was my kit set up for this one.. Love the bossa nova bit at the end!😎 @michaelheadtreb #timstwitterlisteningparty https://t.co/VZAepMcTwv" data-datetime="5:42 PM Jul 8, 2022"> 
+                PhilMurphy1878            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="209000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545463003579138053"
+                 data-text="The Ten 
+I love all the drum changes in the Ten and the orchestration is amazing. It\'s a great song to play live 
+
+#TimsTwitterListeningParty" data-datetime="5:41 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="120000" data-url="https%3A%2F%2Ftwitter.com%2FNathaniel_lc%2Fstatus%2F1545462129075134465"
+                 data-text="@ZappasMuzzie @michaelheadtreb @johnnysecho my baby #timstwitterlisteningparty https://t.co/RPkMYsW211" data-datetime="5:37 PM Jul 8, 2022"> 
+                Nathaniel_lc            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545461623611179008"
+                 data-text="The Grass
+Ive got a soft spot for the grass. I didn\'t think i’d finish it in time, but I did &amp; it\'s fucking boss
+
+#TimsTwitterListeningParty" data-datetime="5:35 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545461310816665601"
+                 data-text="@preno67 Gun! 🔫" data-datetime="5:34 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FNathaniel_lc%2Fstatus%2F1545461007094611971"
+                 data-text="@michaelheadtreb Best solo on the album. I get to play it live but it was written and recorded by Bill, playing my Gibson SG with the tone rolled off entirely. @johnnysecho vibes. https://t.co/F0MGESC7ju" data-datetime="5:33 PM Jul 8, 2022"> 
+                Nathaniel_lc            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FPhilMurphy1878%2Fstatus%2F1545460881030512643"
+                 data-text="@yawnstudioswk where we recorded Dear Scott @michaelheadtreb photo by @John_Johno #timstwitterlisteningparty https://t.co/vRBkvFXOay" data-datetime="5:32 PM Jul 8, 2022"> 
+                PhilMurphy1878            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="152000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545460484886913024"
+                 data-text="Gino and Rico 
+Bill said when we were first doing it “im having that gap for a solo” and he did &amp; it still terrifys me ❤️
+
+#TimsTwitterListeningParty" data-datetime="5:31 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FNathaniel_lc%2Fstatus%2F1545459848095174656"
+                 data-text="@michaelheadtreb @_pet_snake she’s the fuckin coolest x" data-datetime="5:28 PM Jul 8, 2022"> 
+                Nathaniel_lc            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FPhilMurphy1878%2Fstatus%2F1545459516694822925"
+                 data-text="FLUKE - recording opposite Mick in a booth @yawnstudioswk. Brilliant strings and production throughout by @BRyderJones #timstwitterlisteningparty https://t.co/3PXJckK8fW" data-datetime="5:27 PM Jul 8, 2022"> 
+                PhilMurphy1878            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="152000" data-url="https%3A%2F%2Ftwitter.com%2FNathaniel_lc%2Fstatus%2F1545459374600093698"
+                 data-text="@michaelheadtreb shout out to my mate Evelyn @_pet_snake for the wonderful cello on this track and throughout the album. #timstwitterlisteningparty https://t.co/gsXkMO3cZT" data-datetime="5:26 PM Jul 8, 2022"> 
+                Nathaniel_lc            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="121000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545458736315174923"
+                 data-text="Fluke 
+Bill played a blinder on this one. He absolutely nailed it. The orchestration is incredible 
+
+#TimsTwitterListeningParty" data-datetime="5:24 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FNathaniel_lc%2Fstatus%2F1545458226480746497"
+                 data-text="@saladfanclub @michaelheadtreb loads of it in Dear Scott , I reckon x" data-datetime="5:22 PM Jul 8, 2022"> 
+                Nathaniel_lc            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545458011564548100"
+                 data-text="Grace and Eddie
+I seen two buskers in birkenhead. A man about 70 and a woman about 50. He was singing and playing guitar and she was playing box drum. and it was the way she was looking at him. That\'s what inspired me to write the lyrics. 
+
+#TimsTwitterListeningParty" data-datetime="5:21 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2Fmike29225713%2Fstatus%2F1545457638376448001"
+                 data-text="@PhilMurphy1878 Bill\'s production is out of this world" data-datetime="5:19 PM Jul 8, 2022"> 
+                mike29225713            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="151000" data-url="https%3A%2F%2Ftwitter.com%2FPhilMurphy1878%2Fstatus%2F1545457182078128128"
+                 data-text="#TimsTwitterListeningParty https://t.co/8tIWe31A9j" data-datetime="5:18 PM Jul 8, 2022"> 
+                PhilMurphy1878            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="102000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545456550998953985"
+                 data-text="American Kid 
+It\'s about two lads growing up together, one is then is obsessed with Americana which he uses as an escape mechanism. 
+
+#TimsTwitterListeningParty" data-datetime="5:15 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FNathaniel_lc%2Fstatus%2F1545456121430872069"
+                 data-text="@michaelheadtreb love u ❤️" data-datetime="5:13 PM Jul 8, 2022"> 
+                Nathaniel_lc            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545456008839004160"
+                 data-text="https://t.co/AuwJrpj3Yt" data-datetime="5:13 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FNathaniel_lc%2Fstatus%2F1545455978547748864"
+                 data-text="@michaelheadtreb I was working on the travis-picking part to this for ages. I knew there was magic to it. Everyone had parts and wanted to play on the track but I was adamant it should be a duet. Bill agreed. #timstwitterlisteningparty" data-datetime="5:13 PM Jul 8, 2022"> 
+                Nathaniel_lc            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545455720233050112"
+                 data-text="Freedom 
+All I can say about this is that when Natt brought his harmonise and guitar to this one it made it complete. 
+
+#TimsTwitterListeningParty" data-datetime="5:12 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="112000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545455409607196673"
+                 data-text="The next day 
+Is about the madness of war and what happens after the fan fair. All the questions brushed aside in a wave of progedanger. The fruit is magical. Dancing all the way through. 
+It\'s beautiful. 
+ 
+#TimsTwitterListeningParty" data-datetime="5:10 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FPhilMurphy1878%2Fstatus%2F1545454938167320576"
+                 data-text="The Next Day - I used brushes on this one, lovely guitars from Danny and Nat and brilliant lyrics from Mick! #TimsTwitterListeningParty" data-datetime="5:09 PM Jul 8, 2022"> 
+                PhilMurphy1878            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FNathaniel_lc%2Fstatus%2F1545454590539202560"
+                 data-text="@michaelheadtreb The first song me and Mick wrote together, we were in his living room listening to Big Star. It all flowed naturally. That night, over a cup of tea, we discussed Bill-Ryder Jones producing the ‘record’ (there wasn’t one yet). The perfect opening track. #timstwitterlisteningparty" data-datetime="5:07 PM Jul 8, 2022"> 
+                Nathaniel_lc            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2FPhilMurphy1878%2Fstatus%2F1545454539045847041"
+                 data-text="@michaelheadtreb https://t.co/lVIS5vC1dT" data-datetime="5:07 PM Jul 8, 2022"> 
+                PhilMurphy1878            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545454204663242754"
+                 data-text="Broken Beauty - Me and Alice wrote it one night over chippy supper - she wanted a big chorus and a big trumpet solo and that’s what she got 🎺 
+
+#TimsTwitterListeningParty" data-datetime="5:06 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FPhilMurphy1878%2Fstatus%2F1545454119669927938"
+                 data-text="Broken beauty - always loved this song since I first heard it back when we recorded Adios Senor Pussycat. Glad it reappeared and it made this album! @michaelheadtreb #TimsTwitterListeningParty" data-datetime="5:05 PM Jul 8, 2022"> 
+                PhilMurphy1878            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2FPhilMurphy1878%2Fstatus%2F1545453927151407109"
+                 data-text="Great video by @JackFinn_
+
+https://t.co/gYa1xCoflu
+
+#timstwitterlisteningparty" data-datetime="5:05 PM Jul 8, 2022"> 
+                PhilMurphy1878            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2FPhilMurphy1878%2Fstatus%2F1545453542034620418"
+                 data-text="Kismet - we had loads of variations of the drum parts on this and tried it in loads of ways in rehearsals before settling on it #timstwitterlisteningparty" data-datetime="5:03 PM Jul 8, 2022"> 
+                PhilMurphy1878            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fmichaelheadtreb%2Fstatus%2F1545453091876642816"
+                 data-text="Kismet -
+Nats riff was really hypnotic and it draw us in right away 
+
+#TimsTwitterListeningParty" data-datetime="5:01 PM Jul 8, 2022"> 
+                michaelheadtreb            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1545452810644471811"
+                 data-text="Aaaand here we go
+
+Our Dear Scott @LlSTENlNG_PARTY starting right now. 
+
+Handing over to @michaelheadtreb https://t.co/Ww8t25HRJG" data-datetime="5:00 PM Jul 8, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
