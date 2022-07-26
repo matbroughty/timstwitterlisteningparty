@@ -1,0 +1,773 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5nwtGhYdLMUP1nQKne6bGY" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02c66221d9b187b0130bd25b4d" alt="Night Drives" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Kathryn Williams</span><br/><span class="sub-colour">Night Drives</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(332362)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5nwtGhYdLMUP1nQKne6bGY" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_332362_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 160 tweets from Tuesday 26th July 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/kathwilliamsuk" target="_blank"><img src="https://pbs.twimg.com/profile_images/590124464324612096/30RSBZVj_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/kathwilliamsuk.jpg'"><br/>@kathwilliamsuk</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/EdHarcourt" target="_blank"><img src="https://pbs.twimg.com/profile_images/1283324596234706946/AYMotYK6_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/EdHarcourt.jpg'"><br/>@EdHarcourt</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1547220945210933249/__vTQfpZ_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Human" data-start="0"
+             data-duration="164" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Answer In The Dark" data-start="165"
+             data-duration="265" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Chime Like A Bell" data-start="431"
+             data-duration="181" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Radioactive" data-start="613"
+             data-duration="222" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Me For You" data-start="836"
+             data-duration="206" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Moon Karaoke" data-start="1043"
+             data-duration="234" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Night Drive To The Lake" data-start="1278"
+             data-duration="312" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Put The Needle On The Record" data-start="1591"
+             data-duration="207" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Magnets" data-start="1799"
+             data-duration="230" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="The Brightest" data-start="2030"
+             data-duration="262" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Starry Heavens" data-start="2293"
+             data-duration="194" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="I Am Rich In All That I've Lost" data-start="2488"
+             data-duration="243" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="2732"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851c66221d9b187b0130bd25b4d" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-160" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-159" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552033973831966723"
+                 data-text="@feverpitch71 Thank you x" data-datetime="8:51 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-158" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552033857515421696"
+                 data-text="@mrmitchell78 @EdHarcourt Ed is so amazing I can never thank him enough" data-datetime="8:51 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-157" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552033684643057664"
+                 data-text="@DaveDogFacedBoy Xxx" data-datetime="8:50 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-156" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1552033659951218688"
+                 data-text="That closing track has just floored me @kathwilliamsuk I\'m listening to it again now, thank you! 🙏 #timstwitterlisteningparty" data-datetime="8:50 PM Jul 26, 2022"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-155" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Ffeverpitch71%2Fstatus%2F1552033653277982722"
+                 data-text="@kathwilliamsuk This is without a doubt your brightest and best work yet ….Simply beautiful! What a treat to sit, savour and soak it all up again tonight…I’m rich in all that I’ve lost…pass the Kleenex …gets me everytime❤️ Thank you @kathwilliamsuk a stunning album #timstwitterlisteningparty" data-datetime="8:50 PM Jul 26, 2022"> 
+                feverpitch71            </div>
+                        <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1552033562660061184"
+                 data-text="Incredible production from @EdHarcourt too - such a wealth of talent shining throughout this album. @kathwilliamsuk #TimsTwitterListeningParty" data-datetime="8:50 PM Jul 26, 2022"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552033493491777536"
+                 data-text="@CrinklyLion @kathwilliamsuk CRINKLY TIMECHECK!! 😍🕰" data-datetime="8:49 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDaveDogFacedBoy%2Fstatus%2F1552033452727336960"
+                 data-text="@kathwilliamsuk I look forward to seeing you play it live and buying copies for people for the rest of my life" data-datetime="8:49 PM Jul 26, 2022"> 
+                DaveDogFacedBoy            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552033428429742082"
+                 data-text="@DaveDogFacedBoy Thank you xxxx" data-datetime="8:49 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552033342605885440"
+                 data-text="@CrinklyLion Love ❤️" data-datetime="8:49 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FEmsydilemsyL%2Fstatus%2F1552033332468269057"
+                 data-text="@CrinklyLion @kathwilliamsuk No you hang up!
+ And hang up your 🩲" data-datetime="8:49 PM Jul 26, 2022"> 
+                EmsydilemsyL            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Flittletraffy%2Fstatus%2F1552033201744449538"
+                 data-text="It is such an incredible album. So many awesome tracks that it’s hard to pick out one favourite, we’ve had it on repeat since release. Can’t wait to hear it live. Hope tonight has been good food for your soul, because you’re amazing! @kathwilliamsuk #timstwitterlisteningparty" data-datetime="8:48 PM Jul 26, 2022"> 
+                littletraffy            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FChrisHaycock7%2Fstatus%2F1552033201098571778"
+                 data-text="@kathwilliamsuk @LlSTENlNG_PARTY Such a wonderful record. Love it. 😊" data-datetime="8:48 PM Jul 26, 2022"> 
+                ChrisHaycock7            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDaveDogFacedBoy%2Fstatus%2F1552033063663722498"
+                 data-text="@kathwilliamsuk It\'s your best - I\'m calling it. Fuck awards - you\'ve won our hearts. You are rich in all you\'ve touched and saved.  #timstwitterlisteningparty 
+@kathwilliamsuk https://t.co/dKlHKxExzM" data-datetime="8:48 PM Jul 26, 2022"> 
+                DaveDogFacedBoy            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552032995091128320"
+                 data-text="#timstwitterlisteningparty im sat here listening the the crackle of the needle and the silence x what a joy to share this record with you all x" data-datetime="8:47 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FCrinklyLion%2Fstatus%2F1552032898554929158"
+                 data-text="@kathwilliamsuk No... you hang up. No, you!
+
+That was bloody lovely, thank you.
+#TimsTwitterListeningParty" data-datetime="8:47 PM Jul 26, 2022"> 
+                CrinklyLion            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fcaravangirl79%2Fstatus%2F1552032876476219393"
+                 data-text="@CreeksideVinyl @kathwilliamsuk @LlSTENlNG_PARTY Agree" data-datetime="8:47 PM Jul 26, 2022"> 
+                caravangirl79            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fjohnoshea1969%2Fstatus%2F1552032821828620289"
+                 data-text="@kathwilliamsuk Thank you - it is a record for life, to cherish and enjoy." data-datetime="8:47 PM Jul 26, 2022"> 
+                johnoshea1969            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FHarcourtThings%2Fstatus%2F1552032754153431040"
+                 data-text="@EdHarcourt @kathwilliamsuk 💕💕💕" data-datetime="8:46 PM Jul 26, 2022"> 
+                HarcourtThings            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FPeanutpower4%2Fstatus%2F1552032753440505857"
+                 data-text="@kathwilliamsuk Thanks so much for this party. Beautiful music. Will be seeking this out! #TimsTwitterListeningParty" data-datetime="8:46 PM Jul 26, 2022"> 
+                Peanutpower4            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552032664374345728"
+                 data-text="Thank you x I’m so proud of it https://t.co/aECcluK1vX" data-datetime="8:46 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Frenkadima%2Fstatus%2F1552032641414840321"
+                 data-text="@kathwilliamsuk The album is a fabulous thing Kathryn. Thanks for making it ❤️" data-datetime="8:46 PM Jul 26, 2022"> 
+                renkadima            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552032529598844930"
+                 data-text="@EdHarcourt Yes!!!!" data-datetime="8:46 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552032523865178114"
+                 data-text="@kathwilliamsuk An absolute joy to see your lovely comments, thanks so much X" data-datetime="8:46 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552032440448860160"
+                 data-text="@kenjude Amazing x" data-datetime="8:45 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552032334546870275"
+                 data-text="#timstwitterlisteningparty This record means so much to me thank you for taking it to your hearts x" data-datetime="8:45 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552032300514304000"
+                 data-text="@kathwilliamsuk Three piano takes on this…. Remember that bit that reminded us of the Breakfast Club??" data-datetime="8:45 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552032244755316740"
+                 data-text="#timstwitterlisteningparty It’s a wonderful peaceful melancholic end to the record. 
+
+And it makes me realise how lucky I am to have worked with so many amazing people" data-datetime="8:44 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDanJennings1975%2Fstatus%2F1552032194327203842"
+                 data-text="@kathwilliamsuk Adore this song. I Am Rich In all That I’ve Lost. 
+Such lush arrangements - the lyrics and vocal are beautiful. Stunning." data-datetime="8:44 PM Jul 26, 2022"> 
+                DanJennings1975            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1552032185124790277"
+                 data-text="I am not kidding, @kathwilliamsuk - this is the most beautiful album I have heard this year or any year.  It is a complete triumph.  I love it and I (and we all) love you - thanks for creating a gorgeous piece of work.  #TimsTwitterListeningParty" data-datetime="8:44 PM Jul 26, 2022"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552032153504223232"
+                 data-text="#timstwitterlisteningparty In the studio Ed came up with a brilliant sound on one of the many synths he has. 
+Immediately it made me think of an 80’s coming v of age film soundtrack
+
+the breakfast club or pretty in pink or Betty blue. 
+I listen for those three notes every time." data-datetime="8:44 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552032129172885505"
+                 data-text="I am rich in all that I’ve lost. 💜 thank you thank you for sharing this with us @kathwilliamsuk 💜 #timstwitterlisteningparty" data-datetime="8:44 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552031961392336897"
+                 data-text="#timstwitterlisteningparty We had been talking about Proust as you do and the song just appeared. I love how writing with friends is like a magic spell . You talk and then it comes from the talking like we weave from connections ." data-datetime="8:43 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FCreeksideVinyl%2Fstatus%2F1552031903435423744"
+                 data-text="@LlSTENlNG_PARTY @kathwilliamsuk  I am rich in all that I’ve lost.    Is such a great title x" data-datetime="8:43 PM Jul 26, 2022"> 
+                CreeksideVinyl            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552031866705874944"
+                 data-text="#timstwitterlisteningparty am rich in all that I’ve lost 
+This song was also written with @johnAlder we wrote it with him playing .. what’s that instrument that Joni Mitchel plays? 
+
+Dulcimer right!" data-datetime="8:43 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fwordsnmusicfest%2Fstatus%2F1552031811068362754"
+                 data-text="@kathwilliamsuk Just love LOVE the simplicity of this .. almost has the feel of a mantra. 
+So beautiful ..any hints on the origins? 
+Either way it\'s the perfect closing track ❤️
+#timstwitterlisteningparty" data-datetime="8:43 PM Jul 26, 2022"> 
+                wordsnmusicfest            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552031733314424839"
+                 data-text="#timstwitterlisteningparty here’s the last track x happened so quickly" data-datetime="8:42 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="72000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552031696614264833"
+                 data-text="Noooo it’s coming to the end 🥺 is that a wee Proust shoutout I spy in the lyrics @kathwilliamsuk ? #madeleines  #timstwitterlisteningparty" data-datetime="8:42 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552031396662763521"
+                 data-text="@kathwilliamsuk It was the first musical group recorded to acetate - 1906 - Christmas Eve - and it was in time and tune- so eerie and beautiful" data-datetime="8:41 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552031393353433091"
+                 data-text="#timstwitterlisteningparty here it comes x gives me chills everytime" data-datetime="8:41 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552031235509198848"
+                 data-text="@EdHarcourt Yes our gift from a ghost" data-datetime="8:40 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552031150159405059"
+                 data-text="#timstwitterlisteningparty When he pressed play… the recording was in time and in key and felt like it was someone doing a live take in the next room. 
+Honestly felt like a gift" data-datetime="8:40 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552031125056458759"
+                 data-text="@kathwilliamsuk This one is the closest to its original form - apart from - Kathryn? The instrumental bit?!" data-datetime="8:40 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552031029208178688"
+                 data-text="In the track" data-datetime="8:40 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552031027186606081"
+                 data-text="#timstwitterlisteningparty A really crazy thing happened in the studio 
+We wanted something in the instrumental and we looked at first radio recordings. I just recorded a bit on my phone from YouTube as an idea with Ed and sent it to him on email to the studio
+He just plonked It" data-datetime="8:40 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552030856839045121"
+                 data-text="#timstwitterlisteningparty Starry heavens 
+I wrote this one on my own
+In lockdown.
+It’s pretty much a sun up of how it was . Cats sleeping and contemplating existing. 
+I’ve always been spun by the idea of the divine and the mundane and how life is swinging between." data-datetime="8:39 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552030744666640385"
+                 data-text="#timstwitterlisteningparty it’s like watching someone walk away this ending" data-datetime="8:38 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552030569013428225"
+                 data-text="@mrmitchell78 Aw xxxx makes me happy" data-datetime="8:38 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552030483072032768"
+                 data-text="#timstwitterlisteningparty @johnalder is a legend and I love him" data-datetime="8:37 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552030429049487371"
+                 data-text="@scotpaulabear @kathwilliamsuk @johnalder I know!" data-datetime="8:37 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FEmsydilemsyL%2Fstatus%2F1552030422216867844"
+                 data-text="@kathwilliamsuk #timstwitterlisteningparty Totally get that Big Star feeling 🌟💫" data-datetime="8:37 PM Jul 26, 2022"> 
+                EmsydilemsyL            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Flittletraffy%2Fstatus%2F1552030344915845121"
+                 data-text="@kathwilliamsuk @johnalder It’s such a gorgeous song that you can melt into, I’ve been singing/playing it to Mhari." data-datetime="8:37 PM Jul 26, 2022"> 
+                littletraffy            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FCreeksideVinyl%2Fstatus%2F1552030169925287937"
+                 data-text="@EdHarcourt @LlSTENlNG_PARTY @kathwilliamsuk ..also from what I’ve seen…the most generous…and completely open to collaboration in a way which is sonvery special" data-datetime="8:36 PM Jul 26, 2022"> 
+                CreeksideVinyl            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552030163201916931"
+                 data-text="As someone who has spent almost 30 years with the one who was first a long-distance love - the lyrics of Magnets ring very true indeed 💜 @kathwilliamsuk #timstwitterlisteningparty https://t.co/YrDPT4hvv4" data-datetime="8:36 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552030127294451713"
+                 data-text="@kathwilliamsuk @johnalder Yeah we were thinking velvets / big star on this one, real simple, bucolic lazy Sunday afternoon but joyous" data-datetime="8:36 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552030065587851265"
+                 data-text="#timstwitterlisteningparty The version I took to the studio was really slow x Ed sped it up and it sounds all the better for it x it gave it a big star quality 
+Love all the jangling guitars x more guitars!!! 
+More harmonies x 
+More more more" data-datetime="8:36 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552029946075402250"
+                 data-text="#timstwitterlisteningparty I see it as a direct relative to the song old low light" data-datetime="8:35 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552029853305692165"
+                 data-text="#timstwitterlisteningparty The brightest
+This was written with my dear friend @johnalder ( who wrote “ I got your number written on the back of my hand “ a jags classic . It’s a love song to my husband in my head really x how love that’s lasted a while can still burn strong." data-datetime="8:35 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552029682715004928"
+                 data-text="@DaveDogFacedBoy Aw x those bubbling moments x. Those strings that pull" data-datetime="8:34 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552029506537492480"
+                 data-text="@EdHarcourt I feel the same about you Ed" data-datetime="8:34 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552029363339657218"
+                 data-text="@kathwilliamsuk Again, Kathryn’s lyrics just floor you. There’s never anytime where I have to question anything lyrical as a producer. She is the fastest, most brilliant writer I’ve ever met." data-datetime="8:33 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552029351138435072"
+                 data-text="@rogerkirby3 @LlSTENlNG_PARTY @Tim_Burgess Thank you" data-datetime="8:33 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552029225703673856"
+                 data-text="#timstwitterlisteningparty the deep sea of unknowing" data-datetime="8:32 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552029163506245632"
+                 data-text="#timstwitterlisteningparty there’s @emilybarkerhalo and @EdHarcourt backing vocals x" data-datetime="8:32 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552029015195754497"
+                 data-text="#timstwitterlisteningparty When we were in the studio I was wanting the track to feel like you were in a big shop or ferry you know the way it glides even though it’s huge and feels like the world has slowed down ." data-datetime="8:32 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552028911290253317"
+                 data-text="#timstwitterlisteningparty This one was about travelling long distance for love and how that draw can take you over and pull you towards them over seas and mountains" data-datetime="8:31 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552028754469392385"
+                 data-text="#timstwitterlisteningparty Magnets 
+Written with @emilybarker in my studio 
+We had a day of writing together after she had played up here. We wrote three songs , if I remember correctly one was about algorithms , the other about trump" data-datetime="8:31 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552028553625100292"
+                 data-text="What he said x https://t.co/qSJELgkhZs" data-datetime="8:30 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552028373047730177"
+                 data-text="#timstwitterlisteningparty It feels like a maze to me when I close my eyes" data-datetime="8:29 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552028286385012737"
+                 data-text="#timstwitterlisteningparty This feels like such a disco song to me and I though how will I go this? 
+But Ed is so deft at making things work. 
+I credit him by with how easy this do gs feels and goes" data-datetime="8:29 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552028252746678272"
+                 data-text="@kathwilliamsuk @idawenoe This track deserves to be a club hit! Remixers come hither" data-datetime="8:29 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552028173860225024"
+                 data-text="writing in A little space between rooms x" data-datetime="8:28 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552028171201290240"
+                 data-text="#timstwitterlisteningparty We wrote three songs in a day in a courtyard where there was washing hanging out and we were sat in between it all. White tea towels like  flags blowing in the breeze. 
+All if the songs came so easily and I can close my eyes and see the three of us" data-datetime="8:28 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FCrinklyLion%2Fstatus%2F1552028150988771328"
+                 data-text="@EmsydilemsyL @DaveDogFacedBoy @kathwilliamsuk Yup. Even made me laugh on a day I felt like I\'d never laugh again... 🩲 
+#TimsTwitterListeningParty" data-datetime="8:28 PM Jul 26, 2022"> 
+                CrinklyLion            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FDaveDogFacedBoy%2Fstatus%2F1552028132139483137"
+                 data-text="@kathwilliamsuk Scandi-noir commission can\'t be too far away #Tak #timstwitterlisteningparty" data-datetime="8:28 PM Jul 26, 2022"> 
+                DaveDogFacedBoy            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552027964413444098"
+                 data-text="#timstwitterlisteningparty Put the needle on the record 
+
+This was written on a retreat with @idawenoe and @Joelsarakula “ breAthes and says hahaha" data-datetime="8:27 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FEmsydilemsyL%2Fstatus%2F1552027873086943232"
+                 data-text="@kathwilliamsuk
+The poetry of her lyrics and the amazing  fluidity of the accompanying music gives me goosebumps 🥰#timstwitterlisteningparty" data-datetime="8:27 PM Jul 26, 2022"> 
+                EmsydilemsyL            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552027777897037826"
+                 data-text="@EdHarcourt It creeps me out in a good way like your reflection in the mirror in the dark #timstwitterlisteningparty" data-datetime="8:27 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552027764731088898"
+                 data-text="@DaveDogFacedBoy @kathwilliamsuk Or a piñata?" data-datetime="8:27 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552027626218348545"
+                 data-text="Ha https://t.co/m0IlT4sZo1" data-datetime="8:26 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552027605209124869"
+                 data-text="@kathwilliamsuk Implies so much yet never overblown" data-datetime="8:26 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552027564738318344"
+                 data-text="@CreeksideVinyl @LlSTENlNG_PARTY @AndyBruce Who is lol x gawd x i@ in such a rush x panic" data-datetime="8:26 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552027388627898368"
+                 data-text="@EdHarcourt Yes xxx" data-datetime="8:25 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552027234503987201"
+                 data-text="@kathwilliamsuk Darkest song on the record, weaving and winding roads in the middle of nowhere, David Lynch’s lost highway for me" data-datetime="8:25 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552027185245978628"
+                 data-text="I hope @kathwilliamsuk knows how much her Patreon and instagrams kept my spirit up during shit lockdown times. Now Night Drives gives me all the feel… love ya missus 💜#timstwitterlisteningparty" data-datetime="8:24 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FEmsydilemsyL%2Fstatus%2F1552027152387899392"
+                 data-text="@DaveDogFacedBoy @kathwilliamsuk #timstwitterlisteningparty Those Instagram gigs were amazing and just what was needed during lockdown. She reached out to so many of us, not just with music but with her heart." data-datetime="8:24 PM Jul 26, 2022"> 
+                EmsydilemsyL            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552027122104950796"
+                 data-text="#timstwitterlisteningparty river bed of lust rushes right past us" data-datetime="8:24 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552027000558297097"
+                 data-text="#timstwitterlisteningparty The lake being a metaphor for what’s going on between them under the surface .
+Cars rusting 
+Flies landing on the surface film" data-datetime="8:24 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552026910221287426"
+                 data-text="#timstwitterlisteningparty This song has always played like a film in my head . The characters cutting through the dark with the headlights of the car" data-datetime="8:23 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552026846522400770"
+                 data-text="@kathwilliamsuk PUT ZE NEEDLE ON JA?" data-datetime="8:23 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552026776456527873"
+                 data-text="#timstwitterlisteningparty I’m a huge Columbo fan … I’m in the fan club! And most of what I love is the music from the 70’s episodes ." data-datetime="8:23 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552026678213369859"
+                 data-text="#timstwitterlisteningparty Night drive to the lake
+This is where the album title came from and also written in the same session with @andybruce." data-datetime="8:22 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552026640745627648"
+                 data-text="@kathwilliamsuk Totes! And I also threw in a little ‘these are my fave things’ in the middle 8 string part, just a ‘hint’" data-datetime="8:22 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552026461938262045"
+                 data-text="#timstwitterlisteningparty time to turn the record over x" data-datetime="8:21 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Flittletraffy%2Fstatus%2F1552026271432974342"
+                 data-text="@kathwilliamsuk @AndyBruce I’m glad you took this out of the song drawer because it’s one of my favourite songs on the album, love that you can encapsulate the moon! Also love the cinematic feeling of this song." data-datetime="8:21 PM Jul 26, 2022"> 
+                littletraffy            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fcaravangirl79%2Fstatus%2F1552026142160322562"
+                 data-text="@kathwilliamsuk Love those lyrics" data-datetime="8:20 PM Jul 26, 2022"> 
+                caravangirl79            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDaveDogFacedBoy%2Fstatus%2F1552026105619546113"
+                 data-text="Moon Karaoke became a touchstone during lockdown as it was one of the songs that Kathryn played regularly from her studio. It\'s brilliant with just her but this recorded version fucking soars to the stratosphere. 
+
+@kathwilliamsuk
+
+#timstwitterlisteningparty" data-datetime="8:20 PM Jul 26, 2022"> 
+                DaveDogFacedBoy            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552026073738756096"
+                 data-text="@kathwilliamsuk @AndyBruce Unbelievable song. It’s all about that. Makes it so much easier when the song is just 👌🏻" data-datetime="8:20 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552025994210443264"
+                 data-text="@EdHarcourt @DaveDogFacedBoy That’s cause I trust you and your genius" data-datetime="8:20 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fcaravangirl79%2Fstatus%2F1552025992264302596"
+                 data-text="@kathwilliamsuk @AndyBruce Another of my lockdown memories hearing this on your Insta gigs. Then the songs came alive in a different way when I heard the new album the first time. Wonderful" data-datetime="8:20 PM Jul 26, 2022"> 
+                caravangirl79            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552025902493605892"
+                 data-text="Awwww how much do I adore the lyrical imagery of Moon Karaoke 😍🌜✨ @kathwilliamsuk #ImJustTryingToBeMe #timstwitterlisteningparty" data-datetime="8:19 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FPeanutpower4%2Fstatus%2F1552025853114159112"
+                 data-text="@kathwilliamsuk @LlSTENlNG_PARTY @NeillMaccoll I love this X #TimsTwitterListeningParty" data-datetime="8:19 PM Jul 26, 2022"> 
+                Peanutpower4            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552025826987761665"
+                 data-text="#timstwitterlisteningparty I’m so pleased though … that it made it x
+Ed’s string arrangements are so good … like a wonky Ave Maria…. 
+And the drums the twitchy machine and the live drums 
+“Clouds are pretending to be sheep… I’m just trying to me”" data-datetime="8:19 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552025724424523778"
+                 data-text="#timstwitterlisteningparty We’d written a song about thinking about thinking and what famous people do in their day off… when I took songs to Ed I hadn’t shown him this one . It was a late contender ." data-datetime="8:19 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552025645097652224"
+                 data-text="#timstwitterlisteningparty Moon karaoke 
+Aw x hearing Ed play piano is such a beautiful thing . I wrote this with @andyBruce .. in my studio x we’d written 3 songs or so on that session and then it went in the song drawer for a long time ." data-datetime="8:18 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552025641205342214"
+                 data-text="@DaveDogFacedBoy @kathwilliamsuk I love this track. No click, working with Kathryn is a dream, no rules, she allows me to really try anything!" data-datetime="8:18 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552025207556153344"
+                 data-text="@DanJennings1975 @yvettewilliams Haha" data-datetime="8:16 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552025166603079680"
+                 data-text="@EdHarcourt @yvettewilliams Yes it’s mental x" data-datetime="8:16 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552025051595214848"
+                 data-text="RT @jamietmusic: St George Wharf Tower - I’m proud of this one . Is it about kylie minogue or not ? Probably not but you will never know #t…" data-datetime="8:16 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552024972503257088"
+                 data-text="@ChubbyCash1 Corfu. I’m on holiday" data-datetime="8:16 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552024887098839040"
+                 data-text="#timstwitterlisteningparty Me for you I wrote this with my long time collaborator @neillmaccoll I love how he rolls the guitar lines x he’s so fluid and amazing and talented. The content of lyrics is  a sliding doors scenario x of if you could live a parallelise if you could be" data-datetime="8:15 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552024851367530498"
+                 data-text="@kathwilliamsuk @LlSTENlNG_PARTY @thevandykeparks Gah! Inspired" data-datetime="8:15 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552024773168975872"
+                 data-text="@kathwilliamsuk @LlSTENlNG_PARTY Moon Karaoke - I was very much inspaired by @thevandykeparks string arrangements here…" data-datetime="8:15 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjuderogers%2Fstatus%2F1552024670010068992"
+                 data-text="@kathwilliamsuk @yvettewilliams I love the stuttering of the vocal so much - such a frightening, clever idea - like a human Geiger counter" data-datetime="8:14 PM Jul 26, 2022"> 
+                juderogers            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552024549834866696"
+                 data-text="Every song on Night Drives giving off “surely this must be the best song on this album” energy 🥵@kathwilliamsuk #timstwitterlisteningparty" data-datetime="8:14 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552024456377376768"
+                 data-text="@mrmitchell78 Xxx" data-datetime="8:14 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552024432847331328"
+                 data-text="@EdHarcourt Haha" data-datetime="8:13 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552024374668140548"
+                 data-text="@DaveDogFacedBoy Yes x bucolic" data-datetime="8:13 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDaveDogFacedBoy%2Fstatus%2F1552024345005924355"
+                 data-text="For ages this was my favourite track on the album - I love the tension, that simple hypnotic beat , the way it builds
+and the slight madness in @kathwilliamsuk vocal. #Radioactive
+#timstwitterlisteningparty" data-datetime="8:13 PM Jul 26, 2022"> 
+                DaveDogFacedBoy            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552024296666681358"
+                 data-text="@EdHarcourt @DaveDogFacedBoy The string swells" data-datetime="8:13 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552024259605716994"
+                 data-text="@EdHarcourt @DaveDogFacedBoy Yes x that little mistake she. I come in before the chaos" data-datetime="8:13 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552024220460367882"
+                 data-text="@kathwilliamsuk Bear with me…" data-datetime="8:13 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552024144904069128"
+                 data-text="@DanJennings1975 @MattDeighton @chrisdifford @NeillMaccoll Thank you x" data-datetime="8:12 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552024105628614658"
+                 data-text="@CrinklyLion @mrmitchell78 Aw that’s brilliant" data-datetime="8:12 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552024034891759619"
+                 data-text="@Katiebarlowfilms did the video with me and Ed drummed in a bear suit" data-datetime="8:12 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552023972610555913"
+                 data-text="@kathwilliamsuk @yvettewilliams Is this meant to go this fast? I can’t keep up…." data-datetime="8:12 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552023925898477568"
+                 data-text="The original track had the hang drums high in the mix but we ended going a bit more dub with the bass nice and deep." data-datetime="8:11 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552023837495234560"
+                 data-text="Chime Like a Bell - another fab moody string-soaked song yet a very different feel from the last. Props to co-writer and all round dude @deighton_matt 💜 @kathwilliamsuk #timstwitterlisteningparty" data-datetime="8:11 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552023779240714240"
+                 data-text="Radioactive was written with @yvettewilliams and @ simon Edwards bass at Simon’s house x we wrote two songs that day x
+Hearing how yvette sang the song wS really inspirational and I loved the stuttering of the vocal x" data-datetime="8:11 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552023704435040257"
+                 data-text="@DanJennings1975 @LlSTENlNG_PARTY @Tim_Burgess Ha" data-datetime="8:11 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552023702660947972"
+                 data-text="@kathwilliamsuk There’s only one tiny window in the Wolf cabin. Who needs windows when you’re making a badass rekkid? 🤪" data-datetime="8:11 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552023555973447684"
+                 data-text="Mellotron love them" data-datetime="8:10 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552023513552257025"
+                 data-text="@mrmitchell78 Thank you x" data-datetime="8:10 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552023320278835202"
+                 data-text="@DaveDogFacedBoy @EdHarcourt I know amazing x" data-datetime="8:09 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552023258484047873"
+                 data-text="@CreeksideVinyl @EdHarcourt @Tim_Burgess Yeah" data-datetime="8:09 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552023185360670721"
+                 data-text="@DaveDogFacedBoy @kathwilliamsuk That was one of the first songs we worked on, a cry for love &amp; acknowledgment, reaching out to people, wanted it to have this urgent, yearning feel" data-datetime="8:08 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552023025473683458"
+                 data-text="I love how the song makes you feel like you are on a carousel 
+“ look the painted horses are laughing, varnish cracking , baring teeth so bold”" data-datetime="8:08 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552022947946192906"
+                 data-text="Chime like a bell 
+
+This was written with @mattdeighton at a retreat in Pennard house with @chrisdifford. Matt has an otherworldly quality about him and the hypnotic guitar part ( played by @neillmaccoll ) takes me somewhere else." data-datetime="8:08 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552022852454449152"
+                 data-text="This was written on a writing retreat I hosted in Stroud where I put writers in groups each day to write. This was written by Romeo Stodart ( the magic numbers) me and Oystein Greni ( Big Bang) ( Norway )" data-datetime="8:07 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552022775119990784"
+                 data-text="That’s is us setting up in the studio at the beginning… we left it on .. I like it reminds me of the room and the inbetween times. I always enjoy hearing that stuff on other records like you are looking in the window" data-datetime="8:07 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FEmsydilemsyL%2Fstatus%2F1552022767255670785"
+                 data-text="@DaveDogFacedBoy @EdHarcourt @kathwilliamsuk Absolutely love that build of the strings and vocals" data-datetime="8:07 PM Jul 26, 2022"> 
+                EmsydilemsyL            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552022677552070666"
+                 data-text="Inevitable. The tears have started 🥲 @kathwilliamsuk #timstwitterlisteningparty" data-datetime="8:06 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552022613978923011"
+                 data-text="I need this song tonight. Not getting in the shortlist has hit me hard.  I used to swallow and not speak of sadness but I’m getting better at letting it out and not letting shame be a riptide" data-datetime="8:06 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552022575802466309"
+                 data-text="@kathwilliamsuk @Tim_Burgess I remember wanting the drums at the end to sound like they were falling down stairs, like the end of ‘Piggy’ by @nineinchnails" data-datetime="8:06 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552022415169003520"
+                 data-text="@LlSTENlNG_PARTY I need this song tonight. Not getting in the shortlist has hit me hard.  I used to swallow and not speak of sadness but I’m getting better at letting it out and not letting shame be a riptide" data-datetime="8:05 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552022218707812354"
+                 data-text="@LlSTENlNG_PARTY I sat and watched Ed hand write the string parts ins see him hearing them in his head. 
+Him and Gita his wife worked out the parts and it was so lovely seeing them work as a team" data-datetime="8:05 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fscotpaulabear%2Fstatus%2F1552022215704600579"
+                 data-text="Answer in the Dark gives me goosebumps. That piano line. Those strings. Those dark chords. 😍 @kathwilliamsuk #timstwitterlisteningparty" data-datetime="8:05 PM Jul 26, 2022"> 
+                scotpaulabear            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fwordsnmusicfest%2Fstatus%2F1552022192325533701"
+                 data-text="@kathwilliamsuk @LlSTENlNG_PARTY Adore this song ❤️" data-datetime="8:05 PM Jul 26, 2022"> 
+                wordsnmusicfest            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552022119445397504"
+                 data-text="@LlSTENlNG_PARTY We were sat together talki b about being in place and knowing there was hope at the end of the tunnel snd we had to keep walking towards it. 
+
+We recorded the strings in Ed’s local church" data-datetime="8:04 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552022002793316352"
+                 data-text="@LlSTENlNG_PARTY This was written on a writing retreat I hosted in Stroud where I put writers in groups each day to write. This was written by Romeo Stodart ( the magic numbers) me and Oystein Greni ( Big Bang) ( Norway )" data-datetime="8:04 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FEdHarcourt%2Fstatus%2F1552021898053259264"
+                 data-text="@kathwilliamsuk @Tim_Burgess Thank you for letting me go ‘postal’ with that synth 👌🏻" data-datetime="8:03 PM Jul 26, 2022"> 
+                EdHarcourt            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552021887500402688"
+                 data-text="@LlSTENlNG_PARTY Answer in the dark 
+
+That’s is us setting up in the studio at the beginning… we left it on .. I like it reminds me of the room and the inbetween times. I always enjoy hearing that stuff on other records like you are looking in the window" data-datetime="8:03 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552021764087193601"
+                 data-text="@LlSTENlNG_PARTY ooo that went quick" data-datetime="8:03 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552021595262156800"
+                 data-text="@Tim_Burgess We were rolling around on the floor laugh crying so hard when he sand “ s’cuse md while I kiss this guy” 
+We kept it low in the monitor mixes .. it was a out little secret .. but then david Izumi the mixer found it snd turned it up for everyone!" data-datetime="8:02 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552021500504555521"
+                 data-text="@Tim_Burgess I’m often mesmerised when he’s doing his thing musically cause I can see there are NO boundaries or borders .. he’s stretching out without fear snd it’s a sight to behold." data-datetime="8:02 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552021432976265221"
+                 data-text="@Tim_Burgess Anyway the “am I human ? Yes I am human” bit really stuck with me snd the song came from that seed. In the studio Ed snd I talked sbout how we thought it was a robot Jimi Hendrix playing the solo. Ed got out this amazing sun this and just started shredding like it was a lead elec" data-datetime="8:01 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552021335840260098"
+                 data-text="@Tim_Burgess We had things like “ a Minotaur living in a cul de sac” and “a centaur living in a block of flats .. and the lift doesn’t work “ stiff like that .. the magical snd the mundane." data-datetime="8:01 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552021240730337281"
+                 data-text="@Tim_Burgess Here we go!!!!!! 
+Human 
+
+I wrote this song with @kirstylogan the Scottish author. I’m a big fan of her work. It began as a list in a writing retreat to try snd make each other laugh." data-datetime="8:01 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fkathwilliamsuk%2Fstatus%2F1552021058559041538"
+                 data-text="@LlSTENlNG_PARTY Here we go!!!!!! 
+Album NIGHT DRIVES        Human 
+
+I wrote this song with @kirstylogan the Scottish author. I’m a big fan of her work. It began as a list in a writing retreat to try snd make each other laugh." data-datetime="8:00 PM Jul 26, 2022"> 
+                kathwilliamsuk            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1552020959976194048"
+                 data-text="Time for a Night Drive with @kathwilliamsuk 
+
+🙌 https://t.co/m0VpeNYfTa" data-datetime="8:00 PM Jul 26, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
