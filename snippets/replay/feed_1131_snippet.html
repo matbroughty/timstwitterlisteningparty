@@ -1,0 +1,747 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/6doxkIIErjvcfFYrWG4c2c" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e028f8c6f6a8e9f4c60b1a61a1f" alt="Live At O2 Apollo Manchester" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Slow Readers Club</span><br/><span class="sub-colour">Live At O2 Apollo Manchester</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(3319046)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/6doxkIIErjvcfFYrWG4c2c" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_3319046_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 149 tweets from Tuesday 6th September 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/slowreadersclub" target="_blank"><img src="https://pbs.twimg.com/profile_images/1503353699086868488/qBxaDJEk_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/slowreadersclub.jpg'"><br/>@slowreadersclub</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1401913725288960003/n_dKSg1J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1556239813174591489/tqNhFTAC_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Lunatic - Live At O2 Apollo Manchester" data-start="0"
+             data-duration="240" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Fool For Your Philosophy - Live At O2 Apollo Manchester" data-start="241"
+             data-duration="201" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Supernatural - Live At O2 Apollo Manchester" data-start="443"
+             data-duration="219" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Sirens - Live At O2 Apollo Manchester" data-start="663"
+             data-duration="193" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Never Said I Was The Only One - Live At O2 Apollo Manchester" data-start="857"
+             data-duration="205" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Start Again - Live At O2 Apollo Manchester" data-start="1063"
+             data-duration="216" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Through The Shadows - Live At O2 Apollo Manchester" data-start="1280"
+             data-duration="240" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Lives Never Known - Live At O2 Apollo Manchester" data-start="1521"
+             data-duration="220" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="One More Minute - Live At O2 Apollo Manchester" data-start="1742"
+             data-duration="235" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="You Open Up My Heart - Live At O2 Apollo Manchester" data-start="1978"
+             data-duration="281" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Plant The Seed - Live At O2 Apollo Manchester" data-start="2260"
+             data-duration="208" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Lost Boys - Live At O2 Apollo Manchester" data-start="2469"
+             data-duration="221" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="Not Afraid Of The Dark - Live At O2 Apollo Manchester" data-start="2691"
+             data-duration="307" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="Cavalcade - Live At O2 Apollo Manchester" data-start="2999"
+             data-duration="208" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="Block Out The Sun - Live At O2 Apollo Manchester" data-start="3208"
+             data-duration="302" style="display:none"></div>
+                <div id="track-16" class="track-list"
+             data-name="Feet On Fire - Live At O2 Apollo Manchester" data-start="3511"
+             data-duration="249" style="display:none"></div>
+                <div id="track-17" class="track-list"
+             data-name="Forever In Your Debt - Live At O2 Apollo Manchester" data-start="3761"
+             data-duration="244" style="display:none"></div>
+                <div id="track-18" class="track-list"
+             data-name="Lost in Your Gaze - Live At O2 Apollo Manchester" data-start="4006"
+             data-duration="279" style="display:none"></div>
+                <div id="track-19" class="track-list"
+             data-name="I Saw A Ghost - Live At O2 Apollo Manchester" data-start="4286"
+             data-duration="280" style="display:none"></div>
+                <div id="track-20" class="track-list"
+             data-name="On The TV - Live At O2 Apollo Manchester" data-start="4567"
+             data-duration="399" style="display:none"></div>
+                        <div id="track-21" class="track-list"
+                     data-name="Finished" data-start="4967"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048518f8c6f6a8e9f4c60b1a61a1f" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-149" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567247835506016257"
+                 data-text="RT @whitneytheband: “MEMORY” off our new album \'SPARK\' (out Sept 16) is out now. The lyrics of “MEMORY” illustrate someone processing and e…" data-datetime="8:26 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567247574326706176"
+                 data-text="@dewokkel @kurtisstarkie @aaronstarkie @KeyMusicMgmt @KurtStarkie If you find the tabs can you send them to @KurtStarkie please 😏" data-datetime="8:25 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="178000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1567247447478489088"
+                 data-text="The consequences of Brexit are starting to manifest themselves and it will only get worse. Sorry for the doom and gloom 🤷‍♂️
+
+Sending love to @barneydrums https://t.co/hwvbA7TMqm" data-datetime="8:24 PM Sep 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567246701760503809"
+                 data-text="Big thanks to everyone for joining us, it’s been wonderful to re-live it with you. Hopefully catch you on tour in September :)
+https://t.co/UDzNxgHiew
+#timstwitterlisteningparty https://t.co/5TigsxeuSP" data-datetime="8:21 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1567246278349803520"
+                 data-text="Big love and thanks to @slowreadersclub for stopping by The @LlSTENlNG_PARTY tonight 🙌" data-datetime="8:20 PM Sep 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567246227808440330"
+                 data-text="This was quite a moment
+https://t.co/p4v6cJOWVp" data-datetime="8:19 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567246129389096960"
+                 data-text="@SimonHelliwell we love it :)" data-datetime="8:19 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FEdSmith75%2Fstatus%2F1567245968298369024"
+                 data-text="@slowreadersclub If you\'ve not been dancing around at home already... then you will be with this one." data-datetime="8:18 PM Sep 6, 2022"> 
+                EdSmith75            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567245939638673408"
+                 data-text="It\'s about anxiety caused by horrific world events unfolding on the news and having no way to influence or change that and seeking comfort or answers from family" data-datetime="8:18 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567245872030748672"
+                 data-text="Big riff once again :)" data-datetime="8:18 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTWJ_64%2Fstatus%2F1567245819480268801"
+                 data-text="@slowreadersclub I\'ll never forget everyone singing this, going down the escalator into Camden Station after the gig last year. Hundreds of us. The atmosphere around this song is unreal." data-datetime="8:18 PM Sep 6, 2022"> 
+                TWJ_64            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567245734830919693"
+                 data-text="TRACK 20 ON THE TV
+\"On the TV the world is on fire we\'ve all gone insane...\" https://t.co/xpFGt4FbJh" data-datetime="8:17 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fdejavegaband%2Fstatus%2F1567245501099114498"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess @slowreadersclub Orange whip? Orange whip? 4 orange whips please." data-datetime="8:17 PM Sep 6, 2022"> 
+                dejavegaband            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567245170894143488"
+                 data-text="Here\'s the gig poster :) https://t.co/NsIHYUlTEg" data-datetime="8:15 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FEdSmith75%2Fstatus%2F1567245090510307331"
+                 data-text="@slowreadersclub Not sure can ever explain what this songs means to me... the people I\'ve met and good times I\'ve had... just fucking love this song ❤️" data-datetime="8:15 PM Sep 6, 2022"> 
+                EdSmith75            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FJamesfanitalia%2Fstatus%2F1567245002824114177"
+                 data-text="@slowreadersclub I listened to this song on the Italian radio for the first time. ❤️ A DREAM" data-datetime="8:15 PM Sep 6, 2022"> 
+                Jamesfanitalia            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567244676394098690"
+                 data-text="The track was a favourite of Jim from @wearejames it opened the door for us to land our first big support tour with them in 2016 - this is Aaron and Jim back stage on the night :) https://t.co/AYGmkHBZpf" data-datetime="8:13 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1567244643275837441"
+                 data-text="@ElephantStoneHQ @LlSTENlNG_PARTY @antonnewcombe Sure! Hope you gang are all well 🙌" data-datetime="8:13 PM Sep 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567244571997872128"
+                 data-text="It’s a song about mental health struggles and issues with alcohol" data-datetime="8:13 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567244490691190784"
+                 data-text="TRACK 19 ‘I SAW A GHOST’
+“I am broken, I am seasick…” https://t.co/aUkzH0HFua" data-datetime="8:12 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567244153674780672"
+                 data-text="@MattFromAstley Can\'t remember, possibly 🙃" data-datetime="8:11 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="139000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1567244028961243145"
+                 data-text="@ProfTimOB @slowreadersclub 🙌" data-datetime="8:11 PM Sep 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567243446389276675"
+                 data-text="The drums and bass are brilliant on this one" data-datetime="8:08 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fjulisvoice%2Fstatus%2F1567243394639863809"
+                 data-text="@slowreadersclub Three dates and bringing another Yank https://t.co/Hvs8D2qCFj" data-datetime="8:08 PM Sep 6, 2022"> 
+                julisvoice            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fwakemewhenifall%2Fstatus%2F1567243381901762568"
+                 data-text="@slowreadersclub This has recently become the 6th Readers song I’ve learnt to play (decently) on my drums... 🙂🥁" data-datetime="8:08 PM Sep 6, 2022"> 
+                wakemewhenifall            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FNeillyons16%2Fstatus%2F1567243373244727296"
+                 data-text="@slowreadersclub Me, can\'t wait for Hull now!!!  🔥🔥🔥" data-datetime="8:08 PM Sep 6, 2022"> 
+                Neillyons16            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567243370837286918"
+                 data-text="TRACK 18 ‘LOST IN YOUR GAZE’
+\"There\'s no today and no tomorrow\" https://t.co/EhHKPECVtj" data-datetime="8:08 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567243293670400000"
+                 data-text="@Tim_Burgess @slowreadersclub https://t.co/9Lz79O6KXF" data-datetime="8:08 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1567243182697578498"
+                 data-text="Enjoying this @slowreadersclub gig. Anyone want anything from the bar? It’s my round 😉" data-datetime="8:07 PM Sep 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567243071707815937"
+                 data-text="Who\'s coming to see us on tour in September? :)" data-datetime="8:07 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Felisa_aehas%2Fstatus%2F1567242832708046849"
+                 data-text="@slowreadersclub I\'ve also loooooooooved thisssssssssssss soooooo muchhhhh!! Super bella 💜" data-datetime="8:06 PM Sep 6, 2022"> 
+                elisa_aehas            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fwakemewhenifall%2Fstatus%2F1567242716504891392"
+                 data-text="@slowreadersclub Fu*king love this song ❤️👌" data-datetime="8:05 PM Sep 6, 2022"> 
+                wakemewhenifall            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567242580303265798"
+                 data-text="This was our first ‘post album 1’ single, felt like we were maturing and getting more confident with this track." data-datetime="8:05 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567242503329308679"
+                 data-text="Thanks for being involved in this tonight everyone ❤️" data-datetime="8:05 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567242327491502081"
+                 data-text="TRACK 17 ‘FOREVER IN YOUR DEBT’
+“There was a time, when all the world was golden…” https://t.co/w9fDX7STFc" data-datetime="8:04 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2FTunnocks17%2Fstatus%2F1567242312962424834"
+                 data-text="@slowreadersclub It was never in doubt that the music wouldn’t reach a bigger audience" data-datetime="8:04 PM Sep 6, 2022"> 
+                Tunnocks17            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567242026256564228"
+                 data-text="LET’S PAUSE FOR 30 SECONDS WHILE VINYL LISTENERS FLIP THE RECORD :)" data-datetime="8:03 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="159000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567241888767287297"
+                 data-text="was amazing to play these songs after playing them to fuck all people back in the day 🙃" data-datetime="8:02 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567241219431882752"
+                 data-text="Our second single feet on fire, a song about resisting settling down and wanting to go back to the time when you were just out with your mates getting pissed and having no responsibility." data-datetime="7:59 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567241118596612099"
+                 data-text="TRACK 16 ‘FEET ON FIRE’
+“I will regret this decision for a long long time, you know I only really wanted her for just one night…” https://t.co/BXyRswbTx4" data-datetime="7:59 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567241018570932224"
+                 data-text="I was a little pitchy there ha ha" data-datetime="7:59 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FEDouglasWW%2Fstatus%2F1567240983401611265"
+                 data-text="@LlSTENlNG_PARTY @slowreadersclub Yup! Not even their first TTLP either... maybe the third...." data-datetime="7:59 PM Sep 6, 2022"> 
+                EDouglasWW            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567240718556581890"
+                 data-text="@marthaunplugged Thanks Martha" data-datetime="7:57 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567240470522171393"
+                 data-text="RT @slowreadersclub: UK TOUR - SEPTEMBER 2022
+
+Tickets are on-sale now for our UK tour!
+
+Get yours here: https://t.co/Gs4HtpVGjE https://t.…" data-datetime="7:57 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567240467640614914"
+                 data-text="❤️ https://t.co/iJvOh0CGyF" data-datetime="7:57 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567240268759302148"
+                 data-text="Anyone else first hear @slowreadersclub via The @LlSTENlNG_PARTY?" data-datetime="7:56 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567240168993689604"
+                 data-text="It became a song about loss, although not about the event specifically when I wrote the line ‘Block Out The Sun’ I was thinking of my mum drawing the curtains at home on the day of her Gran’s funeral. My first real experience of grief." data-datetime="7:55 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567240102270697477"
+                 data-text="It had a full set of completely different lyrics originally, it was a love song. The change was definitely for the better." data-datetime="7:55 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567240014106329091"
+                 data-text="A much bigger track live than on record" data-datetime="7:55 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FJaneCSweeney%2Fstatus%2F1567240007861018624"
+                 data-text="@RRelves @slowreadersclub @LlSTENlNG_PARTY That’s brilliant &amp; how out of the lockdowns, the listening parties brought such shared positivity &amp; joy 🙌🏻❤️" data-datetime="7:55 PM Sep 6, 2022"> 
+                JaneCSweeney            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="131000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567239852579495943"
+                 data-text="TRACK 15 ‘BLOCK OUT THE SUN’
+“No more laughter, ever after…” https://t.co/sYdC1DzPk1" data-datetime="7:54 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567239304354701315"
+                 data-text="The ‘Through many years, and days unnumbered’ line came from a similar line in the movie the Labrynth with David Bowie ‘Through dangers untold and hardships unnumbered’" data-datetime="7:52 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567239157868642305"
+                 data-text="A song about coming of age, the words are a father readying his son for the world" data-datetime="7:51 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567239105242664960"
+                 data-text="The title track from one of our most loved records." data-datetime="7:51 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567239024795852804"
+                 data-text="TRACK 14 ‘CAVALCADE’
+“Through many years, and days unnumbered you may walk against the tide” https://t.co/3vceJvPHdg" data-datetime="7:51 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="88000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567238848735739907"
+                 data-text="Jims Happy Birthday Message for his mum ❤️ this was him and his Bro Alan backstage too https://t.co/qk6jG7QfQv" data-datetime="7:50 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FRRelves%2Fstatus%2F1567238482581458955"
+                 data-text="@slowreadersclub have been one of my favourite @LlSTENlNG_PARTY discoveries. So, so good 😍
+#TimsTwitterListeningParty" data-datetime="7:49 PM Sep 6, 2022"> 
+                RRelves            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567238457142951940"
+                 data-text="The \'magic theatre\' line is a reference to Steppenwolf by Hermann Hesse" data-datetime="7:49 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2FForaging4Music%2Fstatus%2F1567238227114823680"
+                 data-text="@slowreadersclub @LlSTENlNG_PARTY @KurtStarkie Lovely vocals from @KurtStarkie" data-datetime="7:48 PM Sep 6, 2022"> 
+                Foraging4Music            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567237764617322496"
+                 data-text="BIt gothic and theatrical this one. The riff was done on keys originally, it was one that needed figuring out a bit in the studio." data-datetime="7:46 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567237670195052545"
+                 data-text="TRACK 13 ‘NOT AFRAID OF THE DARK’
+“In the age of innocence what a mess we made, to be measured out in numbers from the cradle to the grave” https://t.co/84EQqF1WB8" data-datetime="7:45 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FFuturesTechs%2Fstatus%2F1567237668609708039"
+                 data-text="@Tim_Burgess @slowreadersclub @wearejames North by Northwich was such a joyous thing! https://t.co/FLIDwjXo5g" data-datetime="7:45 PM Sep 6, 2022"> 
+                FuturesTechs            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567237623168499712"
+                 data-text="@Neillyons16 He never is 🍺 🍺 🍺 🍺" data-datetime="7:45 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1567237524782735361"
+                 data-text="…plus when we both did a set in a shoe shop on Oldham Street https://t.co/Rkdoj508Oy" data-datetime="7:45 PM Sep 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567237185111302144"
+                 data-text="@FuturesTechs oh yeah :)" data-datetime="7:43 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567237016588374018"
+                 data-text="A rare lead vocal from @kurtstarkie here, I think because he came to practice with the melody and lyrics written so it felt natural that he should sing it. We decided on trying to share the vocals for the bridge and chorus, our closest thing to Beatles like harmonies :)" data-datetime="7:43 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1567236958266560513"
+                 data-text="…and in Sheffield too https://t.co/vhDj2HO6Zq" data-datetime="7:43 PM Sep 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567236765353738244"
+                 data-text="TRACK 12 ‘LOST BOYS’ “This boy has no future, this city no future…” https://t.co/P0I54GijNv" data-datetime="7:42 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1567236657719410688"
+                 data-text="The @slowreadersclub played as part of North By Northwich - they opened the show when we played at Manchester Arena with @wearejames and this one of course… https://t.co/5Zo3luwEjb" data-datetime="7:41 PM Sep 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567236535900164097"
+                 data-text="LET’S PAUSE FOR 30 SECONDS WHILE VINYL LISTENERS FLIP THE RECORD :)" data-datetime="7:41 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567236081019412488"
+                 data-text="Our biggest track on Spotify thanks in no small part to it being on heavy rotation on TXFM Dublin" data-datetime="7:39 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567235795274141696"
+                 data-text="TRACK 11 ‘PLANT THE SEED’
+“Fade to white, a new horizon bathed in light…” https://t.co/vFM2sk3SHB" data-datetime="7:38 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567235625597763589"
+                 data-text="@FuturesTechs always ha ha" data-datetime="7:37 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567235518961688576"
+                 data-text="Cheers Neil https://t.co/sZu6JXV3ps" data-datetime="7:37 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567235247678300163"
+                 data-text="one more track after the then we will be pausing for 30 seconds again for vinyl folk :)" data-datetime="7:36 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567234862750343172"
+                 data-text="Remember us playing this at @Alberthallmcr maybe for the first time live and it feeling really magical" data-datetime="7:34 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FRachelPainter13%2Fstatus%2F1567234816545902594"
+                 data-text="@slowreadersclub Goosebumps everytime" data-datetime="7:34 PM Sep 6, 2022"> 
+                RachelPainter13            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567234724153655302"
+                 data-text="Great riff from @kurtstarkie to kick this off" data-datetime="7:34 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567234590233722882"
+                 data-text="TRACK 10 ‘YOU OPENED UP MY HEART’
+“Believe enough to lose control, where theres love theres always hope” https://t.co/ci7lzSqBpE" data-datetime="7:33 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567234348415320065"
+                 data-text="Cheers to the new followers tonight, hope you are enjoying it so far :)" data-datetime="7:32 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fwakemewhenifall%2Fstatus%2F1567234094500560896"
+                 data-text="@slowreadersclub @aaronstarkie TUUUUUNE!!" data-datetime="7:31 PM Sep 6, 2022"> 
+                wakemewhenifall            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567233932692684800"
+                 data-text="Was going for a Smiths croon with the \'Honestly...\' line :)" data-datetime="7:31 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2FJaneCSweeney%2Fstatus%2F1567233859418193941"
+                 data-text="@slowreadersclub @aaronstarkie Who else is thumping their arm to this! Like @aaronstarkie does! 🙋‍♀️ #timstwitterlisteningparty" data-datetime="7:30 PM Sep 6, 2022"> 
+                JaneCSweeney            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567233729306791943"
+                 data-text="This is song that has been with us for a long long time, we carried it over from mine and Jim\'s previous band Omerta" data-datetime="7:30 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="122000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567233637023727623"
+                 data-text="TRACK 9 ‘ONE MORE MINUTE’
+“Honestly, it really is a crying shame, that I bend my will to suit your ways” https://t.co/MCSA9XZxvH" data-datetime="7:29 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567233125570183169"
+                 data-text="@RachelPainter13 Cheers Rachel :)" data-datetime="7:27 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567232999317446656"
+                 data-text="another lighthearted number :)" data-datetime="7:27 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fwakemewhenifall%2Fstatus%2F1567232918640107531"
+                 data-text="@slowreadersclub One of the most memorable songs during your Victorious 2016 set when I saw yous live for the time and being totally unknown to me then too. Your set made such an impact and this one really stood out and with that clock arm action too. Knew I was witnessing something special.." data-datetime="7:27 PM Sep 6, 2022"> 
+                wakemewhenifall            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567232838386286593"
+                 data-text="We began writing this one at a sound check when we were supporting @TheMaryChain, Jim started playing a Bass line and I adlibed a vocal melody on the top" data-datetime="7:26 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567232724225724417"
+                 data-text="TRACK 8 ‘LIVES NEVER KNOWN’
+“Now you’ve chosen a path all those lives never known” https://t.co/R6hwiadR9d" data-datetime="7:26 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567232462048092169"
+                 data-text="Top ❤️ https://t.co/VvAZsGdgYe" data-datetime="7:25 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567232339570302976"
+                 data-text="all photos in tonights listening party are by @Sam_Crowston_" data-datetime="7:24 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTitaniumGirl8%2Fstatus%2F1567232326328893442"
+                 data-text="@slowreadersclub Just found this in my camera roll https://t.co/JhmP6BnJO7" data-datetime="7:24 PM Sep 6, 2022"> 
+                TitaniumGirl8            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567232231621394452"
+                 data-text="RT @pdicko67: @LlSTENlNG_PARTY @slowreadersclub @O2ApolloManc Currently at work in Birmingham. Was blessed the lads allowed me to spend the…" data-datetime="7:24 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567232094278926338"
+                 data-text="It\'s a song about getting through tough times" data-datetime="7:23 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567232042017906688"
+                 data-text="This song originally started life during the Cavalcade writing sessions saved under the codename \'Jims favourite\' :)" data-datetime="7:23 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567231856692678656"
+                 data-text="This one was nearly a single - there\'s a cool video for it on youtube by @croftwerk featuring live footage, fans and behind the scenes stuff - search for it later ;)" data-datetime="7:22 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567231682779938817"
+                 data-text="TRACK 7 ‘THOUGH THE SHADOWS’
+‘Sorrow, fills up your heart…” https://t.co/Gy0GzevaKx" data-datetime="7:22 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567231557479415816"
+                 data-text="LET’S PAUSE FOR 30 SECONDS WHILE VINYL LISTENERS FLIP THE RECORD :)" data-datetime="7:21 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567231492106887168"
+                 data-text="❤️ https://t.co/XIa226lK7J" data-datetime="7:21 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567231381029240835"
+                 data-text="@SimonHelliwell its a good un" data-datetime="7:20 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FK_Stand_Red%2Fstatus%2F1567231319066689536"
+                 data-text="@slowreadersclub Was handed a flyer for this in the pissing rain on the Warwick Road on way to the match. Stuffed it in my pocket and found it about a week later. Gave it a listen and haven\'t looked back. Congratulations on all your successes. Nobody has worked harder. #Readers" data-datetime="7:20 PM Sep 6, 2022"> 
+                K_Stand_Red            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567231124396556289"
+                 data-text="It\'s a song about regret and unfulfilled dreams and wanting to turn back the clock" data-datetime="7:19 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567231022365818881"
+                 data-text="Struggled to find lyrics which lead to the opening lines “when in the end you never start, consternation crippling you, empty head and heavy heart, everyone must have these moments’" data-datetime="7:19 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fsarahpika%2Fstatus%2F1567230990501773313"
+                 data-text="@LlSTENlNG_PARTY @Tim_Burgess @slowreadersclub I’ve seen them a few times but one of my absolute favourites was last year at Tunes In The Dunes on Perranporth beach #timstwitterlisteningparty https://t.co/5SDLiw4Sb8" data-datetime="7:19 PM Sep 6, 2022"> 
+                sarahpika            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567230973057634307"
+                 data-text="A single from our second album ‘Cavalcade’" data-datetime="7:19 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567230916203888641"
+                 data-text="Top hearing those \'Readers\' chants :)" data-datetime="7:19 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567230786432114688"
+                 data-text="TRACK 6 ‘START AGAIN’
+“Time will come to take its toll”
+#timstwitterlisteningparty https://t.co/pKhyPOiql5" data-datetime="7:18 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567230601987559425"
+                 data-text="@eventhestarsuk @ellorellor That came from the movie \'Amadeus\' :)" data-datetime="7:17 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567230426623737864"
+                 data-text="One more track after this then we will pause for 30 seconds for vinyl flippers 👍" data-datetime="7:17 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567230104513777670"
+                 data-text="One of my favourite tracks lyrically - about feeling like an outsider and like you don\'t belong" data-datetime="7:15 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fwakemewhenifall%2Fstatus%2F1567230077703782403"
+                 data-text="@LlSTENlNG_PARTY @slowreadersclub @O2ApolloManc Listening in from northeast England (Jarrow). I was at the Apollo.. down on barrier and loving it, surrounded by so many friends. What a gig. Incredible night. Was a proud moment to see them play that stage ❤️ https://t.co/IoYRk2ihUA" data-datetime="7:15 PM Sep 6, 2022"> 
+                wakemewhenifall            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567230007688265732"
+                 data-text="A change of pace with an album track from Build A Tower" data-datetime="7:15 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567229936489865219"
+                 data-text="TRACK 5 ‘NEVER SAID I WAS THE ONLY ONE’
+“I can hear the choir singing, how they long for new beginnings”
+#timstwitterlisteningparty https://t.co/xoZgn2jzFt" data-datetime="7:15 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567229776699482118"
+                 data-text="@TracyFi31470652 Top vid by a German animator called Dirk, if I remember correctly :) also did a Joy Division one" data-datetime="7:14 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FFuturesTechs%2Fstatus%2F1567229507450413057"
+                 data-text="@slowreadersclub THIS is my all time favourite SRC tuuuune! Remember when we nagged you into playing it at @Chinnerys in Southend? What a night that was! A Readers gig in my own town! BLISS. 😍🎸👊" data-datetime="7:13 PM Sep 6, 2022"> 
+                FuturesTechs            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567229495169454084"
+                 data-text="RT @LlSTENlNG_PARTY: Shout up and let us know where you are in the world for our @slowreadersclub @LlSTENlNG_PARTY 
+
+Also, let us know if y…" data-datetime="7:13 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FTunnocks17%2Fstatus%2F1567229412256501765"
+                 data-text="@slowreadersclub Arguably the stand out track from the debut and so often the set opener, it reminds me of so many amazing days and nights out" data-datetime="7:13 PM Sep 6, 2022"> 
+                Tunnocks17            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567229249047625729"
+                 data-text="Our Debut single - a song about growing up and fearing commitment and responsibility. a common theme in tracks back then 😂" data-datetime="7:12 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567229223974195203"
+                 data-text="RT @Tim_Burgess: London town" data-datetime="7:12 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567229201408745474"
+                 data-text="fluffed \'Good Evening\' a bit there ha ha" data-datetime="7:12 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567229053916028930"
+                 data-text="@slowreadersclub ❤️❤️❤️" data-datetime="7:11 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567229047209353220"
+                 data-text="TRACK 4 ‘SIRENS’
+“When I was young always had the best time, but now I’m old now I need a lifeline. Maybe I could be going crazy…” https://t.co/wNghDXeoo4" data-datetime="7:11 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567228900010348544"
+                 data-text="Sure thing, bring it along to the tour ;) https://t.co/6nHEvecbXO" data-datetime="7:11 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567228754933551106"
+                 data-text="anxiety my constant companion" data-datetime="7:10 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567228664508456962"
+                 data-text="This felt like we were moving into different territory and trying things we hadn\'t done before" data-datetime="7:10 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567228578906996741"
+                 data-text="third ha ha" data-datetime="7:09 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567228412644687874"
+                 data-text="This track was built around the grove, the beat and Kurt and Jim’s parts were great to build a vocal melody on" data-datetime="7:09 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567228359163236354"
+                 data-text="This one was a single from our second album ‘Build A Tower’" data-datetime="7:08 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567228203676098560"
+                 data-text="TRACK 3 ‘SUPERNATURAL’
+“I must obey, your love is Supernatural…”
+#timstwitterlisteningparty https://t.co/Ib4BG93mdX" data-datetime="7:08 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567227752155078659"
+                 data-text="@Tunnocks17 @KurtStarkie @aaronstarkie Happy days Stuart :)" data-datetime="7:06 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567227510575833093"
+                 data-text="I nicked the line ‘shades of mediocrity’ from Simon and Garfunkel :)" data-datetime="7:05 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567227433471938560"
+                 data-text="This track is taken from our second album cavalcade, big live favourite." data-datetime="7:05 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567227354526662659"
+                 data-text="TRACK 2 ‘FOOL FOR YOUR PHILOSOPHY’
+“I was alone, I was afraid, I was a fool for your philosophy so I set out upon a lake and thought of all the things i\'d never be” https://t.co/wV0ceZcZvR" data-datetime="7:04 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567227111118708736"
+                 data-text="RT @k8ty11: @LlSTENlNG_PARTY @slowreadersclub I got this lovely coaster from Warrington, only coaster my dog hasn\'t been chewing on.
+
+I\'m g…" data-datetime="7:03 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567227098992988168"
+                 data-text="@JaneCSweeney Quite :-/" data-datetime="7:03 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567227040918536192"
+                 data-text="@jamescraig1983 @foxxie75 Cheers James" data-datetime="7:03 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567226783832891421"
+                 data-text="The video was filmed at @LondonRoadMCR which had been shut down in the late 70s. @aaronstarkie  and @KurtStarkie  mum lived there as a child as her step father was a fireman and families lived on site" data-datetime="7:02 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567226720956157954"
+                 data-text="@foxxie75 Cheers Christine :)" data-datetime="7:02 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567226631323787264"
+                 data-text="We had loads of support from @xsmanchester for ‘Lunatic’ and at was voted ‘Single of The Year’ in a listener poll #TimsTwitterListeningParty" data-datetime="7:02 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567226552160493573"
+                 data-text="Most of us had been at work that day which made it extra surreal :)" data-datetime="7:01 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567226478126931969"
+                 data-text="This was/is our biggest home town show to date, pretty nervy walking out on that stage" data-datetime="7:01 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567226457339961346"
+                 data-text="RT @foxxie75: @LlSTENlNG_PARTY @slowreadersclub Only 2 so far.. Liverpool and Castlefield Bowl… roll on Sunday for the next one! 💜💜
+#timstw…" data-datetime="7:01 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567226353455439888"
+                 data-text="TRACK 1 ‘LUNATIC’
+“Lies will multiply and the villains will be canonised, darling dont you cry, theres no pain, anymore…” https://t.co/H4eVclXOjI" data-datetime="7:00 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567226352394293248"
+                 data-text="RT @ChezvegasRoyal: @LlSTENlNG_PARTY @slowreadersclub @O2ApolloManc My eldest’s favourite band, it was his first ever gig. The following Ap…" data-datetime="7:00 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1567226237919154178"
+                 data-text="RT @pdicko67: @LlSTENlNG_PARTY @slowreadersclub @O2ApolloManc ❤❤❤ https://t.co/OmCuSa9ZnC" data-datetime="7:00 PM Sep 6, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567226225080373251"
+                 data-text="Let’s press play / start our vinyl spinning now. We will pause to flip the vinyl a few times over the course of the album, will let you know when ;)
+
+Spotify
+https://t.co/Z5dJclQtB0
+
+Apple Music
+https://t.co/4o1hepPXVo
+
+Amazon
+https://t.co/bpXyh7SB8q" data-datetime="7:00 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fslowreadersclub%2Fstatus%2F1567226136026910723"
+                 data-text="Greetings from Manchester UK. Thanks for joining us for this Listening Party for our Live at O2 Apollo album.
+
+We will post one main post for each track and then comments and questions for each track will be posted as replies.  #timstwitterlisteningparty https://t.co/Z3M9aC86A8" data-datetime="7:00 PM Sep 6, 2022"> 
+                slowreadersclub            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1567226119186685952"
+                 data-text="Here we go.
+
+Let’s get started with our @slowreadersclub @LlSTENlNG_PARTY - Live At The @O2ApolloManc 
+
+Pressing play… https://t.co/KaRjgIf2N7" data-datetime="6:59 PM Sep 6, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
