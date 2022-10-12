@@ -1,0 +1,613 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4pbyC0CkZkqmnBDqpykCTo" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02438a24b65f776beec5a361a5" alt="Tableau" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Orielles</span><br/><span class="sub-colour">Tableau</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(7579864)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4pbyC0CkZkqmnBDqpykCTo" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_7579864_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 123 tweets from Wednesday 12th October 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/TheOrielles" target="_blank"><img src="https://pbs.twimg.com/profile_images/1562715367214125057/2370JPne_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/TheOrielles.jpg'"><br/>@TheOrielles</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1576686154442752001/xZb5-Rw5_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Chromo I" data-start="0"
+             data-duration="68" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Chromo II" data-start="69"
+             data-duration="179" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Airtight" data-start="249"
+             data-duration="256" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="The Instrument" data-start="506"
+             data-duration="247" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Improvisation 001" data-start="754"
+             data-duration="527" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Television" data-start="1282"
+             data-duration="186" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Some Day Later" data-start="1469"
+             data-duration="165" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Darkened Corners" data-start="1635"
+             data-duration="246" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Honfleur Remembered" data-start="1882"
+             data-duration="212" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Beam/s" data-start="2095"
+             data-duration="473" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="To Offer, To Erase" data-start="2569"
+             data-duration="113" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="The Room" data-start="2683"
+             data-duration="257" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="By Its Light" data-start="2941"
+             data-duration="47" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="Transmission" data-start="2989"
+             data-duration="440" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="Drawn and Defined" data-start="3430"
+             data-duration="212" style="display:none"></div>
+                <div id="track-16" class="track-list"
+             data-name="Stones" data-start="3643"
+             data-duration="88" style="display:none"></div>
+                        <div id="track-17" class="track-list"
+                     data-name="Finished" data-start="3732"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851438a24b65f776beec5a361a5" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-123" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1580288348668588032"
+                 data-text="✌️ https://t.co/Qz60Hyu5m0" data-datetime="8:04 PM Oct 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1580288201667010560"
+                 data-text="🌲 🌳 🌳 🌲  https://t.co/z6WrlFAiDt" data-datetime="8:04 PM Oct 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580288083957731328"
+                 data-text="That\'s us guys! Cheers for joining &lt;3 Hope you enjoyed listening to Tableau. @Tim_Burgess Cheers for having us :-) xx #timstwitterlisteningparty https://t.co/XDka6ocfhU" data-datetime="8:03 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1580287732634750976"
+                 data-text="Big thanks to @TheOrielles for this early morning @LlSTENlNG_PARTY (in Adelaide) 🙌" data-datetime="8:02 PM Oct 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580287682898407425"
+                 data-text="&lt;3" data-datetime="8:01 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580287590049402880"
+                 data-text="We recorded it at the same time I think it sounds like a conversation. We were both so tired and blagged when we recorded it but it came out really well and janky" data-datetime="8:01 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580287572080701442"
+                 data-text="so we reversed the bass ;)" data-datetime="8:01 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580287498856853506"
+                 data-text="The guitar part Henry came up with doesn’t fit into bars, he wanted it to be free flowing but this made it difficult when Ez came to record bass over." data-datetime="8:01 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580287376081190913"
+                 data-text="STONES We put a handful of stones from the beach in our hands and tiptoed around a room mic, moving the stones around to create this rhythmic basis for the closing track. We called the bag of stones John Stones because we recorded at Echo Zoo when the Euros final was on." data-datetime="8:00 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580287202365386753"
+                 data-text="All of the percussive clicky sounds are made with Sids mouth haha." data-datetime="8:00 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580286860634386432"
+                 data-text="Although the basis is acoustic guitar and bass, the rest of the track is very electronic and we loved this relationship throughout the record. The vocals and euphoric synth pads remind me of Bjork and her record ‘Vespertine’ was a major influence." data-datetime="7:58 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580286744297361408"
+                 data-text="It really exhibits how I view Joel as a second lead vocalist through this record as we had so much fun communicating ideas to each other and egging each other on to be more and more creative with it!" data-datetime="7:58 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580286716404867073"
+                 data-text="The vocal production on the ‘cold light of day’ line is some of my favorite across the record." data-datetime="7:58 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580286584083341312"
+                 data-text="The chord progression for this song we had had in the bag for a while, it was an idea put forward to @rosehdy  for her BBC short film but she preferred another idea we’d sent so we kept this for a later date." data-datetime="7:57 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580286486145966080"
+                 data-text="DRAWN AND DEFINED The drums here are made from synth sounds on Joel’s Moog Mother and Yamaha CS Reface synth. #timstwitterlisteningparty" data-datetime="7:57 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580286098399703041"
+                 data-text="The acoustic guitar is so perfect in this song" data-datetime="7:55 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="104000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580285774813351936"
+                 data-text="Theres a good little write up about this tune Henry did you can read it here: https://t.co/nSNNAGxOpF" data-datetime="7:54 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580285336021712896"
+                 data-text="Henry’s guitar part is completely improvised become more and more loose around the main motifs as the time progresses he wanted it to sound super jammy and non repetitive like you’re listening to a bunch of mates play it in their bedroom." data-datetime="7:52 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580285217109311488"
+                 data-text="We thought it sounded like Portishead and Neil Young had had a baby. I fucking love this bit" data-datetime="7:52 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580285133088694272"
+                 data-text="I loved the reality of the dream world within this film; decaying, cold, bound by unearthly physics, gliding through ruins in the face of a harsh wind, mirrors, labyrinths. A lot of this imagery felt apt to describe the phantasmagoria as you journey through Transmission." data-datetime="7:51 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580285117217415168"
+                 data-text="The lyrical influence came from the film Orpheus directed by John Cocteau. The track comes at a part of the album that seems to take a hauntological turn, possibly inspired by the old chapel of Vada Studios that much of the second half was recorded in." data-datetime="7:51 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580285054042836992"
+                 data-text="Like a lot of the record, what you hear is improvised in that each take was different. We had the parts, but the way we performed them was just down to feeling and jamming with one another." data-datetime="7:51 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580285039203360768"
+                 data-text="This is one of those songs that really doesn’t sound right when we’re too tight on it. Gotta be in the pocket with this one and just jamming the groove." data-datetime="7:51 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580284952020942848"
+                 data-text="The initial mix of this song had just a small amount of can mic, but we decided we preferred a mix where it was constant. It sounds dead lo-fi and like a lot of 90’s jungle and trip-hop records." data-datetime="7:51 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580284924002988032"
+                 data-text="The drums are Jaki Leibezeit inspired (as on the whole record tbh &lt;3) but also I knew I wanted the drums to sound very Portishead. We used a mic made out of a can of chickpeas on the kit. https://t.co/ZZ7pTerTet" data-datetime="7:51 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580284813113638912"
+                 data-text="Shouts out to Raz Ullah of @JanelWeaver  for letting us borrow his SH-101. It came in very handy across the record but these pretty spacey flutters just slotted into this track perfectly." data-datetime="7:50 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580284645882531842"
+                 data-text="TRANSMISSION Again this came from a piano idea that I had (S) but I’m so so happy with how Ez and Hen interpreted it and let it breathe and grow around my repetitive drum groove." data-datetime="7:49 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580284542937890816"
+                 data-text="Then when we recorded the strings Joel suggested we record that. Isabella scored the Octet on the spot  ending on Aminor so we could flow into Transmission." data-datetime="7:49 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580284507042684929"
+                 data-text="This is based around an idea Henry came up with whilst working. The first time he played it was before jumping in the car to east bourne. It started as a meditation on the chords of the chromos, it was first recorded on the guitar on the track stones." data-datetime="7:49 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580284430630805504"
+                 data-text="BY ITS LIGHT and breaaaaaatheee" data-datetime="7:49 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="157000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580284239119278080"
+                 data-text="The guitar in this song is inspired by and reminiscent of bands like Buzzcocks, Television and Gang of Four. The riff at the end of the song following the vocal melody is a favourite moment on the record." data-datetime="7:48 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580283581884035072"
+                 data-text="Ez came up with the stringy top line jamming on the organ that the drum machine take comes from, an insight into the weird and wonderful pieces of gear hoarded at EVE studios!" data-datetime="7:45 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580283540562137090"
+                 data-text="We found that we had more fun drumming along to the drum machine ‘cos we had the snare and kick contact mic’d to some modular synths in which Ez and Henry controlled whilst Sid drummed." data-datetime="7:45 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580283523293843456"
+                 data-text="Our initial idea for this track was to have pre-recorded drum breaks that we could throw in and out, again following our Goyt Method ethos and it feeling like samples." data-datetime="7:45 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580283472530182144"
+                 data-text="The way in which we wrote the lyrics for this song was super interesting. We contributed single lines individually, mixed them up in a bag and pulled out lines at random, leaving it to fate to decide the story of our song. Very happy that “the moon is in the room” got pulled firs" data-datetime="7:45 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580283352254271489"
+                 data-text="THE ROOM We had been intrigued to use an EMS Vocoder for ages and when Martin King at Eve Studios said he had one we were gassed to get it involved. The drum machine is ran through the vocoder here with the Juno synth chords running through the excitation level simultaneously." data-datetime="7:44 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580283035982868480"
+                 data-text="It features Ez on guitar (making noises), Henry on bass and Sid on piano before taking to the drums for an overdub. It also features, in a dream of ours, @xdannyxbrownx  spitting a verse over the top lol. #timstwitterlisteningparty" data-datetime="7:43 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="126000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580282873411563520"
+                 data-text="TO OFFER TO ERASE This is a funny interlude in the record, it is a 14 second loop that we put through a filter and then drummed over - nothing more, nothing less!" data-datetime="7:42 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580282345180971008"
+                 data-text="It was a bit of an experiment in seeing if S&amp;H were on board with the level of vocal manipulation too!" data-datetime="7:40 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580282288117411840"
+                 data-text="The outro section with the autotuned ‘when you make all of those silly mistakes’ lines was something I\'d sung into my voice notes a long time before and Joel helped to bring it to fruition in that moment." data-datetime="7:40 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580282029026910208"
+                 data-text="This was the only track where a significant amount of vocals were actually added during the studio sessions. I’d had 75% of the melodies and lyrics ready to go for a while, so me and Joel excitedly put them down on the second to last day at the studio whilst Sid and Hen cooked T" data-datetime="7:39 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580281699778580481"
+                 data-text="Then we speed up in classic orielles akin to SDM vibes, the only way we could figure out how to fall out of the fast bit was to fall out into 4|4 timing instead. #timstwitterlisteningparty" data-datetime="7:38 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580281586293309441"
+                 data-text="We recorded this at Vada all the lights off baby gotta set the vibe, it is definitely one of our favourites from the record to play live." data-datetime="7:37 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580281390553104384"
+                 data-text="We got so used to calling it beams or beamo, when Ez came to write the lyrics she featured the line beams in there so that the name could remain. https://t.co/CN3QFqZ1P4" data-datetime="7:36 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580281106649055234"
+                 data-text="When we started to write this one it was at Eve with a simple Juno arp running while we played slo as fuck
+#Slowcorebaby" data-datetime="7:35 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580281008913801216"
+                 data-text="BEAAAM/SSSs
+
+Beam/s is short for Brian Emo" data-datetime="7:35 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580280624576806912"
+                 data-text="https://t.co/NsQmVwrqA4" data-datetime="7:33 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580280571355201541"
+                 data-text="Again the track is about process and creation, like much of the record, except this time about painting. The title references Fannie Hillsmith, of Black Mountain College, and her painting Honfleur Remembered." data-datetime="7:33 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580280391616716800"
+                 data-text="There’s also a mega synthy sounding part of the bassline which was actually played on the bass guitar by bending the string off the bridge and picking up a weird textural sounding frequency. Another goytiful moment." data-datetime="7:33 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580280375762264064"
+                 data-text="One of my fave basslines on this track, love how it cycles around and just falls back into place at the start of each line." data-datetime="7:32 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580280298436464640"
+                 data-text="The drums here are sped up slightly, so god knows how I’m gonna play this live. Probably a different live rendition of this particular track awaits. https://t.co/n1dLGH5gsl" data-datetime="7:32 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580280135919337472"
+                 data-text="We approached this track in a similar way to how we approach doing remixes, placing stems and certain recordings around and fucking with them to create structure through dynamic lifts and drops. 
+#timstwitterlisteningparty" data-datetime="7:31 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580280075404029953"
+                 data-text="I was learning piano through lockdown and particularly listening to Nina Simone, Laura Nyro  and Gil Scott Heron for inspiration. The chord progression I had come up with for this definitely was an ode to those three musicians getting me through quieter times of reflection" data-datetime="7:31 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279995108233216"
+                 data-text="HONFLEUR This idea built from a set of chords that Sid played on loop on piano. We kind of used that as a jumping off point to build upon, almost like our canvas to Goyt and edit vocal samples and drum samples." data-datetime="7:31 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279803433078784"
+                 data-text="The flute sound is a mellotron made famous from the beatles record strawberry fields. #timstwitterlisteningparty https://t.co/as2lw6XHLX" data-datetime="7:30 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279631554686978"
+                 data-text="Ez plays some violin on this track. A manic violin take throughout the chaos moment!" data-datetime="7:29 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279599002710016"
+                 data-text="The final line of each section is then placed together to create a new collage, with new meaning, in the ‘middle eight’(? lol) section, which was a particular headfuck to write along every step of the way, but remains in keeping with the ostinato motifs throughout the album." data-datetime="7:29 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279534489784320"
+                 data-text="Particular favorite collections of his are sprinkled throughout the lyrics; ‘The Little Screens’, ‘The American Monument’, as well as repeatedly photographed subjects such as windows and machines." data-datetime="7:29 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279520019763200"
+                 data-text="Just before writing lyrics for the whole album, throughout the period of October, I visited Berlin and came across a Lee Friedlander retrospective, totally falling in love with his work and the philosophy behind his photography." data-datetime="7:29 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279454777032705"
+                 data-text="becoming the maker of our tableaux." data-datetime="7:29 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279433310588928"
+                 data-text="Give ourselves the conditions for these random moments to happen, capture them in a way that would present a different outcome each time like a photograph, and then look at them objectively to edit elements of them and offer new interpretations, thus" data-datetime="7:29 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279305778536448"
+                 data-text="Throughout the song, all three of us sing lines pertaining to either the subject, the taker or the viewer of a Lee Friedlander photograph, which I think represents the process of this album\'s creation." data-datetime="7:28 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279269389139968"
+                 data-text="The title of the album comes from lyrics within this track, also they’re probably my favorite lyrics i’ve written so far as they set the tone of much of the albums themes." data-datetime="7:28 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279181904318464"
+                 data-text="Early on we got major Yo La Tengo, ‘Little Eyes’ vibes from it as well as a bit of La Dusseldorf in there for good measure https://t.co/BnUiU8xQ9x" data-datetime="7:28 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279148873801728"
+                 data-text="In its nascence it was Sid on drums, Henry on bass and Ez on keys at the practice room, thankfully Henry hit record just before the jam came because it was one of the more enlightening moments of thrashing stuff out during practice that we had." data-datetime="7:28 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279073762574337"
+                 data-text="DARKENED CORNERS This song was written over a really long period of time. Conceived in the chronological order of the song.
+We were really trying to achieve rigid, almost robotic, into chaos into euphoria and bliss on the outro." data-datetime="7:27 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580279014916521985"
+                 data-text="@Davrosity Thanks a lot!" data-datetime="7:27 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580278999208833024"
+                 data-text="I think it also speaks of patience, a feeling the three of us know all too well and can sometimes get downbeat by, but the passing of time is mysterious and I truly believe that the lens will find us, someday later." data-datetime="7:27 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580278969080770565"
+                 data-text="Like a photographer trying to find something or someone through their lens which can be captured only in one moment before it\'s gone forever." data-datetime="7:27 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580278924986023936"
+                 data-text="The lyrics are a sort of prelude to the track Darkened Corners, the line ‘taking it’s time to find you’ is super simple but I feel like it speaks to this whole record on many different levels." data-datetime="7:27 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580278841788239872"
+                 data-text="Henry got obsessed with the line ‘taking its time to find you’ it became so important due to the fact Tableau took a long while to come into the world and there was so much waiting involved in making this record. He used it for the basis of a Tshirt design that is going live asap" data-datetime="7:26 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580278660514578432"
+                 data-text="Hen &amp; Ez\'s Facon butties &lt;3 https://t.co/h4EvLjAaFh" data-datetime="7:26 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580278390954680320"
+                 data-text="We added in strings from Darkened Corners afterwards and made them sound sooper ‘verbed and distant. The impression I get from this song is as though three different memories are playing out in your mind at once, much like the hauntology of a song by The Caretaker." data-datetime="7:25 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580278295559446529"
+                 data-text="SOME DAY LATER This tune is another collaged tune we built way after the live tracking was done taking elements of recordings of us just playing around on different instruments. Henry is on Wurlitzer, Ez played the guitar and Sid played that dirty great stinking bass synth." data-datetime="7:24 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580278195634733057"
+                 data-text="https://t.co/vTIUenqWsm" data-datetime="7:24 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580277965015121920"
+                 data-text="The 1st time we jammed the second half of this tune was at Camden Jazz club back in Nov 2021, captured on camera by tour manager maestro James. Because it is in 5:4 it was super hard to try and tie onto the first half in 4:4 but again it was a moment that we just left 2 chance!" data-datetime="7:23 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580277827907522561"
+                 data-text="“Did you do it for love, did you do it for free” shoutout to ‘He Said’ for this absolute banger of a chorus.  https://t.co/kW8T4DkHdV" data-datetime="7:22 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580277774711152640"
+                 data-text="That’s all of us singing “always wet” on the chorus. The lyrics are inspired by our trip to the beach in Eastbourne and the idea of being a patient ‘rock from the beach’  who finally gets picked up by a wave and never gets put down again, aka accepting life\'s unknown fate :-)" data-datetime="7:22 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580277673816772609"
+                 data-text="The working title for a while was EZ CHORDS because of the riff which is indicative of the sludgier, baggier bass sound that I adopted through a lot of the album. Bass inspo for this record in general includes the likes of everything from To Rococo Rot  Fugazi  Jason Newsted." data-datetime="7:22 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="110000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580277520217186304"
+                 data-text="TELEVISION We recorded two versions of Television, one at first in Echo Zoo but then decided it sounded better in the big live room at Vada. https://t.co/NEPfogvpqG" data-datetime="7:21 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="223000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580277058185613312"
+                 data-text="We also resampled all of the vocals and each did a take playing those into the tune throughout the second half of the song, creating a haunted yet meditative atmosphere that washes over you." data-datetime="7:19 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580276124197982209"
+                 data-text="The lyrics detail, in semi-improvised way, the process of actually improvising and writing the song. Listened to loads of Mark Hollis before doing takes of this!" data-datetime="7:16 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580276058539978752"
+                 data-text="When the strings recorded their take Henry just told them it was in Aminor and everyone else gave abstract prompts about how we wanted them to play their instruments. No scores just vibes. #timstwitterlisteningparty" data-datetime="7:15 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580275984078884864"
+                 data-text="Every part of this tune is using the first and only take. We really wanted to emphasize that idea of this album being completely instinctive." data-datetime="7:15 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580275865761763328"
+                 data-text="Hearing this drum take going down live (and hearing the improvised song back for probably only the second time in its entirety) made for one of the most emotional moments I\'ve ever had playing and writing music :) (E)" data-datetime="7:15 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580275745880158208"
+                 data-text="I used brushes for this, which also broke half-way through which is why the snare suddenly seems louder, that is my finger/hand playing the drum Purdie style! #timstwitterlisteningparty" data-datetime="7:14 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580275699835097089"
+                 data-text="What you hear is one take, no editing and no prior discussion in regards to what we would make. I (S) added a drum take afterwards, we’d barely listened back and I went in and just reacted to what I was hearing in the cans. https://t.co/eWYARsJn8u" data-datetime="7:14 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="78000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580275419986939904"
+                 data-text="IMPROV001 A beautiful unexpected moment on the record. Joel sent us into the live room, blindfolded, and told us to pick an instrument that wasn’t our ‘own’. It ended up being Hen on bass, Ez on piano and Sid on Wurlizer." data-datetime="7:13 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580275089161195521"
+                 data-text="THIS IS THE INSTRUMENT https://t.co/4siysusC8g" data-datetime="7:11 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274909954990080"
+                 data-text="We ran Hen’s guitar (after the take) through an Echoplex tape delay unit and live dubbed it ta fuck! A piece of gear apparently also used by CAN quite a bit." data-datetime="7:11 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274878498078720"
+                 data-text="Loosely inspired by Freud’s Civilisation and its Discontents lyrically, what instruments do we implement in order to swim comfortably in the ‘oceanic’ eternity of life." data-datetime="7:11 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274849389289473"
+                 data-text="The bass delays in this track sound to me like car engines and the cymbals cars crashing, plus the performative percussion sounds of ripping and contorting duct tape really evoke angular, mechanical images in my head for this track. Like a Cronenbergian nightmare!" data-datetime="7:10 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274789939548160"
+                 data-text="(4)This set the precedent for the week that followed, in which we worked from breakfast to mid afternoon then giving ourselves a huge break to go to the beach for a swim, or cook up something delicious for tea, before resuming work on the music after dark." data-datetime="7:10 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274741080121344"
+                 data-text="Seeing for the first time the beautiful expanses surrounding us outside of the studio walls was exactly what we needed to fall back in love with the track that we momentarily got the ick from which can happen when you get cabin fever in a studio!" data-datetime="7:10 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274667348463616"
+                 data-text="(2)The pace at which we’d worked was followed by a huge crash so we went for a walk and soon came across the beach literally over the road..." data-datetime="7:10 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1580274556060565505"
+                 data-text="Aus version (pre 6am here) https://t.co/xxKcQJZwnG" data-datetime="7:09 PM Oct 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274552667791361"
+                 data-text="(1) We got this track down during our first, mega productive, day at Echo Zoo studios after arriving in the dark of night the evening before..." data-datetime="7:09 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274416583577600"
+                 data-text="THE INSTRUMENT They’d fly off during takes and just eventually break completely, thankfully we were happy with that last take." data-datetime="7:09 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274369011425280"
+                 data-text="This sound at the start of the track is the instrument itself, a homemade percussive piece made from bottle tops collected during lockdown. Sidonie had it sellotaped to her hi-tom and by the end of a few takes there were bottle caps everywhere!" data-datetime="7:09 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274289357438976"
+                 data-text="The synth arp melody originally started as as guitar hook all the way when we first tried to write tunes back at Airtight studios and the name just stuck #timstwitterlisteningparty" data-datetime="7:08 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274238098808832"
+                 data-text="Here, Sid BECAME the click" data-datetime="7:08 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274164761473025"
+                 data-text="This is probs the track that set Echo Zoo’s Soundcity bass amp head on fire whilst playing it bcos its so goddamn hot! Was replicating a synthy house bass sound through the second part of this song, adding in slight progressions here and there which varied from take to take." data-datetime="7:08 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580274063456378882"
+                 data-text="https://t.co/wHKXKc0HWE" data-datetime="7:07 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580273920737148928"
+                 data-text="We also fed the mic through my window on the second floor into my back garden to try and get an ambience take of the Stones story, but we didn’t stick with that take in the end." data-datetime="7:07 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580273692004995072"
+                 data-text="These first vocals were recorded in Esme’s bedroom one sunny Autumn day, on the spot with a lyrical prompt taken from the Marguerite Duras book Summer Rain (which I was reading throughout the Echo Zoo session)." data-datetime="7:06 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580273478833356800"
+                 data-text="Channeling pure SY throughout the first half of this track, walkie-talkie sounding strained and breathy vocals, lots and lots of guitar feedback takes, a wall of drum sound and a melody on vibraphone orbiting around the vocal line.
+#timstwitterlisteningparty" data-datetime="7:05 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580273264911216641"
+                 data-text="Each time was played completely differently but the take used, which felt most appropriate, has a certain coldness to it. #timstwitterlisteningparty" data-datetime="7:04 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580273221391511552"
+                 data-text="AIRTIGHT The first few seconds of this track, which segway in from Chromo II, are a perfect snapshot of both the in-the-moment methodology of the album, and the mood and atmosphere of the first side in particular." data-datetime="7:04 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580273120770129920"
+                 data-text="I wanted to put a proper bleep techno sounding the synth that echoed the early guitar part" data-datetime="7:04 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1580273110451830785"
+                 data-text="🙌 @TheOrielles sounding 🔥🔥🔥🔥" data-datetime="7:04 PM Oct 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580273083767615488"
+                 data-text="Funny you say that cause the buzzcocks were exactly what i was going for in verse 2 and the outro. Hx" data-datetime="7:03 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580273041892069376"
+                 data-text="I love the breaking down/ falling out of the end of this track. The guitar tone in particular has always reminded me of the Buzzcocks." data-datetime="7:03 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580272992616996865"
+                 data-text="We added a more subtle autotune to the first two lines but completely automated the last line to create essentially a new melody. It’s one of the most interesting ways that I’ve worked with my own voice, using it as an instrument in a twofold way." data-datetime="7:03 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580272952284966912"
+                 data-text="Vocals came way after the recording sessions and I think this was the last one we recorded. Doing this second verse was one of my fave moments working with Joel on the vocals!" data-datetime="7:03 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580272857409470466"
+                 data-text="...making it sound super Larry Heard-esque alongside the chorus chords on the Jupiter. #timstwitterlisteningparty" data-datetime="7:03 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580272807317241857"
+                 data-text="We were messing about in the control room singing some UKG type vocal melodies over the chorus and the high-pitched ‘look at that laughter’ refrain just stuck. Henry layered a vocal harmony underneath this, that we added a load of trem to..." data-datetime="7:02 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580272699628081152"
+                 data-text="CHROMO II The three of us had to really exaggerate the shift in time-signature on the second verse, come up with silly rhymes in our head to make it feel natural, in order to get the part tight. Making it second nature now haha" data-datetime="7:02 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580272613980766208"
+                 data-text="Even before we had begun to paint the full picture of Tableau, we felt pretty certain about this track being an opener." data-datetime="7:02 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580272576152342529"
+                 data-text="Like many of the other tunes on the record, the earliest origin of this track belongs to a practice room jam. It was then further developed at EVE Studios, before coming into full formation at Echo Zoo Studios..." data-datetime="7:01 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580272437950025728"
+                 data-text="It was one of the first tracks that established the off-the-cuff feeling of the record too, when figuring out a part for Darkened Corners in Sid’s living room, Ez began messing around on bass on her new analogue echo unit, making something entirely textural rather than melodious" data-datetime="7:01 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1580272394135969792"
+                 data-text="👋 https://t.co/CDy7vGlDIp" data-datetime="7:01 PM Oct 12, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FTheOrielles%2Fstatus%2F1580272260686176256"
+                 data-text="Chromo I is a perfect example of what ‘Goyting’ is to us. You can hear three different parts from different songs, cut up and sewn together. Perfect way to open the record! #timstwitterlisteningparty" data-datetime="7:00 PM Oct 12, 2022"> 
+                TheOrielles            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1580272097259302913"
+                 data-text="Time to start our Tableau @LlSTENlNG_PARTY 
+
+Handing over to @TheOrielles https://t.co/j5VJtzdVlm" data-datetime="7:00 PM Oct 12, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
