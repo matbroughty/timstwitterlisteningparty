@@ -1,0 +1,385 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/2KNoAzXKyPoYAK46glsbvx" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e0238161eb33187c61e6b6ea261" alt="Home Truths" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">India Arkin</span><br/><span class="sub-colour">Home Truths</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/2KNoAzXKyPoYAK46glsbvx" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 32 tweets from Saturday 15th October 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/indiaarkin" target="_blank"><img src="https://pbs.twimg.com/profile_images/1485575139387445249/VYuSmVSU_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/indiaarkin.jpg'"><br/>@indiaarkin</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/hmvtweets" target="_blank"><img src="https://pbs.twimg.com/profile_images/1541437193662734336/ZitoxKug_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/hmvtweets.jpg'"><br/>@hmvtweets</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/AlbumDayUK" target="_blank"><img src="https://pbs.twimg.com/profile_images/1509821451515445273/0PK7_g1C_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/AlbumDayUK.jpg'"><br/>@AlbumDayUK</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1576686154442752001/xZb5-Rw5_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Scarlet" data-start="0"
+             data-duration="257" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Things Left Behind" data-start="258"
+             data-duration="171" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Party Favours" data-start="430"
+             data-duration="147" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="What You Call Home" data-start="578"
+             data-duration="245" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Fear" data-start="824"
+             data-duration="184" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Dashboard Dancing - Reimagined" data-start="1009"
+             data-duration="252" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Phototaxing" data-start="1262"
+             data-duration="234" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="(I Want You) Near" data-start="1497"
+             data-duration="228" style="display:none"></div>
+                        <div id="track-9" class="track-list"
+                     data-name="Finished" data-start="1726"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d0000485138161eb33187c61e6b6ea261" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-32" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="145000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581306328235925506"
+                 data-text="Thanks so much for listening to “Home Truths” and for @Tim_Burgess for having me on this @LlSTENlNG_PARTY .. it’s been a pleasure x 
+
+you can come see us live on our hmv tour all over this month, hope to see you there ! 
+
+https://t.co/dx9AqFb7or" data-datetime="3:29 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581305718195781633"
+                 data-text="IWYN: the album finishes and closes with a clock that realigns itself to create a eternal loop. the album as a whole was written as a comment on the passing of time and encapsulates a raw insight into the turbulence of life through all its trial and tribulations
+
+@LlSTENlNG_PARTY" data-datetime="3:27 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FAlbumDayUK%2Fstatus%2F1581305658225217536"
+                 data-text="@theJeremyVine Some excellent choices there Jeremy! 💜 #NationalAlbumDay" data-datetime="3:27 PM Oct 15, 2022"> 
+                AlbumDayUK            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2FtheJeremyVine%2Fstatus%2F1581305398115860480"
+                 data-text="SQUAD
+ https://t.co/dETX33GNwg" data-datetime="3:26 PM Oct 15, 2022"> 
+                theJeremyVine            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="137000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581305157161132032"
+                 data-text="8. (I Want you) Near
+
+this was was such an interesting track to produce, we had to find creative ways to create a sense of atmosphere, from using toothbrushes on guitars to running basically every instrument you can possibly think of through a shimmer pedal ahah
+
+@LlSTENlNG_PARTY" data-datetime="3:25 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581304581279035392"
+                 data-text="Phototaxing: the song speaks about seeking out the light in the darkest of situations; and explores the topic of the topic of mental health
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:22 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="89000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581304204160688128"
+                 data-text="7. Phototaxing
+
+phototaxing was the first time we had truly began to push the boundaries with the production of my music, bringing us into a whole new ball park upon its initial teaser release at the beginning of this year. 
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:21 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581303833677860865"
+                 data-text="DD: i worked with my live band up in my guitarist studio in newcastle to create this song and really push the energy of the song from the live shows back into the recorded track 
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:19 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581303429838045184"
+                 data-text="6. Dashboard Dancing - Reimagined 
+
+my debut release just over a year ago, in august of 2021 and truly is the ultimate marker of this projects beginning. so as an ode to that me and my live band decided to recreate a refreshed album edition of the song.
+
+@LlSTENlNG_PARTY" data-datetime="3:18 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581302983618592769"
+                 data-text="The Fear: in the chorus we have over 6 voice doubles for the lead vocal line, including that of “ogre” and “alien” voice doubles as well as the normal harmonising lines
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:16 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fhmvtweets%2Fstatus%2F1581302872049799168"
+                 data-text="Excellent choice 🫡 https://t.co/SORt8to0xe https://t.co/DnR86CbEvk" data-datetime="3:15 PM Oct 15, 2022"> 
+                hmvtweets            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="172000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581302550594060288"
+                 data-text="5. The Fear
+
+funny fact about this track, the slide guitar parts on this track were actually recorded using a wireless headphone box because at the studio we all collectively forgot to bring our glass sliders aha
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:14 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581301828288847872"
+                 data-text="WYCH: this is the heaviest track i have ever put out and a long time audience favourite at live shows, for the first year of shows it became tradition to close sets with this track and shred it up 
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:11 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581301655366037505"
+                 data-text="WYCH: the song speaks about the hardships endured by young people living through the current social and political climate whilst trying to get by in a world that fails to welcome each and every one of us with open arms.
+
+@LlSTENlNG_PARTY
+#timstwitterlisteningparty" data-datetime="3:11 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581301573543612418"
+                 data-text="4. What You Call Home 
+
+being a student, living through the cost of living crisis and attempting to navigate the current political landscape is something you can not shy away from. as a reaction to all this i wrote what you call home
+
+@LlSTENlNG_PARTY
+#timstwitterlisteningparty" data-datetime="3:10 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fhmvtweets%2Fstatus%2F1581301485358395394"
+                 data-text="Indeed is tricky. Good choice nonetheless, classics for any occasion 🔊🔄
+#NationalAlbumDay https://t.co/mcgKRztEwW" data-datetime="3:10 PM Oct 15, 2022"> 
+                hmvtweets            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581301235235246081"
+                 data-text="PF: honestly this song is also just the ultimate boogie track.. am forever going to be obsessed with that groovey bass line and those crazy slide guitars !!  
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:09 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581301101621837825"
+                 data-text="PF: when i had first written party favours i had shared a snippet demo of me playing the song on my acoustic guitar on instagram and was overwhelmed by the response i received from people engaging with the tune. 
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:08 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fhmvtweets%2Fstatus%2F1581300959434526720"
+                 data-text="If you had to choose one… 😝😆
+#WhoWantsToBeAMillionaireFinalQs https://t.co/tnWtsJYgGi" data-datetime="3:08 PM Oct 15, 2022"> 
+                hmvtweets            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581300897048842242"
+                 data-text="3. Party Favours 
+
+Party Favours was written about the the derogative male narrative towards women. Written from personal experience, the song comments on societies oppressive culture on women, in the hopes to fight against this tired narrative. 
+
+@LlSTENlNG_PARTY" data-datetime="3:08 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581300471158800384"
+                 data-text="TLB: this is one of the bands favourite songs to play live and one we have been most itching to play now that tour with @hmvtweets is officially starting .. THE CUTS ARE EVERYTHING !!! perfect for head banging aha 
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:06 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fhmvtweets%2Fstatus%2F1581300363776339969"
+                 data-text="This ❕🔊 https://t.co/pn5CmUeNkN" data-datetime="3:06 PM Oct 15, 2022"> 
+                hmvtweets            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581300243081342976"
+                 data-text="TLB: this was one of craziest songs to create as we quite literally had people from up and down the country play on the track between newcastle and london. 
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:05 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581300074864205824"
+                 data-text="2. Things Left Behind 
+
+This song is actually years old and had been one i had been brewing for a long time. written back through the first year of lockdowns sat in my uni house bedroom. 
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:04 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fhmvtweets%2Fstatus%2F1581299988876865536"
+                 data-text="RT @hmvLiverpool: It\'s #NationalAlbumDay!
+
+This year celebrates the debut album, &amp; we have a selection of great first records on limited ed…" data-datetime="3:04 PM Oct 15, 2022"> 
+                hmvtweets            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fhmvtweets%2Fstatus%2F1581299911261229056"
+                 data-text="@AlbumDayUK @hmv_HighWycombe @buckssu 💞❤️‍🔥" data-datetime="3:04 PM Oct 15, 2022"> 
+                hmvtweets            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581299806076801025"
+                 data-text="Scarlet: funnily enough I had written all of verse lines instantly out in that initial session but was stuck on what to do for the chorus line for months, until i sat down and showed the song to my guitarist
+
+@LlSTENlNG_PARTY 
+#timstwitterlisteningparty" data-datetime="3:03 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FAlbumDayUK%2Fstatus%2F1581299419953057792"
+                 data-text="@hmvtweets @hmv_HighWycombe @buckssu You guys are the best!  💜 #NationalAlbumDay" data-datetime="3:02 PM Oct 15, 2022"> 
+                AlbumDayUK            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581299322968154112"
+                 data-text="1. Scarlet
+
+i wrote “Scarlet” about a year ago through the summer of 2021 sitting on my guitar in the garden and i honestly became entranced by the dark spooky sounding guitar progression, i instantly knew that THIS song had to be something. #timstwitterlisteningparty" data-datetime="3:01 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fhmvtweets%2Fstatus%2F1581299149760528384"
+                 data-text="@hmv_HighWycombe @buckssu @AlbumDayUK And a major thank you to team High Wycombe for creating an awesome #NationalAlbumDay ❗️🔊❤️‍🔥" data-datetime="3:01 PM Oct 15, 2022"> 
+                hmvtweets            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Findiaarkin%2Fstatus%2F1581298929827688448"
+                 data-text="Here we go.. “Home Truths” my debut album for @nationalalbumdayuk with  @hmvtweets is playing now on @listening_Party #timstwitterlisteningparty
+
+https://t.co/BQnBOYwLRE" data-datetime="3:00 PM Oct 15, 2022"> 
+                indiaarkin            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1581298869635551239"
+                 data-text="Home Truths is our next @AlbumDayUK @LlSTENlNG_PARTY album, with @indiaarkin as our tour guide https://t.co/qfKUbP81J6" data-datetime="3:00 PM Oct 15, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
