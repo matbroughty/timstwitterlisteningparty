@@ -1,0 +1,633 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5CusieHRylY8Q5Ipuv2WOY" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e025321498db6e9a130545743da" alt="Slope" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Steve Jansen</span><br/><span class="sub-colour">Slope</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(2048032)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5CusieHRylY8Q5Ipuv2WOY" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_2048032_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 99 tweets from Sunday 6th November 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/istevejansen" target="_blank"><img src="https://pbs.twimg.com/profile_images/1588194936289214468/FUfZ9GVn_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/istevejansen.jpg'"><br/>@istevejansen</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1588145686759067649/qgVz5kH3_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Grip" data-start="0"
+             data-duration="402" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Sleepyard" data-start="403"
+             data-duration="313" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Cancelled Pieces" data-start="717"
+             data-duration="200" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="December Train" data-start="918"
+             data-duration="254" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Sow The Salt" data-start="1173"
+             data-duration="349" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Gap Of Cloud" data-start="1523"
+             data-duration="165" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Playground Martyrs" data-start="1689"
+             data-duration="182" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="A Way Of Disappearing" data-start="1872"
+             data-duration="117" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Ballad Of A Deadman" data-start="1990"
+             data-duration="385" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Conversation Over" data-start="2376"
+             data-duration="307" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Life Moves On" data-start="2684"
+             data-duration="145" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="2830"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048515321498db6e9a130545743da" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-99" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="137000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1589329687909896192"
+                 data-text="❤️ https://t.co/KLg5lvSGig" data-datetime="6:51 PM Nov 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589329112669093888"
+                 data-text="I love it when people join in ... thank you xxxxxx" data-datetime="6:49 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589329004464857089"
+                 data-text="Slope is being reissued on vinyl again. This time with the 2013 artwork /45rpm / 2 x 180g discs ~ ~ ready to pre-order here from The Sate51 Conspiracy should you be so inclined
+
+https://t.co/Rh72TM8plQ
+
+#TimsTwitterListeningParty https://t.co/iyUqGeIdFh" data-datetime="6:48 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1589328929474891776"
+                 data-text="A huge thanks to @istevejansen for such a brilliant @LlSTENlNG_PARTY 🤘" data-datetime="6:48 PM Nov 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589328791310323712"
+                 data-text="Nina also made a film of herself singing the song for the live performance and video maker Shoko Ise overlaid some effected film imagery of families ice-skating at the very end in which the last figure poignantly falls
+#TimsTwitterListeningParty https://t.co/UETT7XfjBo" data-datetime="6:48 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589328582027153410"
+                 data-text="So having received a positive response from Nina Kinert I was fortunate enough to now have 2 versions of the song. Both equally beautiful. I therefore decided, why not a reprise with a different arrangement / mix of the track
+#TimsTwitterListeningParty" data-datetime="6:47 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589328497314762752"
+                 data-text="Playground Martyrs (reprise) coming up....
+#TimsTwitterListeningParty" data-datetime="6:46 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589328312975122433"
+                 data-text="Alberto is a wonderful character with whom I toured with in Italy~a very adept pianist and a true Italian with his passion for music and food, happily transforming his synth into a buffet table for the best of both worlds
+#TimsTwitterListeningParty https://t.co/oKgKQqx64V" data-datetime="6:46 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589328189201219584"
+                 data-text="Halfway through the tape clicks off~then Alberto Tarfuri plays the same refrain on his much nicer, in tune piano at his home in Milan recorded with proper mics~we discovered we share the same birthday and that life moves on
+#TimsTwitterListeningParty https://t.co/juU9sYLEry" data-datetime="6:45 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589328129646268416"
+                 data-text="It was just a sketch of an idea at the time but I rediscovered the cassette later. You hear the natural tape compression and there’s a rumble of thunder. I digitised the cassette and blended in a few Tokyo crows etc. The piano is a little out of tune
+#TimsTwitterListeningParty" data-datetime="6:45 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589328032921456640"
+                 data-text="Recorded on a Sony Walkman Pro~this very one in fact~no longer working but what an incredible advancement in portable audio back in the day~still too much affection for it to throw away~even came with a varispeed wheel
+#TimsTwitterListeningParty https://t.co/9j5I45AOSx" data-datetime="6:45 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589327956392148992"
+                 data-text="Life Moves On
+The first pass of the piano phrase was a recording I made in the mid 80s on my piano at home~my then partner took this polaroid around the time~still have the same piano~it appears on some recent recordings
+#TimsTwitterListeningParty https://t.co/HRsVsoZSi7" data-datetime="6:44 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589327570587512832"
+                 data-text="The crescendo of my string arrangement towards the end was my small nod to Henryk Górecki’s Symphony No.3 ~one of my favourite pieces of music
+#TimsTwitterListeningParty https://t.co/EHik8OJtzp" data-datetime="6:43 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589327472000405504"
+                 data-text="Speaking of the DAW (digital audio workstation) ~my preferred is still Digital Performer~I switched to Pro-Tools in the US but I do like the ease and flexibility of a self-contained DAW that also works great for live performance. Shut the front DAW
+#TimsTwitterListeningParty" data-datetime="6:42 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589327443206500352"
+                 data-text="hahaha https://t.co/9TTizh8OJs" data-datetime="6:42 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fanjagarbarek%2Fstatus%2F1589327312251949057"
+                 data-text="@istevejansen @LlSTENlNG_PARTY Oi!!" data-datetime="6:42 PM Nov 6, 2022"> 
+                anjagarbarek            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589327169670766593"
+                 data-text="Enter the drums and of course you\'ll instantly know the music is in 15/4 or you might suggest it alternates from 7/4 to 8/4 or that it goes 3/4 4/4 4/4 4/4 -either way when you do the simple math it adds up to 15/4~as my DAW knows
+#TimsTwitterListeningParty https://t.co/QEtNdaO9mV" data-datetime="6:41 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589326900421226496"
+                 data-text="With the conversation over synths and percussion build …. sequencers and electronica unite
+#TimsTwitterListeningParty" data-datetime="6:40 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589326714232270848"
+                 data-text="Strings enter along with the telephone voice darting about in conversation (this was actually a message from Anja Garbarek left on my answering machine she has no idea until now!)
+#TimsTwitterListeningParty" data-datetime="6:39 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="117000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589326632179105792"
+                 data-text="Conversation Over
+Commences with Theo’s looped saxophones
+#TimsTwitterListeningParty" data-datetime="6:39 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589326144968757248"
+                 data-text="I like how this processor rack resembles Dan’s miniature on the album cover~sadly the model has not maintained its structure despite being hidden away all these years~the wires have somewhat perished and a pretend knob came unstuck!🥀
+#TimsTwitterListeningParty https://t.co/Qtvk8iT5D5" data-datetime="6:37 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589325922963857409"
+                 data-text="He compressed only the low end of the track which really tightened the sound making it more solid and punchy (mainly the bass) and was then able to remove any muddiness from the deadman’s boots
+#TimsTwitterListeningParty https://t.co/sGEdkxqojs" data-datetime="6:36 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589325779040894976"
+                 data-text="l mastered Slope at Metropolis Studios in London with master of mastering Tony Cousins. Apparently there wasn’t too much to do generally but this track benefited the most
+#TimsTwitterListeningParty https://t.co/N6cvWoIaJZ" data-datetime="6:36 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589325685113643008"
+                 data-text="The live film for this comprised of both singers in profile (filmed separately)~Shoko had previously had a concept for this track when I performed the song in Japan with Tim singing it so she expanded on that idea with the profiles and visual effects
+#TimsTwitterListeningParty https://t.co/cTxgRsTbwF" data-datetime="6:35 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589325550555783168"
+                 data-text="Joan also plays violin and she kindly complimented the string lines I’d added. Dave and I added additional guitars with Theo on flute again
+#TimsTwitterListeningParty" data-datetime="6:35 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589325289263616000"
+                 data-text="I spent a lot of time on the instrumentation of this track to give it the right flavour~arranging string parts and utilising many sampled sounds~even managed to play some harmonica on it
+#TimsTwitterListeningParty" data-datetime="6:34 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589325200088530944"
+                 data-text="Dave was already considering collaborating with Joan when I sent over this track~he thought it might be a good vehicle for her~I liked the prospect of that but hearing the duet for the first time I thought their voices worked so well together
+#TimsTwitterListeningParty" data-datetime="6:33 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589325155876343808"
+                 data-text="Started with the blues guitar sequence and built it up from there
+#TimsTwitterListeningParty" data-datetime="6:33 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589325110896316416"
+                 data-text="Ballad of a Deadman
+Probably the most unanticipated track on the album. Surprised myself with this one
+#TimsTwitterListeningParty" data-datetime="6:33 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589324968529399808"
+                 data-text="That’s effectively what I did by dropping out in my final year at 15 as the school report shows~my whole being was consumed with focusing on becoming a professional musician~2yrs later was recording Adolescent Sex
+#TimsTwitterListeningParty https://t.co/guGxSHDzKF" data-datetime="6:32 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589324870256451584"
+                 data-text="clicking fingers.. snap to it" data-datetime="6:32 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589324445323493376"
+                 data-text="A Way of Disappearing 
+pretty much embodies the sentiment of the mental shutdown caused by the traumas of school life in the 70s ~wishing you could disappear from it
+#TimsTwitterListeningParty" data-datetime="6:30 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589324164208668672"
+                 data-text="For the live show Dave filmed himself singing to camera~Shoko Ise then treated the image by bleaching out almost all of the detail and displayed the lyrics across the screen with each sentence sung in real time
+#TimsTwitterListeningParty https://t.co/cryaOG4hv0" data-datetime="6:29 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589324054502469632"
+                 data-text="Ex-military, bullying, deviant male teachers~abuse~corporal punishment~crushing of spirit~derision~I see an ex-teacher is now His Beatitide shaking hands with royalty~who needs god when science says you(and Davros)can happily exist within your own Dalek
+#TimsTwitterListeningParty https://t.co/84gu0Qj1Ol" data-datetime="6:29 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589323969416810496"
+                 data-text="Having both gone through the same school system his lyrics were very poignant especially concerning secondary school which we both despised
+#TimsTwitterListeningParty" data-datetime="6:28 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589323900940619776"
+                 data-text="During the search I became attached to Dave’s version so he recorded it properly but still with the hope of finding a female vocalist as we hadn’t planned for him to feature on the album on vocals~we were already doing that with our Nine Horses project
+#TimsTwitterListeningParty https://t.co/U4mnsePEUP" data-datetime="6:28 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589323833760448512"
+                 data-text="I sent this over to Dave for a second opinion and to my surprise he sent it back with his vocal demo~singing into his laptop mic with the piano chords playing in the background~as a suggestion for whoever the female vocalist might be
+#TimsTwitterListeningParty" data-datetime="6:28 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589323789191778304"
+                 data-text="Playground Martyrs
+I recorded the piano at The Vestry in London~a simple set of chords intended for a song for a French female vocalist [snapshots taken on the day]
+#TimsTwitterListeningParty https://t.co/Bij6rYhmzI" data-datetime="6:28 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589323587902922752"
+                 data-text="You can see how the ‘gap’ fades as it gets closer to falling in sync with the rest of the shot (trying to time this right Tim)
+#TimsTwitterListeningParty https://t.co/b3H87w6V5k" data-datetime="6:27 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589323386232373248"
+                 data-text="Shoko’s video for this was a lovely simple idea~a moving sky with a still section down the centre~at the end, as the music resolves, the moving part of the image catches up with the fixed part and the line naturally disappears and all moves together
+#TimsTwitterListeningParty" data-datetime="6:26 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589323268149760000"
+                 data-text="I then edited it down to find some sort of structure to the movement of the chords and processed the sound to make it more discordant and dreamlike then back in London I asked Theo Travis to add some flute
+#TimsTwitterListeningParty" data-datetime="6:26 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589323219664015360"
+                 data-text="It’s one of those instruments that just sounds quite magical particularly with the blend of the sound from the amplifier cabinet below the keyboard
+#TimsTwitterListeningParty" data-datetime="6:25 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589323103091707904"
+                 data-text="Gap of Cloud
+In Dave\'s studio in America there was a Fender Rhodes (classic electric piano) sitting in the control room and one morning I sat down as the sun filtered through the room and improvised random chord movements with the mics in record
+#TimsTwitterListeningParty https://t.co/L568rV4QUT" data-datetime="6:25 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589322806952865792"
+                 data-text="Live in 2008~Shoko’s video imagery was more seafaring than working the land but for a Nordic man that’s quite poignant also
+#TimsTwitterListeningParty https://t.co/dR1kbuanqU" data-datetime="6:24 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589322663721566210"
+                 data-text="So .. we’ve seen a whole lot more of one another since and have a second band album coming out early part of next year https://t.co/Vz63m5YoIq
+
+Cheers to Cap’n Thomas!
+
+#TimsTwitterListeningParty https://t.co/AF0k4h7VW6" data-datetime="6:23 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589322500189872129"
+                 data-text="Thomas and I finally met for the first time in 2007 after the release of the album when I was on tour in Stockholm pictured here 
+#TimsTwitterListeningParty https://t.co/K7RMFLDixI" data-datetime="6:23 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589322324083625984"
+                 data-text="As luck would have it Thomas was travelling to Bratislava to record an orchestra for his own project and proposed that they also transcribe a score for this track~this added so much to the character of the track as well as tension and drama
+#TimsTwitterListeningParty" data-datetime="6:22 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589321991303364609"
+                 data-text="Thomas came up with the vocal this vocal pretty quickly~having worked so much with him since then (with our band Exit North in which 4 of us co-write together) I know that a piece of music either resonates with him or it doesn’t~not much middle ground
+#TimsTwitterListeningParty https://t.co/F09rx2YDY8" data-datetime="6:21 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589321863016386560"
+                 data-text="@RiverAngel14 nooooooo nightmare" data-datetime="6:20 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589321612343799808"
+                 data-text="Sow The Salt
+This track is a heavy beast~Thomas was the perfect man for the job~the gravitas of the soulful voice carrying the burden~the hard graft~the sowing of the salt~a folkloric covenantal curse
+#TimsTwitterListeningParty" data-datetime="6:19 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589321417665175552"
+                 data-text="The coda is meant to provoke that sense of stillness once the train comes to a gradual halt. Why December? That’s when I was born and the two words have probably never been united in a title before without being followed by the word ‘strikes’
+#TimsTwitterListeningParty" data-datetime="6:18 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589321306088275968"
+                 data-text="🍶" data-datetime="6:18 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589321204208668672"
+                 data-text="Got a bit derailed there 🤭 Used a slow pitch shifting vibrato on the repeats of the brass sound to prompt that sense of drowsiness one might feel on a long train journey
+#TimsTwitterListeningParty" data-datetime="6:17 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589321153947893760"
+                 data-text="Grew up with a railway line at the back of the house~loved their sound particularly the diesel engines parked somewhere on the line in the night gently chugging away for hours like a heartbeat~another train pic
+#TimsTwitterListeningParty https://t.co/pnFEKgF5q2" data-datetime="6:17 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320958011379712"
+                 data-text="My finger was once a victim to the door slam~caught in the hinge side~about 9y/o on a family outing to see Where Eagles Dare~chemist bandaged it up but the pain!!! Richard Burton chopping into the guys arm with an ice axe was that much more visceral
+#TimsTwitterListeningParty" data-datetime="6:16 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320786468229120"
+                 data-text="And no fun for the lone traveller should an unsavoury character board or a gang of skinheads~what were they thinking - is that why it was third class?
+#TimsTwitterListeningParty" data-datetime="6:16 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320684408541184"
+                 data-text="I don’t think anyone else appears on this track~so who in the UK remembers those ‘door slam’ carriages and the fact there was no corridor which kinda triggered my first sense of claustrophobia~trapped in a small room
+#TimsTwitterListeningParty https://t.co/ejulU1iQ41" data-datetime="6:15 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320536144105474"
+                 data-text="December Train 
+A simple acoustic bass groove … keeps on rolling like a train~ and again various samples interpolated into the groove as musical statements
+#TimsTwitterListeningParty" data-datetime="6:15 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320340723109888"
+                 data-text="Anja made a wonderfully theatrical video for my live show depicting her character’s role~a girl damaged by addiction and bad life choices~turned sex worker and now glaring into the abyss
+#TimsTwitterListeningParty https://t.co/LgqxYd7VVQ" data-datetime="6:14 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320204840218624"
+                 data-text="I don’t think many vocalists could have extracted such a natural song from this music~I was so impressed and also respect Anja’s poetically ambiguous lyrics too~understanding the subject matter provides a whole other dimension
+#TimsTwitterListeningParty" data-datetime="6:13 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320135281901568"
+                 data-text="She accepted the challenge but it wasn’t until over a year later that Anja returned her vocals to me~working remotely really opened up the freedom for contributors to take their time, experiment with ideas and offer alternatives
+#TimsTwitterListeningParty" data-datetime="6:13 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320091191345152"
+                 data-text="Anja’s own music often has unusual arrangements / treatments so I knew the intimacy in her voice would work well against the cold electronica, deconstructed parts and unusual sounds I was using-Dave adds some great sounding guitar work too
+#TimsTwitterListeningParty" data-datetime="6:13 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320045234356225"
+                 data-text="Cancelled Pieces is in 3/4 with the drums in 4/4 so there’s a natural turnaround of the pattern against the instrumentation
+#TimsTwitterListeningParty" data-datetime="6:13 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589320009196896256"
+                 data-text="I believe our final recording session together was for the Luc Besson film Angela-A where I snapped this. And from the ‘behind-the-scenes’ section of the movie dvd where both my surnames make an appearance
+#TimsTwitterListeningParty https://t.co/PlCNvBVpju" data-datetime="6:13 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1589319930671173633"
+                 data-text="Absolute @LlSTENlNG_PARTY masterclass from @istevejansen happening right now" data-datetime="6:12 PM Nov 6, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319928456572928"
+                 data-text="We went on to perform a number of live shows for Anja’s music during the following years
+#TimsTwitterListeningParty https://t.co/1UuRPoReqx" data-datetime="6:12 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319813222256640"
+                 data-text="It was one of those rare sessions where the artist wants to really explore ideas as opposed to simply asking you to play drums
+#TimsTwitterListeningParty" data-datetime="6:12 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319765423960066"
+                 data-text="A bit of context re Anja. From Norway. Daughter of renowned jazz saxophonist Jan Garbarek. I first worked with her in 2000 on her excellent solo album Smiling &amp; Waving.
+#TimsTwitterListeningParty https://t.co/HhY8Ldvp5A" data-datetime="6:12 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319664743567360"
+                 data-text="Cancelled Pieces
+starts with a depressed Ivor the Tank Engine
+#TimsTwitterListeningParty" data-datetime="6:11 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319512704581632"
+                 data-text="Sleepyard was featured in a Nissan TV commercial in Japan with additional string arrangements by cellist Seigen Tokuzawa who played with me for Slope live~as well as a show in 2016 with the Kyoto Philharmonic Orchestra and again with Exit North in 2019
+#TimsTwitterListeningParty https://t.co/dGbNoYmckg" data-datetime="6:11 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319442957471744"
+                 data-text="It was at these performances that I first worked with video artist Shoko Ise who created the live back projections for the full Slope live show and DVD release in 2008
+#TimsTwitterListeningParty https://t.co/sLTQItMqEs" data-datetime="6:10 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319401123500032"
+                 data-text="Blogged about it here: https://t.co/X6dlpcvEoP
+Another mov clip for later
+#TimsTwitterListeningParty https://t.co/mIbBSOVO8q" data-datetime="6:10 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319281090887680"
+                 data-text="Before Slope was ready for release I had a chance to perform in Japan with Takahashi so Tim &amp; I opened the show with a few songs~Cancelled Pieces/Ballad of a Deadman/Sleepyard/Sow the Salt(Tim\'s version)&amp;Get The Hell Out(Nine Horses)~fabulous company
+#TimsTwitterListeningParty https://t.co/6vEUVHDh65" data-datetime="6:10 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319162765381632"
+                 data-text="He and I subsequently recorded some ambient music at The Vestry together with John Foxx titled A Secret Life 
+#TimsTwitterListeningParty https://t.co/4ITO6vr421" data-datetime="6:09 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319092816969728"
+                 data-text="Steve D\' Agostino engineered a few tracks on Slope at The Vestry~we initially met at a live show for Harold Budd at which Steve assisted John Foxx (they were long term collaborators~Steve is a synth player/programmer)
+#TimsTwitterListeningParty" data-datetime="6:09 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589319020523982848"
+                 data-text="A mov clip for later … Tim recording his vocal in the vocal booth
+#TimsTwitterListeningParty https://t.co/OqZrZ6xWTW" data-datetime="6:09 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589318906837053442"
+                 data-text="We recorded Tim’s vocals at The Vestry in Ealing, London~a professionally equipped studio funded by a nearby university for music studies~engineer Steve D’Agostino was a tutor there and held the keys which was very handy!
+#TimsTwitterListeningParty https://t.co/v8xJlkRdLH" data-datetime="6:08 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589318801077989376"
+                 data-text="Tim actually wrote vocal parts for 2 tracks~Sleepyard and the track that turned out to be Sow The Salt which we felt wasn’t in the best key for him (the song ended up in the hands of Thomas Feiner who wrote his own version)
+#TimsTwitterListeningParty https://t.co/os4kwhcPbC" data-datetime="6:08 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589318660639772672"
+                 data-text="The vocal melody beautifully complimented the vibraphone arrangement, developing the line further~he also threw in a few guitar chords in the middle ‘heavy’ section which was jolly decent of him
+#TimsTwitterListeningParty https://t.co/TKcxYAmPoO" data-datetime="6:07 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589318513046753280"
+                 data-text="Sleepyard
+Tim Elsenburg (with his group Sweet Billy Pilgrim) was then managed out of the same office as myself therefore his involvement essentially developed from there~sent him the track (it’s in 7/4 btw so it does that skipping of the beat thing)
+#TimsTwitterListeningParty https://t.co/MUQDuj7806" data-datetime="6:07 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589318276450254849"
+                 data-text="And at the very end “yeah, very nice” captured audio of the lovely master of halloween Keith Lowe when he was in the studio recording Nice Horses with us (after we got out of school)
+#TimsTwitterListeningParty https://t.co/dKBuN417uF" data-datetime="6:06 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589318207248433152"
+                 data-text="“I was in the heart of god” from a weird and frank tv documentary on necrophilia/paraphilia (also used a splice from the same source on Other Worlds in a Small Room’s  - Remains of a Fragile Illusion)" data-datetime="6:06 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589318170359525376"
+                 data-text="I’d compiled quite a sample library by then and those play a big part in the randomness of the track and in that sense it reminds me of one of my favourite albums called Movies by Holgar Czukay
+
+Theo Travis’ horns really transformed this track
+
+#TimsTwitterListeningParty https://t.co/SH9IPV2FRd" data-datetime="6:05 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589318008870416385"
+                 data-text="The voices: a documentary on Russian submarines “I think there is a lot of cheating here” used ironically in reference to the sample usage~followed by the sound of the submarine sonar spliced up rhythmically then some percussive Russian(?) dialect🤔
+#TimsTwitterListeningParty" data-datetime="6:05 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317965962674176"
+                 data-text="The last thing I wanted to do was slap a drum loop behind it all - I wanted pauses, hesitations, distractions, humour
+#TimsTwitterListeningParty" data-datetime="6:05 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317935063257089"
+                 data-text="There was much I liked about the various events sonically but I needed to find the thread to hold it together and this was all centred around the rhythm programming~splicing sound sources, clicks, pops and even hiss to create subtle rhythmic dynamics
+#TimsTwitterListeningParty" data-datetime="6:04 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317897478103040"
+                 data-text="Grip
+Probably one of the most convoluted compositions on the album. It stems from all kinds of micro recordings and was a bit like putting together a jigsaw puzzle~so much editing went into it with quite a few changes and re-workings along the way
+#TimsTwitterListeningParty" data-datetime="6:04 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317863281950721"
+                 data-text="Why call it Slope? ~the title seemed to embody the uneven movement, the off-kilter, the ascent, descent
+#TimsTwitterListeningParty" data-datetime="6:04 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317838371971072"
+                 data-text="My process was to complete writing the music before inviting singers to get involved~so once the music was sufficiently developed I’d propose it as a collaboration for a song at the singer’s discretion
+#TimsTwitterListeningParty" data-datetime="6:04 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317802955243520"
+                 data-text="Aside from a Sakamoto tour in summer of 05 which conveniently incorporated the family summer hols~and the fact we were now mainly based back in London~I found I had more time to focus on solo work~(sending wishes for Ryuichi\'s good health♥️)
+#TimsTwitterListeningParty https://t.co/5NGtIqh5xs" data-datetime="6:04 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317682784264193"
+                 data-text="Thankfully he also invited Thomas Feiner’s band Anywhen to reissue on the label and as a result Thomas then became a vocalist contender for Slope
+
+Thomas himself recently reissued that same amazing album here: https://t.co/1EZFNsYBMU
+
+#TimsTwitterListeningParty" data-datetime="6:03 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317639704170496"
+                 data-text="He and I worked closely throughout 01~05 and supported one another’s projects~live/studio and a label~we scoured the internet for album cover art and he sourced Dan McPharlin’s miniature model photos which I ended up for the original cover artwork
+#TimsTwitterListeningParty
+￼ ￼ https://t.co/cnLQl72t1x" data-datetime="6:03 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317443218206722"
+                 data-text="The antithesis of Dave’s studio in the US where some of Slope was made which was live, luxuriously spacious, professionally equipped and deep in snow for a third of the year
+#TimsTwitterListeningParty https://t.co/NYr8101pWG" data-datetime="6:03 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317266184626176"
+                 data-text="In 05 we moved home in London so I could have my own modest studio space which I named The Nest because of the amount of bugs that came to visit~being made of unvarnished wood it sounded nice and dead (unlike the bugs) which was great for mixing Slope
+#TimsTwitterListeningParty https://t.co/fhQ8GX1T7C" data-datetime="6:02 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317166444470272"
+                 data-text="Various tours as a new dad kept things pretty busy for me with the spinning of plates so as not to be an absent dad during those important years~subsequently Jude travelled a lot which is so rewarding for a mini human
+#TimsTwitterListeningParty https://t.co/f0pebiU4j8" data-datetime="6:01 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589317005005332480"
+                 data-text="Another album(Snow Borne Sorrow)was also in the writing stage and some work intended for my solo project became diverted towards that~I spent a lot of time in the US during the early 2000s~also improvised outside the studio with child-minding duties😓
+#TimsTwitterListeningParty https://t.co/LEE6NGSZYa" data-datetime="6:01 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589316883224096768"
+                 data-text="I began developing the material for Slope in the early 2000s~a gradual process as there were other projects and tours going on around that time~I followed my instincts~‘concepts’ are not a good starting place for me~preferring to keep an open mind
+#timstwitterlisteningparty" data-datetime="6:00 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fistevejansen%2Fstatus%2F1589316721634336768"
+                 data-text="Thanks Party-Tim &amp; Hi out there👋whoever’s listening🍷🍷🍷thanks for showing up~please enjoy▶️
+
+During the intro of the first track Grip… a little background into life at the time the album came about 
+#TimsTwitterListeningParty" data-datetime="6:00 PM Nov 6, 2022"> 
+                istevejansen            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1589316650263683072"
+                 data-text="Over to you @istevejansen https://t.co/lXakNqHCu4" data-datetime="5:59 PM Nov 6, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
