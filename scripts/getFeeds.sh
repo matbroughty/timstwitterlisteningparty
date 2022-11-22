@@ -215,6 +215,9 @@ do
         curl "${REMOTE_PATH}/feedsnip2.php?id=${i}&levels=2&notour=1" -o $localfile
         verify "$localfile" "section"
         addtogit $localfile
+
+        curl "${REMOTE_PATH}/fetchAttachments.php?id=${i}"
+        curl "${REMOTE_PATH}/getRelatedTweets.php?id=${i}"
     fi
 
     if [ $pictures -eq 1 ]
@@ -245,6 +248,7 @@ done
 if [ $github -eq 1 ]
 then
     git status
+    echo "Paste this into browser to download media: ${REMOTE_PATH}/getMediaDownloads.php"
 fi
 
 if [ $ERROR -ne 0 ]
