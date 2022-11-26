@@ -218,6 +218,7 @@ do
 
         curl "${REMOTE_PATH}/fetchAttachments.php?id=${i}"
         curl "${REMOTE_PATH}/getRelatedTweets.php?id=${i}"
+        curl "${REMOTE_PATH}/getURLs.php?id=${i}"
     fi
 
     if [ $pictures -eq 1 ]

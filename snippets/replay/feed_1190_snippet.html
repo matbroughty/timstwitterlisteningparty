@@ -1,0 +1,736 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/0aEL0zQ4XLuxQP0j7sLlS1" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e029c72b249fcaa04d074c1dfcd" alt="Wish" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">The Cure</span><br/><span class="sub-colour">Wish</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(474439)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/0aEL0zQ4XLuxQP0j7sLlS1" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_474439_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 158 tweets from Friday 25th November 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/thecure" target="_blank"><img src="https://pbs.twimg.com/profile_images/3175665097/f98a75369629c7df87c495d37ba23519_normal.jpeg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/thecure.jpg'"><br/>@thecure</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1592922309769236483/HZHPKK1y_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1401913725288960003/n_dKSg1J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Open" data-start="0"
+             data-duration="410" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="High" data-start="411"
+             data-duration="212" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Apart" data-start="624"
+             data-duration="393" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="From The Edge Of The Deep Green Sea" data-start="1018"
+             data-duration="460" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Wendy Time" data-start="1479"
+             data-duration="310" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Doing The Unstuck" data-start="1790"
+             data-duration="261" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Friday I'm In Love" data-start="2052"
+             data-duration="215" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Trust" data-start="2268"
+             data-duration="330" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="A Letter To Elise" data-start="2599"
+             data-duration="312" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Cut" data-start="2912"
+             data-duration="349" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="To Wish Impossible Things" data-start="3262"
+             data-duration="279" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="End" data-start="3542"
+             data-duration="405" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3948"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048519c72b249fcaa04d074c1dfcd" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-158" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-157" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596295934463266816"
+                 data-text="Over 31,000 tweets!! https://t.co/PoYUaatOUA" data-datetime="12:13 AM Nov 26, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-156" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596295591457439744"
+                 data-text="❤️ https://t.co/gZxsU6hMrw" data-datetime="12:11 AM Nov 26, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-155" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596295394438578177"
+                 data-text="ONWARDS - RSX #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:10 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596295156885487619"
+                 data-text="(THE ACTUAL) END… THAT WAS A GRAND EXPERIENCE! THANK YOU TO TIM, TO EVERYONE THAT HELPED OUT, AND TO ALL OF YOU LISTENING ALONG AND TAKING PART - I HOPE YOU ALL ENJOYED IT AS MUCH AS I DID… N.E.X.T UP… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:09 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596295022818873345"
+                 data-text="That was absolutely incredible. Huge thanks to @thecure, and @RobertSmith in particular - and everyone who joined us around the world. Music has the power to help us through. Stay safe x x" data-datetime="12:09 AM Nov 26, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596294904518524940"
+                 data-text="…THE 2022 REMASTER SOUNDS LIKE THE ALBUM I HEARD IN THE STUDIO… FINALLY!!!#TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:08 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596294836147355648"
+                 data-text="BUT ALL IN ALL, ‘WISH’ WAS A GREAT EXPERIENCE - AND AN ALBUM I AM VERY PROUD OF #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:08 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596294751317131264"
+                 data-text="(THE) END… WE PLAYED SOME REALLY GREAT SHOWS ON THE WISH TOUR THAT FOLLOWED THE RELEASE OF THIS ALBUM… BUT THE BAND WAS DISSOLVING SLOWLY… THE END WAS INEVITABLE… IT ALWAYS IS #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:08 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1596294562795982848"
+                 data-text="I saw @thecure loads on this tour and as the tour went on this song got slower and slower. By the time I saw them in Edinburgh in autumn it was half the speed. Sludgy and emotional. X #TimsTwitterListeningParty https://t.co/fnb2uqzXRB" data-datetime="12:07 AM Nov 26, 2022"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="244000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596294550879932418"
+                 data-text="Wish was the Cure\'s most commercially successful in the band\'s career, debuting at number one in the UK and number two in the US, where it sold more than 1.2 million copies." data-datetime="12:07 AM Nov 26, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596293528178786305"
+                 data-text="“Please stop loving me Please stop loving me I am none of these things” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:03 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596293457928392704"
+                 data-text="DOO DOO DOO DOODOOOOO" data-datetime="12:03 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596293371915653120"
+                 data-text="All football…and us https://t.co/e6P7Hw7wYe" data-datetime="12:02 AM Nov 26, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596293339766104065"
+                 data-text="I REMEMBER WORKING THIS SONG OUT IN THE STUDIO VERY NEAR THE END OF THE SESSION… BORIS PLAYED THE SAME BASIC DRUM PATTERN (WITH BORIS VARIATIONS!) OVER AND OVER FOR A COUPLE OF EARLY MORNING HOURS… I WANTED AN EPIC END SONG… A SONG TO BOW OUT WITH… AND I THINK I GOT IT" data-datetime="12:02 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596293227816034304"
+                 data-text="THE CURE WERE PRETTY MUCH ONE OF THE ‘BIGGEST’ BANDS IN THE WORLD… AND I OFTEN FELT LIKE I WAS DYING INSIDE… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:02 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596293141606318082"
+                 data-text="AND I REALLY DID FEEL LIKE THIS A LOT OF THE TIME AROUND THIS TIME… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:01 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596293063647064064"
+                 data-text="TRACK 12 -  END “I think I\'ve reached that point Where giving up and going on Are both the same dead end to me Are both the same old song“ #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:01 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596292980385746944"
+                 data-text="“All I wish Is gone away” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:01 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596292869773725696"
+                 data-text="THE REPETITION OF CERTAIN PHRASES AND IMAGES HAS ALWAYS BEEN THERE WITH ME… REPETITION… COMPULSION? #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:00 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596292713309249537"
+                 data-text="I THINK I RETURNED TO THIS SONG IN SPIRIT WITH OUR NEW SONGS ‘ALONE’ AND ‘ENDSONG’… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="12:00 AM Nov 26, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FMickMaguire_%2Fstatus%2F1596292537051799552"
+                 data-text="To Wish Impossible Things by @thecure. It\'s been my wake up alarm every morning for the last 22+   yrs (since my first phone). Nothing wrong with waking up to melancholy (sometimes I let it run for entire song, f*ck off snooze) 🖤🎶  #TimsTwitterListeningParty @LlSTENlNG_PARTY https://t.co/ZqqpaeeA9x" data-datetime="11:59 PM Nov 25, 2022"> 
+                MickMaguire_            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDZYNRShelly%2Fstatus%2F1596292509965385732"
+                 data-text="@LlSTENlNG_PARTY Pendant https://t.co/33EEjAkcSQ" data-datetime="11:59 PM Nov 25, 2022"> 
+                DZYNRShelly            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596292428549394432"
+                 data-text="“It was the sweetness of your skin It was the hope Of all we might have been That filled me with the hope to wish Impossible things” IT IS PRETTY HARD TO LISTEN TO THIS ONE THOUGH #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:59 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596292325990359042"
+                 data-text="RT @LlSTENlNG_PARTY: Got any sweeet Cure merch to share with us??? https://t.co/VTPRkjJMT7" data-datetime="11:58 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596292135757783044"
+                 data-text="‘TO WISH IMPOSSIBLE THINGS’ IS REALLY THE TITLE TRACK… ANOTHER GORGEOUS, MELANCHOLIC PIECE... IT’S PROBABLY MY FAVOURITE SONG ON THE RECORD? #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:57 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596291938688405504"
+                 data-text="Cannot ever get over what it’s like to read the tweets of an artist listening to one of their albums play. It’s easy to forget that they probably hardly ever listen to their own material once it’s released" data-datetime="11:57 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596291925233274880"
+                 data-text="KATE WILKINSON IS PLAYING VIOLA - IN MY MIND THIS WAS THE SOUND OF A SIREN SINGING… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:57 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="129000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596291831297609728"
+                 data-text="OW.......... TRACK 11 -  TO WISH IMPOSSIBLE THINGS “Remember how it used to be When the sun would fill the sky… “ #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:56 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596291289401606144"
+                 data-text="BUT THE SAME? X" data-datetime="11:54 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596291205884772352"
+                 data-text="I SOUND YOUNG.......... ER......." data-datetime="11:54 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596290955396747269"
+                 data-text="You don\'t feel anymore You don\'t care anymore It\'s all gone It\'s all gone” IT’S ALL GONE… BUT… BUT… !!! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:53 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FThePuckHag%2Fstatus%2F1596290912967090178"
+                 data-text="Oh dear, my early 20\'s angst is bubbling up again. Or rather,  \'Cut\' just clobbered me upside the head with it. #WishListeningParty  #timstwitterlisteningparty https://t.co/EgXXEe0p8c" data-datetime="11:53 PM Nov 25, 2022"> 
+                ThePuckHag            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596290783371567107"
+                 data-text="BUT SOMETIMES IT WAS THE OTHER PERSON CHANGING, NOT ME… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:52 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596290668066111488"
+                 data-text="AND ANOTHER SONG LAMENTING THE FRACTURING OF OLD FRIENDSHIPS… I FOUND IT HARD DURING THIS PERIOD OF THE BAND TO KEEP HOLD ON TO WHO I REALLY WANTED TO BE, AND AS A CONSEQUENCE I THINK I OFTEN BLAMED EVERYONE BUT MYSELF FOR ANY UPSET #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:52 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596290500004564993"
+                 data-text="ANOTHER ONE OF THE REALLY EARLY DEMOS (AKA ‘AWAY’), SPEEDED DOWN AND WAAAAHED UP?!! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:51 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596290374976540673"
+                 data-text="TRACK 10 -  CUT “I wish you felt the way that I still do“ #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:50 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Flarrylglg%2Fstatus%2F1596290314225917952"
+                 data-text="Listening to The Cure with my best friend and love! Doesn’t get any better than this! #TIMSTWITTERLISTENINGPARTY  #WISHLISTENINGPARTY @thecure @CraigatCoF https://t.co/hTAxB74qLq" data-datetime="11:50 PM Nov 25, 2022"> 
+                larrylglg            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596290288317865991"
+                 data-text="“But there\'s nothing else I can really do There\'s nothing else I can really do There\'s nothing else I can really do At all” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:50 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596290265374941186"
+                 data-text="❤️ https://t.co/0uUdcepckc" data-datetime="11:50 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596290232240197635"
+                 data-text="❤️ https://t.co/t0kmaCb91m" data-datetime="11:50 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FMarianita242%2Fstatus%2F1596290216993644546"
+                 data-text="Top of the pile at the moment #wishlisteningparty #TheCure #TIMSTWITTERLISTENINGPARTY https://t.co/V4EYWZpUCi" data-datetime="11:50 PM Nov 25, 2022"> 
+                Marianita242            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596290171137396741"
+                 data-text="“And every time I try to pick it up Like falling sand As fast as I pick it up It runs away Through my clutching hands” MY OLD FRIEND THE FUTILITY MONSTER IS NEVER TOO FAR AWAY… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:50 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596290103210840064"
+                 data-text="“I thought you were The girl I always dreamed about But I let the dream go And the promises broke And the make-believe ran out... “ OUCH #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:49 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FAaronLaw92%2Fstatus%2F1596289764948267008"
+                 data-text="From tonight, the best Wish link I could get haha... #TimsTwitterListeningParty #TheCure @thecure https://t.co/AE8AwMTB0q" data-datetime="11:48 PM Nov 25, 2022"> 
+                AaronLaw92            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fgodwinafaith%2Fstatus%2F1596289686825312256"
+                 data-text="post gig #TimsTwitterListeningParty #thecure #THECURELOSTWORLD22 @thecure @RobertSmith #wish https://t.co/lFvk5M8U7X" data-datetime="11:48 PM Nov 25, 2022"> 
+                godwinafaith            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596289433753587713"
+                 data-text="❤️ A Letter To Elise ❤️" data-datetime="11:47 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596289352585293824"
+                 data-text="THIS WAS THE THIRD SINGLE FROM THE ALBUM… FOR A NUMBER OF REASONS IT NEVER REALLY ESTABLISHED ITSELF IN THE CURE LIVE REPERTOIRE… WHICH IS ODD, BECAUSE I THINK IT IS A REALLY LOVELY SONG? #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:46 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596289261682266115"
+                 data-text="THE BOOK, WHICH IS PRETTY MUCH A SERIES OF INCREASINGLY DEMENTED UNANSWERED LETTERS, REALLY RESONATED WITH ME AT THE TIME… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:46 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596289154815385600"
+                 data-text="AS WITH EVERY CURE ALBUM, CERTAIN LITERARY WORKS PROVIDED TOUCHSTONES… ‘A LETTER TO ELISE’ DREW STRANGE INSPIRATION FROM KAFKA\'S \'LETTERS TO FELICE\' #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:46 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596289045566435329"
+                 data-text="TRACK 9 -  A LETTER TO ELISE “Oh Elise! It doesn\'t matter what you say I just can\'t stay here every yesterday Like keep on acting out the same The way we act out“ #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:45 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596288976046149632"
+                 data-text="“And still the hardest part for you To put your trust in me I love you more than I can say Why won\'t you just believe?” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:45 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="142000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596288714266886145"
+                 data-text="@RogIndustries @LlSTENlNG_PARTY @thecure @thecharlatans ❤️🤘" data-datetime="11:44 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596288115685363713"
+                 data-text="NOW I WILL JUST LISTEN........................................." data-datetime="11:41 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596288005630619648"
+                 data-text="IT IS A LOVE SONG WITH A DARK HEART… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:41 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596287922335948800"
+                 data-text="I THINK ‘TRUST’ IS ONE OF THE BEST THINGS WE\'VE EVER DONE, IT\'S PLAYED WITH SUCH FEELING #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:41 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596287827226116097"
+                 data-text="WHEN I REMASTERED ‘WISH’ THIS YEAR, I REDISCOVERED A DIMENSION IN THE MUSIC WHICH I HAD KIND OF FORGOTTEN, A VERY GENTLE YEARNING THING WHICH I FIND QUITE BEAUTIFUL… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:40 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596287708636516353"
+                 data-text="TRACK 8 - TRUST “There is no-one left in the world That I can hold onto There is really no-one left at all There is only you“ #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:40 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596287580147879936"
+                 data-text="“It\'s Friday I\'m in love” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:39 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FRogIndustries%2Fstatus%2F1596287266107887618"
+                 data-text="I got married recently, it was a Friday, and we got to choose 3 songs for signing the register. 
+
+Eight Days A Week (you know who)
+Friday I\'m In Love by @thecure 
+Let The Good Times Be Never Ending by @thecharlatans @Tim_Burgess 
+
+#TimsTwitterListeningParty 
+#Wish
+#TheCure" data-datetime="11:38 PM Nov 25, 2022"> 
+                RogIndustries            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596287238995775489"
+                 data-text="WE DIDN’T PLAY IT LIVE MUCH FOR A LOOONG TIME… I THOUGHT IT WAS TOO HAPPY! BUT NOW… IT HAS BECOME A REALLY WONDERFUL MOMENT IN THE SHOW… EVEN ON THE ‘WRONG’ NIGHTS (THANK YOU AMSTERDAM!) #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:38 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596287197287686145"
+                 data-text="WOOO HOOOO https://t.co/x6L0EMy7LT" data-datetime="11:38 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596287165646139392"
+                 data-text="I REMEMBER STANDING AT THE MICROPHONE AFTER THE FIRST VOCAL TAKE FEELING VERY HAPPY… LOOKING UP AND SEEING EVERYONE WAVING AT ME THROUGH THE CONTROL ROOM GLASS #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:38 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596287105746862080"
+                 data-text="#TimsTwitterListeningParty https://t.co/JxKnazyCLi" data-datetime="11:37 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596287046607405058"
+                 data-text="I WROTE THE WORDS ON THE WAY BACK TO THE STUDIO… IT REALLY WAS A LOT EASIER THEN… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:37 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596286964138926081"
+                 data-text="IT TOOK ME AGES TO CONVINCE MYSELF AND EVERYONE ELSE THAT I HADN’T NICKED IT! IT SEEMED SO INSTANTLY FAMILIAR… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:37 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Ftakekiyo666%2Fstatus%2F1596286912599592961"
+                 data-text="Friday I\'m in Love!! 🖤
+#TheCure   #WISHLISTENINGPARTY 
+#TimsTwitterListeningParty https://t.co/dbunOpm3sc" data-datetime="11:37 PM Nov 25, 2022"> 
+                takekiyo666            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596286870279053313"
+                 data-text="HALFWAY THROUGH… AND ON THE HALWAY THEME… ONE FRIDAY NIGHT ABOUT HALFWAY THROUGH THE MANOR STUDIO SESSION I WENT HOME FOR A WEEKEND BREAK, AND ON THE JOURNEY I STARTED HUMMING THIS SONG… WHEN I GOT HOME I QUICKLY FIGURED OUT THE CHORDS AND THREW IT DOWN ONTO CASSETTE…" data-datetime="11:37 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596286779807698946"
+                 data-text="TRACK 7 - FRIDAY I\'M IN LOVE “I don\'t care if Monday\'s blue… “ #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:36 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596286693392683013"
+                 data-text="“It\'s a perfect day To throw back your head And kiss it all goodbye” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:36 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FMusicOnly1966%2Fstatus%2F1596286649893363716"
+                 data-text="Tonight is really a Friday to be in love.  A great concert by @thecure in Amsterdam and now #TimsTwitterListeningParty #wishlisteningparty 
+Sorry for the bad video, I can’t do anything about it #thecure https://t.co/njBvCZ3eFX" data-datetime="11:36 PM Nov 25, 2022"> 
+                MusicOnly1966            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FUberGonk%2Fstatus%2F1596286619111378947"
+                 data-text="#WISHLISTENINGPARTY heading for top trending soon, currently in 4th place ⭐️🥳 @thecure @Tim_Burgess @LlSTENlNG_PARTY #TimsTwitterListeningParty #thecure https://t.co/MU9o7Uhjuy" data-datetime="11:36 PM Nov 25, 2022"> 
+                UberGonk            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596286427469578247"
+                 data-text="IT’S ALWAYS BEEN ONE OF SIMON’S FAVOURITE CURE SONGS #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY
+
+AND HE IS NEVER WRONG..." data-datetime="11:35 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596286403511521281"
+                 data-text="It\'s a perfect day for making out
+To wake up with a smile without a doubt
+To burst grin giggle bliss skip jump and sing and shout
+Let\'s get happy!" data-datetime="11:35 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596286298423447553"
+                 data-text="I WANTED ‘DOING THE UNSTUCK’ AS THE THIRD SINGLE FROM THE ALBUM, BUT WAS IGNORED BY THE GREAT POWERS… BAH! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:34 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596286156412694528"
+                 data-text="MAKING ‘DISINTEGRATION’ I KNEW EXACTLY HOW I WANTED THE SONGS TO SOUND… WITH ‘WISH’ I HAD LESS OF AN OVERALL IDEA… I JUST KNEW I WANTED IT TO BE KALEIDOSCOPIC SOMEHOW… AND THIS IS ‘SOMEHOW’! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:34 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596286061738864640"
+                 data-text="HEY! I AM DANCING! (WELL… YOU KNOW… WAVING MY HANDS AROUND WHILST SHUFFLING!) #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:33 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596285885959770112"
+                 data-text="RT @LlSTENlNG_PARTY: Tonight at 11:34 and 53 seconds (UK time) if you are taking part in our Wish @LlSTENlNG_PARTY, you’ll be hearing Frida…" data-datetime="11:33 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285847191506944"
+                 data-text="THIS IS JUST ABOUT THE MOST CAREFREE, ABANDONED AND HAPPY WE EVER GOT I THINK?!! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:32 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596285827990323200"
+                 data-text="RT @LlSTENlNG_PARTY: Tonight at 11:34 and 53 seconds (UK time) if you are taking part in our Wish @LlSTENlNG_PARTY, you’ll be hearing Frida…" data-datetime="11:32 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285765973340160"
+                 data-text="AH! THE ‘EMULATOR 2’ HARP SAMPLE! I AM INSTANTLY PULLED BACK THROUGH TIME TO A SLOWER 8-BIT WORLD… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:32 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285685346242561"
+                 data-text="TRACK 6 - DOING THE UNSTUCK “It\'s a perfect day For letting go“ #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:32 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285642077413376"
+                 data-text="“It doesn\'t touch me at all” HMMM… IT SEEMS CLOSING DOWN HAS ALWAYS BEEN ONE OF MY ‘COPING STRATEGIES’… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:32 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285552953020418"
+                 data-text="AND SET OFF FAR FEWER HOME MADE ROCKETS #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:31 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285494597410821"
+                 data-text="…BUT I DO CYCLE TO THE PUB FAR LESS OFTEN… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:31 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285425223872512"
+                 data-text="BREAKFAST AND BED AROUND 7AM… AND I STILL KEEP THESE HOURS! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:31 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285379384147971"
+                 data-text="- THEN PORL WOULD ADD HIS THING - THEN I WOULD SING - AND THEN ME AND BORIS WOULD ADD SOME FINAL BITS OF ‘THE WEIRD STUFF’… USUALLY PERCUSSION! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:31 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285318579486720"
+                 data-text="USUALLY BORIS AND SIMON AND ME WOULD PUT DOWN A BACKING TRACK - ONCE WE WERE HAPY WITH A TAKE (THIS WAS RECORDED TO TAPE REMEMBER - NO CUTTING AND PASTING BACK THEN!) ME AND SIMON AND PERRY WOULD OVERDUB ‘OTHER BITS’" data-datetime="11:30 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285215651119104"
+                 data-text="@HIDEO_KOJIMA_EN ALOHA!!! X" data-datetime="11:30 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596285073627959299"
+                 data-text="ME AND SIMON AND PERRY (AND OF COURSE DAVE AND STEVE) WERE THERE FOR THE DURATION… BORIS AND PORL WOULD FREQUENTLY TAKE TIME AWAY… WE DEMO’D EVERYTHING AS A BAND, BUT WE RECORDED THIS WISH ALBUM IN DIFFERENT WAYS #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:29 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596285034922639363"
+                 data-text="RT @CraigatCoF: @Tim_Burgess @LlSTENlNG_PARTY @RobertSmith New Orleans. Not too far from Fascination Street." data-datetime="11:29 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596284901699063808"
+                 data-text="MAKING THIS ALBUM I USED TO GET GOING AROUND 4PM… LISTEN TO THE PREVIOUS DAYS THING… CYCLE TO THE LOCAL PUB… CYCLE BACK… FAFF ABOUT… EAT… THEN GO FOR IT! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:29 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596284717292457984"
+                 data-text="ANOTHER SONG ABOUT THE WEIRD AND WONDERFUL WISH WORLD… I STILL FIND IT STRANGE THAT COMPLETE STRANGERS CAN START TALKING TO ME AS IF THEY HAVE KNOWN ME FOR YEARS… I KNOW IN SOME STRANGE WAY THEY HAVE… BUT STILL… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:28 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596284593019158529"
+                 data-text="ONE OF THE REALLY EARLY DEMOS, SPEEDED UP AND WAAAAHED DOWN! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:27 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596284363154624517"
+                 data-text="WOW!!!" data-datetime="11:27 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596284297081757698"
+                 data-text="TRACK 5 - WENDY TIME “\"You look like you could do with a friend\" She said… “ #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:26 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596284192903471105"
+                 data-text="“And miles And miles And miles And miles And miles Away from home again... “ PLUS ÇA CHANGE, PLUS C\'EST LA MÊME CHOSE? #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:26 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596283984345907200"
+                 data-text="REMORSE… ALWAYS REMORSE…
+#TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:25 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596283901034389504"
+                 data-text="WITHOUT DOUBT MY FINEST ‘JIMI HENDRIX WANNABE’ MOMENT! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:25 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596283860232589312"
+                 data-text="And yet @thecure are so absolutely relevant and necessary today. Always moving forward" data-datetime="11:25 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fhellofoxfox%2Fstatus%2F1596283794533011456"
+                 data-text="I saw @thecure for the first time ever this week in Cologne. That’s Robert on stage beneath a giant screen of himself. 
+
+I loved it, it was a life-affirming gig. #TimsTwitterListeningParty #WishListeningParty @Tim_Burgess https://t.co/2OW2l20fsQ" data-datetime="11:24 PM Nov 25, 2022"> 
+                hellofoxfox            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fchimorange%2Fstatus%2F1596283669983166465"
+                 data-text="@Tim_Burgess @RobertSmith @LlSTENlNG_PARTY Kyoto, Japan 🇯🇵" data-datetime="11:24 PM Nov 25, 2022"> 
+                chimorange            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fjhoburgh%2Fstatus%2F1596283617315270656"
+                 data-text="From The Edge Of A Deep Green Sea is always a mountain of glorious sound! And the guitar solo by Porl is SLAPPING!!! @LlSTENlNG_PARTY @thecure #thecure" data-datetime="11:24 PM Nov 25, 2022"> 
+                jhoburgh            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596283578224021505"
+                 data-text="“So I try \"Put your hands in the sky”” AGH! I SPILLED MY DRINK! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:23 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FMarkRSwn%2Fstatus%2F1596283439010955266"
+                 data-text="@LlSTENlNG_PARTY @thecure @RobertSmith @Tim_Burgess #ListeningParty #TheCure #TimsTwitterListeningParty #Wish From The Edge Of The Deep Green Sea https://t.co/aTnhnnzj75" data-datetime="11:23 PM Nov 25, 2022"> 
+                MarkRSwn            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fjchristophem67%2Fstatus%2F1596283339140276225"
+                 data-text="Original large prints by Derek Ridgers from my collection.Signed and stamped
+@Tim_Burgess @RobertSmith @CraigatCoF @LlSTENlNG_PARTY @derekridgers 
+#TimsTwitterListeningParty #robertsmith #thecure #Wish30thanniversary #simongallup #porlthompson #boriswilliams #perrybamonte https://t.co/xzXA24gvnO" data-datetime="11:23 PM Nov 25, 2022"> 
+                jchristophem67            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fbryanvincent9%2Fstatus%2F1596283251160584192"
+                 data-text="@Tim_Burgess @RobertSmith @LlSTENlNG_PARTY 🇵🇭 (The Philippines)" data-datetime="11:22 PM Nov 25, 2022"> 
+                bryanvincent9            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Frobothead78%2Fstatus%2F1596283142368886784"
+                 data-text="@LlSTENlNG_PARTY A few here although I suspect maybe a new addition tonight, my wife is on the way home from seeing them in Amsterdam tonight #TheCure @thecure @RobertSmith https://t.co/EXE5m2ZpF2" data-datetime="11:22 PM Nov 25, 2022"> 
+                robothead78            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596282961015754753"
+                 data-text="Can’t remember a time before @thecure" data-datetime="11:21 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FVaderJaws%2Fstatus%2F1596282771261231105"
+                 data-text="@thecure So amazing to hear some of these songs again since yesterday, and some again since 30 years ago!! 🎶 Congrats @TheCure, @LlSTENlNG_PARTY!!
+
+#TheCure #WishListeningParty 
+#TimsTwitterListeningParty https://t.co/1c5Aw3hCsL" data-datetime="11:20 PM Nov 25, 2022"> 
+                VaderJaws            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596282748377128960"
+                 data-text="A SONG ABOUT A VERY PSYCHEDELIC TRIP… I AM NOT SURE IT EVER REALLY ENDED?!!#TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:20 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FGilovesyou%2Fstatus%2F1596282722720264193"
+                 data-text="Mi colección #Wish
+#TheCure 
+#TimsTwitterListeningParty 
+@LlSTENlNG_PARTY https://t.co/lDelmJVC5E" data-datetime="11:20 PM Nov 25, 2022"> 
+                Gilovesyou            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596282626419163136"
+                 data-text="RT @jhoburgh: @LlSTENlNG_PARTY It’s gotta be A Letter To Elise, and I love most of the tracks on Wish" data-datetime="11:20 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596282539408326659"
+                 data-text="TOD BUD NOOSH AND DARCIE SAY........................YEEEEEEEEEEAH" data-datetime="11:19 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596282337804763137"
+                 data-text="TRACK 4 - FROM THE EDGE OF THE DEEP GREEN SEA “Every time we do this
+I fall for her” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:19 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596282245811212288"
+                 data-text="“How did we get this far apart? I thought this love would last forever” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:18 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="128000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596282142539251712"
+                 data-text="📷 @thecure live in Stuttgart last week. Taken by @billouparis https://t.co/gHlcrRwQxk" data-datetime="11:18 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Frobelan888%2Fstatus%2F1596281603038257152"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY We are a family 🖤" data-datetime="11:16 PM Nov 25, 2022"> 
+                robelan888            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596281514077327360"
+                 data-text="A VERY SAD SONG THIS… HARD TO LISTEN TO! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:15 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596281503004393472"
+                 data-text="THIS IS LIKE A MIX OF THE BEST COFFEE TABLE BOOK AND A CHAT DOWN THE PUB WITH @RobertSmith" data-datetime="11:15 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596281218450194432"
+                 data-text="I LIKE THE THREE VOICES IDEA… THE ETERNAL TRIANGLE… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:14 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDRuffBear%2Fstatus%2F1596280996873531392"
+                 data-text="@LlSTENlNG_PARTY so glad I got a copy today...
+
+#TimsTwitterListeningParty #TheCure #robertsmith #wish https://t.co/ncZmKzQB3d" data-datetime="11:13 PM Nov 25, 2022"> 
+                DRuffBear            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596280946923540481"
+                 data-text="Never in a million years did I think The @LlSTENlNG_PARTY could turn into something so beautiful" data-datetime="11:13 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596280921334112256"
+                 data-text="AND THEN… THE AWFUL REALISATION THAT YOU ONLY DREAMED YOU HAD WOKEN UP IN TIME… SLOWLY, IRREVOCABLY YOU HAVE DRIFTED OUT OF LOVE… TOO MANY MISTAKES… TOO MANY THROWAWAY WORDS… TOO MUCH TAKEN FOR GRANTED #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:13 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596280690659688449"
+                 data-text="TRACK 3 - APART “He waits to hear her say \"Forgive\" But she just drops Her pearl-black eyes” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:12 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596280587966357504"
+                 data-text="“I\'ll keep on holding you In arms so tight They\'ll never let you go” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:12 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596280500074717184"
+                 data-text="ANOTHER OW!!!" data-datetime="11:11 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596280293647912960"
+                 data-text="I LOVE THE WAY MY FENDER V1 BASS SOUNDS ON THIS ALBUM… ‘WISH’ WAS RECORDED AT THE MANOR STUDIOS NEAR OXFORD, ENGLAND… ENGINEERED BY DAVE ALLEN, ASSISTED BY STEVE WHITFIELD, PRODUCED BY DAVE AND ME, AND MIXED BY MARK SAUNDERS #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:10 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596280188073299968"
+                 data-text="WHEN YOU WAKE UP ONE STEP AWAY FROM FALLING OFF THE EDGE OF THE WORLD… A REALISATION OF HOW IMPORTANT IT IS TO HOLD ON TO THOSE YOU LOVE #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:10 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596280023971172354"
+                 data-text="I FIRST HEARD ‘HIGH’ IN SIMON’S KITCHEN… A HISSY BUT PERFECTLY FORMED INSTRUMENTAL CASSETTE DEMO… I KNEW STRAIGHT AWAY IT HAD TO BE THE CURE\'S NEXT SINGLE #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:09 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596279980207505409"
+                 data-text="£1.25 😳 https://t.co/wWGT3DtkOC" data-datetime="11:09 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Ftakekiyo666%2Fstatus%2F1596279937430093824"
+                 data-text="High…my favorite song on Wish⛅️ #TheCure  #WISHLISTENINGPARTY 
+#TimsTwitterListeningParty https://t.co/yNDPasI3F6" data-datetime="11:09 PM Nov 25, 2022"> 
+                takekiyo666            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596279874616000512"
+                 data-text="OW!!! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:09 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596279784916803592"
+                 data-text="TRACK 2 - HIGH “When I see you sky as a kite As high as I might I can\'t get that high” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:08 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596279656713715713"
+                 data-text="RT @Tim_Burgess: 僕らの @thecure @LlSTENlNG_PARTY に参加してくれる日本の友達みんなに挨拶を。 🇯🇵 x x https://t.co/MG2kIegQYN" data-datetime="11:08 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596279617513730051"
+                 data-text="This is instantly straight into The @LlSTENlNG_PARTY hall of fame ❤️❤️❤️❤️
+
+#TheCure" data-datetime="11:08 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596279616674877440"
+                 data-text="“And the way the rain comes down Hard That\'s how I feel Inside” #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:08 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FBirmingham_81%2Fstatus%2F1596279606276808704"
+                 data-text="@LlSTENlNG_PARTY A ticket from when they played Birmingham University in 1979 #TimsTwitterListeningParty https://t.co/DCuQF6zjuT" data-datetime="11:08 PM Nov 25, 2022"> 
+                Birmingham_81            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596279530129612803"
+                 data-text="…ALBEIT IT WAS VERY OFTEN VERY FUN!!! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:07 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596279458197295105"
+                 data-text="THE LYRICS ARE ABOUT THE DERANGED PERSPECTIVE, LOSS OF CONTROL AND OVERWHELMING BANALITY OF BELIEVING ONESELF DEFINED BY THE ROLE ‘SINGER IN A FAMOUS BAND’… #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:07 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fmoggieboy%2Fstatus%2F1596279401481543680"
+                 data-text="Well, this is a bit different from the last album… High 12” DJ promo: #timstwitterlisteningparty  #thecure @thecure @LlSTENlNG_PARTY https://t.co/e8mA640seW" data-datetime="11:07 PM Nov 25, 2022"> 
+                moggieboy            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FRogIndustries%2Fstatus%2F1596279380124356608"
+                 data-text="The Cure \'Wish\' listening party. I\'m in!
+
+@Tim_Burgess @thecure_ 
+#TimsTwitterListeningParty https://t.co/NT8NIGxLyo" data-datetime="11:07 PM Nov 25, 2022"> 
+                RogIndustries            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596279335283220480"
+                 data-text="THIS SONG WAS ONE OF MINE… AS SOON AS I FOUND THIS TUNING ON MY GUITAR AND WROTE THE OPENING THREE CHORDS I KNEW IT WAS GOING TO BE THE ALBUM OPENER #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:07 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596279230412853248"
+                 data-text="MOST OF THE REST OF THE SONGS - INCLUDING THE B-SIDES - WERE BAND EVOLUTIONS OF HOME DEMOS #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:06 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596279085504004097"
+                 data-text="@plasmatron OI!!! X" data-datetime="11:06 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596278948362850304"
+                 data-text="IT\'S WEIRD HOW VERY LITTLE REALLY CHANGES... #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY #THECURE" data-datetime="11:05 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596278705424404482"
+                 data-text="THIS IS OPEN!!! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY #THECURE" data-datetime="11:04 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596278526600265731"
+                 data-text="WOW! So many of us around the world listening to Wish right now. Twitter is going a bit crackers 
+
+#TheCure https://t.co/bdBkT5alhn" data-datetime="11:03 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596278525996273665"
+                 data-text="RECORDING THE ‘WISH\' DEMOS BEGAN IN NOV 1990 AT THE LIVE HOUSE STUDIO IN CORNWALL, WITH ENGINEER STEVE WHITFIELD. THE SESSION PRODUCED FOUR SONGS, A LETTER TO ELISE, WENDY TIME, THE BIG HAND, AND CUT #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:03 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596278387911319555"
+                 data-text="YES??????????????? YES!!!" data-datetime="11:03 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596278181040107521"
+                 data-text="TRACK 1 - OPEN “I really don\'t know What I\'m doing here I really think I should\'ve gone to bed tonight But… “ #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY" data-datetime="11:02 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fplasmatron%2Fstatus%2F1596278113608077314"
+                 data-text="Open by @thecure is one the rarest songs in that it hits just as hard when I heard it as a teenager as it does now. Just in a different way. #TimsTwitterListeningParty" data-datetime="11:02 PM Nov 25, 2022"> 
+                plasmatron            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1596278065642209281"
+                 data-text="RT @moggieboy: “One size fits all” - the original Wish tour Tshirt (modelled for us tonight by the lovely @lornaje): #timstwitterlisteningp…" data-datetime="11:02 PM Nov 25, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596278044372914177"
+                 data-text="HIT PLAY #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY #THECURE" data-datetime="11:01 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596277983081558016"
+                 data-text="3...........2........................1................................GO! #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY #THECURE" data-datetime="11:01 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596277954392330240"
+                 data-text="VERY!!! https://t.co/nYFY5DYoYH" data-datetime="11:01 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FPipFreaksOut%2Fstatus%2F1596277894413787137"
+                 data-text="Time to revisit an album Ive loved since being  fifteen. I don’t have black floppy hair and doc martins now, but I have a lovely picture disc #wish #TimsTwitterListeningParty @thecure  @LlSTENlNG_PARTY https://t.co/5Q6gs4cCuG" data-datetime="11:01 PM Nov 25, 2022"> 
+                PipFreaksOut            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fthecure%2Fstatus%2F1596277842324557825"
+                 data-text="HERE WE GO ON MY MARC #TIMSTWITTERLISTENINGPARTY #WISHLISTENINGPARTY #THECURE" data-datetime="11:01 PM Nov 25, 2022"> 
+                thecure            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1596277734333943809"
+                 data-text="It gives me great pleasure to announce that this @LlSTENlNG_PARTY for @thecure’s Wish is officially OPEN https://t.co/Ccv4OGzkca" data-datetime="11:00 PM Nov 25, 2022"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
