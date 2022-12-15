@@ -1,0 +1,438 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/5hggIegd5o50qXfc1UCjSS" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02cf31b2f85d4c5214ee2e636c" alt="This Is What We Do" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Leftfield</span><br/><span class="sub-colour">This Is What We Do</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(17885)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/5hggIegd5o50qXfc1UCjSS" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_17885_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 61 tweets from Thursday 15th December 2022 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Leftfield" target="_blank"><img src="https://pbs.twimg.com/profile_images/1551959174543818753/EPiugw6C_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Leftfield.jpg'"><br/>@Leftfield</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/AdzWren" target="_blank"><img src="https://pbs.twimg.com/profile_images/1603335865211789313/BQu6lsin_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/AdzWren.jpg'"><br/>@AdzWren</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1601225132025970689/MPp-wD1-_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1401913725288960003/n_dKSg1J_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="This Is What We Do" data-start="0"
+             data-duration="291" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Full Way Round" data-start="292"
+             data-duration="338" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Making A Difference" data-start="631"
+             data-duration="346" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="City Of Synths" data-start="978"
+             data-duration="297" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Pulse" data-start="1276"
+             data-duration="358" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Machines Like Me" data-start="1635"
+             data-duration="275" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Rapture 16" data-start="1911"
+             data-duration="251" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Heart And Soul" data-start="2163"
+             data-duration="339" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Accumulator" data-start="2503"
+             data-duration="378" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Come On" data-start="2882"
+             data-duration="174" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Power of Listening" data-start="3057"
+             data-duration="319" style="display:none"></div>
+                        <div id="track-12" class="track-list"
+                     data-name="Finished" data-start="3377"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851cf31b2f85d4c5214ee2e636c" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-61" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1603480243242663936"
+                 data-text="Learn the words and you can sing along with us  https://t.co/fsUO9u3XNo" data-datetime="8:00 PM Dec 15, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603480082588192768"
+                 data-text="@AdzWren @LlSTENlNG_PARTY doesnt it go down to minus 11..." data-datetime="8:00 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="126000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1603480040829771778"
+                 data-text="Sending love and get well vibes to Shane https://t.co/075bk06kGM" data-datetime="8:00 PM Dec 15, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1603479511223668736"
+                 data-text="@Leftfield @LlSTENlNG_PARTY 🤘" data-datetime="7:58 PM Dec 15, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603479206452682766"
+                 data-text="Rrrrrrrright - I gotta go get the nippers in bed - thanks for doing this with us I really enjoyed it. I will answer any questions later. Big love.  @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:56 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603479123761934336"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY ❤️" data-datetime="7:56 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603479087829377034"
+                 data-text="See you all on the road next May and June. Can’t wait #timstwitterlisteningparty" data-datetime="7:56 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603478949346041870"
+                 data-text="@Tim_Burgess @LlSTENlNG_PARTY Thanks Tim #timstwitterlisteningparty" data-datetime="7:55 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1603478850624786433"
+                 data-text="Much love and thanks to @Leftfield for another fantastic @LlSTENlNG_PARTY - and a brilliant album too" data-datetime="7:55 PM Dec 15, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603478803002535936"
+                 data-text="The brilliant Metropolis sequencer into a Eurorack module I can’t remember the name of did the lead. Not looking forward to playing it live. Makes me sweat. @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:55 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="171000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603478760178737159"
+                 data-text="Well this has been fun… thank you everyone for listening. Time to put the kettle on ! Prog rock solo in Power Of Listening from me and Adz jamming in the studio and having fun. Which is what it’s all about #timstwitterlisteningparty" data-datetime="7:55 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1603478045146615809"
+                 data-text="Power of (The) Listening (Party)
+
+@Leftfield https://t.co/7n8022pv8G" data-datetime="7:52 PM Dec 15, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603477824257417216"
+                 data-text="The Power Of Listening. Carl Rogers - a great man and inspiration for the track. Musically, it’s all about European techno and Dj\'ing in Oslo and Copenhagen. @CultureBoxDK #timstwitterlisteningparty" data-datetime="7:51 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603477590580154368"
+                 data-text="Come On-No guitars were used in the making of this record lol #timstwitterlisteningparty" data-datetime="7:50 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="86000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603477465220931594"
+                 data-text="Photos for the album / campaign were all taken by Steve Gullick...here he is at work...back when it was warm..#timstwitterlisteningparty https://t.co/KrsAvYz4fT" data-datetime="7:49 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603477105290928154"
+                 data-text="Come On. A journey into sound with magical vocals from Georgia, my daughter. Recorded ages ago. There are no guitars used on the making of this track. #timstwitterlisteningparty" data-datetime="7:48 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="93000" data-url="https%3A%2F%2Ftwitter.com%2Floftinopanevino%2Fstatus%2F1603476797290602521"
+                 data-text="@Leftfield Oh this is fun 
+
+#timstwitterlisteningparty https://t.co/taBy7g43HX" data-datetime="7:47 PM Dec 15, 2022"> 
+                loftinopanevino            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603476409489494035"
+                 data-text="Accumulator - main synth line was made with the @Cirklon - epic sequencer. @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:45 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603476140911652864"
+                 data-text="Accumulator - a pure techno/house track. Influenced by many nights Dj\'ing around the world. Here\'s me @club69paisley #timstwitterlisteningparty https://t.co/5dzdl2TJLK" data-datetime="7:44 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603475833166958624"
+                 data-text="Accumulator - this beginning sound was all made on the Eurorack again - I love that thing. Distorted it through the Amek BC3. @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:43 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603475491926773777"
+                 data-text="Accumulator - the first track finished on the album. A journey in 3 parts featuring a strange sequencer and congas. Nearly killed me playing the congas. #timstwitterlisteningparty" data-datetime="7:42 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="134000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603475416827559939"
+                 data-text="I love the Raita - one of my fave instruments. I would love to learn it. Anyone know where I can get one? @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:41 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603474858079358978"
+                 data-text="Heart &amp; Soul also featuring the amazing Raita playing of Abdelatif Lahloo. 
+I was tempted to call this ‘Song For My Father’ as his playing is all about his dad. #timstwitterlisteningparty https://t.co/WMGIs0UMEf" data-datetime="7:39 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603474830455476225"
+                 data-text="@Leftfield Hellooooo……." data-datetime="7:39 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="94000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603474483100422145"
+                 data-text="Heart and Soul - 6/8 or 12/8? I don’t know. Answers on a postcard music people. @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:38 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603474087249989632"
+                 data-text="Heart &amp; Soul. A 6/8 beat but with a disco tinge. And the strange vox that no one knows what they say? Any ideas. It sounds like “come play on the mountain “ spooky. #timstwitterlisteningparty @AdzWren" data-datetime="7:36 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603473904189681664"
+                 data-text="The live version of Rapture is epic. Wait and see! @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:35 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603473658969788418"
+                 data-text="Say hello to @AdzWren everyone....he\'s the maestro in the studio..and many of you will have seen him performing on tour over the years too ❤️..#timstwitterlisteningparty https://t.co/MmpUfx6Zkp" data-datetime="7:34 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="147000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603473630263971846"
+                 data-text="Rapture16 - if I had to choose, this would be the one. Love Earl’s voice. @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:34 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603473016918315015"
+                 data-text="RAPTURE 16. 
+The immaculate Earl 16. The first vocalist Leftfield ever worked with. Back again with soul and his story. Can’t wait to play Rapture 16 live too. We will smash it. #timstwitterlisteningparty https://t.co/cKvxVGqPi7" data-datetime="7:32 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603472663283961886"
+                 data-text="MLM with amazing catchy line from Mr Adz #timstwitterlisteningparty" data-datetime="7:30 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603472231023214593"
+                 data-text="MLM bass is from the Waldorf Wave - an absolute unit of a synth and as deep as anything - goes down to zero @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:29 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603472063167139862"
+                 data-text="@AdzWren @LlSTENlNG_PARTY Dong we live the Chroma. We may have two soon lol" data-datetime="7:28 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="225000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603471806702227461"
+                 data-text="Machines Like Me. So the idea in my head was Cyber men. But it’s about a world taken over by unemotional people. You know faceless bureaucrats. @AdzWren  made this happen with stunning bass line and  much more.  Again me on vocoder. #timstwitterlisteningparty" data-datetime="7:27 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603470863411646478"
+                 data-text="Pulse bass is from our @Roland Eurorack synth recorded through @CranbourneAudio Camden mic amps for the studio heads. @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:23 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603470645421084681"
+                 data-text="@dust_darren @RoughTrade They should have them in the shop by the weekend. Sorry bout that" data-datetime="7:22 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603470421390725155"
+                 data-text="Pulse.
+An absolute live banger! Played it last summer in DJ sets. Massive now for @Leftfield live set. Can’t wait to play it in May. Bits of The synths were done on the Wave. And nearly didn’t make it to final mix but got sudden lease of new life. #timstwitterlisteningparty https://t.co/1NDJyzMFgs" data-datetime="7:21 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603470256705622016"
+                 data-text="#timstwitterlisteningparty alternative cover idea. https://t.co/FWD0UGUntP" data-datetime="7:21 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="59000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603470086446190594"
+                 data-text="#timstwitterlisteningparty https://t.co/lHS6f91mqj" data-datetime="7:20 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603469838671876105"
+                 data-text="City of Synths - Chroma synth playing the lead. The guitar of the synth world and a truly epic, if fragile synth. @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:19 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="173000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603469604277391375"
+                 data-text="City Of Synths - A labour of love started on the Sequential Tempest. You can hear the original on the @RoughTrade Demos. An unusual tempo. Influenced not by Kraftwerk but more Harmonia. Me on vocoder. couldn’t resist. #timstwitterlisteningparty" data-datetime="7:18 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603468879090618394"
+                 data-text="We found Lemn’s poem on YouTube and spun it in - it just worked. @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty" data-datetime="7:15 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fradburn75%2Fstatus%2F1603468792050642945"
+                 data-text="@AdzWren @Leftfield @LlSTENlNG_PARTY https://t.co/XbMCYNnfc2" data-datetime="7:15 PM Dec 15, 2022"> 
+                radburn75            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603468580355510275"
+                 data-text="Lemn is a force of positivity and a pleasure to work with
+@Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty￼" data-datetime="7:14 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="118000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603468086635794434"
+                 data-text="MAKING A DIFFERENCE
+A track with many versions and changes. It all changed when we discovered @Lemnsissay wonderful poem. It all fell in place with the mad bass line and break beat. #timstwitterlisteningparty" data-datetime="7:12 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603467591976161302"
+                 data-text="The end is the best! @Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty￼" data-datetime="7:10 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="254000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603467333346988035"
+                 data-text="Resonator break, great dark vocals from Grian, guitar sample from Neil - what’s not to like??? 
+@Leftfield @LlSTENlNG_PARTY
+ #timstwitterlisteningparty￼" data-datetime="7:09 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fwhirley84%2Fstatus%2F1603466268287406082"
+                 data-text="@LlSTENlNG_PARTY @Leftfield Bournemouth 👊" data-datetime="7:05 PM Dec 15, 2022"> 
+                whirley84            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603466107788066816"
+                 data-text="Big stabs at the end are my favourite bit - Neil on his Nord 3
+ #timstwitterlisteningparty" data-datetime="7:04 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FSwindyMiller%2Fstatus%2F1603465982894379008"
+                 data-text="Monte Darlo! #ListeningParty @Leftfield #TIWWD #ThisIsWhatWeDo - loving the first track. Banger! https://t.co/Pi3gxMyZgM" data-datetime="7:04 PM Dec 15, 2022"> 
+                SwindyMiller            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2FAdzWren%2Fstatus%2F1603465926892216320"
+                 data-text="TIWWD didn’t really change much from the demo stage all the way through the album writing process. We got it right straight off the bat. #timstwitterlisteningparty" data-datetime="7:04 PM Dec 15, 2022"> 
+                AdzWren            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FPeanutpower4%2Fstatus%2F1603465586247405578"
+                 data-text="@LlSTENlNG_PARTY @Leftfield Loch Lomond 🏴󠁧󠁢󠁳󠁣󠁴󠁿👋(pic on a warmer day!) https://t.co/7PL70isdXu" data-datetime="7:02 PM Dec 15, 2022"> 
+                Peanutpower4            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1603465574335512576"
+                 data-text="RT @PlanetClaireB: @LlSTENlNG_PARTY @Leftfield Ibiza - ready and waiting :-)" data-datetime="7:02 PM Dec 15, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2FJeanStroster%2Fstatus%2F1603465455993294860"
+                 data-text="@LlSTENlNG_PARTY @Leftfield Just north of Detroit" data-datetime="7:02 PM Dec 15, 2022"> 
+                JeanStroster            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FWireless_Goat%2Fstatus%2F1603465254801133568"
+                 data-text="@Leftfield @LlSTENlNG_PARTY @AdzWren https://t.co/GAMDGV94FJ" data-datetime="7:01 PM Dec 15, 2022"> 
+                Wireless_Goat            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1603465088878448653"
+                 data-text="RT @LlSTENlNG_PARTY: Let us know whereabouts you are in the world for our @Leftfield @LlSTENlNG_PARTY https://t.co/1j9GKzYAfs" data-datetime="7:00 PM Dec 15, 2022"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603465058721402880"
+                 data-text="TIWWD is a track built around a hip hop concept. Actually I sort of imagine the keyboards  as random shards of music that fly in abstractly in a kinda John Coltrane way. The vox are all samples and reflect the hip hop concept. Neil 
+https://t.co/Jmam0hRktj?" data-datetime="7:00 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FMartinaHemmings%2Fstatus%2F1603464958439817216"
+                 data-text="@LlSTENlNG_PARTY @Leftfield Portugal 👋" data-datetime="7:00 PM Dec 15, 2022"> 
+                MartinaHemmings            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1603464941972951055"
+                 data-text="Handing over the controls of The @LlSTENlNG_PARTY to @Leftfield!  
+
+This is what they do 😉 https://t.co/VdoktcPBoY" data-datetime="7:00 PM Dec 15, 2022"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FdollyblueMC%2Fstatus%2F1603464910897352721"
+                 data-text="@LlSTENlNG_PARTY @Leftfield @Tim_Burgess 
+
+Aaaaaaaaaaannnnnd blast off!!! 💥☁️🔥🚀
+
+#timstwitterlisteningparty https://t.co/k44DWnfqm1" data-datetime="7:00 PM Dec 15, 2022"> 
+                dollyblueMC            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FLeftfield%2Fstatus%2F1603464880429928450"
+                 data-text="And in...3..2..1..▶️  #timstwitterlisteningparty 
+@LlSTENlNG_PARTY @AdzWren https://t.co/YgeNeMb8s6" data-datetime="6:59 PM Dec 15, 2022"> 
+                Leftfield            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
