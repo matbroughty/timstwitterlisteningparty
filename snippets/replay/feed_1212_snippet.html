@@ -1,0 +1,1020 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/6JiSijIr3l3tlnF2dFlloc" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02816d4cc05fa43e5d9d5a8a36" alt="Happy Ending" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">HiFi Sean &amp; David McAlmont</span><br/><span class="sub-colour">Happy Ending</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/6JiSijIr3l3tlnF2dFlloc" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 222 tweets from Friday 3rd February 2023 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/DavidMcalmont" target="_blank"><img src="https://pbs.twimg.com/profile_images/1617259600079720450/KxtL9Qea_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/DavidMcalmont.jpg'"><br/>@DavidMcalmont</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/HifiSean" target="_blank"><img src="https://pbs.twimg.com/profile_images/1600039620112179205/7LfWKL_M_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/HifiSean.jpg'"><br/>@HifiSean</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1611130337794396160/gSoo0C34_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Happy Ending" data-start="0"
+             data-duration="438" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Fever" data-start="439"
+             data-duration="297" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Beautiful" data-start="737"
+             data-duration="215" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Hurricanes" data-start="953"
+             data-duration="302" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="All In The World" data-start="1256"
+             data-duration="253" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Diamond Dust" data-start="1510"
+             data-duration="215" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="The Skin I'm In" data-start="1726"
+             data-duration="262" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Maybe" data-start="1989"
+             data-duration="188" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Transatlantic" data-start="2178"
+             data-duration="271" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Real Thoughts In Real Time" data-start="2450"
+             data-duration="301" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="Otherwise" data-start="2752"
+             data-duration="174" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="Aurora (Parts 1 & 2 )" data-start="2927"
+             data-duration="459" style="display:none"></div>
+                        <div id="track-13" class="track-list"
+                     data-name="Finished" data-start="3387"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851816d4cc05fa43e5d9d5a8a36" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-222" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-221" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621630093394153473"
+                 data-text="@DaveWat96468879 @LlSTENlNG_PARTY @hifi_mc @DavidMcalmont oh I love that joining the dots thing I have never thought of that before !!! x" data-datetime="10:01 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-220" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621630086867816448"
+                 data-text="@DuglasTStewart @HifiSean @Tim_Burgess Our pleasure. Absolutely!" data-datetime="10:01 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-219" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621630028600541185"
+                 data-text="@Konn63 @HifiSean Thanks Alan. Enjoy. :)" data-datetime="10:01 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-218" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1621629968294764546"
+                 data-text="❤️🙌 https://t.co/kLFMyGYSMt" data-datetime="10:01 PM Feb 3, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-217" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629952562024449"
+                 data-text="@CaraDeCarlo @HifiSean @hifi_mc Thank you Cara" data-datetime="10:01 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-216" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621629929669419008"
+                 data-text="@_MariaUzor @DavidMcalmont So glad you could join us Maria :)" data-datetime="10:01 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-215" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629887822921737"
+                 data-text="@ElectronicMagUK @HifiSean Thanks for having us too." data-datetime="10:01 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-214" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621629849818353667"
+                 data-text="@buxton_graham @DavidMcalmont @hifi_mc What a lovely thing to say Graham have a great weekend :)" data-datetime="10:00 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-213" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629751684222976"
+                 data-text="@HifiSean @DuglasTStewart @Tim_Burgess Agreed" data-datetime="10:00 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-212" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621629723200610304"
+                 data-text="@Tim_Burgess @DavidMcalmont Have a good gig Tim and thank you !" data-datetime="10:00 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-211" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629697313439744"
+                 data-text="@buxton_graham @LlSTENlNG_PARTY @HifiSean @hifi_mc Bless you sir." data-datetime="10:00 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-210" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629644691709952"
+                 data-text="@ChrissytaffRees @HifiSean @_MariaUzor @hifi_mc Enjoy." data-datetime="10:00 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-209" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621629637703999488"
+                 data-text="@ElectronicMagUK @DavidMcalmont guys so glad you were there !" data-datetime="10:00 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-208" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629604480827394"
+                 data-text="@RRelves @HifiSean Thank you so much Rachel. Delighted you enjoyed." data-datetime="10:00 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-207" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fbuxton_graham%2Fstatus%2F1621629574164496387"
+                 data-text="@DavidMcalmont @HifiSean @hifi_mc Absolutely gorgeous piece of art gents , may your talents shine on .  Thank you for a wonderful album" data-datetime="9:59 PM Feb 3, 2023"> 
+                buxton_graham            </div>
+                        <div id="tweet-feed-206" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621629544305156099"
+                 data-text="@RRelves @DavidMcalmont thank you Rachel :)" data-datetime="9:59 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-205" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629524654817280"
+                 data-text="@TheLaurenBacall @hifi_mc @HifiSean Merci Lauren" data-datetime="9:59 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-204" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1621629522733924352"
+                 data-text="Big thanks to @DavidMcalmont &amp; @HifiSean - perfect timing for our soundcheck in Montreal 🙌" data-datetime="9:59 PM Feb 3, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-203" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629460658229248"
+                 data-text="@nikidoog @HifiSean @Tim_Burgess @hifi_mc Thank you. :)" data-datetime="9:59 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-202" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621629420522938374"
+                 data-text="@DuglasTStewart @DavidMcalmont @Tim_Burgess That means the World thank you my friend x" data-datetime="9:59 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-201" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629385873793024"
+                 data-text="Much love to you @Tim_Burgess and the @LlSTENlNG_PARTY and to everybody who came along. Now I\'m going to destroy sober January. XXX" data-datetime="9:59 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-200" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FTheLaurenBacall%2Fstatus%2F1621629379456503809"
+                 data-text="👏👏👏 Congratulations on this album. @hifi_mc @DavidMcalmont @HifiSean  #timstwitterlisteningparty" data-datetime="9:59 PM Feb 3, 2023"> 
+                TheLaurenBacall            </div>
+                        <div id="tweet-feed-199" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2FRRelves%2Fstatus%2F1621629370673537026"
+                 data-text="Wow, what an incredible album @HifiSean and @DavidMcalmont! That was hugely enjoyable ❤️😍🙌
+#timstwitterlisteningparty" data-datetime="9:59 PM Feb 3, 2023"> 
+                RRelves            </div>
+                        <div id="tweet-feed-198" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621629154067087361"
+                 data-text="THANK YOU THANK YOU THANK YOU 
+@Tim_Burgess for this opportunity and ALL of you for the love you have shown our album. 
+Day one and a bloody great day it has been. 
+I need a very big gin. xx 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:58 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-197" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621629147813449728"
+                 data-text="Thanks everybody that was fun. @hifisean  @hifi_mc  #timstwitterlisteningparty https://t.co/u5uwqiqIfi" data-datetime="9:58 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-196" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621629088631750658"
+                 data-text="@VPDeehan @hifi_mc thank you Vince :))" data-datetime="9:57 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-195" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621628999750356994"
+                 data-text="With the famous harmonica mike that I sang into. No really. You practically have to eat it. @hifisean  @hifi_mc  #timstwitterlisteningparty https://t.co/FUJp6kfuFN" data-datetime="9:57 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-194" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621628918397550599"
+                 data-text="@DentarNotar @DavidMcalmont that means a lot please tell your friends we want people to slowly discover this :)" data-datetime="9:57 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-193" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621628814802427908"
+                 data-text="The end is perfect @HifiSean especially as it returns to the beginning. The cycle of life. Oh wait..." data-datetime="9:56 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-192" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621628657901912064"
+                 data-text="@DavidMcalmont @hifi_mc stunning string arrangement" data-datetime="9:56 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-191" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621628543389077505"
+                 data-text="@_MariaUzor @hifi_mc @DavidMcalmont good choices :)" data-datetime="9:55 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-190" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621628396856872960"
+                 data-text="This track really gives Dr Chandru Jois space to soar. So exquisite.  @hifisean  @hifi_mc  #timstwitterlisteningparty" data-datetime="9:55 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-189" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621628312752644097"
+                 data-text="@DavidMcalmont @hifi_mc eeewwwwww" data-datetime="9:54 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-188" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621628263943606272"
+                 data-text="I love the way it ends. I wanted Sean to use a gong though. @hifisean  @hifi_mc  #timstwitterlisteningparty" data-datetime="9:54 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-187" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621628258012782596"
+                 data-text="@DavidMcalmont @hifi_mc me fave too that" data-datetime="9:54 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-186" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621628178186862594"
+                 data-text="@_MariaUzor @hifi_mc @DavidMcalmont might be my fave actually on the album" data-datetime="9:54 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-185" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621628140320686087"
+                 data-text="I love the fact that I came up with the line, “These are Tyrannosaurus times,” one for the obit mefeels. @hifisean  @hifi_mc #TimsTwitterListeningParty" data-datetime="9:54 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-184" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621628091800903680"
+                 data-text="“But you gotta get back to your life. These are Tyrannosaurus times.” @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:54 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-183" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621628063304785926"
+                 data-text="Aurora came to me the minute I heard it, and I wasn’t even sure what it meant, but it made sense to ask the dawn why it couldn’t do something different to just another day for a change... never a walk in the geopolitical park. @hifisean   @hifi_mc #TimsTwitterListeningParty" data-datetime="9:53 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-182" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621627971592245251"
+                 data-text="@CaraDeCarlo @hifi_mc @DavidMcalmont wait till you hear the ending" data-datetime="9:53 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-181" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621627883675389952"
+                 data-text="There is something so classic about what Sean created with this arrangement and I wanted the lyric to rise to the occasion. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:53 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-180" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621627834706935812"
+                 data-text="@Konn63 @hifi_mc @DavidMcalmont for that you are getting 4 on the next album" data-datetime="9:52 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-179" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621627746836258817"
+                 data-text="@DavidMcalmont @hifi_mc Ru ?" data-datetime="9:52 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-178" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621627646193844227"
+                 data-text="From sounding like being stranded on a desert island to a full orchestral end of the World vibe \'but we is happy\' to looping round and ending the album with how the album started is pretty ...eh ...ACE ?
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:52 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-177" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621627630519816194"
+                 data-text="Which drag queen do a sound like in that section? @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:52 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-176" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621627425896513537"
+                 data-text="@HifiSean @hifi_mc Ha" data-datetime="9:51 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-175" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621627278055587843"
+                 data-text="AURORA (PARTS 1 &amp; 2)
+HOW pretentious to have a last track in the 2 parts !
+BITE US !
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty https://t.co/ZVCsLeI4fB" data-datetime="9:50 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-174" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2FScrtDrugAddict%2Fstatus%2F1621627270145212416"
+                 data-text="Really enjoying tonight’s Listening Party with @HifiSean and @DavidMcalmont ❤️ #TimsTwitterListeningParty https://t.co/bwL5KE7tPy" data-datetime="9:50 PM Feb 3, 2023"> 
+                ScrtDrugAddict            </div>
+                        <div id="tweet-feed-173" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621627186187829248"
+                 data-text="It’s a moment for the album listeners to take a breather before the epic emotional onslaught of Aurora Parts 1 and II. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:50 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-172" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621627110199525381"
+                 data-text="In its position in the set, it also seems to be making sense of all the complex musical and lyrical goings on that preceded it. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:50 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-171" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621627008735215617"
+                 data-text="My tendency toward complicated verbosity when it comes to songwriting isn’t lost on me. @hifsean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:49 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-170" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621626929928355843"
+                 data-text="It’s kinda corny and cliched, but I don’t care because I like to sing simpler straightforward emotions sometimes. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:49 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-169" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621626865428451334"
+                 data-text="My love for Stevie Wonder is inherent to this one. I like the lyric too. @HifiSean  #TimsTwitterListeningParty" data-datetime="9:49 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-168" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621626782725152769"
+                 data-text="With @janettemason pianist @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:48 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-167" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621626757517393921"
+                 data-text="OH ! and again my drums kick ass on this one. 
+Just sayin\' 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:48 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-166" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621626668254126080"
+                 data-text="I sang it to Sean and he already had some suitable chords. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:48 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-165" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621626620317417472"
+                 data-text="@DavidMcalmont @hifi_mc HELLO @theebillyporter" data-datetime="9:48 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-164" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621626566668156930"
+                 data-text="The one case on the record where the melody came first. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:47 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-163" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621626532476108803"
+                 data-text="OTHERWISE 
+I ADORE THE LYRICS IN THIS SONG.
+We have all been there and David sums us all up perfectly. 
+All I got to say really on this one. 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:47 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-162" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621626487265804288"
+                 data-text="Random photo of the two of us with Billy Porter. :) @hifisean @hifi_mc #TimsTwitterListeningParty https://t.co/0pEwdAxbmL" data-datetime="9:47 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-161" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621626255308193792"
+                 data-text="WOOOOOOOO @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:46 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-160" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621626239248113666"
+                 data-text="Those squealches at the end were just so randomly beautiful and fulfil my analogue synth fantasies beautifully ....it\'s a real phat groove. 
+Always thought @freddie_mercury would love this track &amp; @eltonofficial 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:46 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-159" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621626221648875522"
+                 data-text="Love this break down and outro. Go Sean.  @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:46 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-158" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621626143123046400"
+                 data-text="And shout out to Ian Smith for his glorious multi-colored vinyl rollout.  @LNFGlasgow @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:46 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-157" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625980581289992"
+                 data-text="Thanks so much to Steve Mac for his glorious synthesizers. Our Seanie was pigshithappy. lol @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:45 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-156" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621625908967755776"
+                 data-text="@nikidoog @hifi_mc @DavidMcalmont OMG he is my production hero and this album is released on his anniversary WOW" data-datetime="9:45 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-155" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1621625850603966465"
+                 data-text="How cold is it in Montreal?
+
+Please allow Dave (Ride’s drum tech) to demonstrate.
+
+The cup is full of boiling water… https://t.co/poNIujJkWM" data-datetime="9:45 PM Feb 3, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-154" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625690725535745"
+                 data-text="We had a great summer, but then… @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:44 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-153" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621625681581953024"
+                 data-text="@buxton_graham @mrstevemac @moogmusicinc @hifi_mc @DavidMcalmont yes this was my fave yesterday" data-datetime="9:44 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-152" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625652171374592"
+                 data-text="I was newly loved up at the time with a guy who had sensitive pale skin that was martyr to intense sunshine. @hifsean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:44 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-151" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625612703088640"
+                 data-text="It’s another one of the tracks with a long introduction that makes the most of Dr Chandru’s gift to us. @hifi sean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:44 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-150" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625487561736192"
+                 data-text="I guess I wanted to ensure personal ownership of the saying, and Sean’s hypnotic electronica in this case seemed just the right time to use it as a punchline. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:43 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-149" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625400978702338"
+                 data-text="As a matter of fact it had been in my phone during the Fingersnap days because that was when I began to use that approach to lyric writing. @hifi_mc #TimsTwitterListeningParty" data-datetime="9:43 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-148" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621625338236125186"
+                 data-text="@nikidoog @hifi_mc @DavidMcalmont today is ??" data-datetime="9:43 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-147" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625333555372035"
+                 data-text="This phrase had been in my smartphone list for ages, before I met Sean, even. @hifi_mc #TimsTwitterListeningParty" data-datetime="9:43 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-146" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621625206145011713"
+                 data-text="REAL THOUGHTS IN REAL TIME
+Big up @mrstevemac and his great studio The Bunker where I played his Modular system on this one. 
+In fact we both did at same time.
+I would adore a Modular system.
+Hello @moogmusicinc 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:42 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-145" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625096640110593"
+                 data-text="The mood of Transatlantic seems to be pondering that. @hifi_mc #TimsTwitterListeningParty" data-datetime="9:42 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-144" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625061860859911"
+                 data-text="Something went horribly wrong that year - may things! @hifi_mc #TimsTwitterListeningParty" data-datetime="9:41 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-143" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621625030533693440"
+                 data-text="I say thanks to 2016 on the album sleeve for inspiring a lot of this album. @hifi_mc #TimsTwitterListeningParty" data-datetime="9:41 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-142" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624996803010568"
+                 data-text="I flew back a few months later when I left university, as a post varsity treat, and to be in America for a historic election. @hifi_mc #TimsTwitterListeningParty" data-datetime="9:41 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-141" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624947205341185"
+                 data-text="I had a dread, as it was the same year that we lost Bowie, that by the time the flight touched down Stevie might be gone. Silly, I know, but as the year showed, the grim reaper had some mega plans. @hifi_mc #TimsTwitterListeningParty" data-datetime="9:41 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-140" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624909792256003"
+                 data-text="I went to America in April 2016, the day after Prince died. @hifi_mc #TimsTwitterListeningParty" data-datetime="9:41 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-139" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624868847472643"
+                 data-text="Dr Chandru Jois did an amazing orchestral arrangement for us, and Sean had the inspired idea of tuning it down, which is why it sounds so haunting. @hifi_mc #TimsTwitterListeningParty" data-datetime="9:41 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-138" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624820508000257"
+                 data-text="Anyway, if you’ve taken that flight, you will have a sense of Transatlantic’s philosophical vantage point. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:41 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-137" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDaveWat96468879%2Fstatus%2F1621624794339835905"
+                 data-text="@HifiSean @LlSTENlNG_PARTY @LNFGlasgow @hifi_mc @DavidMcalmont 10/10 for the swag! Xx https://t.co/2coLcL2Z65" data-datetime="9:40 PM Feb 3, 2023"> 
+                DaveWat96468879            </div>
+                        <div id="tweet-feed-136" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624732561850369"
+                 data-text="Flying to America is always an unnerving thing, because as often as I’ve done it, I don’t believe that they are going to let me in. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:40 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-135" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621624582934233090"
+                 data-text="I dedicate this song to my trust old 1968 Echoplex tape delay I have and adore.
+She worked her ass off on this track and created the whole Joe Meek meets BBC Radiophonic Workshop vibes I was really aiming for. 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:40 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-134" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624470271057921"
+                 data-text="I know that it wouldn’t be any better if the engine gave up the ghost over the sea, but still, I’d rather perish in water than in an endless freeze. It’s when I become most stressed about the plane staying airborne. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:39 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-133" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624409441042432"
+                 data-text="It’s when I become most stressed about the plane staying airborne. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:39 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-132" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624331829649408"
+                 data-text="One of the things I always find a bit scary about flying to America is the hours spent flying over miles and miles of mountains, miles below, in a seeming sea of endless snowdrifts. @hifi_mc @hifisean #TimsTwitterListeningParty" data-datetime="9:39 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-131" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621624210345918464"
+                 data-text="TRANSATLANTIC 
+We had a fast track that Chadru did this strings on but was just not working out.
+I thought why don\'t we half the speed and play them backwards and write a song over it. 
+Voila. 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:38 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-130" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621624041382494209"
+                 data-text="First time I heard it it reminded me of The Sundays. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:37 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-129" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621624027616772096"
+                 data-text="Big shout out to @LNFGlasgow who did the beautiful double gatefold vinyl edition.
+I love we took it back to Glasgow 
+@hifi_mc @DavidMcalmont #timstwitterlisteningparty" data-datetime="9:37 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-128" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623938009669634"
+                 data-text="And “You’re a season late. Can you feel the sun on your ass now?” @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:37 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-127" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623791565643776"
+                 data-text="“I burned my brain. You’re a season late. Can you feel the sun on your ass now?” @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:36 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-126" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621623740311261188"
+                 data-text="I love the fact that David basically invented a Chic like disco choir on this track all by him singing himself. 
+His sense of harmonies are like having 4 people in a room as one person. 
+I always sing along to this one. 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:36 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-125" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623723957665797"
+                 data-text="Favourite lines include, “You’re dragging up the dregs and all that dirty traffic. Is that supposed to be some kind of aphrodisiac?” @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:36 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-124" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623649542307840"
+                 data-text="When I finally made “I shoulda paid for the ignorance, it’s been an education,” the first line, the structure just flowed from there @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:36 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-123" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623577362538496"
+                 data-text="I kept coming up with great lines and scans in different places and the process became very much about, what happens If I move that second line of the chorus to the third line of the verse, and so on. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:36 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-122" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621623560782356480"
+                 data-text="@buxton_graham @hifi_mc @DavidMcalmont oh yeah it was amazing last night it totally took off" data-datetime="9:35 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-121" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623506923307010"
+                 data-text="I knew there was something special there, so I probably wrote five songs to Sean’s arrangement before I settled on something. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:35 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-120" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623428800290816"
+                 data-text="This one took me days. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:35 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-119" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623366921633796"
+                 data-text="This one took me days. @hifi_mc @hifi_mc #TimsTwitterListeningParty" data-datetime="9:35 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-118" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621623302497206275"
+                 data-text="MAYBE 
+I used to play guitar a lot in my previous bands but not so much now.
+But I do like messing around with cutting guitars up and sampling them to kind of un-play them. 
+This was an experiment that went VERY well. 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:34 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-117" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623248961036288"
+                 data-text="@soozworld @hifi_mc 🤣" data-datetime="9:34 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-116" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623108934180864"
+                 data-text="“They don’t believe I can’t breathe. All they see is the skin I’m in.” @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:34 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-115" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621623056249536512"
+                 data-text="I basically selected statements from the piece that I wrote about Trump that horrible night. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:33 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-114" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621623052806004738"
+                 data-text="@VPDeehan @hifi_mc @DavidMcalmont done that test too ....it does :)" data-datetime="9:33 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-113" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621622992550641665"
+                 data-text="I sensed it would be one of the album’s more explicit, less impressionistic songs, but what would the lyric be? @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:33 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-112" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621622944463032321"
+                 data-text="I told him not to touch it! It reminded me of Marvin Gaye circa What’s Going On? @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:33 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-111" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621622874661322753"
+                 data-text="When Sean handed me the arrangement, he was in two minds about the backing vocal he’d created. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:33 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-110" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621622803861487623"
+                 data-text="My typing fingers immediately started to twitch. @hifisean @hifi_mc #TimsTwitterListeningParty
+“Check me stepping out with my dad, carrying a bible in a Max Mara bag.” @hifi_mc #TimsTwitterListeningParty" data-datetime="9:32 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-109" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621622681358434306"
+                 data-text="He held it upside down. I found the moment, highly sinister, theatrically fascist and borderline Satanic. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:32 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-108" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621622617907003392"
+                 data-text="When DT marched out of the White House during the BLM uprisings to hold up a Bible outside a Washington church. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:32 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-107" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621622592577867776"
+                 data-text="The nah nah nah\'s are me. 
+I did them like in 5 mins rough to let David hear the idea with view to doing them proper. 
+He was like \'don\'t you dare record them again !\' 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:32 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-106" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621622553243537409"
+                 data-text="I wrote a piece that night that Trump et al did there anti-BLM Animal Farm “four legs good; two legs better” walkabout during the #BLM protests. @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:31 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-105" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621622501435478016"
+                 data-text="@_MariaUzor @hifi_mc @DavidMcalmont I do too my friend" data-datetime="9:31 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-104" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621622433483575297"
+                 data-text="For George Floyd @hifisean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:31 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-103" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621622308962983936"
+                 data-text="The Skin I’m in video still directed by Arber @hifisean @hifi_mc #TimsTwitterListeningParty https://t.co/AF8SPjops9" data-datetime="9:31 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621622188473290754"
+                 data-text="THE SKIN I\'M IN 
+Literally blew me away when I heard David sing this in front of me. Like that moment when you know something incredibly special and important has just taken place. I still get chills. 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:30 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621993404612609"
+                 data-text="The lyric, “Smack de bass down ‘pon my Black panorama,” took me all the way back to the mid-eighties in Guyana when Dancehall music took over from old school reggae. @hifi_mc @hifi_mc #TimsTwitterListeningParty" data-datetime="9:29 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621897896001537"
+                 data-text="When Sean saw the effect that the track had on my neck, he got the message. @hifi_mc @hifi_mc #TimsTwitterListeningParty" data-datetime="9:29 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621849191813122"
+                 data-text="The groove in the verse is phat, but the gated strings in the chorus had me doing that Javanese head move that I’ve liked to do since the 1970s when my sister and I looked forward to an “exotic” Cadbury’s chocolate advertisement. @hifi_mc @hifi_mc #TimsTwitterListeningParty" data-datetime="9:29 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621621781369872384"
+                 data-text="@ChrissytaffRees @hifi_mc @DavidMcalmont 3 times" data-datetime="9:28 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621621684049481731"
+                 data-text="This is a driving down the motorway song. 
+I did all these tests when I mixed the album. 
+Night Drives / Day Drives / Tube / Train /Bus / Lie in bed / half asleep at night test etc etc 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:28 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621653250736130"
+                 data-text="I gave him the “Don’t you effing dare!’ look. @hifi_mc @hifi_mc #TimsTwitterListeningParty" data-datetime="9:28 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621613845168129"
+                 data-text="When this arrangement appeared from Mr Dickson, he was considering using it in another collaboration. @hifi_mc @hifi_mc #TimsTwitterListeningParty" data-datetime="9:28 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621574347489281"
+                 data-text="It used to find its way onto at least one track per album. @hifi_mc @hifi_mc #TimsTwitterListeningParty" data-datetime="9:28 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621535382405124"
+                 data-text="It’s been some years since I allowed my overtly Caribbean side to come through. @hifi_mc @hifi_mc #TimsTwitterListeningParty" data-datetime="9:27 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621492877328384"
+                 data-text="Sean once asked me what I thought of one of his favourite artists. I said “It’s like Diamond Dust in the eyes.” He said, “That’s great. Write that down.” @hifi_mc #TimsTwitterListeningParty" data-datetime="9:27 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621454264537088"
+                 data-text="Leading candidate for personal favourite. It’s the chorus string thing. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:27 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621404910194688"
+                 data-text="“My sunny day friend like man who once was diamond dust in my eyes. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:27 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621621294511935490"
+                 data-text="DIAMOND DUST 
+All through the album interspersed are our Whats App messages we were passing back forth.
+This starts with me leaving a message saying do that jiggy jiggy jiggy thing you sang last night at the jazz club. 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:26 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621051695288325"
+                 data-text="Don’t forget that you can access the lyrics via our freed lyric booklet download @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:26 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621621008279953411"
+                 data-text="I think there may be a nod to cancel culture or ghosting in verse three too. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:25 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621620944430063619"
+                 data-text="That and Edward Lorenz’s Chaos Theory are the two ideas that make sense of the world for me and as often as I can express that with  a piece of songwriting I do. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:25 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621620912599490563"
+                 data-text="You might have noticed last year when James Lovelock crossed over that I wrote an appreciation of his Gaia theory, the idea that we are all in this together, elements of a great big organism. @hifi_mc @HifiSean #TimsTwitterListeningParty" data-datetime="9:25 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621620899681017859"
+                 data-text="@Weirdyweirdtwit @hifi_mc @DavidMcalmont I did the phone test ;)" data-datetime="9:25 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621620874427203585"
+                 data-text="When the single came out, many of you said, “It’s a banger!” Love that. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:25 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621620843506704384"
+                 data-text="One of my favourite ever creations. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:25 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621620807062413313"
+                 data-text="Another Candidate for personal favourite @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:25 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621620757762646017"
+                 data-text="“Pins break on dragon scales.” @HifiSean @hifi_mc #TimsTwitterListeningParty #gameofthrones" data-datetime="9:24 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621620686748786690"
+                 data-text="Sean and Arber at the Barbican for All in the World video shoot @HifiSean @hifi_mc #timstwitterlisteningparty https://t.co/RGvoZZQt6F" data-datetime="9:24 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621620673905889280"
+                 data-text="Some people call this track a bit ravey ?
+I DJ at raves and it is not ravey ... it is wavey.
+Chuggy waveform gated keyboards at the max. 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty https://t.co/CnaSnMIbnm" data-datetime="9:24 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="81000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621620261576495107"
+                 data-text="ALL IN THE WORLD
+You need to check the video later. 
+We spent a day on London transport nearly getting arrested numerous times. 
+The fact David lay on a packed rush hour escalator singing his heart out might have been ??
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:22 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619922253103107"
+                 data-text="“Let the tiredness swim against the high tide, the movement of the planets in your hieroglyphic spine.” @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:21 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621619821870727172"
+                 data-text="@Weirdyweirdtwit @hifi_mc @DavidMcalmont eh think so ....can\'t actually remember ha !" data-datetime="9:21 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621619748013281281"
+                 data-text="FACT
+There are no tracks on the album we intentionally made long in fact we were as surprised the day we looked at the length of some of the timings.
+We let the songs write themselves so to speak.
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:20 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619717621387264"
+                 data-text="It is an honest self-portrait that I really hope kills the notion of the “Croydon choirboy” once and for all. lol @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:20 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621619660499066885"
+                 data-text="@DaveWat96468879 @LlSTENlNG_PARTY @hifi_mc @DavidMcalmont ha ha trust you !" data-datetime="9:20 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619628542664707"
+                 data-text="As I said with the Happy Endings post, the Real Thoughts in Real Time process means that any uncontrived thought at anytime, day or night, sober or drunk, first thing in the morning or last thing at night can be registered. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:20 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619525568315392"
+                 data-text="I remember Sean’s husband Mike with raised eyebrows, saying that it would raise eyebrows. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:19 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619461290704896"
+                 data-text="The arrangement also summoned Prince a la Purple Rain’s Nikki, so I felt that I could let it all hang out as it were. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:19 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619409558061059"
+                 data-text="I came up with a melody that feels reminiscent of early English composition. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:19 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619375638810626"
+                 data-text="I wanted to write something tougher to match Sean’s bold marching pattern. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:19 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621619373973594113"
+                 data-text="@CaraDeCarlo @hifi_mc @DavidMcalmont and ?" data-datetime="9:19 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619337311174657"
+                 data-text="One of the first songs that Sean and I wrote was this one, but it was something a little bit sappy like “Stay in love,” which paled quickly. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:19 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619275977965570"
+                 data-text="Another lyrical, melodic rethink like Happy Ending. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:18 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619229051994112"
+                 data-text="The biggest compliment I have been paid about this tune is that I sound like Iggy Pop who I effing revere. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:18 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621619224610209796"
+                 data-text="@DavidMcalmont @hifi_mc ha ha that pic !" data-datetime="9:18 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619173691375619"
+                 data-text="Candidate for favourite @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:18 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621619127470227457"
+                 data-text="Recording bass with James Wiltshire and @guypratt in Brighton @HifiSean @hifi_mc #timstwitterlisteningparty https://t.co/ANkPLYGMGl" data-datetime="9:18 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621619090791047168"
+                 data-text="@ampersandad @hifi_mc @DavidMcalmont WOW ! thank you x" data-datetime="9:18 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618999237689346"
+                 data-text="Sean in lobster costume on the South Coast for Beautiful video shoot. @HifiSean @hifi_mc #TimsTwitterListeningParty https://t.co/413EKuUOeN" data-datetime="9:17 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621618974512365570"
+                 data-text="HURRICANES 
+Dead chuffed again with my drums on this.
+This was our first track we wrote from this album that started from a tipsy discussion about our production love for Prince.
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:17 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621618861467385859"
+                 data-text="@philip_1966 @LlSTENlNG_PARTY @hifi_mc @DavidMcalmont WOW just WOW kind of what we were trying to achieve !" data-datetime="9:17 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618680386801665"
+                 data-text="Sean loves his Omnichord. It features here as it does elsewhere on the record. 
+@HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:16 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618632512905218"
+                 data-text="#TimsTwitterListeningParty
+I love how Chandru varies on the strings in the third chorus. @HifiSean @hifi_mc" data-datetime="9:16 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618589970141185"
+                 data-text="The whole thing makes me feel like I’m ascending a mountain, which is why the video has me climbing tower block stairs. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:16 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618527869325313"
+                 data-text="Maggie K De Monde sings on this one. @HifiSean @hifi_mc #TimsTwitterListeningParty
+I think you can tell how much I love the Bee Gees too. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:15 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621618491093663745"
+                 data-text="I like to think there is a smidge of @BurtBacharach meets @_DustySpring on holiday in Mumbai on this. 
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:15 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618485028610048"
+                 data-text="I think the singing is kinda butch in the verse. @HifiSean @hifi_mc #TimsTwitterListeningParty
+I think the song is just a cycle of three killer bits. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:15 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618435980394497"
+                 data-text="I love the intro. It’s so making an entrance. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:15 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621618401322876931"
+                 data-text="@CaraDeCarlo @hifi_mc @DavidMcalmont yes. you are here !" data-datetime="9:15 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618379990728712"
+                 data-text="Trademark Sean melody. Sean write the Beautiful section for this and I did the rest. Dr Chandru Jois’ arrangement is the chorus, and I’m his backing vocal. Lol @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:15 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618330535616514"
+                 data-text="“You make me thinking the thoughts I’m trying to think when my love disappears.” @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:15 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621618056232402945"
+                 data-text="BEAUTIFUL 
+I  was a giant lobster in the video for this. 
+I nearly suffocated myself trying the costume on as I never read the instructions before.
+WARNING do not inflate this way due to suffocation.
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:14 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="105000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621618041342627840"
+                 data-text="@HifiSean @hifi_mc Ha" data-datetime="9:14 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617601045471233"
+                 data-text="“Let’s forget this age of simpletons, the little incisions. We’ll all come together until the fever breaks.” @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:12 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621617593000857602"
+                 data-text="Ohhhhh that quiet before the storm bit really gets me going. 
+I wish I was that person who hears this for the first time that does not anticipate THAT happening. 
+BOOOOOM !
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty https://t.co/xYIvuoQLAD" data-datetime="9:12 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617540249051138"
+                 data-text="This was written long before there was even a hint that life on earth was about to be disrupted by Rona, but as is the case with many a track on the album, the songs seemed to become more relevant to now. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:12 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617498444414977"
+                 data-text="I remember him showing me some titles that he’d written down when we worked on this and I basically took them and made them into the first half of the first verse. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:11 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617445084487681"
+                 data-text="Sean is a very determined retainer of his Glaswegian-ness and this is highly detectable in the way he counts the track in. @HifiSean @hifi_mc #timstwitterlisteningparty" data-datetime="9:11 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621617439145328641"
+                 data-text="@DavidMcalmont @hifi_mc awwwww thank uuuu x" data-datetime="9:11 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617401384026114"
+                 data-text="My friend Tim, a complete Billie Holiday obsessive said this is the best vocal he’d heard me do in years. @HifiSean @hifi_mc #timstwitterlisteningparty" data-datetime="9:11 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617354621714432"
+                 data-text="I was doing a Billie Holiday show at the time. @HifiSean @hifi_mc #TimsTwitterListeningParty
+It didn’t occur to me until Sean said so that I was kind of emulating Billie’s phrasing with this melody. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:11 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617292952961030"
+                 data-text="I remember hearing this for the first time and being absolutely stoked that he was capable of producing something that wouldn’t be out of place on a Mariah Carey record. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:11 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617235000270848"
+                 data-text="But remember Soup Dragons, The High Fidelity, BMX Bandits. Sean was a road-tested songwriter long before he was animating Glitterbox dancefloors. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:10 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617166637211649"
+                 data-text="Sean is well known as a DJ, so some  will have expected wall-to-wall dance anthems. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:10 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617101462020111"
+                 data-text="I can’t anticipate what it is going to land. It’s one of the things that makes the album released special. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:10 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617054942887937"
+                 data-text="I never know what kind of arrangement is coming down the pipe next. @HifiSean @hifi_mc   #timstwitterlisteningparty" data-datetime="9:10 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621617011372572675"
+                 data-text="He is not predictable at all. @HifiSean @hifi_mc   #TimsTwitterListeningParty" data-datetime="9:09 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621616966057222147"
+                 data-text="His programming is amazing. @HifiSean @hifi_mc   #timstwitterlisteningparty" data-datetime="9:09 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621616917839585280"
+                 data-text="Hifi always surprises me. @HifiSean @hifi_mc   #TimsTwitterListeningParty" data-datetime="9:09 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="84000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621616762860064768"
+                 data-text="THE FEVER
+1,2,3,4
+I love the drums on this track as it reminds me in a strange way of the Beach Boys. 
+I spent days getting these drums right. 
+Anal beats. 
+@hifi_mc @DavidMcalmont #timstwitterlisteningparty" data-datetime="9:08 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621616410890833920"
+                 data-text="@RRelves @DavidMcalmont @LlSTENlNG_PARTY @hifi_mc thank you :)" data-datetime="9:07 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621616360403992576"
+                 data-text="We are super-proud of this seven-minute epic. @HifiSean @hifi_mc   #TimsTwitterListeningParty" data-datetime="9:07 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621616309988466689"
+                 data-text="It’s utterly majestic. Well done @HifiSean @hifi_mc   #TimsTwitterListeningParty" data-datetime="9:07 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621616221140443141"
+                 data-text="“Just a melody doing what I can to find a harmony.” @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:06 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621616144938311680"
+                 data-text="The rhythm arrangement reminds me of one of my favourite album’s, Massive Attack’s Blue Lines, and I love the way the transcendent strings from Dr Chandru Jois fade in. @HifiSean @hifi_mc  #TimsTwitterListeningParty" data-datetime="9:06 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621616057579454464"
+                 data-text="Any uncontrived thought that I could capture got jotted into my smartphone Notes and I would listen to Sean’s music while scrutinising that list. I love what Sean did here. @HifiSean @hifi_mc  #timstwitterlisteningparty" data-datetime="9:06 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621616011953807366"
+                 data-text="It shows how effective what I call the Real Thoughts in Real Time process is. @HifiSean  @hifi_mc  #TimsTwitterListeningParty" data-datetime="9:06 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621615951190835200"
+                 data-text="My love for songs like Malcolm McLaren’s Waltz Darling, Siouxsie Sioux’s Kiss Them For Me and Blondie’s Rapture came out in the melody. @HifiSean @hifi_mc   #TimsTwitterListeningParty" data-datetime="9:05 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621615897465987074"
+                 data-text="I drilled the proverbial hole in the new discovery and decided that I could bring something more ethereal to what Sean had already set down. @HifiSean @hifi_mc   #TimsTwitterListeningParty" data-datetime="9:05 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621615871536910337"
+                 data-text="80 piece Bollywood orchestra for the album was recorded in Bangalore India by Dr. Chadru Jois.
+In the very same studio I visited in the late 90\'s. 
+If you want to see that studio there is a video on my YouTube page. 
+@hifi_mc @DavidMcalmont #timstwitterlisteningparty" data-datetime="9:05 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621615749944033280"
+                 data-text="I do remember that it was our last recording before the Christmas break that year, and that I had just discovered Theme From the Deep, the Donna Summer/John Barry collab. @HifiSean @hifi_mc   #timstwitterlisteningparty" data-datetime="9:04 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621615657258291201"
+                 data-text="Whatever was in place of what the song became probably would not have made title track in the original incarnation. @HifiSean @hifi_mc   #timstwitterlisteningparty" data-datetime="9:04 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621615599557173248"
+                 data-text="I forget what it was initially because this is so much better. It happened once or twice that in the long process of writing this record, I felt that I could add something better than I had before to Sean’s arrangements. @HifiSean @hifi_mc    #TimsTwitterListeningParty" data-datetime="9:04 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621615527951998976"
+                 data-text="@DavidMcalmont @hifi_mc ha ha !!! we wrote this double - omni !" data-datetime="9:04 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621615518275846144"
+                 data-text="The opening cut from the album is a rewrite. @HifiSean @hifi_mc  #TimsTwitterListeningParty" data-datetime="9:04 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621615442375708673"
+                 data-text="With the omnichord Sean gifted me @HifiSean @hifi_mc #TimsTwitterListeningParty https://t.co/HXT5DmmzTD" data-datetime="9:03 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621615422125522944"
+                 data-text="@Konn63 @DavidMcalmont it sure is :)" data-datetime="9:03 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621615335534108674"
+                 data-text="Sean and me writing Happy Ending on omnichords @HifiSean @hifi_mc https://t.co/m91wWf5ntr" data-datetime="9:03 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621615199579938819"
+                 data-text="I love to think of the album as a soundtrack to a movie that does not exist but should.
+All soundtracks start with the title track of the movie. Hence Track.1 being the album title.
+No one seems to do that anymore right ?
+@hifi_mc @DavidMcalmont #timstwitterlisteningparty" data-datetime="9:02 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621615083741667328"
+                 data-text="The intro you hear on the album was a basically a bum dial of David recording some street noise then his friend Chico walked up &amp; he accidentally recorded their discussion. 
+It had to start the album with this 7mins of bliss. 
+@hifi_mc @DavidMcalmont #timstwitterlisteningparty" data-datetime="9:02 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621614899746033668"
+                 data-text="EVERYONE READY ??? LET\'S GOOOOOOO !!! 🚀
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:01 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621614894771572738"
+                 data-text="Just so you know, Tweets, I did a blahdeblah pre-release video advent calendar for our Twitter handle about the songs @HifiSean  @hifi_mc #TimsTwitterListeningParty" data-datetime="9:01 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621614722368897028"
+                 data-text="@Tim_Burgess @HifiSean @hifi_mc Good evening Tim and Tweets. Thanks for having us. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:00 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621614705943904257"
+                 data-text="Also on our page is this the free lyric book. 
+A beautiful PDF to either read on your digital device or print out of all the lyrics with pics. 
+Made by the artist Arber .
+https://t.co/7jRmQMIAI0
+@DavidMcalmont @hifi_mc #timstwitterlisteningparty" data-datetime="9:00 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FDavidMcalmont%2Fstatus%2F1621614669382225925"
+                 data-text="Good evening Tim and Tweets. Thanks for having us. @HifiSean @hifi_mc #TimsTwitterListeningParty" data-datetime="9:00 PM Feb 3, 2023"> 
+                DavidMcalmont            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2FHifiSean%2Fstatus%2F1621614608430555138"
+                 data-text="Hiya everyone ! Before we start :) 
+Thanks for joining ‘Happy Ending’ 
+We are going to run this from the digital streaming version NOT the vinyl. 
+Vinyl has extra track. 
+If you get a chance join our new band page later
+@hifi_mc @DavidMcalmont 
+#timstwitterlisteningparty" data-datetime="9:00 PM Feb 3, 2023"> 
+                HifiSean            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1621614506395697155"
+                 data-text="Aaaaand it’s over to you @DavidMcalmont &amp; @HifiSean 
+
+Here’s to a Happy Ending 
+
+@hifi_mc https://t.co/KTeIPHkrZe" data-datetime="9:00 PM Feb 3, 2023"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
