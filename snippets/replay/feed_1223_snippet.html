@@ -1,0 +1,504 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4XKvqhpEPobqCV9Q4zfbSp" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02e3761cbead485c17769e1a0b" alt="One In A Thousand" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Obey Robots</span><br/><span class="sub-colour">One In A Thousand</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4XKvqhpEPobqCV9Q4zfbSp" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 81 tweets from Tuesday 28th February 2023 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/penfriendrocks" target="_blank"><img src="https://pbs.twimg.com/profile_images/1629927133622534151/l6ZwYbll_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/penfriendrocks.jpg'"><br/>@penfriendrocks</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/rat_ned" target="_blank"><img src="https://pbs.twimg.com/profile_images/1583420751641812994/lPdVagr2_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/rat_ned.jpg'"><br/>@rat_ned</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1611130337794396160/gSoo0C34_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Not the Quiet Type" data-start="0"
+             data-duration="226" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="One of These Days" data-start="227"
+             data-duration="184" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Elephant" data-start="412"
+             data-duration="280" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Next Summer" data-start="693"
+             data-duration="188" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Glitter to Dust" data-start="882"
+             data-duration="254" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Porcupine" data-start="1137"
+             data-duration="213" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Old Kindnesses" data-start="1351"
+             data-duration="189" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Super Connected" data-start="1541"
+             data-duration="221" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Let It Snow" data-start="1763"
+             data-duration="240" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="One in a Thousand" data-start="2004"
+             data-duration="269" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="2274"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851e3761cbead485c17769e1a0b" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-81" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630685119588577281"
+                 data-text="If we ever manage to play live I want you all singing along at the end please!!! #timstwitterlisteningparty" data-datetime="9:43 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630685050877489155"
+                 data-text="I wanted this song to feel almost relentless as it went through the alternative choruses, opening out into a triumphant, catharsis at the end. Did it work? #timstwitterlisteningparty" data-datetime="9:43 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="48000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630684873978511363"
+                 data-text="December 2019 was the last trip I took with my husband and my dogs before the pandemic started, we went to Dungeness and stood \"on the shingle, by the sea\". And then life changed...A LOT #timstwitterlisteningparty" data-datetime="9:42 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630684672022675458"
+                 data-text="This album is sitting at #5 in the midweek albums chart, and it was mostly recorded in my house, and released on my DIY label. That proves people power - we\'re nothing without you, and I hope we help each other out #timstwitterlisteningparty" data-datetime="9:41 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630684536295108608"
+                 data-text="I can\'t believe we are at the last song already... 
+
+ #TimsTwitterListeningParty" data-datetime="9:41 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630684405722169344"
+                 data-text="The title means that I\'d rather be one in a thousand than one in a million, I\'d like to live a calm and happy life, not trying to be better than anyone else. We\'re stronger together #timstwitterlisteningparty" data-datetime="9:40 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630684153753616385"
+                 data-text="One in a Thousand... This was a really odd idea at first as there are many parts and tempo changes that initially I never thought would fit together coherently... 
+Enter Laura as Producer and WOW!!!
+
+#TimsTwitterListeningParty" data-datetime="9:39 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630684144689729541"
+                 data-text="How is it the end of the album already?!!! Here\'s \"One In A Thousand\" #timstwitterlisteningparty" data-datetime="9:39 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630684016335630336"
+                 data-text="I made up another word in this song I think: unendable. You\'re welcome! :) #timstwitterlisteningparty" data-datetime="9:39 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630683771203645445"
+                 data-text="What about that solo, though? #timstwitterlisteningparty" data-datetime="9:38 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630683645378801664"
+                 data-text="I made a video for this song at the start of this year to show how we conducted the songwriting for the album ;) https://t.co/EuQLSNqjsb
+
+#timstwitterlisteningparty" data-datetime="9:37 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630683410858405892"
+                 data-text="This album only exists because of @mileshuntTWS - he introduced Rat and I in 2019 over email, and having been a lifelong fan of Milo I especially wanted to do a great job. When he said he loved \"Let It Snow\" it was a wonderful moment in my life #timstwitterlisteningparty" data-datetime="9:36 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630683287885676544"
+                 data-text="The track that started all of this. Laura messaged me and said \'look, lets get one of the ideas finished and get it out there\'... we did, and the feedback gannered was the catalyst that triggered the immortal words...\' Let\'s make an album\'... 
+
+ #TimsTwitterListeningParty" data-datetime="9:36 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630683148966150146"
+                 data-text="(because we ARE super connected) #timstwitterlisteningparty" data-datetime="9:35 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630683143228338176"
+                 data-text="\'Let it Snow\'...  Laura’s Bass Riff !!!!!!!!!
+  #TimsTwitterListeningParty" data-datetime="9:35 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630683110261104640"
+                 data-text="I think that only by being specific can we hope to connect with others - we\'ve all felt the same emotions after all, just in different scenarios #timstwitterlisteningparty" data-datetime="9:35 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630682950281879552"
+                 data-text="I don\'t know whether the meanings of the lyrics I write are obvious or not, I also don\'t like to over explain things because it\'s up to you what you take from the songs, BUT they are all about very specific things to me #timstwitterlisteningparty" data-datetime="9:34 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630682792777375749"
+                 data-text="But really, the rest of the song is about how we spend so much of our time online, supposedly connected to everyone, but sections of our society lack basic empathy for people who really need our help #timstwitterlisteningparty" data-datetime="9:34 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630682642206056448"
+                 data-text="My uncle was very sick when I wrote this chorus, and I took myself out to Clevedon Marine Lake to immerse myself in cold water and be completely disconnected from the world. It was so healing #timstwitterlisteningparty" data-datetime="9:33 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630682390371680257"
+                 data-text="\"Super Connected\" is nothing to do with @bellytheband , but I LOVE THEM VERY MUCH, and when the title popped out of the lyrics I thought it was a good friendly nod to one of the bands who got me started #timstwitterlisteningparty" data-datetime="9:32 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630682364052422661"
+                 data-text="In fact, the confidence that Laura has grown in me has pushed me all the way and I\'m so grateful for that
+
+ #TimsTwitterListeningParty" data-datetime="9:32 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630682223643881472"
+                 data-text="I have no idea if anyone is attending this party with us, but we\'ll hang out afterwards for a chat if you like :) #timstwitterlisteningparty" data-datetime="9:31 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630682209865564162"
+                 data-text="Super Connected A definite move away from the norm for me this. The confidence Laura gave me to try other things and really push myself is really evident on this track 
+
+#TimsTwitterListeningParty" data-datetime="9:31 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630682126684176384"
+                 data-text="Those guitars sound SO GREAT in the chorus! Nice work @rat_ned #timstwitterlisteningparty" data-datetime="9:31 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630681793279021056"
+                 data-text="The chorus is about how humans have such amazing potential, but we also have the ability to destroy. I prefer to make things! #timstwitterlisteningparty" data-datetime="9:30 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630681616786812928"
+                 data-text="It all made total sense at the time - I programmed the drums down to the exact beat and Max kindly reproduced it exactly for me on his kit #timstwitterlisteningparty" data-datetime="9:29 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630681487661051904"
+                 data-text="\"Old Kindnesses\" was written while I was high on the second Moderna vaccine. LOOPY #timstwitterlisteningparty" data-datetime="9:28 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630681452135297025"
+                 data-text="Old Kindnesses. The Guitar Riff in the Chorus is playing in an odd time signature, the drums Laura programmed are playing in another time signature and then there\'s that amazing Cyclic Vocal Melody that is again... in a different time signature...
+
+#TimsTwitterListeningParty" data-datetime="9:28 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630681364465950720"
+                 data-text="I wrote \"Porcupine\" and forgot to send it back to Rat for ages, so it was a fun surprise for him when I eventually did! #timstwitterlisteningparty" data-datetime="9:28 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630681167052587009"
+                 data-text="Save this link for after the party to watch \"Porcupine\" and all the other videos we created for the album https://t.co/srEmXkY5wJ #timstwitterlisteningparty" data-datetime="9:27 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630681020646187008"
+                 data-text="And we had to make a cheese and pineapple porcupine for the set  #timstwitterlisteningparty https://t.co/shBorJ171X" data-datetime="9:27 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630680980053794819"
+                 data-text="!!! This Robot will NOT Obey !!!
+
+ #TimsTwitterListeningParty" data-datetime="9:26 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630680926278516738"
+                 data-text="Rat raised the bar for all music video costumes with this creation!  #timstwitterlisteningparty https://t.co/OJscKVfR04" data-datetime="9:26 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630680723819511809"
+                 data-text="Fun Fact... We\'ve renamed the venue where we shot the video as \'Porcupine Hall\' 
+ #TimsTwitterListeningParty" data-datetime="9:25 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630680642999529473"
+                 data-text="ROBOT PARTY SONG! I learned a lot about porcupines from Wikipedia while I was writing this song!  #timstwitterlisteningparty" data-datetime="9:25 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630680634556309504"
+                 data-text="My inner child emerged making the robot costume 
+ #TimsTwitterListeningParty" data-datetime="9:25 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630680521687613440"
+                 data-text="Porcupine, Possibly the most fun every had making a video for this song. And Laura gets to sing the words Erethizontidae and Hystricidae… hats off on that one
+
+ #TimsTwitterListeningParty" data-datetime="9:25 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630680329991213060"
+                 data-text="Writing this song was incredibly upsetting, but it felt good to put my thoughts into a beautiful setting and send them off into the world  #timstwitterlisteningparty" data-datetime="9:24 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630680204535377920"
+                 data-text="Please call out hate where you see it - it\'s the only way love can win  #timstwitterlisteningparty" data-datetime="9:23 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630680036612210689"
+                 data-text="I\'d love to live in a world where people don\'t have to walk around in \"survival mode\" because some people can\'t control their violence. We just want to live our lives, and walk home in safety  #timstwitterlisteningparty" data-datetime="9:23 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630679740804743168"
+                 data-text="Time for a sad one. \"Glitter To Dust\" is about the fear of attack and murder that women carry, whether at the forefront of their minds or deeper inside. So this song is about wanting to be the last to know about my own demise #timstwitterlisteningparty" data-datetime="9:22 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630679606318473217"
+                 data-text="May be a tad self indulgent here and just listen to this song 
+
+ #TimsTwitterListeningParty" data-datetime="9:21 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630679503633514499"
+                 data-text="Glitter to Dust I struggle to listen to this song to this day without feeling incredibly emotional at the Lyrics, Strings… the whole song in fact gets me
+
+ #TimsTwitterListeningParty" data-datetime="9:21 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630679365502619648"
+                 data-text="Laura sent me the single file of those keys and I couldn\'t stop dancing to it
+
+ #TimsTwitterListeningParty" data-datetime="9:20 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630679335706279936"
+                 data-text="Rave synth nod to my faves @the_prodigy (not that these sound like them, but I was thinking of them when I programmed the parts)  #timstwitterlisteningparty" data-datetime="9:20 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630679236942917633"
+                 data-text="Dance  Time 
+#TimsTwitterListeningParty" data-datetime="9:20 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630679204273569792"
+                 data-text="We wrote the album mostly over email and occasional Zoom calls, and have probably met fewer than 10 times in person. I highly recommend this system for keeping things fun in a \"band\"! (I don\'t do bands)  #timstwitterlisteningparty" data-datetime="9:19 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630679026816671744"
+                 data-text="I try to be an optimistic person, but that was challenging at times, hence the line \"optimism can be so nauseating\" - sometimes I need to wallow in feeling awful and try again another day  #timstwitterlisteningparty" data-datetime="9:19 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630678809321123842"
+                 data-text="Yes! \"Next Summer\" is about HOPE. I was lacking it for a time there, seeing as this album was written over many lockdowns #timstwitterlisteningparty" data-datetime="9:18 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630678764148383746"
+                 data-text="Next Summer The suprise at the end of this song that Laura did!!!!
+
+ #TimsTwitterListeningParty" data-datetime="9:18 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="85000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630678622984912899"
+                 data-text="You\'re listening to \"Next Summer\" now, and my internet is buffering #timstwitterlisteningparty" data-datetime="9:17 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630678265982533632"
+                 data-text="I don\'t know if \"unbandaging\" is a real word, but I simply don\'t care  #timstwitterlisteningparty" data-datetime="9:16 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630678059203346444"
+                 data-text="@rat_ned Yeah I mostly ignored those ;)  #timstwitterlisteningparty" data-datetime="9:15 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630677973677355010"
+                 data-text="Drums were programmed to start with then 8 of the 10 were recorded by Max, the other 2 are programmed drums. Chris SHELDON mixed it for us, and completely saved the day when we had a catastrophe trying to finish stuff off #timstwitterlisteningparty" data-datetime="9:15 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630677731074514945"
+                 data-text="Will always be remembered by me for the out of time drum loops I \'repeatedly\' sent to Laura :) (sorry Laura)  #TimsTwitterListeningParty" data-datetime="9:14 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630677707729117185"
+                 data-text="All the songs came from instrumental demos Rat sent me. I cut them up and moved stuff round and changed stuff to suit the vocal melodies I was coming up with, then added bass, synths and any additional guitar on top. #timstwitterlisteningparty" data-datetime="9:13 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630677615940890624"
+                 data-text="Laura thinks my guitar sounds like an Elephant... I was hurt ... 🤣
+
+ #TimsTwitterListeningParty" data-datetime="9:13 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1630677528795922434"
+                 data-text="🙌 https://t.co/vbQTlf85r4" data-datetime="9:13 PM Feb 28, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630677333177692162"
+                 data-text="Next up is \"Elephant\" - one of my faves on the album (don\'t tell the others)! It\'s called \"Elephant\" because of a certain noise Rat makes on the guitar...and it works because of the elephant in the room subject matter #timstwitterlisteningparty" data-datetime="9:12 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630677321580441601"
+                 data-text="Elephant Started life with the working title of \'Rubik\'... why? literally just because I was staring at a Rubik Cube on my desk... better than \'Song 1\' as a title I guess 
+
+ #TimsTwitterListeningParty" data-datetime="9:12 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630677066512302087"
+                 data-text="BTW Rat and I are on a video chat right now, he\'s dancing along and I\'m singing along! We like our album very much #timstwitterlisteningparty" data-datetime="9:11 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630676898769453057"
+                 data-text="This song is about the moment the power dynamic in a relationship turns on its head - and this is my guitar solo! #timstwitterlisteningparty" data-datetime="9:10 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630676896189915142"
+                 data-text="@1969jdr It became Glitter to Dust" data-datetime="9:10 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630676869480607754"
+                 data-text="@dw_mocelet It became Glitter to Dust" data-datetime="9:10 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630676742527410183"
+                 data-text="Yes that\'s a Cranberries reference: \"no need to argue any more\" &lt;3 #timstwitterlisteningparty" data-datetime="9:10 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630676578421096448"
+                 data-text="Next up will be - yes! - \"One Of These Days\".  @rat_ned had a paranoid day where he thought I\'d written it about him!! It\'s not about him #timstwitterlisteningparty" data-datetime="9:09 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630676486351929344"
+                 data-text="The first idea I sent became \'Glitter to Dust’ #TimsTwitterListeningParty" data-datetime="9:09 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630676409466191876"
+                 data-text="With you in a sec #timstwitterlisteningparty" data-datetime="9:08 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630676376637386754"
+                 data-text="Hahahaha this is hilarious. I don\'t pay for Spotify, because...reasons, you know #timstwitterlisteningparty" data-datetime="9:08 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630676337278025729"
+                 data-text="One of These Days  almost didn\'t exist. Laura said we needed another one for the Album and I said I\'d got 2 ideas, so I sent just the one across. Laura asked for the other idea \'In case I was throwing something good away\'... that idea became this song #TimsTwitterListeningParty" data-datetime="9:08 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630676217157365761"
+                 data-text="And then we go right into...an ad! OOPS #timstwitterlisteningparty" data-datetime="9:08 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="57000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630676062026776577"
+                 data-text="Drums on this album are by the very wonderful Max Saidi: every time he does a flamboyant fill it was because I asked him to \"do something a bit silly\". #timstwitterlisteningparty" data-datetime="9:07 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630675823739928578"
+                 data-text="WAH WAH WAH #timstwitterlisteningparty" data-datetime="9:06 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630675764537327617"
+                 data-text="Wah time !!!... riff entirely triggered by Laura\'s vocal melody 
+
+ #TimsTwitterListeningParty" data-datetime="9:06 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630675711647272963"
+                 data-text="This song is for anyone who\'s tried and failed and had to drag themselves back up to try again #timstwitterlisteningparty" data-datetime="9:06 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630675535830437888"
+                 data-text="Was the first \'loud\' idea I had that I played to Laura #TimsTwitterListeningParty" data-datetime="9:05 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630675520458203137"
+                 data-text="\"Not The Quiet Type\" I found it very amusing to start an album with the word \"goodbye\" :) #timstwitterlisteningparty" data-datetime="9:05 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Frat_ned%2Fstatus%2F1630675287439548417"
+                 data-text="\'Not the quiet type\' ... This started life with the working title of... \'Song 1\'... Really let my imagination run riot when I thought of that didn’t I...
+
+ #TimsTwitterListeningParty" data-datetime="9:04 PM Feb 28, 2023"> 
+                rat_ned            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="128000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630675065871257600"
+                 data-text="Evening everyone, are we ready to press play on \"One In A Thousand\"??
+
+https://t.co/M6kt28UM72
+
+#timstwitterlisteningparty" data-datetime="9:03 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fpenfriendrocks%2Fstatus%2F1630674526332657670"
+                 data-text="@LlSTENlNG_PARTY @rat_ned Hey! I\'m in Bristol, surrounded by dogs :) #timstwitterlisteningparty" data-datetime="9:01 PM Feb 28, 2023"> 
+                penfriendrocks            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1630674182471135232"
+                 data-text="Handing over the @LlSTENlNG_PARTY controls to Obey Robots, also known as @penfriendrocks and @rat_ned https://t.co/hPS8pB1bHW" data-datetime="8:59 PM Feb 28, 2023"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
