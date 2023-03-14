@@ -1,0 +1,603 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/0OclmXNuleEKgzbkxbPcnk" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02ba671f94063bf8d9405d57e8" alt="True Entertainment" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Dutch Uncles</span><br/><span class="sub-colour">True Entertainment</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(2355468)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/0OclmXNuleEKgzbkxbPcnk" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_2355468_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 98 tweets from Tuesday 14th March 2023 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/dutchuncles" target="_blank"><img src="https://pbs.twimg.com/profile_images/1584449482661437443/5132VuQI_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/dutchuncles.jpg'"><br/>@dutchuncles</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1611130337794396160/gSoo0C34_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="True Entertainment" data-start="0"
+             data-duration="218" style="display:none"></div>
+                        <div id="track-2" class="track-list"
+                     data-name="Finished" data-start="219"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851ba671f94063bf8d9405d57e8" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-98" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635742624769363968"
+                 data-text="... \"you\'ll need it in the commital room\" A commital room is in a crematorium through which the casket goes through to after a funeral service has taken place." data-datetime="8:40 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635742620554084359"
+                 data-text="ON TO THE NEXT ONE #timstwitterlisteningparty" data-datetime="8:40 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635742517651013642"
+                 data-text="R: thank you for listening along and following our silly ramblings. Hope you enjoyed the album and hopefully see you down at the shows next month! #timstwitterlisteningparty 
+
+Lots of love,
+DU xo" data-datetime="8:39 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="68000" data-url="https%3A%2F%2Ftwitter.com%2Fpshutt41%2Fstatus%2F1635742430543708161"
+                 data-text="Big fan of @dutchuncles, great to have them back. Seen them at cluny in Newcastle back in 2017 and will hopefully catch them on next tour. #timstwitterlisteningparty" data-datetime="8:39 PM Mar 14, 2023"> 
+                pshutt41            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635742142990614528"
+                 data-text="...the line about my Grandma in verse 2 is a reference to the song Cadenza which they particularly panned and i imagine didnt listen beyond after that which was about me being a pallbearer at her funeral" data-datetime="8:38 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635742069695168512"
+                 data-text="p. Dead Letter
+
+This ending is meant to sound like the beautiful disintegation tapes by William Basinski 
+
+#timstwitterlisteningparty" data-datetime="8:37 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635742065643454492"
+                 data-text="It\'s finished!" data-datetime="8:37 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635742025462022145"
+                 data-text="Jacob Rees Prog on guitar #timstwitterlisteningparty https://t.co/MPfdue5Uai" data-datetime="8:37 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635741967949725712"
+                 data-text="It\'s not finished!" data-datetime="8:37 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1635741875536625704"
+                 data-text="Muchas gracias to @dutchuncles for all that True Entertainment 🙌" data-datetime="8:37 PM Mar 14, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635741853436837896"
+                 data-text="P. Dead Letter
+
+I tried to hard to sign a real cheesy broadway musical style call and response over this ending... They weren\'t having it. Deffo gonna do it live. I have no mic
+
+#timstwitterlisteningparty" data-datetime="8:37 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635741799695220736"
+                 data-text="R: my babies primed for some final song prog #timstwitterlisteningparty https://t.co/SOB5bPGTOA" data-datetime="8:36 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635741673475960832"
+                 data-text="A: Dead Letter
+
+Mix-wise a very dead vibe indeed. Which felt very alien to me, reverb is my friend. But the intimacy it creates for Dunc\'s vox in the mid is 8 especially is lovely." data-datetime="8:36 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635741622750117908"
+                 data-text="D: Dead Letter
+
+A Partirdge-esq last laugh at the futility of opinion, especially when discussing music (fishing about golf according to Zappa) especially when coming from places of supposedly respectable platforms. Inspired by a 5/10 review that read like a 1 from NME in 2011" data-datetime="8:36 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635741521868718091"
+                 data-text="Food was massively important during the making of True Entertainment thanks @EngancheMaxey for delivering this special curry
+
+#timstwitterlisteningparty https://t.co/GBfdKRGAL8" data-datetime="8:35 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635741508233035806"
+                 data-text="R: cheeky time sig development in those harmonising guitar parts, if you can spot them? #timstwitterlisteningparty" data-datetime="8:35 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635741207769800704"
+                 data-text="R: the final song written for the album, written with the intention of it being the final song on the album #timstwitterlisteningparty" data-datetime="8:34 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635741178153893910"
+                 data-text="THE AXES USED ON TRUE ENTERTAINMENT 
+
+@neilsft thanks Twowood Guitars for the setup 
+
+#timstwitterlisteningparty https://t.co/584Z2mF4fk" data-datetime="8:34 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635740850138349606"
+                 data-text="D: End Belief
+
+Lyrically, a song about witnessing extreme and conspiratorial opinions in someone you love." data-datetime="8:33 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635740761978281984"
+                 data-text="Shout out to the knob twiddlers @andyproudfoot and @henrybroadhead for polishing these turds
+
+#timstwitterlisteningparty https://t.co/xs0KhG55dm" data-datetime="8:32 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635740709184569357"
+                 data-text="R: it’s marimba time! #timstwitterlisteningparty" data-datetime="8:32 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635740608999424010"
+                 data-text="R: probably the song that went through the most studio-composition. Tried out a lot of daft bass lines and drum beats for the chorus, but dark disco it had to be #timstwitterlisteningparty" data-datetime="8:32 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635740385602404358"
+                 data-text="P: End Belief 
+
+Certainly listened to my fair share of Avalon-era Roxy Music during the making of this record you can certainly hear it in End Belief. Shout to @henrybroadhead on the coconuts! Still not loud enough
+
+#timstwitterlisteningparty" data-datetime="8:31 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635740270233878549"
+                 data-text="R: End Belief - working title: Tommy Ticklebury #timstwitterlisteningparty" data-datetime="8:30 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635740220892086279"
+                 data-text="A: End Belief
+
+Producer @henrybroadhead told me to play like Ronnie Vannucci from The Killers. Naturally I failed, not just then but in my whole drumming career. Also features the only marimba part on this record. #timstwitterlisteningparty" data-datetime="8:30 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635740006135332885"
+                 data-text="R: ssssh it’s the segue #timstwitterlisteningparty" data-datetime="8:29 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739956344750088"
+                 data-text="P. In Salvia 
+
+The ending interlude is actually from an ambient techno song I made called “Routine” for my alter ego @karstt__  I just muted the drums! 
+
+#timstwitterlisteningparty" data-datetime="8:29 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739860534263835"
+                 data-text="R: I wanted this synth solo to sound like it was being played on a Casio watch #timstwitterlisteningparty" data-datetime="8:29 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739852724469762"
+                 data-text="D: In Salvia
+
+God i hope we learn to play this one in time for the tour" data-datetime="8:29 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739760395255816"
+                 data-text="R: e-bow “an instrument in its own right” #timstwitterlisteningparty" data-datetime="8:28 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739726442364984"
+                 data-text="This chorus was orginally the middle 8. Well played @rodinrichards on the rejig! 
+
+#timstwitterlisteningparty" data-datetime="8:28 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739625972006934"
+                 data-text="A: In Salvia
+
+Another magical vox appearance from @annaprior adding some incredible atmosphere." data-datetime="8:28 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739469495107597"
+                 data-text="R: that drum fill tho #timstwitterlisteningparty" data-datetime="8:27 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739463530807301"
+                 data-text="Pete: In Salvia 
+
+A special song as it includes my darling wife @stephiephoenix  on Flute! It really helped to capture the electro-acoustic @metronomy  esque feelz! Thanks @annaprior for the ASMR Vox &lt;3 
+
+#timstwitterlisteningparty" data-datetime="8:27 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739407146778655"
+                 data-text="R: contrast between synthesised and acoustic instruments is central to In Salvia #timstwitterlisteningparty" data-datetime="8:27 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fstephiephoenix%2Fstatus%2F1635739279811903489"
+                 data-text="In Salvia! Flute recorded in our spare room at home with supervision from Scampi Pants Jr.
+@dutchuncles 
+#timstwitterlisteningparty https://t.co/1JAeZz3E0s" data-datetime="8:26 PM Mar 14, 2023"> 
+                stephiephoenix            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739068083445760"
+                 data-text="See previous tweet. HA!" data-datetime="8:25 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739005806411777"
+                 data-text="R: Interpol and Daft Punk backing Frankie Goes To Hollywood #timstwitterlisteningparty" data-datetime="8:25 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635739000022466563"
+                 data-text="*in search of moral consistency" data-datetime="8:25 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635738904602050575"
+                 data-text="D: Deep End
+A story of moral consistency
+Essentially starts with taking the small stand not going to Wetherspoons even for the cheap chips anymore and ends up with a smirking apathy towards a burning bin fire of a country, because frankly it deserves it." data-datetime="8:25 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635738866698125335"
+                 data-text="P. Deep End
+
+A real mash-up of a tune. Originally Inspired by Schatze @ohtis   which then went down a more 
+@Interpol  route. But it still wasn’t quite landing.
+
+#timstwitterlisteningparty" data-datetime="8:25 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635738805989769245"
+                 data-text="Back in Chorlton for the vox #timstwitterlisteningparty https://t.co/aHPkx1O0pP" data-datetime="8:24 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635738642462244900"
+                 data-text="P. Deep ENd 
+
+That was until Henry   laid down some humongous Korg Triton Horns and that was the EUREKA moment. It needs to be ridiculous like Frankie goes to Hollywood! The rest was history. 
+#timstwitterlisteningparty" data-datetime="8:24 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635738544881762305"
+                 data-text="A: Deep End
+
+A song that really started to take shape after 5 cans at 1am. The triumphant synths in the chorus made us laugh, which is only ever a good thing and the song found it’s character from then. #timstwitterlisteningparty" data-datetime="8:23 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635738500162093060"
+                 data-text="P. Deep End
+
+A real mash-up of a tune. Originally Inspired by Schatze @ohtis  which then went down a more @Interpol  route. But it still wasn’t quite landing." data-datetime="8:23 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="79000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635738485352005641"
+                 data-text="R: our archivist and long time collaborator Nick Middleton joined us in the studio and even supplied the chimes for Deep End #timstwitterlisteningparty https://t.co/cLEoZ8z4gz" data-datetime="8:23 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635738157273546777"
+                 data-text="R: at 215bpm I’m Not Your Dad is our fastest ever song #timstwitterlisteningparty" data-datetime="8:22 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="55000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635738093926973474"
+                 data-text="R: first demo for INYD arrived pretty much two years ago this week. Second duelling solo was almost a bit Steve Vai 😬 #timstwitterlisteningparty https://t.co/3jjcPPZW7E" data-datetime="8:22 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fmattcolton%2Fstatus%2F1635737863504494613"
+                 data-text="@dutchuncles Thanks, it was a blast cutting this one !" data-datetime="8:21 PM Mar 14, 2023"> 
+                mattcolton            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737832063918080"
+                 data-text="D: Im Not Your Dad
+\"A weekend 2 at a time\" should be the actual lyric d\'oh
+
+also incase you\'re wondering \"berber rugs\" are those lovely big Moroccan rugs" data-datetime="8:21 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737729169326099"
+                 data-text="Pete: A real headfuck of solo… That’s why I palmed it off to @neilsft  to play live. Don’t fuck it up mate! Hahaha 
+
+#timstwitterlisteningparty" data-datetime="8:20 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737693505159195"
+                 data-text="A: Mix-wise, this was incredibly tricky trying to blend Dunc’s very direct narrative, the Moriccone guitar and energetic beats. I gave this session long breaks to re-contextualise what the key elements were. The drums were also a pain to record! #timstwitterlisteningparty" data-datetime="8:20 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737635690872844"
+                 data-text="R: our Neil channeling his inner Johnny Greenwood here #timstwitterlisteningparty https://t.co/J5YSfl6Zfa" data-datetime="8:20 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737582230274066"
+                 data-text="D:2/2 unfortunately, when it came to recording the line got changed to \"your graceland sucks\" which makes it all far more cutting imho. Soz Dad. x" data-datetime="8:20 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737533928669199"
+                 data-text="P. I\'m Not Your Dad
+
+The one and only @neilsft tearing it up and getting nasty. This one gonna be BIG live!
+
+#timstwitterlisteningparty https://t.co/NiPGmonSSF" data-datetime="8:19 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737402588184578"
+                 data-text="D: Im Not Your Dad
+Firstly id like to apologise to my Dad for putting him right in it on this. I always told him there was a lyric to prove it wasn\'t a true telling of my emotions by saying the line \"but graceland sucks\" was clearly a lie because its one of my favourite albums1/2" data-datetime="8:19 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737398331015203"
+                 data-text="R: I was attempting to write my imagining of an Ennio Morricone space opera soundtrack here #timstwitterlisteningparty" data-datetime="8:19 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="53000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737329921847297"
+                 data-text="A: I’m Not Your Dad
+
+I was pretty blown away hearing Dunc’s lyrics for the first time on this one, some of his very best work. #timstwitterlisteningparty" data-datetime="8:19 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635737108945010704"
+                 data-text="R: key change in chorus in Exit Row definitely a tad inspired by Yellow Magic Orchestra #timstwitterlisteningparty" data-datetime="8:18 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736910424408066"
+                 data-text="R: We watched Get Back every night night in the studio and woke up the following morning thinking we were The Beatles #timstwitterlisteningparty" data-datetime="8:17 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736844234096640"
+                 data-text="D: EXIT ROW - Although YMOs early singles (Technopolis and Rydeen) were a visual and sound inspiration for this song (Their videos felt like they fit to what we were doing) I also bizarrely recall taking inspo from the chorus of Black Eyed Peas song Meet Me Halfway for this too😅" data-datetime="8:17 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736796356116499"
+                 data-text="P. Exit Row
+
+Leccy drums were made on this old beast. And it then set on 🔥 what a track  #timstwitterlisteningparty https://t.co/rk9EiSwGOr" data-datetime="8:16 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="61000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736670828986379"
+                 data-text="R: I was told several times to be “more Billy Preston” when recording the Rhodes part for Exit Row #timstwitterlisteningparty https://t.co/9IMvjFgPAY" data-datetime="8:16 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736414414315520"
+                 data-text="D: Exit Row...
+Written lyrically as a sequel to the song Nometo from our third album Out of Touch In The Wild. That song was about the sky and this one was about space and it felt like the natural sequel, and there back to the wild!" data-datetime="8:15 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736348601581582"
+                 data-text="R: Exit Row - working title: Ermagherd #timstwitterlisteningparty" data-datetime="8:15 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1635736204514656260"
+                 data-text="This is @dutchuncles’ 3rd @LlSTENlNG_PARTY - and our 1,308th @LlSTENlNG_PARTY overall 🙌" data-datetime="8:14 PM Mar 14, 2023"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736147279183914"
+                 data-text="P. Poppin\'
+
+A one point we had a vocal samples from this scene in Gentle Broncos - A bridge too far sadly
+https://t.co/PbyuTtO4GS
+
+#timstwitterlisteningparty" data-datetime="8:14 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736110646132769"
+                 data-text="D: Poppin... \"read my muppet lips\" is a reworking of a line I wrote completely on its own some years before as \"reading the lips of muppets\" it sat in the back of my notepad for about 2 years and felt rude not to force onto the album somehow." data-datetime="8:14 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736055319068674"
+                 data-text="P. Poppin\' 
+
+You can hear me talking gibberish talking about “Poppin’ to the shopps!!”
+
+#timstwitterlisteningparty" data-datetime="8:14 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635736040307654672"
+                 data-text="R: someone definitely told me to make the piano sound like David Gray #timstwitterlisteningparty" data-datetime="8:13 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735958434840599"
+                 data-text="A lot of demo sounds made the final cut including the songname! \"Poppin\' to the shops!\" Guitars, electronics and synths. 
+
+#timstwitterlisteningparty" data-datetime="8:13 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735925463416859"
+                 data-text="Pete: Poppin\'  original demo was cooked up in my pants and dressing gown during lockdown.  Ode to Talking Heads but not so obvious Weather Report… 
+
+#timstwitterlisteningparty" data-datetime="8:13 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735854726479876"
+                 data-text="R: THAT WHISTLE THO #timstwitterlisteningparty" data-datetime="8:13 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735807649628160"
+                 data-text="R: mastering Poppin’ with @mattcolton at @MetropStudios #timstwitterlisteningparty https://t.co/8qdko9rZIm" data-datetime="8:13 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735647448096768"
+                 data-text="A: Poppin’
+
+Shout out to @mattcolton who really elevated this one in mastering. Incredible job on the album as a whole, I loved watching a professional make my bedroom mixes sound so much better. #timstwitterlisteningparty" data-datetime="8:12 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735509900165142"
+                 data-text="Pete: Poppin\'
+
+The fuckin home studio rig where I concocted up stupid shit like Poppin\'
+
+#timstwitterlisteningparty https://t.co/DtCx6ltqQG" data-datetime="8:11 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fstephiephoenix%2Fstatus%2F1635735502912454659"
+                 data-text="Continuing the curse of every @dutchuncles video shoot being absolutely freezing #timstwitterlisteningparty https://t.co/cU1BsnPorh" data-datetime="8:11 PM Mar 14, 2023"> 
+                stephiephoenix            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735415314415641"
+                 data-text="Shout out to @BHarrisonMedia for his wonderful work on the video! #timstwitterlisteningparty" data-datetime="8:11 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735309315874816"
+                 data-text="R: listen out for the can of Tyskie opening up #timstwitterlisteningparty Get the drinks in" data-datetime="8:11 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735183210020886"
+                 data-text="R: recording the (party) group vocals at Airtight studios in Chorlton-cum-Hardy last year #timstwitterlisteningparty https://t.co/cphsvaQXoU" data-datetime="8:10 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635735060388216833"
+                 data-text="Pete. Tropigala 
+
+Muvva fuckin Dale Craven @henrybroadhead  in the muvva fucken House!
+
+#timstwitterlisteningparty https://t.co/zzK8xjZY4P" data-datetime="8:10 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635734791608827905"
+                 data-text="R: Tropigala (2 to 5), working title was Nugs #timstwitterlisteningparty https://t.co/sSvst1EdP4" data-datetime="8:08 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635734729084338205"
+                 data-text="A: Tropigala(2 to 5)
+The brief for the “gang” vocals was to sound like we’re having a really great time at a party. They sound so fucking awkward on their own, I didn’t print them in the stems… Luckily @annaprior added some more classy good time vibes. #timstwitterlisteningparty" data-datetime="8:08 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635734414591180800"
+                 data-text="D: \"Living for The Millstone feel\" is a reference to the pub in the Northern Quarter. Still not been there mind." data-datetime="8:07 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635734361222905858"
+                 data-text="R: any music video ideas for Damascenes? #timstwitterlisteningparty" data-datetime="8:07 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1635734106075004929"
+                 data-text="If you have doubts about Meg White’s drumming, you don’t know about music. That’s that. Next? 😉" data-datetime="8:06 PM Mar 14, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="46000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635734075506868230"
+                 data-text="R: DamaSCENES #timstwitterlisteningparty https://t.co/mtu5SRDXTN" data-datetime="8:06 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635733881285484544"
+                 data-text="R: my daughter approving the initial demo way back in early 2021 #timstwitterlisteningparty https://t.co/Mw3ugpREMk" data-datetime="8:05 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635733873387601935"
+                 data-text="This was when @rodinrichards well and truly lost it...
+
+#timstwitterlisteningparty https://t.co/9ySghI3ovB" data-datetime="8:05 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635733707675021312"
+                 data-text="A: Damascenes 
+
+There’s a spicy content alternative lyric version of this song sung by @JonathanJHiggs. But the lush BVs remain! #timstwitterlisteningparty" data-datetime="8:04 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635733448613609472"
+                 data-text="R: Pete singing “ooh la la cafe” in the studio… actually made the cut #timstwitterlisteningparty" data-datetime="8:03 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635733430628671488"
+                 data-text="Pete: When doing the group vocals. I kept getting it wrong and sang incorrectly “O lala CAFE” instead of “Parfait”… Oops. We left it there anyways. 
+
+#timstwitterlisteningparty" data-datetime="8:03 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635733255776247809"
+                 data-text="Pete: Bass synth was cooked up using this new age knock-off of the classic  TB-303. Getting in some of that classic Manc acid house sounds 
+
+#timstwitterlisteningparty https://t.co/EfftjVMMAo" data-datetime="8:02 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635733215775260703"
+                 data-text="Acid house bass baby #timstwitterlisteningparty" data-datetime="8:02 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635733058845573121"
+                 data-text="R: the view of the lovely mid-Welsh countryside in which we recorded this beast #timstwitterlisteningparty https://t.co/kqXax4yc5R" data-datetime="8:02 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="108000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635732992424390656"
+                 data-text="A - True Entertainment THE SONG
+
+Featuring @petebroadhead singing “Oo La La CAFE” instead of “Oo La La Parfait” in the BVs. #timstwitterlisteningparty" data-datetime="8:01 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fdutchuncles%2Fstatus%2F1635732540332933144"
+                 data-text="WHO\'s ready to be Truly Entertained by Dutch Uncles!? Thank you @Tim_Burgess for having us back on your wonderful @LlSTENlNG_PARTY  
+
+Sit back and get ready to delve into our 6th album a truly mesmeric piece of something
+
+#timstwitterlisteningparty https://t.co/qMSfy6Df5S" data-datetime="8:00 PM Mar 14, 2023"> 
+                dutchuncles            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1635732516991647744"
+                 data-text="OK, hi all 👋 
+
+Time for our @dutchuncles @LlSTENlNG_PARTY 
+
+Time for some True Entertainment https://t.co/DOvLDBezpj" data-datetime="7:59 PM Mar 14, 2023"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
