@@ -55,6 +55,7 @@
       </#if>
 
       <div class="card-body">
+
         <table style="width: 100%;">
           <tr>
             <td style="width:35%;text-align:left" class="font-weight-light"><a

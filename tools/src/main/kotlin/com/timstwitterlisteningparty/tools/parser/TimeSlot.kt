@@ -137,6 +137,10 @@ data class TimeSlot(val dateStr: String = "?",
     return band.isEmpty()
   }
 
+  private fun isAbsoluteRadio(): Boolean {
+    return !isEmpty() && band.contains("Absolute Radio")
+  }
+
 
   fun replayId(): String {
     if (replayLink.isNotEmpty()) {
