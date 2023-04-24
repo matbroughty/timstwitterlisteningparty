@@ -1,0 +1,500 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://soundcloud.com/adamnutterofficial/sets/badlands-on-fire/s-PffJY59Shlm?ref=clipboard&amp;p=a&amp;c=1&amp;si=0cd169de52e9467eb491f2437e2d38c5&amp;utm_source=clipboard&amp;utm_medium=text&amp;utm_campaign=social_sharing" target="_blank">                <img src="img/feed_1253.png" alt="Badlands On Fire" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Adam Nutter</span><br/><span class="sub-colour">Badlands On Fire</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 103 tweets from Monday 24th April 2023 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/nutter_adam" target="_blank"><img src="https://pbs.twimg.com/profile_images/1572822851761102848/cRunkBZM_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/nutter_adam.jpg'"><br/>@nutter_adam</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/thisismaps" target="_blank"><img src="https://pbs.twimg.com/profile_images/1626563606820147200/VbDWoVDE_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/thisismaps.jpg'"><br/>@thisismaps</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/ross_mccully" target="_blank"><img src="https://pbs.twimg.com/profile_images/1569683113118138368/Dl0AcmlI_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/ross_mccully.jpg'"><br/>@ross_mccully</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1650568163183001600/5-U2hu0h_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                </div>
+        <div id="tweet-feed-103" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-102" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650602510543998976"
+                 data-text="Thanks to @nutter_adam for sliding into my DMs 😂and @thisismaps for creating great tracks ❤️ It’s been an absolute dream for me &amp; @moombanic. Thank you everyone for your support. (Books coming soon!Promise!lol) and thank you @Tim_Burgess for putting on #TimsTwitterListeningParty" data-datetime="8:47 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-101" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650602449021837322"
+                 data-text="Love you James ❤️ @thisismaps Love you @ross_mccully ❤️ and @moombanic  ❤️
+#TimsTwitterListeningParty" data-datetime="8:47 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-100" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650602406613229583"
+                 data-text="Amazing work @nutter_adam @ross_mccully @moombanic - this has been such a pleasure, so happy with how it all turned out 😍 Huge thanks to @Tim_Burgess @LlSTENlNG_PARTY This was awesome! Thanks everyone for joining! 🙏 #TimsTwitterListeningParty" data-datetime="8:47 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-99" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650602074231414788"
+                 data-text="Thank you to everyone that has listened with us ❤️❤️❤️🙏🙏🙏😍😍😍 #TimsTwitterListeningParty" data-datetime="8:46 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-98" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1650601983869419520"
+                 data-text="@nutter_adam @ross_mccully @thisismaps 🤘" data-datetime="8:45 PM Apr 24, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-97" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650601916978569225"
+                 data-text="Thank you again to @Tim_Burgess for having us 🙏 ❤️ #TimsTwitterListeningParty @ross_mccully @thisismaps" data-datetime="8:45 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-96" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650601908371857423"
+                 data-text="Take a bow @nutter_adam you beautiful human being. Love you man ❤️ Everything about this album has been an absolute joy. #TimsTwitterListeningParty" data-datetime="8:45 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-95" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650601838066933767"
+                 data-text="Love the fadeout on this - really gives a sense of ‘to be continued…’ and I’m here for it. Anyone else?
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:45 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-94" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650601642771750937"
+                 data-text="Great chorus. Another banger live.
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:44 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-93" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650601620130897924"
+                 data-text="Visit https://t.co/moQCXGPfOl Every single physical purchase helps massively to support this project. It is entirely DIY. I really appreciate every single order. I really hope youve enjoyed Badlands On Fire. Thank you @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:44 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-92" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650601509753593856"
+                 data-text="I can\'t thank @thisismaps enough for working with me on this album 🥰🥰🥰😍😍😍 and @ross_mccully brought the music to life with his art #TimsTwitterListeningParty @thisismaps" data-datetime="8:44 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-91" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650601485854470144"
+                 data-text="Salvation - Key change! Love those moments. @nutter_adam #TimsTwitterListeningParty" data-datetime="8:43 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-90" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1650601378627067908"
+                 data-text="A huge thanks to @nutter_adam for stopping by The @LlSTENlNG_PARTY tonight - an honour to help take the album to a wider audience. That’s what we’re all about x x" data-datetime="8:43 PM Apr 24, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-89" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650601241234251779"
+                 data-text="Salvation - Feels so cathartic, so emotional - @nutter_adam taps into a deep place man. @ross_mccully #TimsTwitterListeningParty" data-datetime="8:42 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-88" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650600991350222848"
+                 data-text="A guitar hook of champions  
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:41 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-87" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650600715901976577"
+                 data-text="Salvation - Think the Beacons of Gondor - only not.
+#badlandsonfire
+#TimsTwitterListeningParty https://t.co/KUJwIgoVhb" data-datetime="8:40 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-86" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650600695504969743"
+                 data-text="Love the drums on this one 🔥🔥 It slams in!!!! #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:40 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-85" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650600542719057951"
+                 data-text="Into The Dust - These are some grooves. I love the way everything slotted together in this one. Felt like me and @nutter_adam were jamming in the same room 😍 #TimsTwitterListeningParty" data-datetime="8:40 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-84" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650600474377068566"
+                 data-text="Salvation. Absolutely love this one.  Another skyscraper! I love creating melodies and music. Maps production, absolutely amazing. I love how the chorus kicks in. By this point me and James were so in tune with each other @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:39 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-83" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650600201067831298"
+                 data-text="Limited Edition Digital Pressing of the album is available through @serenade__co Only 50 of these in existence. Badlands Live from The Cellar Of Dreams comes as a reward. This album sounds immense Live https://t.co/52SdVDg4dr @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:38 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-82" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650600028837126163"
+                 data-text="Another emotional release!!! Into The Dust ✨️✨️✨️✨️ #TimsTwitterListeningParty @ross_mccully @thisismaps" data-datetime="8:38 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-81" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650599914550730778"
+                 data-text="@nutter_adam @ross_mccully Same here my friend! 😍 #TimsTwitterListeningParty" data-datetime="8:37 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-80" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650599670035390499"
+                 data-text="Into The Dust - I love these riffs! @nutter_adam This is one of my fave paintings of yours as well @ross_mccully 😍 #TimsTwitterListeningParty" data-datetime="8:36 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-79" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650599563596537863"
+                 data-text="I love how hypnotic this whole track is. The verse guitar riff is another of my favourites to play, the chorus groove is absolutely fierce!! I love the arpeggio cascades on this verse riff. The chorus is very very cool 😎🔥🔥 @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:36 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650599455442214934"
+                 data-text="Making this album was some of the most creative fun I\'ve ever had!! So lucky to work with such talent 🔥🔥❤️❤️ #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:35 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650599160364539909"
+                 data-text="Now this is chilled as ^^^^ ❤️❤️🔥🔥 
+#TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:34 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650599145797722130"
+                 data-text="Into the Dust - An unusual colour palette for me. But it’s what the track made me think of - home and Scotland somehow. Definite Knopfler vibes.
+#badlandsonfire
+#TimsTwitterListeningParty https://t.co/PAgrvxr8ZA" data-datetime="8:34 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650598933989564432"
+                 data-text="\"Into The Dust\", the relaxed calm after a storm. Riding back into town, like some old western. Coming home from a long journey, one of triumph. This whole album is an emotional journey. It has made me a better person ❤️❤️ @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:33 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650598878138314753"
+                 data-text="The static sounds were to create a feeling of electricity, @nutter_adam a feeling of being connected to everything. @ross_mccully #TimsTwitterListeningParty" data-datetime="8:33 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650598756419526656"
+                 data-text="I want to do more live shows!!! 😍😍😍 #TimsTwitterListeningParty" data-datetime="8:33 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="36000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650598521798533155"
+                 data-text="So pretty this melody #TimsTwitterListeningParty" data-datetime="8:32 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650598370040225805"
+                 data-text="@nutter_adam @ross_mccully Remember the Terminator 2: Judgement Day reference?! 😀 #TimsTwitterListeningParty" data-datetime="8:31 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="41000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650598295675215894"
+                 data-text="Crystal delays 👌👌 #TimsTwitterListeningParty" data-datetime="8:31 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650598122295271458"
+                 data-text="Such a beautiful place this track ❤️❤️❤️ #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:30 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650597966405615616"
+                 data-text="TLDOTL - @nutter_adam guitar work on this felt so orchestral, it really lent itself to the glockenspiel and percussive elements. #TimsTwitterListeningParty" data-datetime="8:29 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="67000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650597936646987794"
+                 data-text="I heard children laughing in my head when I wrote this. Can you hear them in the background... they are there #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:29 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650597655247036416"
+                 data-text="The Last Dance Of The Light, beautiful. Another one where the title came instantly. Fairy\'s dancing in a glade. The point of happiness everyone should experience. Every title felt perfect for each track, especially this @thisismaps @ross_mccully
+#TimsTwitterListeningParty" data-datetime="8:28 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650597650629107712"
+                 data-text="The Last Dance of the Light - I have a real soft spot for this one. Both as art and as a track.
+#badlandsonfire
+#TimsTwitterListeningParty https://t.co/1Bx35M5uRu" data-datetime="8:28 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650597541958787112"
+                 data-text="The Last Dance Of The Light.. \"So uplifting it could cause vertigo\" I love this quote from a review of the album 😍😍 Absolutely perfectly sums up this piece of music. Practically impossible to play too. I\'m always doing that @ross_mccully @thisismaps #TimsTwitterListeningParty" data-datetime="8:28 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650597382726230021"
+                 data-text="Skyfires - I think we can all agree that @nutter_adam is a guitar genius can\'t we 😍 #TimsTwitterListeningParty" data-datetime="8:27 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650597276639698958"
+                 data-text="The outro on Skyfires is utter Chefs kiss @nutter_adam @thisismaps 
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:27 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650597169479426066"
+                 data-text="A Sun bed for the soul ✨️🔥❤️ #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:26 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650597136935821326"
+                 data-text="Skyfires - Everything about this track was about looking upwards into the stratosphere. The big tom fills really worked with Adam\'s guitars on this 🥁 #TimsTwitterListeningParty" data-datetime="8:26 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650596756051091458"
+                 data-text="Buying a vinyl or cd is the best way to support this album!! There are also incredible art prints, t-shirts, test pressings and the awesome project book! Available from my @TownsendMusicUK store https://t.co/moQCXGPfOl @thisismaps @ross_mccully #TimsTwitterListeningParty https://t.co/OsI83llEig" data-datetime="8:25 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650596534998773760"
+                 data-text="Skyfires - Adam\'s melodies are so emotional, they connected with me so much. It was such a joy to work with him 😍 #TimsTwitterListeningParty" data-datetime="8:24 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650596505948921860"
+                 data-text="Such a massive tune!!! Skyfires 🔥🔥🔥 #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:24 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650596470691594240"
+                 data-text="Skyfires Live is something else.HUUUGE SOUND.
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:23 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650596270862376965"
+                 data-text="Skyfires - The hardest out the lot for me to complete. Many an abandoned canvas. The brightest thing I’ve ever done by some margin. Another one that seems to have become a bit of a favourite.
+#badlandsonfire
+#TimsTwitterListeningParty https://t.co/II7k3fR8yd" data-datetime="8:23 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650596270342299649"
+                 data-text="Skyfires - This tune is a tiny bit massive! #TimsTwitterListeningParty" data-datetime="8:23 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650596187689328695"
+                 data-text="This one feels like tearing a hole in the sky and letting heaven rain down. I get very emotional whenever I listen to the album. It makes me so alive and full of pride. The canvass for this is insane. Biggest selling print too @ross_mccully @thisismaps #TimsTwitterListeningParty" data-datetime="8:22 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650595981329682432"
+                 data-text="Skyfires, a massive sky scraping landscape of euphoria!! Adore this one. Powerful and uplifting. Pure celebration. Even though no lyrics or vocals, I think the emotions I\'m trying to convey are completely self evident @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:22 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650595935775346688"
+                 data-text="Endless Summer - Filter-y drums made with this thing which I fiddled around with #TimsTwitterListeningParty https://t.co/bepnTl12hW" data-datetime="8:21 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="73000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650595771119443991"
+                 data-text="This tune makes me so happy! ❤️❤️❤️ #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:21 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650595465862299648"
+                 data-text="Endless Summer - Adam mentioned how important the groove was on this one, it was all there in the guitar parts - everything I did was just jamming along with the vibe #TimsTwitterListeningParty" data-datetime="8:20 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650595297754488865"
+                 data-text="The bridge sections are utterly magical #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:19 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650595114421477377"
+                 data-text="Good groove. good times.
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:18 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650595030766174209"
+                 data-text="Such a laid back groove on that chorus!! #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:18 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650595002748117011"
+                 data-text="Endless Summer - It was actually sunny EVERY DAY while working on this track (imagine that!) I think it definitely seeped into the sound of the track ☀️ #TimsTwitterListeningParty" data-datetime="8:18 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650594881113301021"
+                 data-text="Endless Summer - A simple idea. The track made me think of late night camping on the beach in Scotland and I went with it.
+#badlandsonfire
+#TimsTwitterListeningParty https://t.co/7s6aJnpOol" data-datetime="8:17 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650594809843789824"
+                 data-text="Endless Summer is so beautiful 🥰🥰🥰 #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:17 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650594731703803917"
+                 data-text="Love the synth outro @thisismaps 
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:17 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650594598081667101"
+                 data-text="With Dreamtwister, Timefall and Badlands written, Endless Summer was next. Completely inspired by the creative snowball that had started. Pure joy. With the most infectious feel good summer groove. My favourite to play live 🔥 @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:16 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650594509808345118"
+                 data-text="Not many of limited digital pressings left! Get involved with this super collectable version of Badlands On Fire. Unique artwork, album voice notes and the Live from The Cellar Of Dreams performance https://t.co/52SdVDg4dr @thisismaps @ross_mccully #TimsTwitterListeningParty https://t.co/XJtFZOVQt6" data-datetime="8:16 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650594507769913349"
+                 data-text="Badlands On Fire - Arpeggios are your friend 🎶 #TimsTwitterListeningParty" data-datetime="8:16 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650594371354361857"
+                 data-text="Badlands On Fire - @ross_mccully artwork is just spellbinding, it floored me when I saw the paintings 😍 #TimsTwitterListeningParty" data-datetime="8:15 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650594144249585673"
+                 data-text="Here we go!! #TimsTwitterListeningParty" data-datetime="8:14 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650594007997620226"
+                 data-text="@moombanic has just reminded me that I spent time painting this outside too. Only time I have ever done that but it was our annual two days of Scottish Summer sun 😂
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:14 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650594003631349761"
+                 data-text="The first painting @ross_mccully did was Dreamtwister. I leapt out of my chair the first time I saw it. He perfectly understood the vibe of the music and created something spellbinding and mesmeric. It is absolutely perfect @thisismaps #TimsTwitterListeningParty" data-datetime="8:14 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="69000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650593998224932864"
+                 data-text="Badlands On Fire - Adam\'s guitar riffs are insane, I had so much fun trying to play them on synths 😁 #TimsTwitterListeningParty" data-datetime="8:14 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650593709002465286"
+                 data-text="The build on this one is pure 🔥🔥🔥🔥❤️❤️❤️❤️ wait for it!! So emotional. It really soars!!!! #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:13 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650593679201935364"
+                 data-text="Badlands On Fire - We were on a roll now, Adam sent me more parts to work with - and the sessions took on a life of their own 😁 82 tracks in this one #TimsTwitterListeningParty https://t.co/pNWq2o2FXu" data-datetime="8:12 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650593356320219149"
+                 data-text="This was the piece of art I was most anticipating! I knew it was the title track, therefore the canvass would be the front cover. The painting that @ross_mccully did is truly iconic. In my eyes it is the greatest album cover ever! Seriously @thisismaps #TimsTwitterListeningParty https://t.co/Evdloe09Q2" data-datetime="8:11 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650593339182293016"
+                 data-text="Badlands on Fire - Something happened here which I can’t explain but the whole thing just ‘clicked’ on this one. Then on in the outpouring of colour continued across the rest of the collection. it’s the Daddy at 75cm x 75cm.
+#badlandsonfire
+#TimsTwitterListeningParty https://t.co/RJ7YwoYdfn" data-datetime="8:11 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2FSusannaHoffs%2Fstatus%2F1650593304076247040"
+                 data-text="I\'ll always love recounting the day @prince invited me to the studio to pick up a song  from him 💜 https://t.co/PorvS3ofOa" data-datetime="8:11 PM Apr 24, 2023"> 
+                SusannaHoffs            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650593245296992264"
+                 data-text="@ross_mccully Me too!! 😁 #TimsTwitterListeningParty" data-datetime="8:11 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1650593239236222986"
+                 data-text="❤️❤️❤️❤️
+
+Love this… https://t.co/ijB7Jy5N4K" data-datetime="8:11 PM Apr 24, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650593133934133248"
+                 data-text="Badlands On Fire. The title came to me as soon as I finished it. It slapped me in the face. I knew instantly I\'d found the title for the album and this incredible track. This is setting fire to the past and watching it burn🔥 @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:10 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650592966929526785"
+                 data-text="Timefall - The pianos bounce off his riffs perfectly. I love the scope of this track, it\'s massive #TimsTwitterListeningParty" data-datetime="8:10 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650592950491938822"
+                 data-text="Such a haunting melody #TimsTwitterListeningParty @thisismaps @ross_mccully" data-datetime="8:10 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650592845479157760"
+                 data-text="Here are some behind the scenes pictures from the Dreamtwister video shoot. We had such an amazing time, and i hadn\'t seen the sea in a very long time. It\'s the perfect setting for the piece of music it is set to ❤️❤️🔥🔥 @thisismaps @ross_mccully #TimsTwitterListeningParty https://t.co/BXvqK4VjOf" data-datetime="8:09 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650592689069367330"
+                 data-text="Timefall - Adam\'s phenomenal guitar playing is both intimate and huge. It gives me shivers.  #TimsTwitterListeningParty" data-datetime="8:08 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650592615853617152"
+                 data-text="Love me some Drum reverb ❤️ @thisismaps 
+#TimsTwitterListeningParty" data-datetime="8:08 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650592572203474951"
+                 data-text="\"Badlands On Fire\" is available to buy on Vinyl, Cd from my @TownsendMusicUK store https://t.co/moQCXGPfOl Also, a limited edition of 50 digital pressings from @serenade__co is available here https://t.co/52SdVDg4dr @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:08 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="82000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650592478171475972"
+                 data-text="Timefall is absolutely massive!!! 🔥🔥🔥🔥🔥😍😍😍😍 The atmospheric vibes are off the scale!!! @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:08 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="26000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650592132204208132"
+                 data-text="I went upto the beautiful Helensburgh to stay with @ross_mccully @moombanic and Theo to make the video. It was an amazing experience. It was also the first time I got to see the entire collection of art in the flesh. @thisismaps #TimsTwitterListeningParty https://t.co/au0u2N4Uqb" data-datetime="8:06 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650592022028333056"
+                 data-text="Timefall- One of the most unusual compositions for me. Seems to be developing into a favourite judging by the feedback so far art wise.
+#badlandsonfire
+#TimsTwitterListeningParty https://t.co/r0d4s61JlW" data-datetime="8:06 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650591942885908499"
+                 data-text="...@thisismaps really worked his sonic skyscraping magic on Timefall. With Dreamtwister and then Timefall, I knew this record had an incredible foundation to build the record around! James could tell exactly how I wanted it to sound @ross_mccully #TimsTwitterListeningParty" data-datetime="8:06 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650591881296748559"
+                 data-text="I’ll never forget the absolute terrifying 5 minutes of silence after sending @nutter_adam the first picture. Staring at it until it said ‘read’ :D
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:05 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="27000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650591799923073024"
+                 data-text="@ross_mccully I\'ll copyright that now please 😁 #TimsTwitterListeningParty" data-datetime="8:05 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650591689034047488"
+                 data-text="Timefall!!! ❤️ The main riff/melody for this is something I\'ve had for a long time! When I decided I wanted to make this album, this was one of the first things I thought of. The track listening is the order they were written @thisismaps @ross_mccully #TimsTwitterListeningParty" data-datetime="8:04 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="15000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650591556955521024"
+                 data-text="The melody of this just stays in your brain. Forever.
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:04 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650591493885665298"
+                 data-text="Announced in November with the Dreamtwister video. @ross_mccully directed with @moombanic. Starring Theo McCully. Theo\'s joyfully innocence perfectly captures the whole sentiment of Dreamtwister. Hope, rebirth. https://t.co/kCcSM0KoWW @thisismaps #TimsTwitterListeningParty" data-datetime="8:04 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650591480501661698"
+                 data-text="Adam had the idea of making the drums sound less like drums and more like a heartbeat, it gives Dreamtwister a really human feel - and taps into the sense of rebirth #TimsTwitterListeningParty" data-datetime="8:04 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650591314004660224"
+                 data-text="Love @thisismaps use of the ‘wave sweep’ as I have christened it! Hence the use of waves in the video" data-datetime="8:03 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1650591171335405568"
+                 data-text="@nutter_adam @LlSTENlNG_PARTY @thisismaps @ross_mccully 🤘" data-datetime="8:02 PM Apr 24, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="44000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650591151005609985"
+                 data-text="Producer and sonic wizard @thisismaps will also be tweeting along with us tonight. The amazing James Chapman agreed to work with me after I tweeted that I wanted to work with someone with a love of beats and ambience. @ross_mccully #TimsTwitterListeningParty https://t.co/ZSQkJkoZhL" data-datetime="8:02 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650590964568694791"
+                 data-text="Ross painted a canvass for each track. Very pleased to say @ross_mccully will be tweeting along with us tonight. Showing off his incredible work. The art is integral to the overall concept and project  @thisismaps #badlandsonfire #TimsTwitterListeningParty https://t.co/QbSH3BoWVi" data-datetime="8:02 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="21000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650590948332535808"
+                 data-text="Dreamtwister - The first painting completed for the project. Fun fact 5,451: There exists a proto-version of this that didn’t make the cut. This tweet gets 100k likes I will show it. Maybe. Probably not. :D
+#badlandsonfire
+#TimsTwitterListeningParty https://t.co/EY6WJoDo3n" data-datetime="8:02 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fthisismaps%2Fstatus%2F1650590861770498051"
+                 data-text="Dreamtwister - this is the riff that started it all ❤️ #TimsTwitterListeningParty" data-datetime="8:01 PM Apr 24, 2023"> 
+                thisismaps            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650590779344035861"
+                 data-text="Dreamtwister was the first thing I wrote on guitar in over 10 years. Having not played for more than a decade, this melody just seemed to flow effortlessly out of my fingers. I fell in love with it instantly. @ross_mccully @thisismaps #TimsTwitterListeningParty" data-datetime="8:01 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fnutter_adam%2Fstatus%2F1650590678508773398"
+                 data-text="This whole album is a celebration. An uplifting experience. An explosion of joy light and colour. Entirely instrumental. Each track tells an emotional story, with sound, sky scraping melodies and sonic beauty. @ross_mccully @thisismaps #TimsTwitterListeningParty" data-datetime="8:00 PM Apr 24, 2023"> 
+                nutter_adam            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fross_mccully%2Fstatus%2F1650590585667854340"
+                 data-text="*coughs* Hello? Testing. Testing. one.twooooo.
+
+#badlandsonfire
+#TimsTwitterListeningParty" data-datetime="8:00 PM Apr 24, 2023"> 
+                ross_mccully            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1650590461663256591"
+                 data-text="It’s over to @nutter_adam with his guests, album producer 
+@thisismaps plus artist 
+@ross_mccully 
+
+ Badlands On Fire https://t.co/XN0x6lmLrK" data-datetime="8:00 PM Apr 24, 2023"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
