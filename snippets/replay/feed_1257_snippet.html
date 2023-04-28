@@ -1,0 +1,601 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/4hSyXqerDLeh0aXs2Kdqyt" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e025c6163e6aaaa3688d1480d1a" alt="Nocturne" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Manny Noir</span><br/><span class="sub-colour">Nocturne</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates()" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/4hSyXqerDLeh0aXs2Kdqyt" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour__snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 79 tweets from Friday 28th April 2023 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/_____N0IR" target="_blank"><img src="https://pbs.twimg.com/profile_images/1642874121825538048/GGJibgM3_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/_____N0IR.jpg'"><br/>@_____N0IR</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/ensemblepsych" target="_blank"><img src="https://pbs.twimg.com/profile_images/1179712436703825922/A7btHp8H_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/ensemblepsych.jpg'"><br/>@ensemblepsych</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1650568163183001600/5-U2hu0h_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td></tr><tr style="background-color:transparent">                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Light One, Burn One" data-start="0"
+             data-duration="162" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Walk in the Dark" data-start="163"
+             data-duration="178" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="What Is It Like to Be a Bat?" data-start="342"
+             data-duration="147" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Where Were You..." data-start="490"
+             data-duration="208" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Goodbyes" data-start="699"
+             data-duration="197" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="In a Mare (Interlude)" data-start="897"
+             data-duration="105" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="TILLIDIE" data-start="1003"
+             data-duration="177" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="SPIN THE COUPE" data-start="1181"
+             data-duration="125" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Skunk" data-start="1307"
+             data-duration="180" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Let the Love In" data-start="1488"
+             data-duration="151" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="1640"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048515c6163e6aaaa3688d1480d1a" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-79" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-78" style="display:none;font-size:smallest" data-delay="126000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652048231226810375"
+                 data-text="Thank you!!!!! 🫡🫡🫡 https://t.co/aEc1R55hTw" data-datetime="8:32 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-77" style="display:none;font-size:smallest" data-delay="90000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1652047703965048848"
+                 data-text="Big thanks to 
+@_____N0IR &amp; @ensemblepsych for tonight’s @LlSTENlNG_PARTY  🤘" data-datetime="8:30 PM Apr 28, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-76" style="display:none;font-size:smallest" data-delay="63000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652047323390681114"
+                 data-text="🤣🤣🤣 i’m like Jay Z telling Timbaland he ain’t got no bounce 
+
+Knowing fully well shit bouncing https://t.co/w9OyBlMiuv" data-datetime="8:29 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-75" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652047059086721024"
+                 data-text="@ensemblepsych 🙏🏾🙏🏾" data-datetime="8:28 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-74" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652046827762360320"
+                 data-text="Let the love in for all da mandem tryna make out their ends , don’t ever late the hate or lack of love absorb you , remember to never take life for granted and always “Aim for the sky” 
+
+Love ! 
+
+ #TimsTwitterListeningParty" data-datetime="8:27 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-73" style="display:none;font-size:smallest" data-delay="19000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652046765762158594"
+                 data-text="Last tweet!
+Much love to @_____N0IR always.
+Thank you @LlSTENlNG_PARTY for the opportunity.
+Thank you @trevorjofficial for the ridiculous support.
+All attention will eventually die, but great art lasts forever.
+On that note - I’m out! ✌️
+#TimsTwitterListeningParty" data-datetime="8:26 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-72" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1652046688041721857"
+                 data-text="@ensemblepsych @LlSTENlNG_PARTY Absolutely loved it!  Your production is amazing!" data-datetime="8:26 PM Apr 28, 2023"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-71" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652046680907194383"
+                 data-text="To be honest, I don’t have much to say about the beat for “Let the Love In”. It’s just GOD LEVEL FIRE. In that case, I suggest to anyone seeing this to check the music video. Shout out to Marlon Francis for the visuals. Here: https://t.co/GtfZ8O2mD6
+#TimsTwitterListeningParty" data-datetime="8:26 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-70" style="display:none;font-size:smallest" data-delay="65000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652046632924467200"
+                 data-text="Before I go - big up to my man Spruce who shot the artwork as well as all the other photographs we used for this project. I think they capture the atmosphere of the album perfectly. Here are some other sick pieces by Spruce. #TimsTwitterListeningParty https://t.co/V8ZNmoFJsw" data-datetime="8:26 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-69" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652046359770308610"
+                 data-text="@nightvisional Trust me !!" data-datetime="8:25 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-68" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1652046352711385088"
+                 data-text="\"I used to battle with my demons, now we like to dance\".  
+
+YES @_____N0IR @ensemblepsych #TimsTwitterListeningParty" data-datetime="8:25 PM Apr 28, 2023"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-67" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652046350739972119"
+                 data-text="When Manny and I reunite for album number two, I wanna go experimental, full steam ahead. “Nocturne” was an (intentionally) reserved album by my standards. I wanted it to be as digestible as possible, because I am convinced that Manny is a STAR!!!! #TimsTwitterListeningParty" data-datetime="8:25 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-66" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652046275226009600"
+                 data-text="Let the Love In - 
+
+The light at the end of a VERY dark tunnel, Let the love in will always hold a special place in my heart. it\'s something I try to practice everyday ... it\'s hard to believe in love in a world full of hate.
+
+#TimsTwitterListeningParty" data-datetime="8:25 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-65" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652046231432994834"
+                 data-text="Last track! Yo, this was so much fun! Loved revisiting this album. I am truly honoured to have produced a full length for Manny Noir, an impeccable and one of a kind writer. #TimsTwitterListeningParty" data-datetime="8:24 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-64" style="display:none;font-size:smallest" data-delay="12000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652046074830266386"
+                 data-text="My boy jaso played the guitar on “Skunk”! Go check out his album “the red orb!”. I was just thinking the other day how crazy it is that we dropped “Nocturne” and “the red orb!”, two undeniable UK CLASSICS, in the same year. 🤯 #TimsTwitterListeningParty" data-datetime="8:24 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-63" style="display:none;font-size:smallest" data-delay="54000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652046023714283539"
+                 data-text="Let The Love In - 
+
+\" I\'M TRYNA LET THE LOVE IN (TRYNA LET THE LOVE IN) 
+
+BUT IT\'S HARD IN THIS WORLD FULL OF SIN WHEN YOU SEE MAN MOVING SO CYNICAL. \" 
+
+#TimsTwitterListeningParty" data-datetime="8:24 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-62" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652045797330939904"
+                 data-text="Skunk sounds like my thoughts before I cry 
+
+ #TimsTwitterListeningParty" data-datetime="8:23 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-61" style="display:none;font-size:smallest" data-delay="24000" data-url="https%3A%2F%2Ftwitter.com%2Fnightvisional%2Fstatus%2F1652045680419164161"
+                 data-text="@_____N0IR she really is the goat! her vocals are some of the best I\'ve ever heard" data-datetime="8:22 PM Apr 28, 2023"> 
+                nightvisional            </div>
+                        <div id="tweet-feed-60" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fnightvisional%2Fstatus%2F1652045579512582144"
+                 data-text="@_____N0IR sign of the times cause this road hasn\'t been easy 💯" data-datetime="8:22 PM Apr 28, 2023"> 
+                nightvisional            </div>
+                        <div id="tweet-feed-59" style="display:none;font-size:smallest" data-delay="10000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652045562949017606"
+                 data-text="For “Skunk”, I initially envisioned a chorus/hook heavily inspired by Three 6 Mafia. However, at some point I started pressing buttons randomly and ended up with the final (more unique) result. Love it when that happens. #TimsTwitterListeningParty" data-datetime="8:22 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-58" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652045520360054800"
+                 data-text="Skunk - 
+
+song speaks for itself , Love to Jaso for the extra guitar composition at the end , took this track to a whole new level / dynamic. 
+
+This songs about dealing with addiction &amp; decaying friendships
+
+#TimsTwitterListeningParty" data-datetime="8:22 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-57" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652045496049868833"
+                 data-text="That’s my guy Pat Cain of Model Home on the intro to “Skunk”! Go check out Model Home’s WHOLE discography if you’re unaware. Legendary shit. Much love to NAPPYNAPPA as well. We make music under the name PSYCHE NAH. #TimsTwitterListeningParty" data-datetime="8:21 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-56" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652045398670712867"
+                 data-text="EVERY DAY ! https://t.co/0oPiONFPrQ" data-datetime="8:21 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-55" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652045275014242311"
+                 data-text="YOOOOO @EASPORTS 
+
+PUT THIS ON A RACING SOUNDTRACK ! PLEASE ! 🙏🏾😔
+
+#TimsTwitterListeningParty 
+
+https://t.co/CP7OScfsaE" data-datetime="8:21 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-54" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652045268697894912"
+                 data-text="had something to prove on this track , certain man think i\'m just a poetry writing , boom bap , conscious rapper.  had to show man I can Rap for bants too.
+
+I\'m Top 5 #DeadorAlive
+
+certain man still don\'t get it tho,  they will one day ha. 
+
+#TimsTwitterListeningParty https://t.co/cbGB6ESBdX" data-datetime="8:21 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-53" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652045268685291520"
+                 data-text="Spin The Coupe - 
+
+This is dat Need for speed hot pursuit music , I NEED this in a racing game @EASPORTS  HOLLA ME ! PLEASE ! 
+
+#TimsTwitterListeningParty https://t.co/69yr4aYwMr" data-datetime="8:21 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-52" style="display:none;font-size:smallest" data-delay="47000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652045216310763521"
+                 data-text="“She loves the style because ARCHIVES is on the chest”! Manny references the clothing store ARCHIVES on “SPIN THE COUPE”. His friends run it. I supported them recently and was impressed with their attention to detail!
+See here: https://t.co/ks1t7PB7tB
+#TimsTwitterListeningParty" data-datetime="8:20 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652045017370730526"
+                 data-text="&amp; SHE SAYS SHE LOVES THE STYLE
+
+IT\'S ARCHIVES ON DA CHEST.
+
+#TimsTwitterListeningParty" data-datetime="8:20 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="14000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652045016934522880"
+                 data-text="Spin the coupe -  
+
+Now this right here is in my top 5 songs I ever made. inspired by the Everything Is Psychdelic project Tony &amp; Psych made, specifically track called \"Kweff\"  I knew I had to match that energy and come w sumn gully. 
+
+#TimsTwitterListeningParty" data-datetime="8:20 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652044957962608664"
+                 data-text="“AND EVERYONE THINKS I’M HIGH AND I AM. AND EVERYONE THINKS I’M HIGH AND I AM”! This intro to \"SPIN THE COUPE\" right here is why I am the illest. The movie this is from is excellent. Interested and trusted film buffs can DM me for more info. 😂🤫 #TimsTwitterListeningParty" data-datetime="8:19 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652044772654063636"
+                 data-text="The initial plan was to somehow merge nwakke’s vocals with the main loop for “TILLIDIE”. However, all the arrangements I came up with were too busy. Plus, the vocals were so good that they were more appropriate for a guest appearance. #TimsTwitterListeningParty" data-datetime="8:19 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="92000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652044649131810834"
+                 data-text="I am such a fan of nwakke and am forever grateful for the guest vocals on “TILLIDIE”. What a crucial moment on “Nocturne”! Also, shout out to aloisius for sneaking this song into one of their sessions - they are frequent collaborators, you see. #TimsTwitterListeningParty" data-datetime="8:18 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652044262991601664"
+                 data-text="“TILLIDIE” was the last song we made for “Nocturne”. By that time we had gone through about 200 beats. Manny is easily the most selective beat picker I have ever worked with. (For the avoidance of any doubt, this is a compliment of the HIGHEST LEVEL!) #TimsTwitterListeningParty" data-datetime="8:17 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652044262173712395"
+                 data-text="\" I SAW THE SIGNAL IN THE SKY , I FEEL LIKE THE CITY NEEDS ME ! \"
+
+this tune is soo gas cause it\'s the first ever official Nwakke appearance &amp; I\'m privileged to have that feautre she\'s the GOAT! https://t.co/85kofNJm1Z" data-datetime="8:17 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652044251323047952"
+                 data-text="Poetry has become a fixation of mine , I think lyrics and words &amp; how they are constructed , strung together are so important to me 
+
+#TimsTwitterListeningParty" data-datetime="8:16 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="34000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652044156208816146"
+                 data-text="The few seconds of silence at the end of “IN A MARE (Interlude)” were intentional. Manny was spitting too crazy. I had to give the people a moment to contemplate and catch up. #TimsTwitterListeningParty" data-datetime="8:16 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fmrmitchell78%2Fstatus%2F1652044011249475592"
+                 data-text="The sounds from @ensemblepsych and words and delivery from @_____N0IR has produced a genuinely exciting album. #TimsTwitterListeningParty" data-datetime="8:16 PM Apr 28, 2023"> 
+                mrmitchell78            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="31000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652044001258643482"
+                 data-text="On “IN A MARE (Interlude)” the vocal effects are inspired by various scenes from “Serial Experiments Lain” (1998). Especially the opening titles. “Present DAY… Present TIME… Haha!” - so good.
+https://t.co/mIAH1TGmzm
+#TimsTwitterListeningParty" data-datetime="8:15 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652043874762629124"
+                 data-text="Speaking of film, I rewatched almost all Wong Kar-Wai films while we were working on “Nocturne” to get in the zone to create the moodiest atmosphere possible. “Fallen Angels” (1995) and “Happy Together” (1997) are my personal Wong Kar-Wai favourites. #TimsTwitterListeningParty" data-datetime="8:15 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652043767350697997"
+                 data-text="Shout out to my man Steven of DEEPER INTO MOVIES who made me aware of the sounds that I used on “IN A MARE (Interlude)” and “SPIN THE COUPE”! Steven is a film knowledge guru. Such a cool and interesting guy. #TimsTwitterListeningParty" data-datetime="8:15 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652043758639407104"
+                 data-text="In a mare - is how it sounds &amp; reads , again in refrence to the Psychotic episodes I was having , the lack of structure is depictive of the lack of order in my thoughts at the time. 
+
+entropy. 
+
+#TimsTwitterListeningParty" data-datetime="8:15 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652043412483219516"
+                 data-text="I made the scratches for “Goodbyes” in Edison (FL Studio). 😂Some food for thought for producers out there - you can probably make it work by yourself if you think hard enough. #TimsTwitterListeningParty" data-datetime="8:13 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652043408901283860"
+                 data-text="Goodbyes - 
+
+CALL YOU JULIET LIKE YOU’RE A LOVE OF MINE 
+
+this one of the first times I experimented with my voice , I love singing but I don’t necessarily think I can sing , I still try tho 🤣
+
+#TimsTwitterListeningParty https://t.co/c4K4qGUmZw" data-datetime="8:13 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652043003853422592"
+                 data-text="Goodbyes -
+
+like Light One , Burn One &amp; that abandonment feeling , I always felt like my relationships ended prematurely or unfinished... instrumetal is so beautiful.
+
+I bare like this track , one of my personal favourites. 
+
+#TimsTwitterListeningParty" data-datetime="8:12 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652042976070172672"
+                 data-text="Fun fact about the beat for “Goodbyes” - it’s 6+ years old. I remember I wanted to use it for my 2018 album “LIVE AT THE CLINIC”, but it did not fit the overall direction. Now I can’t hear anyone but Manny Noir rapping over it. 👑#TimsTwitterListeningParty" data-datetime="8:11 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="40000" data-url="https%3A%2F%2Ftwitter.com%2FShivajiShivaLaw%2Fstatus%2F1652042968268677140"
+                 data-text="@_____N0IR Love that essay.  I packed my copy of Mortal Questions earlier this week. (We\'re moving.)" data-datetime="8:11 PM Apr 28, 2023"> 
+                ShivajiShivaLaw            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652042797480923137"
+                 data-text="Man… I just remembered “Where Were You…” was supposed to have a Sade inspired sax solo at the end. Unfortunately, the saxophonist ghosted me near the (fixed) deadline. Pity. Anwyays, fuck that guy, lmaooooooo! Working with me is for winners only. #TimsTwitterListeningParty" data-datetime="8:11 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652042679650230280"
+                 data-text="At first I wasn’t too sure about that bassline on “Where Were You…”, but at some point I pulled up to Cajm’s studio and Cajm said I was bugging. Salute to my guy! #TimsTwitterListeningParty" data-datetime="8:10 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652042500406915073"
+                 data-text="Also this song speaks for itself , it\'s an uplifitng type of feeling , It defo felt like a curve ball , I wasn\'t sure if it would work. 
+
+but it did , this song got the best reception which is crazy cause I didn\'t think it would. 
+
+#TimsTwitterListeningParty https://t.co/SgFerx7bL3" data-datetime="8:10 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="39000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652042495293792284"
+                 data-text="“Where Were You…” is one of my biggest artistic achievements so far. It’s so sick Manny just ran with the idea, no questions asked… and wrote the insane (and catchy!!!!!!) lyrics he wrote in the process. #TimsTwitterListeningParty" data-datetime="8:09 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652042332584259584"
+                 data-text="Much love to @djkevincole and @kexp for playing “Where Were You…” on the Song of the Day podcast last year! Very grateful! #TimsTwitterListeningParty" data-datetime="8:09 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="18000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652042248648032258"
+                 data-text="WHERE WERE YOU WHEN I WAS HURTING , I WAS HURTING , I WAS HURT ! 
+
+I wanted this song to be a reminder that you don\'t neccesarily need anyone , you can do great things on your own ! To rise past abandonment and pain, cause YOU have to deal with it. 
+
+#TimsTwitterListeningParty" data-datetime="8:09 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652042172747620363"
+                 data-text="Haha just remembered I was trying to convince Manny to make “Where Were You…” the first thing people hear from this album, but with hindsight I’m glad we picked more traditional singles. #TimsTwitterListeningParty" data-datetime="8:08 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652042055407771657"
+                 data-text="The beat for “Where Were You…” is inspired by all my favourite creators of dark oontz oontz music. Andy Stott, Huerco S, Moiré, Galcher Lustwerk, Actress, Marcel Dettmann, the list goes on... #TimsTwitterListeningParty" data-datetime="8:08 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652042054782820381"
+                 data-text="The phenomenonality that is subjective experience; which is why I wanted to focus on what it felt like to be “Me” … this song is a projection of Me 
+
+#timstwitterlisteningparty https://t.co/NMfjlhSOv8" data-datetime="8:08 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652041960071241745"
+                 data-text="For “What Is It Like to Be a Bat?” I remember I was looking for that bat sound for about a month. I looked everywhere. “Suspiria” (1977), “The Hunger” (1983), etc. Turns out the best sounds were in somebody’s holiday footage that I found on YouTube. #TimsTwitterListeningParty" data-datetime="8:07 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652041745511890945"
+                 data-text="You really wasn\'t there on Carter\'s birthday when we were facing da city spitting bars on the balcony on Brick Lane. one of my favourite memories in life. 
+
+\"You wasn\'t there on brick lane when we were spinning tunes\"
+
+#TimsTwitterListeningParty https://t.co/FYkTzkIyh0" data-datetime="8:07 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652041493798854657"
+                 data-text="DO YOU KNOW WHAT IT MEANS OR WHAT IT\'S LIKE TO BE A BAT ?!?!
+
+Based off this thought experiment I learnt at uni by Thomas Nagel who talks about subjective experience &amp; what is likeness to be another. 
+
+#TimsTwitterListeningParty https://t.co/qyk1EENeH6" data-datetime="8:06 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652041456968671255"
+                 data-text="The transition from “Walk In the Dark” to “What Is It Like to Be a Bat?”…
+I’m really him. The man.
+That’s all I have to say here.😂
+#TimsTwitterListeningParty" data-datetime="8:05 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="16000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652041410617417732"
+                 data-text="Ooooh just remembered something cool: I added the kick drum on top of the aloisius outro for “Walk in the Dark”. I wanted it to replicate the sound/rhythm of a heartbeat. #TimsTwitterListeningParty" data-datetime="8:05 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652041345538596890"
+                 data-text="Walk in the dark , is metaphorical for leading a blind journey but then also literally going out for walks at night because that’s when I found peace , a privilege I can only experience as a man. 
+
+#TimsTwitterListeningParty" data-datetime="8:05 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="17000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652041316199440421"
+                 data-text="aloisius did the outro for “Walk in the Dark”. It was important to me to get aloisius involved in “Nocturne” because he and Manny have a history of working together. aloisius also did the outro for “TILLIDIE”. Plus, he recorded all of Manny’s vocals. #TimsTwitterListeningParty" data-datetime="8:05 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="60000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652041242434490368"
+                 data-text="Nocturne itself is a journey through those episodes , delusions , emotions , whatever I was feeling / experiencing at the time. It\'s a journey through a dark path to find light at the end. 
+
+#TimsTwitterListeningParty" data-datetime="8:05 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652040990834688003"
+                 data-text="Walk in the dark - 
+
+big up Ms. George (my mum) , world\'s greatest english teacher , who inspired the entire theme of the album more time cause she always used to call me a \"Nightcrawler\" and say things like \"You\'re turning into a shadow of yourself\" 
+
+#TimsTwitterListeningParty" data-datetime="8:04 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652040990788558873"
+                 data-text="Nocturne itself is also a reflection of a time period , (Hindsight) late 2019, early 2020 begininng of the pandemic I fell into early episode(S) psychosis ... so I liked the chaotic nature of \"Walk in the dark\" , it sounds like how I felt mentally. 
+
+#TimsTwitterListeningParty" data-datetime="8:04 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="58000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652040983431749636"
+                 data-text="“Don’t think I’m shy cause I’m quiet … I’m just plotting &amp; plotting” 
+
+🤫 https://t.co/rmFOyrpFkR" data-datetime="8:03 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652040738992173056"
+                 data-text="\"Walk in the dark\" 
+
+One of my personal favourites, I remeber sitting in my uni library meant to be revising but I was looking through Psychdelic\'s insta page looking for beats for the album, I came across this &amp; KNEW instantly... yeah, Hard.
+
+#TimsTwitterListeningParty" data-datetime="8:03 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652040724173430812"
+                 data-text="Listen to the intro to “Walk in the Dark” and the intro to “Blueprint (Momma Loves Me)” by JAY-Z. You might hear some similarities. COINCIDENCE??? I think not. Let me rephrase that: it’s NEVER a coincidence when it comes to psychedelic ensemble.!!!!! #TimsTwitterListeningParty" data-datetime="8:02 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652040670624751640"
+                 data-text="Scheduled tweets but finished work early so now I’m Live tweeting , it’s peak 
+
+#timstwitterlisteningparty https://t.co/eRcyqwWQC7" data-datetime="8:02 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652040487409422336"
+                 data-text="\"Roll One, Smoke One, Light One, Burn That\" 
+ 
+Further refrence to my bad habit and relationship w smoking ; using that as a coping mechanism for my problems.
+
+however a Idiomatic expression - the use of repition to highlight the continuity &amp; routine. 
+
+#TimsTwitterListeningParty" data-datetime="8:02 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652040476793491456"
+                 data-text="I met Manny at a hangout at aloisius’s flat. He was the quietest person in the room. That was relatable, so I knew Manny was a lyrical assassin, the way I am a production assassin. We made “SAME KICKS” (a loosie which preceded “Nocturne”) shortly after. #TimsTwitterListeningParty" data-datetime="8:01 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652040321193193474"
+                 data-text="Manny performed “Light One, Burn One” at SPLAYWORLD on the album’s release day. SPLAYWORLD is a live show series hosted by Everything Is Perfect Records, who co-released “Nocturne” with my platform LIVE AT THE CLINIC. People already knew the lyrics! #TimsTwitterListeningParty https://t.co/FEzrBcW5eo" data-datetime="8:01 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652040235663097856"
+                 data-text="A homage to someone, who taught me to use poetry as an outlet. A medium.
+
+Light One, Burn One is a commiseration of those moments &amp; that bond which I once had.
+
+While emphasising the cycle of relationships afterwards which seemed to start &amp; end.
+
+#TimsTwitterListeningParty" data-datetime="8:01 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652040235658649613"
+                 data-text="let\'s get dis shit! *Kendrick voice*
+
+#TimsTwitterListeningParty" data-datetime="8:01 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="2000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652040138233356310"
+                 data-text="“Light One, Burn One” and “Let the Love In” (i.e. the first and last song on “Nocturne”) were the first two songs Manny and I made for this project. At that point I dropped everything else I was doing creatively and gave the album my full attention. #TimsTwitterListeningParty" data-datetime="8:00 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="30000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1652040131182731274"
+                 data-text="Handing over to
+@_____N0IR &amp; @ensemblepsych for our Nocturne @LlSTENlNG_PARTY https://t.co/wwlk108h3f" data-datetime="8:00 PM Apr 28, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="5000" data-url="https%3A%2F%2Ftwitter.com%2Fensemblepsych%2Fstatus%2F1652040005869510673"
+                 data-text="… and so the “Nocturne” @LISTENING_PARTY begins! #TimsTwitterListeningParty" data-datetime="8:00 PM Apr 28, 2023"> 
+                ensemblepsych            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652039986877812736"
+                 data-text="I wanna say Thank you @ensemblepsych Always! For co-curating and orchestrating this masterpiece. Thank you to my Everything Is Perfect family for the belief. 
+@trevorjofficial &amp; @LlSTENlNG_PARTY for continually pushing it a year later. 
+
+#TimsTwitterListeningParty https://t.co/AembnPwSaN" data-datetime="8:00 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2F_____N0IR%2Fstatus%2F1652039983920717829"
+                 data-text="\"Light One, Burn One\" !!!
+
+This is Manny from the past, tweeting for the future 
+
+Thank you to anyone tapped in rn, Nocturne will always be my favorite and most meaningful project. 
+I think it was the first time I ever cohesively put music together 
+ 
+#TimsTwitterListeningParty" data-datetime="8:00 PM Apr 28, 2023"> 
+                _____N0IR            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
