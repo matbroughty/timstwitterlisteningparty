@@ -1,0 +1,386 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/7jDGyDNTncT0fB0CHUVtuJ" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e02cfe22e36b4a439a091eb390c" alt="The Horse" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Matthew Herbert</span><br/><span class="sub-colour">The Horse</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(288168)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/7jDGyDNTncT0fB0CHUVtuJ" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_288168_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 35 tweets from Thursday 8th June 2023 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/matthewherbert" target="_blank"><img src="https://pbs.twimg.com/profile_images/1636687669458612226/B8AHkf-w_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/matthewherbert.jpg'"><br/>@matthewherbert</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1650568163183001600/5-U2hu0h_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/LlSTENlNG_PARTY" target="_blank"><img src="https://pbs.twimg.com/profile_images/1615313089032855554/hFSx7-kT_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/LlSTENlNG_PARTY.jpg'"><br/>@LlSTENlNG_PARTY</a></td></tr><tr style="background-color:transparent"><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Stokesie" target="_blank"><img src="https://pbs.twimg.com/profile_images/73707049/me_at_glastonbury05_67_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Stokesie.jpg'"><br/>@Stokesie</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="The Horse's Bones Are in a Cave" data-start="0"
+             data-duration="251" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="The Horse's Hair and Skin Are Stretched" data-start="252"
+             data-duration="352" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="The Horse's Bones Are Flutes" data-start="605"
+             data-duration="321" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="The Horse's Pelvis Is a Lyre (feat. Jali Bakary)" data-start="927"
+             data-duration="287" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="The Horse Is Prepared" data-start="1215"
+             data-duration="557" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="The Horse Is Quiet" data-start="1773"
+             data-duration="264" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="The Horse Is Submerged (feat. Evan Parker)" data-start="2038"
+             data-duration="141" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="The Horse Is Put to Work" data-start="2180"
+             data-duration="489" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="The Rider (Not the Horse)" data-start="2670"
+             data-duration="537" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="The Truck That Follows the Horses" data-start="3208"
+             data-duration="216" style="display:none"></div>
+                <div id="track-11" class="track-list"
+             data-name="The Horse's Winnings" data-start="3425"
+             data-duration="369" style="display:none"></div>
+                <div id="track-12" class="track-list"
+             data-name="The Horse Has a Voice (feat. Theon Cross)" data-start="3795"
+             data-duration="353" style="display:none"></div>
+                <div id="track-13" class="track-list"
+             data-name="The Horse Remembers" data-start="4149"
+             data-duration="167" style="display:none"></div>
+                <div id="track-14" class="track-list"
+             data-name="The Horse Is Close" data-start="4317"
+             data-duration="94" style="display:none"></div>
+                <div id="track-15" class="track-list"
+             data-name="The Horse Is Here (feat. Danilo Perez)" data-start="4412"
+             data-duration="216" style="display:none"></div>
+                        <div id="track-16" class="track-list"
+                     data-name="Finished" data-start="4629"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d00004851cfe22e36b4a439a091eb390c" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-35" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="83000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666902212226736159"
+                 data-text="and that\'s it. from bones to bones. 
+
+and we still don\'t know more than our ancestors about what happens when we die. 
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY" data-datetime="8:17 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="135000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666901865387155459"
+                 data-text="tr.15 The Horse Is Here.
+trying to set the horse free- create a place it can just be. @RanaEiddbstudio made the wonderful soundscape. gave it grass. water + a friend.  incredible @DaniloPerezJAZZ supporting and dueting with the horse.
+
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY" data-datetime="8:15 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="209000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666901296991854608"
+                 data-text="tr. 14. The Horse Is Close. here they come!
+in the background you hear the bone flutes from the start. throughout whole lp all bass drums from horse skin and perc from bones. 
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY" data-datetime="8:13 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="151000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666900422378807307"
+                 data-text="tr 13 The Horse Remembers.
+trying to drive the whole thing forward from here to the end. create a space to welcome the horse.  in the background. a shaker made from polo horse semen mixed with clay. proof below.
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY https://t.co/5oRZEj88zT" data-datetime="8:10 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="237000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666899788258762752"
+                 data-text="tr. 12 The Horse Has A Voice. am trying to bring the horse back to life through music - here the horse is starting to make itself heard. wildly incredible solo by @TheonCross on tuba. #timstwitterlisteningparty
+@LlSTENlNG_PARTY" data-datetime="8:07 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="80000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666898792396775434"
+                 data-text="also this has 6900 horses scraped from the internet by matthew yee king and dan jones. also horses through history soundscape by @ellakaysound" data-datetime="8:03 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="116000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666898456953208832"
+                 data-text="the weird squeaks are horses having sex sped up 4 times." data-datetime="8:02 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666897972792025115"
+                 data-text="@samjokell are you 100% sure?" data-datetime="8:00 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="174000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666897847738851341"
+                 data-text="tr 11 The Horse’s Winnings. made by layering/stacking sounds on top of each other this is about accumulation of horse paraphernalia/trophies/bits/chains/horse coins - all put in a cement mixer. humans just making more and more stuff.
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY https://t.co/C2AoVY0L9W" data-datetime="7:59 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="96000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666897117871259648"
+                 data-text="big up @HughBrunt and @LCOrchestra players for going all out here on the wonk" data-datetime="7:56 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="146000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666896718393221122"
+                 data-text="tr. 10 The Truck That Follows The Horses-in fact horse racing\'s brutal. 100s of horses killed each year because they\'re uneconomical to nurse back to health. also it\'s subsidised in uk by £100m each year! fund nhs/arts/schools instead!
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY" data-datetime="7:55 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="99000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1666896102845472780"
+                 data-text="Biiiig thanks to @matthewherbert and the @Dolby Atmos crew x x" data-datetime="7:52 PM Jun 8, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="156000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666895691761737728"
+                 data-text="thank you to @Tim_Burgess and @LlSTENlNG_PARTY  for inviting me to do it." data-datetime="7:51 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="268000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666895035009310720"
+                 data-text="in case you\'re wondering why i\'m tweeting loads about my new record made with a horse skeleton, i\'m doing a #timstwitterlisteningparty where people are invited to listen along in real time with me and i tell you some stuff about it how/why it was made xx" data-datetime="7:48 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="198000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666893909660692482"
+                 data-text="tr.9 The Rider (Not The Horse). this is like a fantasy track. the humans pretending they\'re in control. the imaginary rider at sunset along a deserted beach. the wind in their hair.  you can hear some of these horses below in action. 
+
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY https://t.co/17rTARtB6v" data-datetime="7:44 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="74000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666893082271309839"
+                 data-text="strapped the bone flutes to the wind section of the mammoth beat organ to mechanise the blowing of the air through them (horses legs!)." data-datetime="7:40 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="98000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666892772161249282"
+                 data-text="tricky one to write this, as soon as i handed control over to the computers something was lost. rewrote it loads of times to try and create some resistance to the order of it. wrote some of the melody in real time watching mbappe run towards goal in cup final." data-datetime="7:39 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="152000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666892357713682449"
+                 data-text="tr8. The Horse Is Put To Work. super close up bone scraping. it\'s a record about materials after all.  some sounds from epsom where emily davidson threw herself infront of the king\'s horse. plus riot police on horses, military, hunting
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY https://t.co/Af43SMQKAh" data-datetime="7:38 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666891720481464331"
+                 data-text="tr 7 The Horse Is Submerged. evan parker again plus lee patterson forcing air through tiny holes in the bones. also the ritualistic washing of the bones. again in preparation for something.
+
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY https://t.co/8uiNUsRgdG" data-datetime="7:35 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="275000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1666891341559652365"
+                 data-text="Matthew in the Dolby sweet spot at The @LlSTENlNG_PARTY https://t.co/esTpofLAYN" data-datetime="7:33 PM Jun 8, 2023"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="416000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666890187148873728"
+                 data-text="tr. 6 The Horse Is Quiet. this is a lament.  when horses were painted in caves, they were free. now they\'re made to work,run, carry for us. this track takes a moment before gets too full on to acknowledge this shift-something is coming.
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY" data-datetime="7:29 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="25000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666888443769544720"
+                 data-text="weird solo that sounds like fax machine is me playing flute through autotune https://t.co/65NXPae1y9" data-datetime="7:22 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="200000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666888338505097222"
+                 data-text="tr.5 The Horse Is Prepared. part of the record\'s journey is a history of music. here we are moving into mechanisation. @misterunderwood #grahamdunning
+also some amplification starting here. perc includes 17thC samurai horse bells.
+
+#timstwitterlisteningparty @LlSTENlNG_PARTY https://t.co/KoXunMKbwY" data-datetime="7:22 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="62000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666887498985885696"
+                 data-text="in the background percussionists @sebrochford and @EdwardWakili scraping and finding new textures with the bones. https://t.co/73GDmUHtyE" data-datetime="7:18 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="204000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666887238544654336"
+                 data-text="tr.4 The Horse\'s Pelvis Is A Lyre
+we\'re emerging out of the caves now. we hear fire, water, rain, birdsong. sheep gut strings stretched over the horse pelvis to form a lyre. kora player jali bakary. finding a way to make sense of it.
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY https://t.co/0xU1trahM6" data-datetime="7:17 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="157000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666886382197850112"
+                 data-text="soprano sax by evan parker!
+british musical improv hero.
+
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY https://t.co/5iIts1f66t" data-datetime="7:14 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="137000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666885722224091162"
+                 data-text="tr3 The Horse\'s Bones Are Flutes. played by the incomparable @shabakah playing the flute made from the horse\'s leg. the introduction of melody. orchestral players banging ribs together in the background! flute made by henry dagg
+#timstwitterlisteningparty
+@LlSTENlNG_PARTY https://t.co/CTZPs52lly" data-datetime="7:11 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="115000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666885151047950336"
+                 data-text="(2) this is the sound of harmony emerging.  in the background we have a triad of crystal  bowls playing to reinforce the harmonic/reverby feeling.  @rahelonline #timstwitterlisteningparty @LlSTENlNG_PARTY" data-datetime="7:09 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666884668644286473"
+                 data-text="#timstwitterlisteningparty @LlSTENlNG_PARTY" data-datetime="7:07 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="103000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666884575006449673"
+                 data-text="tr2. The Horse\'s Hair And Skin Are Stretched. this is a horse skin drum plus horse hair stretched across a horse rib. played by @LCOrchestra as if playing their instruments for the first time. https://t.co/XKbVVl1nDR" data-datetime="7:07 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2FLlSTENlNG_PARTY%2Fstatus%2F1666884140686364672"
+                 data-text="Live from The @LlSTENlNG_PARTY https://t.co/z55n5VnPAQ" data-datetime="7:05 PM Jun 8, 2023"> 
+                LlSTENlNG_PARTY            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="3000" data-url="https%3A%2F%2Ftwitter.com%2FStokesie%2Fstatus%2F1666883818815381518"
+                 data-text="RT @LlSTENlNG_PARTY: The Horse @LlSTENlNG_PARTY 
+
+@matthewherbert &amp; @Stokesie 
+
+Join us on twitter from 8pm (UK time) https://t.co/37J3xGfk…" data-datetime="7:04 PM Jun 8, 2023"> 
+                Stokesie            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666883805506854935"
+                 data-text="this is the photo from ebay of the horse skeleton. looks like a musical instrument already no? #timstwitterlisteningparty #thehorse https://t.co/G7l3tqpV2j" data-datetime="7:04 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="147000" data-url="https%3A%2F%2Ftwitter.com%2Fmatthewherbert%2Fstatus%2F1666883423493816330"
+                 data-text="the horse\'s bones are in a cave.
+this simulates the sounds of real caves from northern spain as if the skeleton is in front of the 15,000 yr old horse paintings #timstwitterlisteningparty" data-datetime="7:02 PM Jun 8, 2023"> 
+                matthewherbert            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1666882810081050637"
+                 data-text="Time to join @matthewherbert for our @LlSTENlNG_PARTY featuring his new work, The Horse
+
+Let’s go! https://t.co/D1wfu0VHor" data-datetime="7:00 PM Jun 8, 2023"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
