@@ -1,0 +1,521 @@
+<section class="post">
+    <script>
+        function togglePreview() {
+            tourDates = document.getElementById('tour-dates');
+            if (tourDates !== null) {
+                tourDates.style.display = 'none';
+            }
+            preview = document.getElementById('track-preview');
+            $(preview).slideToggle("slow");
+        }
+        
+        function toggleTourDates(id) {
+            if (id > 0) {
+                tourDates = document.getElementById('tour-dates');
+                tourLoading = document.getElementById('tour-loading');
+                preview = document.getElementById('track-preview');
+                if (preview !== null) {
+                    preview.style.display = 'none';
+                }
+
+                if (tourDates.style.display === 'none') {
+                    tourLoading.style.display = 'block';
+                    $("#tour-dates").load("../../snippets/tours/tour_" + id + "_snippet.html", 
+                                        function() {
+                                            tourLoading.style.display = 'none';
+                                            $("#tour-dates").slideDown("slow");
+                                        });
+                } else {
+                    $("#tour-dates").slideUp("slow", function() {
+                        tourDates.innerHTML = '';
+                    });
+                }
+            }
+        }
+    </script>
+        <table>
+        <tr>
+            <td><a href="https://open.spotify.com/album/2TF6deaYHbiP5xepwFYbd1" target="_blank">                <img src="https://i.scdn.co/image/ab67616d00001e020338a214b104dedb8e6e16e8" alt="Joy’All" style="width:120px;height:120px;padding-right:8px">
+                </a>            </td>
+            <td><h4 style="text-align:left"><span class="main-colour">Jenny Lewis</span><br/><span class="sub-colour">Joy’All</span></h4></td>
+        </tr>
+    </table>
+
+        <div style="padding-right:3px;margin-top:5px;margin-bottom:5px">
+                <a class="pure-button" onclick="togglePreview()" style="margin-top:3px"><i class="fas fa-compact-disc" style="color:#3d4f5d"></i> Tracks</a>
+                <a id="tour-button" class="pure-button" onclick="toggleTourDates(513368)" style="margin-top:3px;color:red;display:none"><i class="fas fa-calendar-day" style="color:red;"></i> Tour Dates</a>
+    </div>
+            <div id="track-preview" style="display:none;margin-bottom:5px">
+    <iframe src="https://open.spotify.com/embed/album/2TF6deaYHbiP5xepwFYbd1" width="300" height="380" frameborder="0" 
+                allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+            <div id="tour-loading" style="display:none">
+        <img src="../../img/record-loading.gif" style="width:40px;height:40px;"> Loading...
+    </div>
+    <div id="tour-dates" style="display:none;margin-bottom:5px">
+    </div>
+    <script>
+        // If the songkick snippet exists, show the tour button
+        $.ajax({
+            type: 'HEAD',
+            url: 'https://timstwitterlisteningparty.com/snippets/tours/tour_513368_snippet.html',
+        success: function() {
+            document.getElementById('tour-button').style.display = 'inline-block';
+        }
+        });
+    </script>
+                <!-- Show number of tweets and users -->
+        <div id="users-panel" style="display:block">
+            <span class="main-colour">Real-time replay of 52 tweets from Monday 12th June 2023 by: </span><br/>            <table>
+                <tr>
+            <td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/jennylewis" target="_blank"><img src="https://pbs.twimg.com/profile_images/1649273438828367873/9TPXi_IP_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/jennylewis.jpg'"><br/>@jennylewis</a></td><td class="profile" style="font-size:9pt;text-align:center;padding-top:8px;padding-left:8px"><a href="https://twitter.com/Tim_Burgess" target="_blank"><img src="https://pbs.twimg.com/profile_images/1650568163183001600/5-U2hu0h_normal.jpg" style="border-radius:50%;width:48px;height:48px" onerror="this.onerror=null; this.src='../../img/profile/Tim_Burgess.jpg'"><br/>@Tim_Burgess</a></td>                </tr>
+            </table>
+        </div>
+        <br/>
+                <!-- div to show timer and play/pause/ffwd buttons -->
+        <h1 class="content-subhead main-colour">Replay Feed</h1>
+        <div id="timer-div">
+            <table>
+                <tr>
+                    <td>
+                        <div id="playpause" title="Play/Pause Feed" style="padding-right:7px;">
+                            <a class="pure-button" onclick="playPause()"><i class="fas fa-play" id="play-pause-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="advance" title="Jump to Next Tweet" style="padding-right:7px;display:none;">
+                            <a class="pure-button" onclick="advance()"><i class="fas fa-forward" id="fast-forward-btn" style="color:#3d4f5d"></i></a>
+                        </div>
+                    <td style="vertical-align:middle"><i id="stand-by-arrow" class="blinking far fa-hand-point-left fa-2x main-colour" style="display:none;padding-right:5px"></i></td>
+                    <td style="vertical-align:bottom;text-align:left;padding-top:3px"><label id="timer" class="blinking main-colour" style="line-height:1em">Stand by...</label></td>
+                </tr>
+            </table>
+                <div id="track-1" class="track-list"
+             data-name="Psychos" data-start="0"
+             data-duration="185" style="display:none"></div>
+                <div id="track-2" class="track-list"
+             data-name="Joy'All" data-start="186"
+             data-duration="224" style="display:none"></div>
+                <div id="track-3" class="track-list"
+             data-name="Puppy and a Truck" data-start="411"
+             data-duration="191" style="display:none"></div>
+                <div id="track-4" class="track-list"
+             data-name="Apples and Oranges" data-start="603"
+             data-duration="226" style="display:none"></div>
+                <div id="track-5" class="track-list"
+             data-name="Essence of Life" data-start="830"
+             data-duration="216" style="display:none"></div>
+                <div id="track-6" class="track-list"
+             data-name="Giddy Up" data-start="1047"
+             data-duration="181" style="display:none"></div>
+                <div id="track-7" class="track-list"
+             data-name="Cherry Baby" data-start="1229"
+             data-duration="146" style="display:none"></div>
+                <div id="track-8" class="track-list"
+             data-name="Love Feel" data-start="1376"
+             data-duration="194" style="display:none"></div>
+                <div id="track-9" class="track-list"
+             data-name="Balcony" data-start="1571"
+             data-duration="163" style="display:none"></div>
+                <div id="track-10" class="track-list"
+             data-name="Chain of Tears" data-start="1735"
+             data-duration="190" style="display:none"></div>
+                        <div id="track-11" class="track-list"
+                     data-name="Finished" data-start="1926"
+                     data-duration="0" style="display:none"></div>
+        <div id="now-playing" style="padding-top:10px;display:none">
+            <table style="width:98%;max-width:550px;">
+                <tr>
+                    <td style="text-align:left;width:1%;padding-right:7px;"><img src="https://i.scdn.co/image/ab67616d000048510338a214b104dedb8e6e16e8" alt="CD" width="45px"></td>
+                    <td style="text-align:left;width:100%;">
+                        <div id="track-title" class="main-colour" style="line-height:1.1em;"></div>
+                        <div id="track-time" style="line-height:1.1em;color:#777777">0:00</div>
+                    </td>
+                    <td style="text-align:right;width:1%;padding-left:15px">
+                        <i id="now-playing-btn" class="far fa-question-circle main-colour"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            $('#now-playing-btn').tooltip();
+            $('#now-playing-btn').on({
+             "click": function() {
+               $(this).tooltip({ 
+                   items: "#now-playing-btn", 
+                   content: "Shows progress through the album so you can see what should be playing as each tweet appears. Adjusts when you pause or skip tweets.",
+                   position: {
+                       of: "#now-playing-btn",
+                       within: "#completed", 
+                       my: "left bottom", 
+                       at: "left top-10", 
+                       collision: "fit flip"
+                   }
+               });
+               $(this).tooltip("enable");
+               $(this).tooltip("open");
+             },
+             "mouseout": function() {      
+                $(this).tooltip("disable");   
+                $(this).tooltip();
+             }
+           });
+        </script>
+                </div>
+        <div id="tweet-feed-52" style="display:none" data-delay="1000">
+            <h3 class="main-colour">End of Feed</h3>
+        </div>
+                    <div id="tweet-feed-51" style="display:none;font-size:smallest" data-delay="174000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668341710437638144"
+                 data-text="Watch the new Joy\'All lyric video out now! 
+
+Joy’all /Joi/yol/ noun 1. Joy to all 2. A feeling of great pleasure and happiness
+
+https://t.co/adYxl7gmem
+
+- JLHQ
+
+#JoyAll https://t.co/hA85ilzmL2" data-datetime="7:37 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-50" style="display:none;font-size:smallest" data-delay="101000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1668340978594492416"
+                 data-text="Thaaaaaanks @jennylewis 🤘" data-datetime="7:34 PM Jun 12, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-49" style="display:none;font-size:smallest" data-delay="52000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668340556014190595"
+                 data-text="BLESS!
+thank you for listening to JOY’ALL!
+it’s my joy to share it with you
+
+https://t.co/6BNxAVBcZk
+
+#joyall #timstwitterlisteningparty https://t.co/L8RkW7PmbK" data-datetime="7:32 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-48" style="display:none;font-size:smallest" data-delay="23000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668340339609059329"
+                 data-text="don’t matter how long
+if it ain’t right it’s wrong
+
+#joyall #timstwitterlisteningparty" data-datetime="7:31 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-47" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668340241399447553"
+                 data-text="it’s obvious but it’s true
+and sometimes i need the very plain reminder
+stop painting those red flags white
+if it ain’t right
+it’s wrong
+
+#joyall #timstwitterlisteningparty" data-datetime="7:31 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-46" style="display:none;font-size:smallest" data-delay="75000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668340087388798976"
+                 data-text="it may be trite but
+if it ain’t wrong it’s right
+strike that
+reverse it
+
+#joyall #timstwitterlisteningparty" data-datetime="7:30 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-45" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668339772555927552"
+                 data-text="deep eternal sunshine
+homage here
+with jon brion on the talent maker
+
+#joyall #timstwitterlisteningparty" data-datetime="7:29 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-44" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668339625721761792"
+                 data-text="track 10 - chain of tears
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/L7yDSGqmJu" data-datetime="7:28 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-43" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668339389615996928"
+                 data-text="you cannot unsee the search history
+
+#joyall #timstwitterlisteningparty" data-datetime="7:28 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-42" style="display:none;font-size:smallest" data-delay="56000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668339273320517632"
+                 data-text="out of the hex into the next
+BLESS!
+
+#joyall #timstwitterlisteningparty" data-datetime="7:27 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-41" style="display:none;font-size:smallest" data-delay="22000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668339036333957120"
+                 data-text="another call to the crew with woooo’s this time
+i really will pick up the tab if you let me
+
+#joyall #timstwitterlisteningparty" data-datetime="7:26 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-40" style="display:none;font-size:smallest" data-delay="91000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668338943795027968"
+                 data-text="track 9 - balcony
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/ICtHTQNujo" data-datetime="7:26 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-39" style="display:none;font-size:smallest" data-delay="500" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668338564369891328"
+                 data-text="john prine shout out!
+marvin gaye &amp; timberlake!
+so long vette city
+&amp; i had to get a modelo ref in there
+
+#joyall #timstwitterlisteningparty" data-datetime="7:24 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-38" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fbuffyfanboy%2Fstatus%2F1668338563338096643"
+                 data-text="@jennylewis @LlSTENlNG_PARTY ICE COLD MODELO 👏🏻🙌🏻" data-datetime="7:24 PM Jun 12, 2023"> 
+                buffyfanboy            </div>
+                        <div id="tweet-feed-37" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668338267752894464"
+                 data-text="i really don’t fuck with tesla
+or MOPAR!
+i’m mostly a honda accord gal
+and a chevy angel!
+
+#joyall #timstwitterlisteningparty" data-datetime="7:23 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-36" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668338119626850304"
+                 data-text="track 8 - love feel
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/5vO8hrgYKM" data-datetime="7:22 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-35" style="display:none;font-size:smallest" data-delay="8000" data-url="https%3A%2F%2Ftwitter.com%2FPipeDreamTC%2Fstatus%2F1668337999128723456"
+                 data-text="Not me living in NYC but still considering buying a Chevrolet truck cuz @jennylewis told me it’s the right way to live 😂. But I will def be getting the puppy at some point. #joyall" data-datetime="7:22 PM Jun 12, 2023"> 
+                PipeDreamTC            </div>
+                        <div id="tweet-feed-34" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668337962566967296"
+                 data-text="the lyric used to go
+cherry marry me baby
+in the summertime
+it was a proposal
+
+#joyall #timstwitterlisteningparty" data-datetime="7:22 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-33" style="display:none;font-size:smallest" data-delay="50000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668337816957509632"
+                 data-text="i am cherry baby
+like diane lane’s character
+in the outsiders
+
+#joyall #timstwitterlisteningparty" data-datetime="7:21 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-32" style="display:none;font-size:smallest" data-delay="28000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668337605577175040"
+                 data-text="this song has has a lyric that nearly drove me mad!
+can you spot it?
+i got her done in a publix  parking lot
+BLESS!
+
+#joyall #timstwitterlisteningparty" data-datetime="7:20 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-31" style="display:none;font-size:smallest" data-delay="13000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668337491202678784"
+                 data-text="track 7 - cherry baby
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/E99PiK3NZp" data-datetime="7:20 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-30" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2FArielZzzuko%2Fstatus%2F1668337434629922816"
+                 data-text="@jennylewis Respect to your guru, Namaste" data-datetime="7:20 PM Jun 12, 2023"> 
+                ArielZzzuko            </div>
+                        <div id="tweet-feed-29" style="display:none;font-size:smallest" data-delay="32000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668337289787998208"
+                 data-text="intentional grammatical error ahead !
+stakes is high is a de la soul ref
+
+#joyall #timstwitterlisteningparty" data-datetime="7:19 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-28" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668337154936954881"
+                 data-text="my bathroom has pink and grey tile from the 50’s
+and a levi’s ad on the wall that’s on the cover of sweetheart of the rodeo
+my friend gary burden picked it out for me at an antique mall in past robles CA
+jim james was there too!
+
+#joyall #timstwitterlisteningparty" data-datetime="7:19 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-27" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668336887600414721"
+                 data-text="can you hear the birds on this track ? that’s my backyard in nashville
+the bridge vocals were recorded in my bathroom in the middle of the night
+
+#joyall #timstwitterlisteningparty" data-datetime="7:18 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-26" style="display:none;font-size:smallest" data-delay="4000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668336738727755776"
+                 data-text="track 6 - giddy up
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/5sFSjWRM9E" data-datetime="7:17 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-25" style="display:none;font-size:smallest" data-delay="51000" data-url="https%3A%2F%2Ftwitter.com%2FAshworthAndy%2Fstatus%2F1668336720625143808"
+                 data-text="How can a song with the lyric “The essence of life is suffering” sound so hopeful?? @jennylewis 
+
+#joyall #timstwitterlisteningparty" data-datetime="7:17 PM Jun 12, 2023"> 
+                AshworthAndy            </div>
+                        <div id="tweet-feed-24" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668336507927814145"
+                 data-text="we have the essence of life at our fingertips
+
+#joyall #timstwitterlisteningparty" data-datetime="7:16 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-23" style="display:none;font-size:smallest" data-delay="11000" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1668336187390726145"
+                 data-text="RT @LlSTENlNG_PARTY: The Cure played for 2 hours and 55 minutes in Chicago last night 
+
+31 songs in total https://t.co/4NT7PqIXvu" data-datetime="7:15 PM Jun 12, 2023"> 
+                Tim_Burgess            </div>
+                        <div id="tweet-feed-22" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668336140003454977"
+                 data-text="sparkle blue y’all!
+
+#joyall #timstwitterlisteningparty" data-datetime="7:15 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-21" style="display:none;font-size:smallest" data-delay="35000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668336054695493632"
+                 data-text="the great greg leisz plays pedal steel on the song
+
+#joyall #timstwitterlisteningparty" data-datetime="7:14 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-20" style="display:none;font-size:smallest" data-delay="20000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668335909379637248"
+                 data-text="it’s not that far away
+from LA to the bay
+but i may as well be living on the moon
+re: may 2020
+
+#joyall #timstwitterlisteningparty" data-datetime="7:14 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-19" style="display:none;font-size:smallest" data-delay="70000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668335823048302594"
+                 data-text="track 5 - essence of life
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/Sv1kisPRyH" data-datetime="7:13 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-18" style="display:none;font-size:smallest" data-delay="49000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668335532819255305"
+                 data-text="also a good will hunting reference in apples and oranges
+can you find it ?
+
+#joyall #timstwitterlisteningparty" data-datetime="7:12 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-17" style="display:none;font-size:smallest" data-delay="77000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668335323921907717"
+                 data-text="i had to look up the definition of alchemy...
+AGAIN!
+
+#joyall #timstwitterlisteningparty" data-datetime="7:11 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-16" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668335003925876737"
+                 data-text="i had been wanting to get the lyric halfpipe in a song &amp; the line
+apples and oranges perfume or poison
+
+#joyall #timstwitterlisteningparty" data-datetime="7:10 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-15" style="display:none;font-size:smallest" data-delay="1000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668334879925489668"
+                 data-text="track 4 - apples and oranges
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/7MyrbVg49q" data-datetime="7:10 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-14" style="display:none;font-size:smallest" data-delay="64000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1668334877064982528"
+                 data-text="#timstwitterlisteningparty https://t.co/2l3rJGmXd9" data-datetime="7:10 PM Jun 12, 2023"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-13" style="display:none;font-size:smallest" data-delay="42000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668334610353389568"
+                 data-text="shout out to bob dylan’s shot of love
+like a shot of good luck
+get a puppy and a truck
+
+#joyall #timstwitterlisteningparty" data-datetime="7:09 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-12" style="display:none;font-size:smallest" data-delay="9000" data-url="https%3A%2F%2Ftwitter.com%2Fmarcusb66%2Fstatus%2F1668334430879117318"
+                 data-text="@jennylewis My 50s are kicking MY ass! 😅" data-datetime="7:08 PM Jun 12, 2023"> 
+                marcusb66            </div>
+                        <div id="tweet-feed-11" style="display:none;font-size:smallest" data-delay="45000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668334395684700164"
+                 data-text="my favorite line in this song is
+i’m a chevy angel, lord!
+
+#joyall #timstwitterlisteningparty" data-datetime="7:08 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-10" style="display:none;font-size:smallest" data-delay="29000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668334204827086849"
+                 data-text="puppy and a truck is bobby rhubarbs song
+she knows it’s hers cuz she was sitting by me when i wrote it!
+
+#joyall #timstwitterlisteningparty" data-datetime="7:07 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-9" style="display:none;font-size:smallest" data-delay="106000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668334083641053185"
+                 data-text="track 3 - puppy and a truck
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/jQMOYXiufg" data-datetime="7:06 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-8" style="display:none;font-size:smallest" data-delay="7000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668333638617026562"
+                 data-text="this song is a call to the wild child!
+imagine the ooh’s being cooed
+in a forest between the pines
+
+#joyall #timstwitterlisteningparty" data-datetime="7:05 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-7" style="display:none;font-size:smallest" data-delay="76000" data-url="https%3A%2F%2Ftwitter.com%2Fw7tchywoman%2Fstatus%2F1668333611362426880"
+                 data-text="@jennylewis motorpsychos babe" data-datetime="7:05 PM Jun 12, 2023"> 
+                w7tchywoman            </div>
+                        <div id="tweet-feed-6" style="display:none;font-size:smallest" data-delay="38000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668333289957109760"
+                 data-text="joy’all is all about the rhythms!
+with nate smith on drums playing “ the purdie shuffle “
+and i’m singing a blue note!
+
+#joyall #timstwitterlisteningparty" data-datetime="7:03 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-5" style="display:none;font-size:smallest" data-delay="33000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668333131315953669"
+                 data-text="track 2 - joy’all
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/7avdqTffj9" data-datetime="7:03 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-4" style="display:none;font-size:smallest" data-delay="71000" data-url="https%3A%2F%2Ftwitter.com%2Fmurrell_simon%2Fstatus%2F1668332994292236288"
+                 data-text="This sh*t is crazy town 🤘#timstwitterlisteningparty" data-datetime="7:02 PM Jun 12, 2023"> 
+                murrell_simon            </div>
+                        <div id="tweet-feed-3" style="display:none;font-size:smallest" data-delay="43000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668332697113202690"
+                 data-text="the opening line of the record
+life goes in cycles it’s a merry go round
+makes me think of motorcycles
+#joyall #timstwitterlisteningparty" data-datetime="7:01 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-2" style="display:none;font-size:smallest" data-delay="37000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668332516481302529"
+                 data-text="this song started as a bossanova
+a very stoned bossanova
+the first lyric was
+i’m a rock n roll disciple
+i don’t want to hurt no one
+#joyall #timstwitterlisteningparty" data-datetime="7:00 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-1" style="display:none;font-size:smallest" data-delay="6000" data-url="https%3A%2F%2Ftwitter.com%2Fjennylewis%2Fstatus%2F1668332358439952389"
+                 data-text="track 1 - psychos
+https://t.co/6BNxAVBcZk
+#joyall #timstwitterlisteningparty https://t.co/nolGA9TjLl" data-datetime="7:00 PM Jun 12, 2023"> 
+                jennylewis            </div>
+                        <div id="tweet-feed-0" style="display:none;font-size:smallest" data-delay="0" data-url="https%3A%2F%2Ftwitter.com%2FTim_Burgess%2Fstatus%2F1668332336273047552"
+                 data-text="Ready y’all?
+
+Handing over to @jennylewis for our Joy’All @LlSTENlNG_PARTY 🙌 https://t.co/1S6N90Pf2P" data-datetime="6:59 PM Jun 12, 2023"> 
+                Tim_Burgess            </div>
+                <div id="float-button" class="fa-stack" onclick="toggleAutoOff()">
+      <i class="fas fa-mobile fa-3x fa-stack-1x"></i>
+      <i id="auto-off-cancel" class="fas fa-ban fa-stack-2x" style="display:none;color:red"></i>
+    </div>
+    <div style="width:100%;display:flex;justify-content:center;">
+        <div id ="float-message">
+        </div>
+    </div>
+
+    <script src="../../js/replay/NoSleep.min.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        var autoOff = true;
+        var showing = false;
+
+        window.onscroll = function(){
+            if (/mobile|android|blackberry/i.test(navigator.userAgent) && !showing) {
+                var x = document.getElementById("float-button");
+                x.className = "show";
+                if (!autoOff) {
+                    document.getElementById('auto-off-cancel').style.display = 'inline-block';
+                }
+                showing = true;
+                setTimeout(function(){ 
+                    x.className = x.className.replace("show", "");
+                    showing = false;
+                }, 5000);
+            }
+         };
+         
+         function toggleAutoOff() {
+            autoOff = !autoOff;
+            if (autoOff) {
+                noSleep.disable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off enabled</span>';
+            } else {
+                noSleep.enable();
+                document.getElementById('float-message').innerHTML = 
+                        '<span>Screen auto-off disabled</span>';
+            }
+
+            var dispStyle = (autoOff ? 'none' : 'inline-block');
+            document.getElementById('auto-off-cancel').style.display = dispStyle;
+
+            var floatMsg = document.getElementById("float-message");
+            floatMsg.className = "show";
+            setTimeout(function(){ floatMsg.className = floatMsg.className.replace("show", ""); }, 5000);
+         }
+    </script>
+</section>
