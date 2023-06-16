@@ -128,9 +128,9 @@ class TimeSlotFileCreator : HtmlFileCreator {
     val template = FreeMarkerUtils().getFreeMarker(UPCOMING_FTL)
     val input: Map<String, Any> = mapOf(
       Pair("upcoming_list", upcoming.sortedBy { it.isoDate }),
-      Pair("startDate", upcoming.first().isoDate),
-      Pair("startDateFormatted", upcoming.first().dateDisplayString())
-      )
+      Pair("startDate", if(upcoming.isEmpty()) "" else upcoming.first().isoDate),
+      Pair("startDateFormatted", if(upcoming.isEmpty()) "" else upcoming.first().dateDisplayString())
+    )
     val htmlStr = StringWriter()
     template.process(input, htmlStr)
     return htmlStr.toString()
