@@ -21,7 +21,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
   implementation("org.springframework:spring-web")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-  implementation("org.jsoup:jsoup:1.13.1")
+  implementation("org.jsoup:jsoup:1.15.3")
   implementation("com.opencsv:opencsv:5.1")
   implementation("org.springframework.shell:spring-shell-starter:2.0.0.RELEASE")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -36,7 +36,7 @@ dependencies {
   implementation("se.michaelthelin.spotify:spotify-web-api-java:6.0.0-RC1"){
     exclude(group = "org.slf4j")
   }
-  implementation("com.github.redouane59.twitter:twittered:1.25")
+  implementation("io.github.redouane59.twitter:twittered:2.23")
 
   // had to add some additional code to allow for update of collections to twitter4j - need
   // this until aws updates to Java 15 for lambda's or twittered drops back to java 8

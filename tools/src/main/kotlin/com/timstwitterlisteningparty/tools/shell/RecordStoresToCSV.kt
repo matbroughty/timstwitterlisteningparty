@@ -61,11 +61,13 @@ class RecordStoresToCSV {
     if (this != null) {
       logger.info("row {}", html())
 
-      return RecordStore(
-        name = StringUtils.substringBefore(select("p.store-title").first().text(), " - Visit website"),
-        address = select("p.store-address").first().text(),
-        webSite = select("p")[0].select("a").attr("href")
-      )
+      return select("p.store-address").first()?.let {
+        RecordStore(
+          name = StringUtils.substringBefore(select("p.store-title").first()?.text() ?: "", " - Visit website"),
+          address = it.text(),
+          webSite = select("p")[0].select("a").attr("href")
+        )
+      }
     }
     return null
   }

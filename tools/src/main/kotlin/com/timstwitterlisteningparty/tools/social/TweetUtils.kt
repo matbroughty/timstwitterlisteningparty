@@ -1,12 +1,13 @@
 package com.timstwitterlisteningparty.tools.social
 
-import com.github.redouane59.twitter.TwitterClient
-import com.github.redouane59.twitter.dto.collections.TimeLineOrder
-import com.github.redouane59.twitter.signature.TwitterCredentials
 import com.timstwitterlisteningparty.tools.parser.Replay
 import com.timstwitterlisteningparty.tools.parser.TimeSlot
 import com.timstwitterlisteningparty.tools.parser.TimeSlotReader
+import io.github.redouane59.twitter.TwitterClient
+import io.github.redouane59.twitter.dto.collections.TimeLineOrder
+import io.github.redouane59.twitter.signature.TwitterCredentials
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.LocalDate
@@ -21,7 +22,8 @@ class TweetUtils {
 
   fun getTwittered(): TwitterClient {
     logger.info("getting-twitter-client")
-    return TwitterClient(TwitterCredentials.builder()
+    return TwitterClient(
+      TwitterCredentials.builder()
       .accessToken(System.getenv("twitter4j_oauth_accessToken"))
       .accessTokenSecret(System.getenv("twitter4j_oauth_accessTokenSecret"))
       .apiKey(System.getenv("twitter4j_oauth_consumerKey"))
@@ -214,7 +216,7 @@ class TweetUtils {
           Jsoup.connect("https://timstwitterlisteningparty.com/snippets/replay/feed_${replayId}_snippet.html").get()
         } catch (e: Exception) {
           // will indicate end of loop if no feed existed for feed number
-          null
+          return ""
         }
       }
       retMsg = retMsg.plus("https://twitter.com/LlSTENlNG_PARTY/timelines/${collectionId.substringAfter("custom-")}")
