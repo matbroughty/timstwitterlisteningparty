@@ -2360,37 +2360,24 @@ function selectRandomTracks() {
         }
     }
     
-    postData(playlistName,trackUrls.join(','), imageNum);
-}
-
-function postData(name, tracks, imageNum) {
-    const form = document.createElement('form');
-    form.method = 'post';
-    
-    var action = 'https://timstwitterlisteningparty.eu-gb.cf.appdomain.cloud/createMixtape.php';
-    
-    if (window.location.hostname.includes('sk7software')) {
-        action = 'http://www.sk7software.co.uk/listeningparty/mixtape/createMixtape.php';
+    // Get some random hex bytes to use as the state to send
+    // to the spotify API (allows app to confirm response)
+    const getRanHex = size => {
+        let result = [];
+        let hexRef = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+        for (let n = 0; n < size; n++) {
+            result.push(hexRef[Math.floor(Math.random() * 16)]);
+        }
+        return result.join('');
     }
-    form.action = action;
+    const state = getRanHex(16);
 
-    const hiddenField1 = document.createElement('input');
-    hiddenField1.type = 'hidden';
-    hiddenField1.name = 'name';
-    hiddenField1.value = name;
-    form.appendChild(hiddenField1);
-    const hiddenField2 = document.createElement('input');
-    hiddenField2.type = 'hidden';
-    hiddenField2.name = 'tracks';
-    hiddenField2.value = tracks;
-    form.appendChild(hiddenField2);
-    const hiddenField3 = document.createElement('input');
-    hiddenField3.type = 'hidden';
-    hiddenField3.name = 'image';
-    hiddenField3.value = imageNum;
-    form.appendChild(hiddenField3);
-
-    document.body.appendChild(form);
-    form.submit();
+    setCookie('stateCheck', state, 5);
+    setCookie('tracks', trackUrls.join(','), 5);
+    setCookie('name', playlistName, 5);
+    setCookie('img', imageNum, 5);
+    
+    const redirectUrl = encodeURI(REDIRECT_URI);
+    window.parent.location = 'https://accounts.spotify.com/authorize/?client_id=' + SPOTIFY_CLIENT_ID + '&response_type=code&redirect_uri=' + redirectUrl + '&state=' + state + '&show_dialog=false&scope=' + encodeURI('playlist-modify-private ugc-image-upload');
 }
 </script>

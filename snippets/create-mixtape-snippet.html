@@ -8,43 +8,52 @@
 <div id="playlist-error"></div>
 <br/>
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-const state = urlParams.get('state');
-const code = urlParams.get('code');
-const host = window.location.hostname;
+    const urlParams = new URLSearchParams(window.location.search);
+    const state = urlParams.get('state');
+    const code = urlParams.get('code');
 
-//var url = "https://timstwitterlisteningparty.eu-gb.cf.appdomain.cloud/playlist.php";
-var url = "https://mixtape.owmaokhduvw.eu-gb.codeengine.appdomain.cloud/playlist.php";
+    // Conditions for calling spotify to create playlist are:
+    // - state and code not null
+    // - state matches stateCheck in cookie
+    // - tracks cookie is not null
+    if (state !== null && state.length > 0 && 
+            code !== null && code.length > 0 &&
+            getCookie('stateCheck') === state &&
+            getCookie('tracks') !== null) {
+        
+        let postData = {};
+        postData['state'] = state;
+        postData['code'] = code;
+        postData['tracks'] = getCookie('tracks');
+        postData['name'] = getCookie('name');
+        postData['img'] = getCookie('img');
 
-if (host.includes('sk7software')) {
-    url = "http://www.sk7software.co.uk/listeningparty/mixtape/playlist.php";
-}
-
-    // Call function to create playlist
-    $.ajax({
-        type: "GET",
-        url: url + "?state=" + state + "&code=" + code,
-        crossDomain: true,
-        xhshuew: "",
-        dataType: "json",
-        success: function (data) {
-            console.log(data);
-            var complete = document.getElementById('playlist-complete');
-            var loading = document.getElementById('playlist-loading');
-            $(complete).html(
-                    'Your mixtape is ready.  Here is a preview of it.  You can listen to it in full on Spotify<br/>' + 
-                    '<iframe src="https://open.spotify.com/embed/playlist/' + data.playlistId + '" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>' +
-                    '<br/><br/><a href="mixtape.html">Make another</a><br/>'
-                    );
-            loading.style.display = 'none';
-        },
-        error: function (data) {
-            console.log(data);
-            var error = document.getElementById('playlist-error');
-            var loading = document.getElementById('playlist-loading');
-            $(error).html('There was a problem creating your mixtape.  Please <a href="mixtape.html">try again</a> and if the problem persists contact the developer for help.<br/>[Error: ' + data.error + ']');
-            loading.style.display = 'none';
-        }
-    });                
+        // Call function to create playlist
+        $.ajax({
+            type: "POST",
+            url: PLAYLIST_CREATE_URI,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(postData),
+            success: function (data) {
+                console.log(data);
+                var complete = document.getElementById('playlist-complete');
+                var loading = document.getElementById('playlist-loading');
+                $(complete).html(
+                        'Your mixtape is ready.  Here is a preview of it.  You can listen to it in full on Spotify<br/><br/>' + 
+                        '<iframe src="https://open.spotify.com/embed/playlist/' + data.playlistId + '" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>' +
+                        '<br/><br/><a href="mixtape.html">Make another</a><br/>'
+                        );
+                loading.style.display = 'none';
+            },
+            error: function (data) {
+                console.log(data);
+                var error = document.getElementById('playlist-error');
+                var loading = document.getElementById('playlist-loading');
+                $(error).html('There was a problem creating your mixtape.  Please <a href="mixtape.html">try again</a> and if the problem persists contact the developer for help.<br/>[Error: ' + data.error + ']');
+                loading.style.display = 'none';
+            }
+        });                
+    }
 </script>
 
