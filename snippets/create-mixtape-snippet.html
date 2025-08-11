@@ -12,6 +12,9 @@
     const state = urlParams.get('state');
     const code = urlParams.get('code');
 
+    var complete = document.getElementById('playlist-complete');
+    var loading = document.getElementById('playlist-loading');
+
     // Conditions for calling spotify to create playlist are:
     // - state and code not null
     // - state matches stateCheck in cookie
@@ -42,7 +45,7 @@
                 $(complete).html(
                         'Your mixtape is ready.  Here is a preview of it.  You can listen to it in full on Spotify<br/><br/>' + 
                         '<iframe src="https://open.spotify.com/embed/playlist/' + data.playlistId + '" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>' +
-                        '<br/><br/><a href="mixtape.html">Make another</a><br/>'
+                        '<br/><br/>' +  showSocialButtons(data.playlistId) + '<br/><br/><a href="mixtape.html">Make another</a><br/><br/>'
                         );
                 loading.style.display = 'none';
             },
@@ -54,6 +57,32 @@
                 loading.style.display = 'none';
             }
         });                
+    }
+    
+    function showSocialButtons(playlistId) {
+        const ttlpLink = document.URL.split('?')[0]; 
+        const playlistLink = encodeURIComponent('https://open.spotify.com/playlist/' + playlistId);
+        const blueskyShare = '<a href="https://bsky.app/intent/compose?text='+ encodeURIComponent('Take a look at my playlist of listening party songs on Spotify ') + playlistLink + encodeURIComponent('. Have a listen and then make your own here ' + ttlpLink + ' @listeningparty.bsky.social‬ #TimsListeningParty') + '" target="_blank" title="Share on BlueSky" style="display:inline-block;line-height:2em;vertical-align:middle;text-align:center;width:2em;height:2em;color:#fff;background:#1b95e0;margin-right:5px"><span style="font-size:1.3em;"><i class="fa-brands fa-bluesky"></i></span></a>';
+        const twitterShare = '<a href="https://twitter.com/intent/tweet?url=' + playlistLink + '&text=' + encodeURIComponent('Take a look at my playlist of listening party songs on Spotify. Have a listen and then make your own here ' + ttlpLink) + '&via=LlSTENlNG_PARTY&hashtags=TimsTwitterListeningParty&related=Tim_Burgess,andrewb1970" target="_blank" title="Share on X" style="display:inline-block;line-height:2em;vertical-align:middle;text-align:center;width:2em;height:2em;color:#fff;background:#000000;margin-right:5px"><span style="font-size:1.3em;"><i class="fa-brands fa-x-twitter"></i></span></a>';
+        const whatsAppShare = (/mobile|android|blackberry/i.test(navigator.userAgent) ? '<a href="whatsapp://send?text=' + playlistLink + '" title="Share on WhatsApp" style="display:inline-block;line-height:2em;vertical-align:middle;text-align:center;width:2em;height:2em;color:#fff;background:#43d854;margin-right:5px"><span style="font-size:1.3em;"><i class="fa-brands fa-whatsapp"></i></span></a>' : '');
+        const copyLink = '<a href="javascript:copyToClipboard(\'' + playlistLink + '\')" title="Copy Playlist Link" style="display:inline-block;line-height:2em;vertical-align:middle;text-align:center;width:2em;height:2em;color:#fff;background:#ff0000;"><span style="font-size:1.3em;"><i id="copy-button" class="fa-regular fa-copy"></i></span></a>';
+        return twitterShare + blueskyShare + whatsAppShare + copyLink;
+    }
+
+    function copyToClipboard(text) {
+        var dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+
+        document.getElementById('copy-button').className = 'fa-regular fa-circle-check';
+        setTimeout("setCopyBack()", 2000);        
+    }
+
+    function setCopyBack() {
+        document.getElementById('copy-button').className = 'fa-regular fa-copy';            
     }
 </script>
 
